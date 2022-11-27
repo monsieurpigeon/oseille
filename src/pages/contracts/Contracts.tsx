@@ -9,14 +9,13 @@ export function Contracts() {
       <Link to="create">Nouveau</Link>
       <h1>Contrats</h1>
       {contracts.map((contract: any) => {
-        console.log({ contract });
         return (
           <div key={contract._id}>
-            <div>{contract.customerId}</div>
+            <div>{contract.customer.name}</div>
             {contract.products.map((el: any) => {
               return (
                 <div>
-                  {el.quantity} * {el.productId}
+                  {el.quantity} * {el.product.name} #{el.productId}
                 </div>
               );
             })}

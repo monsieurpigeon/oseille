@@ -31,9 +31,24 @@ export function useContracts() {
   const loadContracts = useCallback(() => {
     db.find({
       selector: { type: 'Contract' },
-    }).then((result: { docs: Contract[] }) => {
-      setContracts(result.docs);
-    });
+    })
+      .then((result: { docs: Contract[] }) => {
+        return Promise.all(
+          result.docs.map(async (doc) => {
+            const customer = await db.get(doc.customerId);
+            const products = await Promise.all(
+              doc.products.map(async (el) => {
+                const product = await db.get(el.productId);
+                return { ...el, product };
+              }),
+            );
+            return { ...doc, customer, products };
+          }),
+        );
+      })
+      .then((data: any) => {
+        setContracts(data);
+      });
   }, []);
 
   const addContract = (contract: ContractInput) => {
