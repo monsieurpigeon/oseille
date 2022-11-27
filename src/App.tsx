@@ -1,8 +1,11 @@
+import { Products } from './pages/Products';
 
 function App() {
   return (
-    <div>App</div>
-  )
+    <div>
+      <Products />
+    </div>
+  );
 }
 
-export default App
+export default App;
