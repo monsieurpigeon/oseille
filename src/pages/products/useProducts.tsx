@@ -24,8 +24,7 @@ export function useProducts() {
   }, []);
 
   const addProduct = (product: ProductInput) => {
-    db.put({
-      _id: 'product:' + product.name,
+    db.post({
       name: product.name,
       type: 'Product',
     }).then(loadProducts);
