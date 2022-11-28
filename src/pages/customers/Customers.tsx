@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { Link, Outlet } from 'react-router-dom';
 import styled from 'styled-components';
+import { useSnapshot } from 'valtio';
+import { addCustomer, store } from '../../backend';
 import { Button } from '../../components/form/button/Button';
 import { TextInput } from '../../components/form/input/TextInput';
-import { useCustomers } from './useCustomers';
 
 const StyledContainer = styled.div`
   position: relative;
@@ -16,7 +17,7 @@ const StyledDetail = styled.div`
 
 export function Customers() {
   const [text, setText] = useState('');
-  const { customers, addCustomer } = useCustomers();
+  const { customers } = useSnapshot(store);
 
   return (
     <StyledContainer>

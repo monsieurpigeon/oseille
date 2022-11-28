@@ -1,15 +1,14 @@
 import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
+import { useSnapshot } from 'valtio';
+import { store } from '../../backend';
 import { Button } from '../../components/form/button/Button';
-import { useCustomers } from '../customers/useCustomers';
-import { useProducts } from '../products/useProducts';
 import { ContractInput, useContracts } from './useContracts';
 
 export function CreateContract() {
   const { customerId = '' } = useParams();
-  const { customers } = useCustomers();
-  const { products } = useProducts();
+  const { products, customers } = useSnapshot(store);
   const { addContract } = useContracts();
   const [count, setCount] = useState([0]);
   const { register, handleSubmit } = useForm<ContractInput>();
@@ -38,7 +37,7 @@ export function CreateContract() {
         <div>
           {count.map((index) => {
             return (
-              <div>
+              <div key={index}>
                 <select {...register(`products.${index}.productId`)}>
                   {products.map((product) => {
                     return (

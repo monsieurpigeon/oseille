@@ -14,7 +14,7 @@ export function Contracts() {
             <div>{contract.customer.name}</div>
             {contract.products.map((el: any) => {
               return (
-                <div>
+                <div key={el.product._id}>
                   {el.quantity} * {el.product.name} #{el.productId}
                 </div>
               );

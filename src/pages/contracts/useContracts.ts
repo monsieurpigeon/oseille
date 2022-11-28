@@ -26,6 +26,7 @@ export interface ContractInput {
 
 export function useContracts() {
   const { db } = usePouch();
+
   const [contracts, setContracts] = useState<Contract[]>([]);
 
   const loadContracts = useCallback(() => {

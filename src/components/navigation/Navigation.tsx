@@ -28,9 +28,9 @@ export function Navigation() {
     <StyledNav>
       <StyledUl>
         {navBarItems.map((item) => (
-          <li>
+          <li key={item.path}>
             <StyledLink
-              key={item.path}
+
               to={item.path}
             >
               {item.emoji} {item.label}
