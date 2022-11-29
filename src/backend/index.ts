@@ -1,6 +1,9 @@
+import PouchDb from 'pouchdb';
 import PouchDB from 'pouchdb';
+import find from 'pouchdb-find';
 import { proxy } from 'valtio';
 
+PouchDb.plugin(find);
 export const db = new PouchDB('hello_world');
 
 interface Store {
