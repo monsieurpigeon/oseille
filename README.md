@@ -1,5 +1,7 @@
 # Oseille
 
+https://oseille.vercel.app/
+
 ## Requirements
 
 - List of products
