@@ -1,7 +1,7 @@
 import PouchDB from 'pouchdb';
 import { proxy } from 'valtio';
-import { Customer, loadCustomers } from './entities/Customer';
-import { loadProducts, Product } from './entities/Product';
+import { Customer } from './entities/Customer';
+import { Product } from './entities/Product';
 
 export const db = new PouchDB('hello_world');
 
@@ -15,7 +15,7 @@ export const store = proxy<Store>({
   customers: [],
 });
 
-const initDatabase = () => {
+export const initDatabase = () => {
   db.get('init').catch((error) => {
     if (error.status === 404) {
       console.log('MAKE INIT');
@@ -42,10 +42,6 @@ const initDatabase = () => {
     }
   });
 };
-
-initDatabase();
-loadProducts();
-loadCustomers();
 
 export * from './entities/Product';
 export * from './entities/Customer';
