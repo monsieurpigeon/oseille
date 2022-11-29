@@ -1,7 +1,6 @@
-import PouchDb from 'pouchdb';
 import { proxy } from 'valtio';
+import { db } from './database';
 
-export const db = new PouchDb('hello_world');
 db.allDocs().then((data) => {
   console.log({ data });
 });
