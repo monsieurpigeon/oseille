@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useSnapshot } from 'valtio';
-import { store } from '../../backend';
-import { addProduct } from '../../backend/entities/Product';
+import { addProduct, store } from '../../backend';
 import { Button } from '../../components/form/button/Button';
 import { TextInput } from '../../components/form/input/TextInput';
 

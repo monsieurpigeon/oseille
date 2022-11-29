@@ -1,7 +1,5 @@
 import PouchDB from 'pouchdb';
 import { proxy } from 'valtio';
-import { Customer } from './entities/Customer';
-import { Product } from './entities/Product';
 
 export const db = new PouchDB('hello_world');
 
@@ -43,5 +41,65 @@ export const initDatabase = () => {
   });
 };
 
-export * from './entities/Product';
-export * from './entities/Customer';
+export interface Product {
+  _id: string;
+  type: 'Product';
+  name: string;
+}
+
+export interface ProductInput {
+  name: string;
+}
+
+export const loadProducts = () => {
+  db.changes({
+    include_docs: true,
+    filter: function (doc) {
+      return doc.type === 'Product';
+    },
+  }).on('complete', (result) => {
+    store.products = [...(result.results.map((el) => el.doc) as unknown as Product[])];
+  });
+};
+
+export const addProduct = (product: ProductInput) => {
+  db.post({
+    ...product,
+    type: 'Product',
+  }).catch(console.error);
+};
+
+export interface Customer {
+  _id: string;
+  type: 'Customer';
+  name: string;
+}
+
+export interface CustomerInput {
+  name: string;
+}
+
+export const loadCustomers = () => {
+  db.changes({
+    include_docs: true,
+    filter: function (doc) {
+      return doc.type === 'Customer';
+    },
+  }).on('complete', (result) => {
+    store.customers = [...(result.results.map((el) => el.doc) as unknown as Customer[])];
+  });
+};
+
+export const getCustomer = (id: string) => {
+  db.get(id).then((result) => {
+    console.log({ result });
+  });
+  return { loading: true };
+};
+
+export const addCustomer = (customer: ProductInput) => {
+  db.post({
+    ...customer,
+    type: 'Customer',
+  }).catch(console.error);
+};
