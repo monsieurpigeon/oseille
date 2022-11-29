@@ -10,7 +10,6 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <PouchProvider>
       <BrowserRouter>
-        TEST
         <App />
       </BrowserRouter>
     </PouchProvider>
