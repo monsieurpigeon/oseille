@@ -1,10 +1,10 @@
 import PouchDb from 'pouchdb';
-import PouchDB from 'pouchdb';
-import find from 'pouchdb-find';
 import { proxy } from 'valtio';
 
-PouchDb.plugin(find);
-export const db = new PouchDB('hello_world');
+export const db = new PouchDb('hello_world');
+db.allDocs().then((data) => {
+  console.log({ data });
+});
 
 interface Store {
   products: Product[];
