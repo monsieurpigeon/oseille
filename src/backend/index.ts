@@ -83,6 +83,7 @@ export interface CustomerInput {
 }
 
 export const loadCustomers = () => {
+  console.log('LOAD CUSTOMER');
   db.changes({
     include_docs: true,
     filter: function (doc) {
