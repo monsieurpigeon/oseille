@@ -1,18 +1,7 @@
-import { proxy } from 'valtio';
 import { db } from './database';
 
 db.allDocs().then((data) => {
   console.log({ data });
-});
-
-interface Store {
-  products: Product[];
-  customers: Customer[];
-}
-
-export const store = proxy<Store>({
-  products: [],
-  customers: [],
 });
 
 export const initDatabase = () => {
@@ -43,66 +32,6 @@ export const initDatabase = () => {
   });
 };
 
-export interface Product {
-  _id: string;
-  type: 'Product';
-  name: string;
-}
-
-export interface ProductInput {
-  name: string;
-}
-
-export const loadProducts = () => {
-  db.changes({
-    include_docs: true,
-    filter: function (doc) {
-      return doc.type === 'Product';
-    },
-  }).on('complete', (result) => {
-    store.products = [...(result.results.map((el) => el.doc) as unknown as Product[])];
-  });
-};
-
-export const addProduct = (product: ProductInput) => {
-  db.post({
-    ...product,
-    type: 'Product',
-  }).catch(console.error);
-};
-
-export interface Customer {
-  _id: string;
-  type: 'Customer';
-  name: string;
-}
-
-export interface CustomerInput {
-  name: string;
-}
-
-export const loadCustomers = () => {
-  console.log('LOAD CUSTOMER');
-  db.changes({
-    include_docs: true,
-    filter: function (doc) {
-      return doc.type === 'Customer';
-    },
-  }).on('complete', (result) => {
-    store.customers = [...(result.results.map((el) => el.doc) as unknown as Customer[])];
-  });
-};
-
-export const getCustomer = (id: string) => {
-  db.get(id).then((result) => {
-    console.log({ result });
-  });
-  return { loading: true };
-};
-
-export const addCustomer = (customer: ProductInput) => {
-  db.post({
-    ...customer,
-    type: 'Customer',
-  }).catch(console.error);
-};
+export * from './store';
+export * from './customer';
+export * from './product';
