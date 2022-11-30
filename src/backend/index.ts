@@ -14,7 +14,7 @@ export const initDatabase = () => {
         { type: 'Product', _id: '3', name: 'Courgette' },
         { type: 'Customer', _id: '4', name: 'Biocoop' },
         {
-          type: 'Contract',
+          type: 'Deal',
           customerId: '4',
           products: [
             { productId: '1', quantity: '17' },
@@ -35,3 +35,4 @@ export const initDatabase = () => {
 export * from './service/store';
 export * from './entity/customer';
 export * from './entity/product';
+export * from './entity/deal';

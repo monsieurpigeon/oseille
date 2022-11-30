@@ -4,17 +4,14 @@ import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import './backend';
 import { initDatabase } from './backend';
-import { PouchProvider } from './context/pouchDb';
 import './index.css';
 
 initDatabase();
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <PouchProvider>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </PouchProvider>
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
   </React.StrictMode>,
 );

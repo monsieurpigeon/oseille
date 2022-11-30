@@ -2,25 +2,23 @@ import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
 import { useSnapshot } from 'valtio';
-import { store } from '../../backend';
+import { addDeal, DealInput, store } from '../../backend';
 import { Button } from '../../component/form/button/Button';
-import { ContractInput, useDocument } from './useDocument';
 
-export function CreateDocument() {
+export function CreateDeal() {
   const { customerId = '' } = useParams();
   const { products, customers } = useSnapshot(store);
-  const { addContract } = useDocument();
   const [count, setCount] = useState([0]);
-  const { register, handleSubmit } = useForm<ContractInput>();
+  const { register, handleSubmit } = useForm<DealInput>();
 
-  const onSubmit: SubmitHandler<ContractInput> = (d) => {
+  const onSubmit: SubmitHandler<DealInput> = (d) => {
     console.log(d);
-    addContract(d);
+    addDeal(d);
   };
 
   return (
     <div>
-      CreateContract
+      CreateDeal
       <form onSubmit={handleSubmit(onSubmit)}>
         <select {...register('customerId')}>
           {customers.map((customer) => {
