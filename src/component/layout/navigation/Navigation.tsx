@@ -1,6 +1,5 @@
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
-import { Contact } from '../../pages/contact/Contact';
 
 const navBarItems = [
   { label: 'Produits', emoji: '🥬', path: 'products' },
@@ -29,14 +28,10 @@ export function Navigation() {
       <StyledUl>
         {navBarItems.map((item) => (
           <li key={item.path}>
-            <StyledLink
-
-              to={item.path}
-            >
+            <StyledLink to={item.path}>
               {item.emoji} {item.label}
             </StyledLink>
           </li>
-
         ))}
       </StyledUl>
     </StyledNav>

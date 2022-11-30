@@ -4,7 +4,7 @@ import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import './backend';
 import { initDatabase } from './backend';
-import { PouchProvider } from './contexts/pouchDb';
+import { PouchProvider } from './context/pouchDb';
 import './index.css';
 
 initDatabase();

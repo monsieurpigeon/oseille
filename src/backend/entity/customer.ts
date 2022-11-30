@@ -1,5 +1,5 @@
-import { db } from './database';
-import { store } from './store';
+import { db } from '../service/database';
+import { store } from '../service/store';
 
 export interface Customer {
   _id: string;
@@ -28,8 +28,7 @@ export const addCustomer = (customer: CustomerInput) => {
 };
 
 export const getCustomer = (id: string) => {
-  db.get(id).then((result) => {
-    console.log({ result });
+  return db.get(id).then((result) => {
+    store.customer = result as unknown as Customer;
   });
-  return { loading: true };
 };

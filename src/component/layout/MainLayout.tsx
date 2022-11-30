@@ -1,8 +1,8 @@
 import { ReactNode } from 'react';
 import styled from 'styled-components';
-import { Footer } from '../footer/Footer';
-import { Header } from '../header/Header';
-import { Navigation } from '../navigation/Navigation';
+import { Footer } from './footer/Footer';
+import { Header } from './header/Header';
+import { Navigation } from './navigation/Navigation';
 
 const StyledContainer = styled.div`
   display: flex;

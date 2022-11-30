@@ -1,11 +1,12 @@
 import { Link } from 'react-router-dom';
-import { useContracts } from './useContracts';
+import { ScreenLayout } from '../../component/layout/ScreenLayout';
+import { useDocument } from './useDocument';
 
-export function Contracts() {
-  const { contracts } = useContracts();
+export function Documents() {
+  const { contracts } = useDocument();
 
   return (
-    <div>
+    <ScreenLayout>
       <Link to="create">Nouveau</Link>
       <h1>Contrats</h1>
       {contracts.map((contract: any) => {
@@ -22,6 +23,6 @@ export function Contracts() {
           </div>
         );
       })}
-    </div>
+    </ScreenLayout>
   );
 }

@@ -1,4 +1,4 @@
-import { db } from './database';
+import { db } from './service/database';
 
 db.allDocs().then((data) => {
   console.log({ data });
@@ -32,6 +32,6 @@ export const initDatabase = () => {
   });
 };
 
-export * from './store';
-export * from './customer';
-export * from './product';
+export * from './service/store';
+export * from './entity/customer';
+export * from './entity/product';

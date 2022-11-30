@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
-import { usePouch } from '../../contexts/pouchDb';
+import { usePouch } from '../../context/pouchDb';
 
-export interface Contract {
+export interface Document {
   id: string;
   customerId: string;
   products: Array<{
@@ -13,7 +13,7 @@ export interface Contract {
   }>;
 }
 
-export interface ContractInput {
+export interface DocumentInput {
   customerId: string;
   products: Array<{
     productId: string;
@@ -24,16 +24,16 @@ export interface ContractInput {
   }>;
 }
 
-export function useContracts() {
+export function useDocument() {
   const { db } = usePouch();
 
-  const [contracts, setContracts] = useState<Contract[]>([]);
+  const [contracts, setContracts] = useState<Document[]>([]);
 
-  const loadContracts = useCallback(() => {
+  const loadDocuments = useCallback(() => {
     db.find({
       selector: { type: 'Contract' },
     })
-      .then((result: { docs: Contract[] }) => {
+      .then((result: { docs: Document[] }) => {
         return Promise.all(
           result.docs.map(async (doc) => {
             const customer = await db.get(doc.customerId);
@@ -52,16 +52,16 @@ export function useContracts() {
       });
   }, []);
 
-  const addContract = (contract: ContractInput) => {
+  const addContract = (document: DocumentInput) => {
     db.post({
-      ...contract,
-      type: 'Contract',
+      ...document,
+      type: 'Document',
     }).then(console.log);
   };
 
   useEffect(() => {
-    loadContracts();
-  }, [loadContracts]);
+    loadDocuments();
+  }, [loadDocuments]);
 
   return { contracts, addContract };
 }

@@ -3,13 +3,13 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
 import { useSnapshot } from 'valtio';
 import { store } from '../../backend';
-import { Button } from '../../components/form/button/Button';
-import { ContractInput, useContracts } from './useContracts';
+import { Button } from '../../component/form/button/Button';
+import { ContractInput, useDocument } from './useDocument';
 
-export function CreateContract() {
+export function CreateDocument() {
   const { customerId = '' } = useParams();
   const { products, customers } = useSnapshot(store);
-  const { addContract } = useContracts();
+  const { addContract } = useDocument();
   const [count, setCount] = useState([0]);
   const { register, handleSubmit } = useForm<ContractInput>();
 

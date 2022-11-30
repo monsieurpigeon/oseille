@@ -1,15 +1,15 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { loadCustomers, loadProducts } from './backend';
-import { MainLayout } from './components/layouts/MainLayout';
-import { Contact } from './pages/contact/Contact';
-import { Contracts } from './pages/contracts/Contracts';
-import { CreateContract } from './pages/contracts/CreateContract';
-import { Customers } from './pages/customers/Customers';
-import { CustomerDetail } from './pages/customers/detail/CustomerDetail';
-import { Home } from './pages/home/Home';
-import { Products } from './pages/products/Products';
-import { Profile } from './pages/profile/Profile';
+import { MainLayout } from './component/layout/MainLayout';
+import { Contact } from './page/contact/Contact';
+import { Customers } from './page/customer/Customers';
+import { CustomerDetail } from './page/customer/detail/CustomerDetail';
+import { CreateDocument } from './page/document/CreateDocument';
+import { Documents } from './page/document/Documents';
+import { Home } from './page/home/Home';
+import { Products } from './page/product/Products';
+import { Profile } from './page/profile/Profile';
 
 function App() {
   loadCustomers();
@@ -36,15 +36,15 @@ function App() {
         </Route>
         <Route
           path="contracts"
-          element={<Contracts />}
+          element={<Documents />}
         />
         <Route
           path="contracts/create"
-          element={<CreateContract />}
+          element={<CreateDocument />}
         >
           <Route
             path=":customerId"
-            element={<CreateContract />}
+            element={<CreateDocument />}
           />
         </Route>
         <Route

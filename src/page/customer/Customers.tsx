@@ -3,12 +3,10 @@ import { Link, Outlet } from 'react-router-dom';
 import styled from 'styled-components';
 import { useSnapshot } from 'valtio';
 import { addCustomer, store } from '../../backend';
-import { Button } from '../../components/form/button/Button';
-import { TextInput } from '../../components/form/input/TextInput';
+import { Button } from '../../component/form/button/Button';
+import { TextInput } from '../../component/form/input/TextInput';
+import { ScreenLayout } from '../../component/layout/ScreenLayout';
 
-const StyledContainer = styled.div`
-  position: relative;
-`;
 const StyledDetail = styled.div`
   position: absolute;
   top: 0;
@@ -20,7 +18,7 @@ export function Customers() {
   const { customers } = useSnapshot(store);
 
   return (
-    <StyledContainer>
+    <ScreenLayout>
       <h1>Clients</h1>
       <TextInput
         placeholder="Nouveau client"
@@ -43,6 +41,6 @@ export function Customers() {
       <StyledDetail>
         <Outlet />
       </StyledDetail>
-    </StyledContainer>
+    </ScreenLayout>
   );
 }

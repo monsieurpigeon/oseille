@@ -1,15 +1,16 @@
 import { useState } from 'react';
 import { useSnapshot } from 'valtio';
 import { addProduct, store } from '../../backend';
-import { Button } from '../../components/form/button/Button';
-import { TextInput } from '../../components/form/input/TextInput';
+import { Button } from '../../component/form/button/Button';
+import { TextInput } from '../../component/form/input/TextInput';
+import { ScreenLayout } from '../../component/layout/ScreenLayout';
 
 export function Products() {
   const [text, setText] = useState('');
   const { products } = useSnapshot(store);
 
   return (
-    <div>
+    <ScreenLayout>
       <h1>Produits</h1>
       <TextInput
         placeholder="Nouveau produit"
@@ -27,6 +28,6 @@ export function Products() {
       {products.map((product: any) => (
         <div key={product._id}>{product.name}</div>
       ))}
-    </div>
+    </ScreenLayout>
   );
 }

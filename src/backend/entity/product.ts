@@ -1,5 +1,5 @@
-import { db } from './database';
-import { store } from './store';
+import { db } from '../service/database';
+import { store } from '../service/store';
 
 export interface Product {
   _id: string;
