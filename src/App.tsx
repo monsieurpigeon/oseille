@@ -1,6 +1,6 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
-import { initDatabase, loadCustomers, loadProducts } from './backend';
+import { loadCustomers, loadProducts } from './backend';
 import { MainLayout } from './components/layouts/MainLayout';
 import { Contact } from './pages/contact/Contact';
 import { Contracts } from './pages/contracts/Contracts';
@@ -12,7 +12,6 @@ import { Products } from './pages/products/Products';
 import { Profile } from './pages/profile/Profile';
 
 function App() {
-  initDatabase();
   loadCustomers();
   loadProducts();
   return (

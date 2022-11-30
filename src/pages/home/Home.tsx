@@ -34,6 +34,10 @@ export function Home() {
       <StyledH1>Bienvenue sur Oseille</StyledH1>
       <StyledSubtitle>L'application qui aide les maraîchers à gérer leur argent</StyledSubtitle>
       <p>Application gratuite, en code libre, et qui marche sans internet</p>
+      <StyledSubtitle>
+        Attention : Cette application est toujours en développement et va connaitre de gros changements jusqu'à nouvel
+        ordre
+      </StyledSubtitle>
       <StyledH2>Fonctionnalités :</StyledH2>
       <StyledUl>
         <li>Gérer une liste de produits avec un prix</li>
