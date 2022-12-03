@@ -17,11 +17,11 @@ const StyledPage = styled.div`
 
 const StyledContent = styled.div`
   display: flex;
-  flex-grow: 1;
+  flex-grow: 20;
   background-color: silver;
 `;
 
-const StyledSreen = styled.main`
+const StyledScreen = styled.main`
   flex-grow: 1;
   padding: 12px;
   background-color: white;
@@ -36,7 +36,7 @@ export function MainLayout({ children }: { children: ReactNode }) {
         <Header />
         <StyledContent>
           <Navigation />
-          <StyledSreen>{children}</StyledSreen>
+          <StyledScreen>{children}</StyledScreen>
         </StyledContent>
         <Footer />
       </StyledPage>

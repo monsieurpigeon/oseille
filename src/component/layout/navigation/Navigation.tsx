@@ -2,10 +2,10 @@ import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 
 const navBarItems = [
-  { label: 'Produits', emoji: '🥔', path: 'product' },
+  { label: 'Produits', emoji: '🍓', path: 'product' },
   { label: 'Clients', emoji: '🤴', path: 'customer' },
-  { label: 'Livraisons', emoji: '📦', path: 'delivery' },
-    { label: 'Factures', emoji: '🪙', path: 'invoice' },
+  { label: 'Livraisons', emoji: '🧺', path: 'delivery' },
+  { label: 'Factures', emoji: '🧲', path: 'invoice' },
   { label: 'Contact', emoji: '🖋️', path: 'contact' },
 ];
 
@@ -14,12 +14,26 @@ const StyledNav = styled.nav`
 `;
 
 const StyledUl = styled.ul`
-  padding: 10px;
+  margin-top: 30px;
+  border-top: 2px solid lightgrey;
+  border-bottom: 2px solid darkgrey;
+
+  li {
+    background: grey;
+  }
 `;
 
 const StyledLink = styled(NavLink)`
+  padding: 20px;
+  font-size: 1em;
+  display: block;
+  width: 100%;
+
   &.active {
-    background-color: aqua;
+    background-color: darkgray;
+    color: white;
+    border-top: 2px solid magenta;
+    border-bottom: 2px solid aqua;
   }
 `;
 
