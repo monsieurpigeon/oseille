@@ -17,7 +17,7 @@ export function CustomerDetail() {
       {customer ? (
         <div>
           <div>Customer Detail : {customer.name}</div>
-          <Link to={`/contracts/create/${id}`}>Livrer</Link>
+          <Link to={`/delivery/create/${id}`}>Livrer</Link>
         </div>
       ) : (
         '...'
