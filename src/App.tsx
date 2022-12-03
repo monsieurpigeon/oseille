@@ -1,20 +1,21 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
-import { loadCustomers, loadDeals, loadProducts } from './backend';
+import { loadCustomers, loadDeliveries, loadProducts } from './backend';
 import { MainLayout } from './component/layout/MainLayout';
 import { Contact } from './page/contact/Contact';
 import { Customers } from './page/customer/Customers';
 import { CustomerDetail } from './page/customer/detail/CustomerDetail';
-import { CreateDeal } from './page/deal/CreateDeal';
-import { Deals } from './page/deal/Deals';
+import { CreateDeliveries } from './page/delivery/CreateDeliveries';
+import { Deliveries } from './page/delivery/Deliveries';
 import { Home } from './page/home/Home';
 import { Products } from './page/product/Products';
 import { Profile } from './page/profile/Profile';
+import {Invoices} from "./page/invoice/Invoices";
 
 function App() {
   loadCustomers();
   loadProducts();
-  loadDeals();
+  loadDeliveries();
   return (
     <MainLayout>
       <Routes>
@@ -36,18 +37,22 @@ function App() {
           />
         </Route>
         <Route
-          path="deal"
-          element={<Deals />}
+          path="delivery"
+          element={<Deliveries />}
         />
         <Route
-          path="deal/create"
-          element={<CreateDeal />}
+          path="delivery/create"
+          element={<CreateDeliveries />}
         >
           <Route
             path=":customerId"
-            element={<CreateDeal />}
+            element={<CreateDeliveries />}
           />
         </Route>
+        <Route
+            path="invoice"
+            element={<Invoices/>}
+        />
         <Route
           path="/contact"
           element={<Contact />}

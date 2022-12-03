@@ -1,15 +1,18 @@
 import { proxy } from 'valtio';
 import { Customer } from '../entity/customer';
-import { Deal } from '../entity/deal';
+import { Delivery } from '../entity/delivery';
 import { Product } from '../entity/product';
+import {Invoice} from "../entity/invoice";
 
 interface Store {
   products: Product[];
   product: Product | null;
   customers: Customer[];
   customer: Customer | null;
-  deals: Deal[];
-  deal: Deal | null;
+  deliveries: Delivery[];
+  delivery: Delivery | null;
+  invoices: Invoice[];
+  invoice:Invoice|null
 }
 
 export const store = proxy<Store>({
@@ -17,6 +20,8 @@ export const store = proxy<Store>({
   product: null,
   customers: [],
   customer: null,
-  deals: [],
-  deal: null,
+  deliveries: [],
+  delivery: null,
+  invoices:[],
+  invoice:null
 });

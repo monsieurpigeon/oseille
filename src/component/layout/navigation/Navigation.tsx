@@ -2,10 +2,11 @@ import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
 
 const navBarItems = [
-  { label: 'Produits', emoji: '🥬', path: 'product' },
+  { label: 'Produits', emoji: '🥔', path: 'product' },
   { label: 'Clients', emoji: '🤴', path: 'customer' },
-  { label: 'Accords', emoji: '🖋', path: 'deal' },
-  { label: 'Contact', emoji: '✉️', path: 'contact' },
+  { label: 'Livraisons', emoji: '📦', path: 'delivery' },
+    { label: 'Factures', emoji: '🪙', path: 'invoice' },
+  { label: 'Contact', emoji: '🖋️', path: 'contact' },
 ];
 
 const StyledNav = styled.nav`

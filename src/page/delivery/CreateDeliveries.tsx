@@ -2,18 +2,18 @@ import { useState } from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
 import { useSnapshot } from 'valtio';
-import { addDeal, DealInput, store } from '../../backend';
+import { addDelivery, DeliveryInput, store } from '../../backend';
 import { Button } from '../../component/form/button/Button';
 
-export function CreateDeal() {
+export function CreateDeliveries() {
   const { customerId = '' } = useParams();
   const { products, customers } = useSnapshot(store);
   const [count, setCount] = useState([0]);
-  const { register, handleSubmit } = useForm<DealInput>();
+  const { register, handleSubmit } = useForm<DeliveryInput>();
 
-  const onSubmit: SubmitHandler<DealInput> = (d) => {
+  const onSubmit: SubmitHandler<DeliveryInput> = (d) => {
     console.log(d);
-    addDeal(d);
+    addDelivery(d);
   };
 
   return (

@@ -3,18 +3,18 @@ import { useSnapshot } from 'valtio';
 import { store } from '../../backend';
 import { ScreenLayout } from '../../component/layout/ScreenLayout';
 
-export function Deals() {
-  const { deals } = useSnapshot(store);
+export function Deliveries() {
+  const { deliveries } = useSnapshot(store);
 
   return (
     <ScreenLayout>
       <Link to="create">Nouveau</Link>
-      <h1>Accords</h1>
-      {deals.map((deal: any) => {
+      <h1>Livraisons</h1>
+      {deliveries.map((delivery: any) => {
         return (
-          <div key={deal._id}>
-            <div>{deal.customer.name}</div>
-            {deal.products.map((el: any) => {
+          <div key={delivery._id}>
+            <div>{delivery.customer.name}</div>
+            {delivery.products.map((el: any) => {
               return (
                 <div key={el.product._id}>
                   {el.quantity} * {el.product.name} #{el.productId}

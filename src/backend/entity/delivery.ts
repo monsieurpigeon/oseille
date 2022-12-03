@@ -1,7 +1,7 @@
 import { db } from '../service/database';
 import { store } from '../service/store';
 
-export interface Deal {
+export interface Delivery {
   id: string;
   customerId: string;
   products: Array<{
@@ -13,7 +13,7 @@ export interface Deal {
   }>;
 }
 
-export interface DealInput {
+export interface DeliveryInput {
   customerId: string;
   products: Array<{
     productId: string;
@@ -24,13 +24,13 @@ export interface DealInput {
   }>;
 }
 
-export const loadDeals = () => {
+export const loadDeliveries = () => {
   db.find({
-    selector: { type: 'Deal' },
+    selector: { type: 'Delivery' },
   })
     .then((result: { docs: unknown }) => {
       return Promise.all(
-        (result.docs as unknown as Deal[]).map(async (doc) => {
+        (result.docs as unknown as Delivery[]).map(async (doc) => {
           const customer = await db.get(doc.customerId);
           const products = await Promise.all(
             doc.products.map(async (el) => {
@@ -42,16 +42,16 @@ export const loadDeals = () => {
         }),
       );
     })
-    .then((data: Deal[]) => {
-      store.deals = data;
+    .then((data: Delivery[]) => {
+      store.deliveries = data;
     });
 };
 
-export const addDeal = (deal: DealInput) => {
+export const addDelivery = (delivery: DeliveryInput) => {
   db.post({
-    ...deal,
-    type: 'Deal',
+    ...delivery,
+    type: 'Delivery',
   })
-    .then(loadDeals)
+    .then(loadDeliveries)
     .catch(console.error);
 };
