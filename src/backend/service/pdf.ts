@@ -34,6 +34,7 @@ export const exportDocument = ({ payload }: any) => {
           body: [['Ferme A', { text: payload.customer.name, alignment: 'right' }]],
         },
       },
+
       {
         layout: 'lightHorizontalLines',
         style: 'tableExample',
@@ -53,6 +54,7 @@ export const exportDocument = ({ payload }: any) => {
           return acc + el.product.price * el.quantity;
         }, 0)}`,
       },
+      { qr: payload._id, fit: '80', alignment: 'right' },
     ],
     styles: {
       header: {
