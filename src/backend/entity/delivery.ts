@@ -44,8 +44,8 @@ export const loadDeliveries = () => {
         }),
       );
     })
-    .then((data: Delivery[]) => {
-      store.deliveries = data;
+    .then((data) => {
+      store.deliveries = data as unknown as Delivery[];
     });
 };
 
