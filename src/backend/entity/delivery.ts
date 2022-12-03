@@ -1,16 +1,15 @@
 import { db } from '../service/database';
 import { store } from '../service/store';
 import { Customer } from './customer';
+import { Product } from './product';
 
 export interface Delivery {
   _id: string;
-  customerId: string;
-  customer?: Customer;
+  type: 'Delivery';
+  customer: Customer;
   products: Array<{
-    productId: string;
-    name: string;
+    product: Product;
     quantity: number;
-    price: number;
     totalPrice: number;
   }>;
 }
@@ -19,41 +18,39 @@ export interface DeliveryInput {
   customerId: string;
   products: Array<{
     productId: string;
-    name: string;
     quantity: number;
-    price: number;
-    totalPrice: number;
+    totalPrice?: number;
   }>;
 }
 
-export const loadDeliveries = () => {
+export const loadDeliveries = (id?: string) => {
   db.find({
     selector: { type: 'Delivery' },
-  })
-    .then((result: { docs: unknown }) => {
-      return Promise.all(
-        (result.docs as unknown as Delivery[]).map(async (doc) => {
-          const customer = await db.get(doc.customerId);
-          const products = await Promise.all(
-            doc.products.map(async (el) => {
-              const product = await db.get(el.productId);
-              return { ...el, product };
-            }),
-          );
-          return { ...doc, customer, products };
-        }),
-      );
-    })
-    .then((data) => {
-      store.deliveries = data as unknown as Delivery[];
-    });
+  }).then((result) => {
+    store.deliveries = result.docs as unknown as Delivery[];
+  });
+  return id;
 };
 
-export const addDelivery = (delivery: DeliveryInput) => {
-  db.post({
-    ...delivery,
-    type: 'Delivery',
-  })
-    .then(loadDeliveries)
-    .catch(console.error);
+export const addDelivery = async (delivery: DeliveryInput) => {
+  const customer = await db.get(delivery.customerId);
+  const promise = async () => {
+    const products = await Promise.all(
+      delivery.products.map(async (el) => {
+        const product = await db.get(el.productId);
+        return { ...el, product };
+      }),
+    );
+    return { ...delivery, customer, products };
+  };
+
+  promise().then((deliveryFull) => {
+    db.post({
+      ...deliveryFull,
+      type: 'Delivery',
+    })
+      .then((data) => data.id)
+      .then(loadDeliveries)
+      .catch(console.error);
+  });
 };

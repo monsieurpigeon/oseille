@@ -11,18 +11,21 @@ export interface CustomerInput {
   name: string;
 }
 
-export const loadCustomers = () => {
+export const loadCustomers = (id?: string) => {
   db.find({
     selector: { type: 'Customer' },
   }).then((result) => {
     store.customers = result.docs as unknown as Customer[];
   });
+  return id;
 };
 export const addCustomer = (customer: CustomerInput) => {
-  db.post({
-    ...customer,
-    type: 'Customer',
-  })
+  return db
+    .post({
+      ...customer,
+      type: 'Customer',
+    })
+    .then((data) => data.id)
     .then(loadCustomers)
     .catch(console.error);
 };

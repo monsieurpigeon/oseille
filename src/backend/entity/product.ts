@@ -13,19 +13,22 @@ export interface ProductInput {
   price: number;
 }
 
-export const loadProducts = () => {
+export const loadProducts = (id?: string) => {
   db.find({
     selector: { type: 'Product' },
   }).then((result) => {
     store.products = result.docs as unknown as Product[];
   });
+  return id;
 };
 
 export const addProduct = (product: ProductInput) => {
-  db.post({
-    ...product,
-    type: 'Product',
-  })
+  return db
+    .post({
+      ...product,
+      type: 'Product',
+    })
+    .then((data) => data.id)
     .then(loadProducts)
     .catch(console.error);
 };

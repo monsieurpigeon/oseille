@@ -18,7 +18,7 @@ export function CreateDeliveries() {
 
   return (
     <div>
-      CreateDeal
+      CreateDelivery
       <form onSubmit={handleSubmit(onSubmit)}>
         <select {...register('customerId')}>
           {customers.map((customer) => {

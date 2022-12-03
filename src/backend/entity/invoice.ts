@@ -1,6 +1,7 @@
 import { db } from '../service/database';
 import { store } from '../service/store';
-import { Delivery } from './delivery';
+import { Product } from './product';
+import { Customer } from './customer';
 
 export interface Invoice {
   _id: string;
@@ -15,12 +16,11 @@ export interface Invoice {
 }
 
 export interface InvoiceInput {
-  customerId: string;
+  _id: string;
+  customer: Customer;
   products: Array<{
-    productId: string;
-    name: string;
+    product: Product;
     quantity: number;
-    price: number;
     totalPrice: number;
   }>;
 }
@@ -33,8 +33,8 @@ export const loadInvoices = () => {
   });
 };
 
-export const addInvoice = (deliveries: Delivery[]) => {
-  deliveries.map((delivery) => {
+export const addInvoice = (invoices: InvoiceInput[]) => {
+  invoices.map((delivery) => {
     const { customer, products, _id } = delivery;
     db.post({
       customer,
