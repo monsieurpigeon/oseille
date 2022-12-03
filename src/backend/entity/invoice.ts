@@ -1,5 +1,6 @@
 import { db } from '../service/database';
 import { store } from '../service/store';
+import {Delivery} from "./delivery";
 
 export interface Invoice {
     id: string;
@@ -47,11 +48,15 @@ export const loadInvoices = () => {
         });
 };
 
-export const addDelivery = (invoice: InvoiceInput) => {
-    db.post({
-        ...invoice,
-        type: 'Invoice',
+export const addInvoice = (deliveries: Delivery[]) => {
+    console.log({deliveries})
+    deliveries.map((delivery)=>{
+
+        db.post({
+            ...delivery,
+            type: 'Invoice',
+        })
+            .then(loadInvoices)
+            .catch(console.error);
     })
-        .then(loadInvoices)
-        .catch(console.error);
 };
