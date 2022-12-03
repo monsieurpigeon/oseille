@@ -69,5 +69,7 @@ export const exportDocument = ({ payload }: any) => {
       // alignment: 'justify'
     },
   };
+
+  (<any>pdfMake).vfs = pdfFonts.pdfMake.vfs;
   pdfMake.createPdf(docDefinition).open();
 };
