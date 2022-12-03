@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useSnapshot } from 'valtio';
-import { store } from '../../backend';
+import {exportDocument, store} from '../../backend';
 import { ScreenLayout } from '../../component/layout/ScreenLayout';
 import {addInvoice} from "../../backend/entity/invoice";
 
@@ -20,10 +20,15 @@ export function Deliveries() {
               }
               }
               >Facturer</button>
+              <button onClick={()=>{
+                  exportDocument({payload: delivery})
+              }
+              }
+              >Export</button>
             {delivery.products.map((el: any) => {
               return (
                 <div key={el.product._id}>
-                  {el.quantity} * {el.product.name} #{el.productId}
+                  {el.quantity} * {el.product.name} #{el.productId} - {el.product.price}
                 </div>
               );
             })}

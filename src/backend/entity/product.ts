@@ -5,10 +5,12 @@ export interface Product {
   _id: string;
   type: 'Product';
   name: string;
+  price: number;
 }
 
 export interface ProductInput {
   name: string;
+  price: number;
 }
 
 export const loadProducts = () => {

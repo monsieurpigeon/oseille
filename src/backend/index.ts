@@ -4,9 +4,9 @@ export const initDatabase = () => {
   db.get('init').catch((error) => {
     if (error.status === 404) {
       db.bulkDocs([
-        { type: 'Product', _id: '1', name: 'Tomate' },
-        { type: 'Product', _id: '2', name: 'Carotte' },
-        { type: 'Product', _id: '3', name: 'Courgette' },
+        { type: 'Product', _id: '1', name: 'Tomate' , price: 42},
+        { type: 'Product', _id: '2', name: 'Carotte' , price: 43},
+        { type: 'Product', _id: '3', name: 'Courgette' , price: 44},
         { type: 'Customer', _id: '4', name: 'Biocoop' },
         {
           type: 'Delivery',
@@ -24,6 +24,7 @@ export const initDatabase = () => {
 };
 
 export * from './service/store';
+export * from './service/pdf'
 export * from './entity/customer';
 export * from './entity/product';
 export * from './entity/delivery';
