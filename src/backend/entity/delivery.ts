@@ -1,9 +1,11 @@
 import { db } from '../service/database';
 import { store } from '../service/store';
+import { Customer } from './customer';
 
 export interface Delivery {
-  id: string;
+  _id: string;
   customerId: string;
+  customer?: Customer;
   products: Array<{
     productId: string;
     name: string;
