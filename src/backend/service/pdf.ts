@@ -1,8 +1,14 @@
 import * as pdfMake from 'pdfmake/build/pdfmake';
-import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 import { Product } from '../entity/product';
 
-(<any>pdfMake).vfs = pdfFonts.pdfMake.vfs;
+const fonts = {
+  Roboto: {
+    normal: 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-Regular.ttf',
+    bold: 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-Medium.ttf',
+    italics: 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-Italic.ttf',
+    bolditalics: 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-MediumItalic.ttf',
+  },
+};
 
 const titles = {
   Delivery: 'Bon de livraison',
@@ -14,6 +20,9 @@ type DocumentKey = 'Delivery' | 'Invoice';
 export const exportDocument = ({ payload }: any) => {
   const title = titles[payload.type as DocumentKey] || '';
   const docDefinition: any = {
+    defaultStyle: {
+      font: 'Roboto',
+    },
     footer: { text: `${title} genere gratuitement grace a Oseille`, alignment: 'center' },
     content: [
       { text: title, style: 'header' },
@@ -65,11 +74,7 @@ export const exportDocument = ({ payload }: any) => {
         color: 'black',
       },
     },
-    defaultStyle: {
-      // alignment: 'justify'
-    },
   };
 
-  (<any>pdfMake).vfs = pdfFonts.pdfMake.vfs;
-  pdfMake.createPdf(docDefinition).open();
+  pdfMake.createPdf(docDefinition, undefined, fonts).open();
 };
