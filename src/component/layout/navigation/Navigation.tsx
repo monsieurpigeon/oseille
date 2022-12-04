@@ -28,9 +28,13 @@ const StyledLink = styled(NavLink)`
   font-size: 1em;
   display: block;
   width: 100%;
+  text-shadow: rgba(0, 0, 0, 0.3) -3px 3px 5px;
+  border-top: 2px solid transparent;
+  border-bottom: 2px solid transparent;
 
   &.active {
     background-color: darkgray;
+    text-shadow: white 0 0 10px;
     color: white;
     border-top: 2px solid magenta;
     border-bottom: 2px solid aqua;
