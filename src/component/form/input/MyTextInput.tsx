@@ -1,6 +1,6 @@
 import { ChangeEvent } from 'react';
 
-export function TextInput({
+export function MyTextInput({
   placeholder,
   value,
   onChange,

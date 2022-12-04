@@ -9,7 +9,7 @@ const StyledHeader = styled.header`
   background-color: silver;
 `;
 
-export function Header() {
+export function MyHeader() {
   return (
     <StyledHeader>
       <Link to="/">Oseille</Link>

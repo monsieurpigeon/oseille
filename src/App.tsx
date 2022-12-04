@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { loadCustomers, loadDeliveries, loadFarm, loadInvoices, loadProducts } from './backend';
-import { MainLayout } from './component/layout/MainLayout';
+import { MyMainLayout } from './component/layout/MyMainLayout';
 import { Contact } from './page/contact/Contact';
 import { Customers } from './page/customer/Customers';
 import { CustomerDetail } from './page/customer/detail/CustomerDetail';
@@ -19,7 +19,7 @@ function App() {
   loadInvoices();
   loadFarm();
   return (
-    <MainLayout>
+    <MyMainLayout>
       <Routes>
         <Route
           path="/"
@@ -64,7 +64,7 @@ function App() {
           element={<Settings />}
         />
       </Routes>
-    </MainLayout>
+    </MyMainLayout>
   );
 }
 

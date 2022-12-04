@@ -4,6 +4,6 @@ const StyledScreenLayout = styled.div`
   position: relative;
 `;
 
-export function ScreenLayout({ children }: any) {
+export function MyScreenLayout({ children }: any) {
   return <StyledScreenLayout>{children}</StyledScreenLayout>;
 }

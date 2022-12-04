@@ -1,9 +1,9 @@
-import { ScreenLayout } from '../../component/layout/ScreenLayout';
-import { StyledH1 } from '../../component/typography/Font';
+import { MyScreenLayout } from '../../component/layout/MyScreenLayout';
+import { StyledH1 } from '../../component/typography/MyFont';
 import { useEffect, useState } from 'react';
 import { useSnapshot } from 'valtio';
 import { store, updateFarmName } from '../../backend';
-import { TextInput } from '../../component/form/input/TextInput';
+import { MyTextInput } from '../../component/form/input/MyTextInput';
 import { MyButton } from '../../component/form/button/MyButton';
 
 export function Settings() {
@@ -15,10 +15,10 @@ export function Settings() {
   }, [farm]);
 
   return (
-    <ScreenLayout>
+    <MyScreenLayout>
       <StyledH1>Reglages</StyledH1>
       Ma ferme : {farm?.title}
-      <TextInput
+      <MyTextInput
         placeholder="Ma ferme"
         value={farmTitle}
         onChange={(e) => {
@@ -31,6 +31,6 @@ export function Settings() {
           updateFarmName({ title: farmTitle });
         }}
       />
-    </ScreenLayout>
+    </MyScreenLayout>
   );
 }

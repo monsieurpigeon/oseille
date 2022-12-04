@@ -2,10 +2,10 @@ import { useState } from 'react';
 import { useSnapshot } from 'valtio';
 import { addProduct, store } from '../../backend';
 import { MyButton } from '../../component/form/button/MyButton';
-import { TextInput } from '../../component/form/input/TextInput';
-import { ScreenLayout } from '../../component/layout/ScreenLayout';
+import { MyTextInput } from '../../component/form/input/MyTextInput';
+import { MyScreenLayout } from '../../component/layout/MyScreenLayout';
 import { MyNumberInput } from '../../component/form/input/MyNumberInput';
-import { StyledH1 } from '../../component/typography/Font';
+import { StyledH1 } from '../../component/typography/MyFont';
 import styled from 'styled-components';
 import { ProductLine } from './ProductLine';
 
@@ -22,9 +22,9 @@ export function Products() {
   const { products } = useSnapshot(store);
 
   return (
-    <ScreenLayout>
+    <MyScreenLayout>
       <StyledH1>Produits</StyledH1>
-      <TextInput
+      <MyTextInput
         placeholder="Nouveau produit"
         value={name}
         onChange={(e) => setName(e.target.value)}
@@ -49,6 +49,6 @@ export function Products() {
           />
         ))}
       </StyledProducts>
-    </ScreenLayout>
+    </MyScreenLayout>
   );
 }

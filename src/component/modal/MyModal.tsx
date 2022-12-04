@@ -33,7 +33,7 @@ const StyledModalContent = styled.div`
   font-size: 2rem;
 `;
 
-export function Modal({ children, isOpen, handleClose }: ModalProps) {
+export function MyModal({ children, isOpen, handleClose }: ModalProps) {
   useEffect(() => {
     const closeOnEscapeKey = (e: KeyboardEvent) => (e.key === 'Escape' ? handleClose() : null);
     document.body.addEventListener('keydown', closeOnEscapeKey);

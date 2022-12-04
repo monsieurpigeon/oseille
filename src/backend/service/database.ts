@@ -14,7 +14,9 @@ export const initDatabase = () => {
       const p1 = await addProduct({ name: 'Tomate', price: 0.42 });
       const p2 = await addProduct({ name: 'Aubergine', price: 4 });
       const p3 = await addProduct({ name: 'Pasteque', price: 42 });
-      const c1 = await addCustomer({ name: 'Pfizer' });
+      const c1 = await addCustomer({ name: 'Biocoop' });
+      const c2 = await addCustomer({ name: 'Restaurant super chic' });
+      const c3 = await addCustomer({ name: 'Epicerie de parisiens' });
       addDelivery({
         customerId: c1 || '',
         products: [

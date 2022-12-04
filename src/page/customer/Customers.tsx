@@ -4,9 +4,9 @@ import styled from 'styled-components';
 import { useSnapshot } from 'valtio';
 import { addCustomer, store } from '../../backend';
 import { MyButton } from '../../component/form/button/MyButton';
-import { TextInput } from '../../component/form/input/TextInput';
-import { ScreenLayout } from '../../component/layout/ScreenLayout';
-import { StyledH1 } from '../../component/typography/Font';
+import { MyTextInput } from '../../component/form/input/MyTextInput';
+import { MyScreenLayout } from '../../component/layout/MyScreenLayout';
+import { StyledH1 } from '../../component/typography/MyFont';
 
 const StyledDetail = styled.div`
   position: absolute;
@@ -19,9 +19,9 @@ export function Customers() {
   const { customers } = useSnapshot(store);
 
   return (
-    <ScreenLayout>
+    <MyScreenLayout>
       <StyledH1>Clients</StyledH1>
-      <TextInput
+      <MyTextInput
         placeholder="Nouveau client"
         value={text}
         onChange={(e) => setText(e.target.value)}
@@ -42,6 +42,6 @@ export function Customers() {
       <StyledDetail>
         <Outlet />
       </StyledDetail>
-    </ScreenLayout>
+    </MyScreenLayout>
   );
 }

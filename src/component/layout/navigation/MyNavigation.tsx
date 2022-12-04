@@ -42,7 +42,7 @@ const StyledLink = styled(NavLink)`
   }
 `;
 
-export function Navigation() {
+export function MyNavigation() {
   return (
     <StyledNav>
       <StyledUl>

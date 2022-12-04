@@ -1,6 +1,6 @@
 import styled from 'styled-components';
-import { ScreenLayout } from '../../component/layout/ScreenLayout';
-import { StyledH1, StyledH2, StyledLink, StyledSubtitle, StyledUl } from '../../component/typography/Font';
+import { MyScreenLayout } from '../../component/layout/MyScreenLayout';
+import { StyledH1, StyledH2, StyledLink, StyledSubtitle, StyledUl } from '../../component/typography/MyFont';
 
 const StyledContainer = styled.div`
   display: flex;
@@ -10,7 +10,7 @@ const StyledContainer = styled.div`
 
 export function Home() {
   return (
-    <ScreenLayout>
+    <MyScreenLayout>
       <StyledContainer>
         <StyledH1>Bienvenue sur Oseille</StyledH1>
         <StyledSubtitle>L'application qui aide les maraîchers à gérer leur argent</StyledSubtitle>
@@ -54,6 +54,6 @@ export function Home() {
           </StyledLink>
         </div>
       </StyledContainer>
-    </ScreenLayout>
+    </MyScreenLayout>
   );
 }

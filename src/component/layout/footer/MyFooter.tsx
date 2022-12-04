@@ -12,7 +12,7 @@ const StyledContent = styled.div`
   display: flex;
 `;
 
-export function Footer() {
+export function MyFooter() {
   return (
     <StyledFooter>
       <StyledContent>

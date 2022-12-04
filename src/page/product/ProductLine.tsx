@@ -1,7 +1,8 @@
-import { Modal } from '../../component/modal/Modal';
+import { MyModal } from '../../component/modal/MyModal';
 import styled from 'styled-components';
 import { useState } from 'react';
 import { ProductEditModal } from './ProductEditModal';
+import { MyButton } from '../../component/form/button/MyButton';
 
 const StyledProductItem = styled.div`
   display: flex;
@@ -40,15 +41,14 @@ export function ProductLine({ product }: any) {
         <StyledProductName>{product.name}</StyledProductName>
         <StyledProductPrice>{product.price.toFixed(2)}€</StyledProductPrice>
       </StyledProductItem>
-      <button
+      <MyButton
         onClick={() => {
           setIsOpen((v) => !v);
         }}
-      >
-        ✏️
-      </button>
+        label="✏️"
+      />
       {isOpen && (
-        <Modal
+        <MyModal
           isOpen={isOpen}
           handleClose={() => {
             setIsOpen(false);
@@ -60,7 +60,7 @@ export function ProductLine({ product }: any) {
               setIsOpen(false);
             }}
           />
-        </Modal>
+        </MyModal>
       )}
     </StyledLine>
   );

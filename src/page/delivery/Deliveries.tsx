@@ -1,15 +1,16 @@
 import { Link } from 'react-router-dom';
 import { useSnapshot } from 'valtio';
 import { addInvoice, exportDocument, store } from '../../backend';
-import { ScreenLayout } from '../../component/layout/ScreenLayout';
+import { MyScreenLayout } from '../../component/layout/MyScreenLayout';
 import React from 'react';
-import {StyledH1} from "../../component/typography/Font";
+import { StyledH1 } from '../../component/typography/MyFont';
+import { MyButton } from '../../component/form/button/MyButton';
 
 export function Deliveries() {
   const { deliveries } = useSnapshot(store);
 
   return (
-    <ScreenLayout>
+    <MyScreenLayout>
       <Link to="create">Nouveau</Link>
       <StyledH1>Livraisons</StyledH1>
       {deliveries.map((delivery: any) => {
@@ -18,20 +19,18 @@ export function Deliveries() {
             <div>
               {delivery.customer.name} - {delivery._id}
             </div>
-            <button
+            <MyButton
               onClick={() => {
                 addInvoice([delivery]);
               }}
-            >
-              Facturer
-            </button>
-            <button
+              label="Facturer"
+            />
+            <MyButton
               onClick={() => {
                 exportDocument({ payload: delivery });
               }}
-            >
-              Export
-            </button>
+              label="Export PDF"
+            />
             {delivery.products.map((el: any) => {
               return (
                 <div key={el.product._id}>
@@ -42,6 +41,6 @@ export function Deliveries() {
           </div>
         );
       })}
-    </ScreenLayout>
+    </MyScreenLayout>
   );
 }

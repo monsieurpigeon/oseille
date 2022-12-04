@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { priceFormatter } from '../../utils/formatter';
-import { Button } from '@chakra-ui/react';
 import { updatePrice } from '../../backend';
 import { MyNumberInput } from '../../component/form/input/MyNumberInput';
+import { MyButton } from '../../component/form/button/MyButton';
 
 export function ProductEditModal({ product, handleClose }: any) {
   const [price, setPrice] = useState(product.price.toFixed(2));
@@ -19,17 +19,14 @@ export function ProductEditModal({ product, handleClose }: any) {
           setPrice(value);
         }}
       />
-      <Button
-        colorScheme="blue"
+      <MyButton
         onClick={() => {
-          console.log('hello');
           updatePrice(product, +price).then(() => {
             handleClose();
           });
         }}
-      >
-        Enregistrer
-      </Button>
+        label="Enregistrer"
+      />
     </div>
   );
 }
