@@ -4,6 +4,7 @@ import { Product } from './product';
 import { Customer } from './customer';
 import { updateDocumentId } from './farm';
 import { documentIdFormatter } from '../../utils/formatter';
+import { addInvoiceId } from './delivery';
 
 export interface Invoice {
   _id: string;
@@ -47,6 +48,9 @@ export const addInvoice = (invoices: InvoiceInput[]) => {
       delivery_id: [_id],
       type: 'Invoice',
     })
+      .then((result) => {
+        addInvoiceId(result.id, delivery._id);
+      })
       .then(loadInvoices)
       .then(() => {
         updateDocumentId('Invoice');

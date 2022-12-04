@@ -19,12 +19,14 @@ export function Deliveries() {
             <div>
               {delivery.customer.name} - {delivery.documentId}
             </div>
-            <MyButton
-              onClick={() => {
-                addInvoice([delivery]);
-              }}
-              label="Facturer"
-            />
+            {!delivery.invoiceId ? (
+              <MyButton
+                onClick={() => {
+                  addInvoice([delivery]);
+                }}
+                label="Facturer"
+              />
+            ) : null}
             <MyButton
               onClick={() => {
                 exportDocument({ payload: delivery });

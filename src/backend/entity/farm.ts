@@ -17,10 +17,8 @@ export interface FarmInput {
 export const FARM_KEY = 'myFarm';
 
 export const loadFarm = () => {
-  console.log('LOAD FARM');
   db.get(FARM_KEY)
     .then((data) => {
-      console.log('FARM FOUND', data);
       store.farm = data as unknown as Farm;
     })
 };
@@ -45,11 +43,8 @@ export const updateFarmName = ({ title }: FarmInput) => {
 };
 
 export const updateDocumentId = (type: DocumentKey) => {
-  db.allDocs().then(console.log).catch(console.error);
-  console.log(type);
   db.get(FARM_KEY)
     .then((doc) => {
-      console.log(doc);
       if (type === 'Invoice') {
         db.put({
           ...doc,

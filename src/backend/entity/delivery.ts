@@ -60,3 +60,16 @@ export const addDelivery = async (delivery: DeliveryInput) => {
       .catch(console.error);
   });
 };
+
+export const addInvoiceId = (invoiceId: string, deliveryId: string) => {
+  db.get(deliveryId)
+    .then((delivery) => {
+      db.put({
+        ...delivery,
+        _rev: delivery._rev,
+        invoiceId,
+      }).catch(console.error);
+    })
+    .then(() => loadDeliveries())
+    .catch(console.error);
+};
