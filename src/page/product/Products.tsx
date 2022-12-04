@@ -5,6 +5,7 @@ import { Button } from '../../component/form/button/Button';
 import { TextInput } from '../../component/form/input/TextInput';
 import { ScreenLayout } from '../../component/layout/ScreenLayout';
 import { NumberInput } from '../../component/form/input/NumberInput';
+import {StyledH1} from "../../component/typography/Font";
 
 export function Products() {
   const [name, setName] = useState('');
@@ -13,7 +14,7 @@ export function Products() {
 
   return (
     <ScreenLayout>
-      <h1>Produits</h1>
+      <StyledH1>Produits</StyledH1>
       <TextInput
         placeholder="Nouveau produit"
         value={name}

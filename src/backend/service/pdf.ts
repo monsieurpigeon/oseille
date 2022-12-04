@@ -1,5 +1,6 @@
 import * as pdfMake from 'pdfmake/build/pdfmake';
 import { Product } from '../entity/product';
+import {store} from "./store";
 
 const fonts = {
   Roboto: {
@@ -31,7 +32,7 @@ export const exportDocument = ({ payload }: any) => {
         style: 'tableExample',
         table: {
           widths: ['*', '*'],
-          body: [['Ferme A', { text: payload.customer.name, alignment: 'right' }]],
+          body: [[store.farm?.title || 'La ferme sans nom', { text: payload.customer.name, alignment: 'right' }]],
         },
       },
 

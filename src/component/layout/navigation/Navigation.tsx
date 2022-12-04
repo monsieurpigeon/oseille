@@ -6,6 +6,7 @@ const navBarItems = [
   { label: 'Clients', emoji: '🤴', path: 'customer' },
   { label: 'Livraisons', emoji: '🧺', path: 'delivery' },
   { label: 'Factures', emoji: '🧲', path: 'invoice' },
+  { label: 'Reglages', emoji: '🔧', path: 'settings' },
   { label: 'Contact', emoji: '🖋️', path: 'contact' },
 ];
 

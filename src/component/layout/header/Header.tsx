@@ -13,7 +13,6 @@ export function Header() {
   return (
     <StyledHeader>
       <Link to="/">Oseille</Link>
-      <Link to="/profile">Profil</Link>
     </StyledHeader>
   );
 }
