@@ -19,6 +19,9 @@ export function Home() {
           Attention : Cette application est toujours en développement et va connaitre de gros changements jusqu'à nouvel
           ordre
         </StyledSubtitle>
+        <StyledSubtitle>
+          Pour l'instant, des donnees de test seront utilise a chaque rechargement de la page
+        </StyledSubtitle>
         <StyledH2>Fonctionnalités :</StyledH2>
         <StyledUl>
           <li>Gérer une liste de produits avec un prix</li>

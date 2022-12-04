@@ -4,12 +4,6 @@ const StyledButton = styled.button`
   background-color: cornsilk;
 `;
 
-export function Button({
-  label,
-  onClick,
-}: {
-  label: String;
-  onClick: () => void;
-}) {
+export function MyButton({ label, onClick }: { label: String; onClick: () => void }) {
   return <StyledButton onClick={onClick}>{label}</StyledButton>;
 }

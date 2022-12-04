@@ -3,7 +3,7 @@ import { Link, Outlet } from 'react-router-dom';
 import styled from 'styled-components';
 import { useSnapshot } from 'valtio';
 import { addCustomer, store } from '../../backend';
-import { Button } from '../../component/form/button/Button';
+import { MyButton } from '../../component/form/button/MyButton';
 import { TextInput } from '../../component/form/input/TextInput';
 import { ScreenLayout } from '../../component/layout/ScreenLayout';
 import { StyledH1 } from '../../component/typography/Font';
@@ -26,7 +26,7 @@ export function Customers() {
         value={text}
         onChange={(e) => setText(e.target.value)}
       />
-      <Button
+      <MyButton
         label="Ajouter"
         onClick={() => {
           addCustomer({ name: text });

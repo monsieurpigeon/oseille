@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { useSnapshot } from 'valtio';
 import { addProduct, store } from '../../backend';
-import { Button } from '../../component/form/button/Button';
+import { MyButton } from '../../component/form/button/MyButton';
 import { TextInput } from '../../component/form/input/TextInput';
 import { ScreenLayout } from '../../component/layout/ScreenLayout';
-import { NumberInput } from '../../component/form/input/NumberInput';
+import { MyNumberInput } from '../../component/form/input/MyNumberInput';
 import { StyledH1 } from '../../component/typography/Font';
 import styled from 'styled-components';
 import { ProductLine } from './ProductLine';
@@ -18,7 +18,7 @@ const StyledProducts = styled.div`
 
 export function Products() {
   const [name, setName] = useState('');
-  const [price, setPrice] = useState(0);
+  const [price, setPrice] = useState('0.00');
   const { products } = useSnapshot(store);
 
   return (
@@ -29,15 +29,15 @@ export function Products() {
         value={name}
         onChange={(e) => setName(e.target.value)}
       />
-      <NumberInput
+      <MyNumberInput
         placeholder="prix"
         value={price}
-        onChange={(e) => setPrice(+e.target.value)}
+        onChange={(value) => setPrice(value)}
       />
-      <Button
+      <MyButton
         label="Ajouter"
         onClick={() => {
-          addProduct({ name, price });
+          addProduct({ name, price: +price });
           setName('');
         }}
       />

@@ -3,7 +3,7 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { useParams } from 'react-router-dom';
 import { useSnapshot } from 'valtio';
 import { addDelivery, DeliveryInput, store } from '../../backend';
-import { Button } from '../../component/form/button/Button';
+import { MyButton } from '../../component/form/button/MyButton';
 
 export function CreateDeliveries() {
   const { customerId = '' } = useParams();
@@ -55,7 +55,7 @@ export function CreateDeliveries() {
               </div>
             );
           })}
-          <Button
+          <MyButton
             label={'ajouter produit'}
             onClick={() => {
               const maxIndex = Math.max(...count);
