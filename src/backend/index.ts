@@ -1,8 +1,17 @@
-import { db, initDatabase } from './service/database';
+import { initDatabase } from './service/database';
+import { loadCustomers } from './entity/customer';
+import { loadProducts } from './entity/product';
+import { loadDeliveries } from './entity/delivery';
+import { loadInvoices } from './entity/invoice';
+import { loadFarm } from './entity/farm';
 
-db.allDocs({ include_docs: true })
-  .then((result) => Promise.all(result.rows.map((doc) => db.remove(doc.doc as any).catch(console.error))))
-  .then(initDatabase);
+initDatabase().then(() => {
+  loadCustomers();
+  loadProducts();
+  loadDeliveries();
+  loadInvoices();
+  loadFarm();
+});
 
 export * from './service/database';
 export * from './service/store';

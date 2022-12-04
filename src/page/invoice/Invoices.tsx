@@ -15,7 +15,9 @@ export function Invoices() {
       {invoices.map((invoice: any) => {
         return (
           <div key={invoice._id}>
-            <div>{invoice.customer.name}</div>
+            <div>
+              {invoice.customer.name} - {invoice.documentId}
+            </div>
             {invoice.products.map((el: any) => {
               return (
                 <div key={el.product._id}>

@@ -2,6 +2,7 @@ import { db } from '../service/database';
 import { store } from '../service/store';
 import { Product } from './product';
 import { Customer } from './customer';
+import { updateDocumentId } from './farm';
 
 export interface Invoice {
   _id: string;
@@ -27,8 +28,11 @@ export interface InvoiceInput {
 
 export const loadInvoices = () => {
   db.find({
-    selector: { type: 'Invoice' },
+    selector: {
+      type: 'Invoice',
+    },
   }).then((result) => {
+    console.log(result);
     store.invoices = result.docs as unknown as Invoice[];
   });
 };
@@ -37,12 +41,16 @@ export const addInvoice = (invoices: InvoiceInput[]) => {
   invoices.map((delivery) => {
     const { customer, products, _id } = delivery;
     db.post({
+      documentId: store.farm?.invoiceId,
       customer,
       products,
       delivery_id: [_id],
       type: 'Invoice',
     })
       .then(loadInvoices)
+      .then(() => {
+        updateDocumentId('Invoice');
+      })
       .catch(console.error);
   });
 };

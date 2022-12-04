@@ -1,6 +1,7 @@
 import * as pdfMake from 'pdfmake/build/pdfmake';
 import { Product } from '../entity/product';
-import {store} from "./store";
+import { store } from './store';
+import { priceFormatter } from '../../utils/formatter';
 
 const fonts = {
   Roboto: {
@@ -16,7 +17,7 @@ const titles = {
   Invoice: 'Facture',
 };
 
-type DocumentKey = 'Delivery' | 'Invoice';
+export type DocumentKey = 'Delivery' | 'Invoice';
 
 export const exportDocument = ({ payload }: any) => {
   const title = titles[payload.type as DocumentKey] || '';
@@ -24,9 +25,9 @@ export const exportDocument = ({ payload }: any) => {
     defaultStyle: {
       font: 'Roboto',
     },
-    footer: { text: `${title} genere gratuitement grace a Oseille`, alignment: 'center' },
+    footer: { text: `${title} genere gratuitement grace a Oseille - www.oseille.app`, alignment: 'center' },
     content: [
-      { text: title, style: 'header' },
+      { text: `${title} - ${payload.documentId}`, style: 'header' },
       {
         layout: 'noBorders',
         style: 'tableExample',
@@ -43,19 +44,39 @@ export const exportDocument = ({ payload }: any) => {
           headerRows: 1,
           widths: ['*', '*', '*', '*'],
           body: [
-            ['Produit', 'Prix', 'Quantite', 'Total'],
+            [
+              'Produit',
+              { text: 'Prix', alignment: 'right' },
+              { text: 'Quantite', alignment: 'right' },
+              {
+                text: 'Total',
+                alignment: 'right',
+              },
+            ],
             ...payload.products.map((el: { product: Product; quantity: number }) => {
-              return [el.product.name, el.product.price, el.quantity, el.product.price * el.quantity];
+              return [
+                el.product.name,
+                { text: priceFormatter(el.product.price), alignment: 'right' },
+                {
+                  text: el.quantity,
+                  alignment: 'right',
+                },
+                { text: priceFormatter(el.product.price * el.quantity), alignment: 'right' },
+              ];
             }),
           ],
         },
       },
       {
-        text: `Total: ${payload.products.reduce((acc: number, el: { product: Product; quantity: number }) => {
-          return acc + el.product.price * el.quantity;
-        }, 0)}`,
+        text: `Total       ${priceFormatter(
+          payload.products.reduce(
+            (acc: number, el: { product: Product; quantity: number }) => acc + el.product.price * el.quantity,
+            0,
+          ),
+        )}`,
+        alignment: 'right',
       },
-      { qr: payload._id, fit: '80', alignment: 'right' },
+      { qr: payload._id, fit: '80' },
     ],
     styles: {
       header: {

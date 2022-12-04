@@ -1,6 +1,5 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
-import { loadCustomers, loadDeliveries, loadFarm, loadInvoices, loadProducts } from './backend';
 import { MyMainLayout } from './component/layout/MyMainLayout';
 import { Contact } from './page/contact/Contact';
 import { Customers } from './page/customer/Customers';
@@ -13,11 +12,6 @@ import { Settings } from './page/settings/Settings';
 import { Invoices } from './page/invoice/Invoices';
 
 function App() {
-  loadCustomers();
-  loadProducts();
-  loadDeliveries();
-  loadInvoices();
-  loadFarm();
   return (
     <MyMainLayout>
       <Routes>
