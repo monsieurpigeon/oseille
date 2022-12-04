@@ -3,6 +3,7 @@ import { useSnapshot } from 'valtio';
 import { addInvoice, exportDocument, store } from '../../backend';
 import { ScreenLayout } from '../../component/layout/ScreenLayout';
 import React from 'react';
+import {StyledH1} from "../../component/typography/Font";
 
 export function Deliveries() {
   const { deliveries } = useSnapshot(store);
@@ -10,7 +11,7 @@ export function Deliveries() {
   return (
     <ScreenLayout>
       <Link to="create">Nouveau</Link>
-      <h1>Livraisons</h1>
+      <StyledH1>Livraisons</StyledH1>
       {deliveries.map((delivery: any) => {
         return (
           <div key={delivery._id}>

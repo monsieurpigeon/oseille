@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { useSnapshot } from 'valtio';
 import {exportDocument, store} from '../../backend';
 import { ScreenLayout } from '../../component/layout/ScreenLayout';
+import {StyledH1} from "../../component/typography/Font";
 
 export function Invoices() {
     const { invoices } = useSnapshot(store);
@@ -9,7 +10,7 @@ export function Invoices() {
     return (
         <ScreenLayout>
             <Link to="create">Nouveau</Link>
-            <h1>Factures</h1>
+            <StyledH1>Factures</StyledH1>
             {invoices.map((invoice: any) => {
                 return (
                     <div key={invoice._id}>

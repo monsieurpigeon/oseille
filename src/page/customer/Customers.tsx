@@ -6,6 +6,7 @@ import { addCustomer, store } from '../../backend';
 import { Button } from '../../component/form/button/Button';
 import { TextInput } from '../../component/form/input/TextInput';
 import { ScreenLayout } from '../../component/layout/ScreenLayout';
+import { StyledH1 } from '../../component/typography/Font';
 
 const StyledDetail = styled.div`
   position: absolute;
@@ -19,7 +20,7 @@ export function Customers() {
 
   return (
     <ScreenLayout>
-      <h1>Clients</h1>
+      <StyledH1>Clients</StyledH1>
       <TextInput
         placeholder="Nouveau client"
         value={text}
