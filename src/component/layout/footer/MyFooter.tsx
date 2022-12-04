@@ -17,7 +17,7 @@ export function MyFooter() {
     <StyledFooter>
       <StyledContent>
         <span>
-          Fabriqué avec ❤️ à Bordeaux. Retrouvez le code source sur{' '}
+          Fabriqué avec ❤️ & 🍅🍆🧄🥦🥬🌽🥕🧅🥔 à Bordeaux. Retrouvez le code source sur{' '}
           <a href="https://github.com/monsieurpigeon/oseille">Github</a>
         </span>
       </StyledContent>
