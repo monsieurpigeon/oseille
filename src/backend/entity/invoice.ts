@@ -40,12 +40,13 @@ export const loadInvoices = () => {
 
 export const addInvoice = (invoices: InvoiceInput[]) => {
   invoices.map((delivery) => {
-    const { customer, products, _id } = delivery;
+    const { customer, products, _id, documentId } = delivery;
     db.post({
       documentId: documentIdFormatter(store.farm?.invoiceId || 0, 'Invoice'),
       customer,
       products,
-      delivery_id: [_id],
+      deliveryIds: [_id],
+      deliveryDocumentIds: [documentId],
       type: 'Invoice',
     })
       .then((result) => {

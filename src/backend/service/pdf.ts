@@ -77,6 +77,8 @@ export const exportDocument = ({ payload }: any) => {
         alignment: 'right',
       },
       { qr: payload._id, fit: '80' },
+      { text: 'Livraisons liees', alignment: 'right' },
+      ...payload.deliveryDocumentIds.map((text: string) => ({ text, alignment: 'right' })),
     ],
     styles: {
       header: {
