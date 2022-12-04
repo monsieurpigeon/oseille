@@ -11,8 +11,8 @@ export const db = new PouchDb('hello_world');
 export const initDatabase = () => {
   db.get('init').catch(async (error) => {
     if (error.status === 404) {
-      const p1 = await addProduct({ name: 'Tomate', price: 42 });
-      const p2 = await addProduct({ name: 'Aubergine', price: 42 });
+      const p1 = await addProduct({ name: 'Tomate', price: 0.42 });
+      const p2 = await addProduct({ name: 'Aubergine', price: 4 });
       const p3 = await addProduct({ name: 'Pasteque', price: 42 });
       const c1 = await addCustomer({ name: 'Pfizer' });
       addDelivery({

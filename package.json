@@ -9,8 +9,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@chakra-ui/react": "^2.4.2",
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
     "@pdfme/generator": "^1.0.17",
     "events": "^3.3.0",
+    "framer-motion": "^6.5.1",
     "pdfmake": "^0.2.6",
     "pouchdb": "^7.3.1",
     "pouchdb-find": "^7.3.1",

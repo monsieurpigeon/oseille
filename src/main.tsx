@@ -5,13 +5,16 @@ import App from './App';
 import './backend';
 import { initDatabase } from './backend';
 import './index.css';
+import { ChakraProvider } from '@chakra-ui/react';
 
 initDatabase();
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <ChakraProvider>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </ChakraProvider>
   </React.StrictMode>,
 );

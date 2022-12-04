@@ -5,7 +5,16 @@ import { Button } from '../../component/form/button/Button';
 import { TextInput } from '../../component/form/input/TextInput';
 import { ScreenLayout } from '../../component/layout/ScreenLayout';
 import { NumberInput } from '../../component/form/input/NumberInput';
-import {StyledH1} from "../../component/typography/Font";
+import { StyledH1 } from '../../component/typography/Font';
+import styled from 'styled-components';
+import { ProductLine } from './ProductLine';
+
+const StyledProducts = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+`;
 
 export function Products() {
   const [name, setName] = useState('');
@@ -32,12 +41,14 @@ export function Products() {
           setName('');
         }}
       />
-
-      {products.map((product: any) => (
-        <div key={product._id}>
-          {product.name} {product.price}
-        </div>
-      ))}
+      <StyledProducts>
+        {products.map((product: any) => (
+          <ProductLine
+            key={product._id}
+            product={product}
+          />
+        ))}
+      </StyledProducts>
     </ScreenLayout>
   );
 }
