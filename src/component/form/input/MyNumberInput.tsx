@@ -21,6 +21,8 @@ export function MyNumberInput({
       value={value}
       placeholder={placeholder}
       onChange={onChange}
+      min={0}
+      step={0.2}
     >
       <NumberInputField />
       <NumberInputStepper>
