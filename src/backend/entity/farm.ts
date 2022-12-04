@@ -14,7 +14,7 @@ export interface FarmInput {
   title: string;
 }
 
-const FARM_KEY = 'myFarm';
+export const FARM_KEY = 'myFarm';
 
 export const loadFarm = () => {
   console.log('LOAD FARM');
@@ -23,20 +23,19 @@ export const loadFarm = () => {
       console.log('FARM FOUND', data);
       store.farm = data as unknown as Farm;
     })
-    .catch((error) => {
-      if (error.status === 404) {
-        console.log('FARM NOT FOUND');
-        db.post({ _id: FARM_KEY, invoiceId: 1, deliveryId: 1 }).then(() => {
-          loadFarm();
-        });
-      }
-    });
 };
+
+export const addFarm = () => {
+  db.post({ _id: FARM_KEY, invoiceId: 1, deliveryId: 1 }).then(() => {
+    loadFarm();
+  });
+}
 
 export const updateFarmName = ({ title }: FarmInput) => {
   db.get(FARM_KEY)
     .then((doc) => {
       db.put({
+        ...doc,
         _id: FARM_KEY,
         _rev: doc._rev,
         title,

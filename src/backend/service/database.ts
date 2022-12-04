@@ -4,7 +4,7 @@ import {addProduct, loadProducts} from '../entity/product';
 import {addCustomer, loadCustomers} from '../entity/customer';
 import {addDelivery, loadDeliveries} from '../entity/delivery';
 import {loadInvoices} from "../entity/invoice";
-import {loadFarm} from "../entity/farm";
+import {addFarm, loadFarm} from "../entity/farm";
 
 PouchDb.plugin(find);
 
@@ -17,6 +17,8 @@ db.allDocs({ include_docs: true }).then(console.log);
 export const initDatabase = () => {
   return db.destroy().then(async () => {
     db = new PouchDb(DB_NAME);
+
+    await addFarm();
 
     const p1 = await addProduct({ name: 'Tomate', price: 0.42 });
     const p2 = await addProduct({ name: 'Aubergine', price: 4 });

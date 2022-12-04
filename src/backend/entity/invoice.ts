@@ -33,7 +33,6 @@ export const loadInvoices = () => {
       type: 'Invoice',
     },
   }).then((result) => {
-    console.log(result);
     store.invoices = result.docs as unknown as Invoice[];
   });
 };

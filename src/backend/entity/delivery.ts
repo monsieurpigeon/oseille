@@ -2,6 +2,8 @@ import { db } from '../service/database';
 import { store } from '../service/store';
 import { Customer } from './customer';
 import { Product } from './product';
+import { documentIdFormatter } from '../../utils/formatter';
+import { updateDocumentId } from './farm';
 
 export interface Delivery {
   _id: string;
@@ -47,10 +49,14 @@ export const addDelivery = async (delivery: DeliveryInput) => {
   promise().then((deliveryFull) => {
     db.post({
       ...deliveryFull,
+      documentId: documentIdFormatter(store.farm?.deliveryId || 0, 'Delivery'),
       type: 'Delivery',
     })
-      .then((data) => data.id)
-      .then(loadDeliveries)
+      .then(console.log)
+      .then(() => loadDeliveries())
+      .then(() => {
+        updateDocumentId('Delivery');
+      })
       .catch(console.error);
   });
 };

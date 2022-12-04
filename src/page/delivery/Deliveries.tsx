@@ -17,7 +17,7 @@ export function Deliveries() {
         return (
           <div key={delivery._id}>
             <div>
-              {delivery.customer.name} - {delivery._id}
+              {delivery.customer.name} - {delivery.documentId}
             </div>
             <MyButton
               onClick={() => {
