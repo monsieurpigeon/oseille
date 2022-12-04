@@ -32,6 +32,11 @@ const StyledLink = styled(NavLink)`
   text-shadow: rgba(0, 0, 0, 0.3) -3px 3px 5px;
   border-top: 2px solid transparent;
   border-bottom: 2px solid transparent;
+  font-weight: bold;
+  
+  &:hover {
+    text-shadow: white 0 0 10px;
+  }
 
   &.active {
     background-color: darkgray;
