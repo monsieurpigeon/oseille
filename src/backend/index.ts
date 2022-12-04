@@ -1,16 +1,7 @@
-import { initDatabase } from './service/database';
-import { loadCustomers } from './entity/customer';
-import { loadProducts } from './entity/product';
-import { loadDeliveries } from './entity/delivery';
-import { loadInvoices } from './entity/invoice';
-import { loadFarm } from './entity/farm';
+import { initDatabase, loadDatabase } from './service/database';
 
 initDatabase().then(() => {
-  loadCustomers();
-  loadProducts();
-  loadDeliveries();
-  loadInvoices();
-  loadFarm();
+  loadDatabase();
 });
 
 export * from './service/database';

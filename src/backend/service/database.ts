@@ -1,18 +1,22 @@
 import PouchDb from 'pouchdb';
 import find from 'pouchdb-find';
-import { addProduct } from '../entity/product';
-import { addCustomer } from '../entity/customer';
-import { addDelivery } from '../entity/delivery';
+import {addProduct, loadProducts} from '../entity/product';
+import {addCustomer, loadCustomers} from '../entity/customer';
+import {addDelivery, loadDeliveries} from '../entity/delivery';
+import {loadInvoices} from "../entity/invoice";
+import {loadFarm} from "../entity/farm";
 
 PouchDb.plugin(find);
 
-export let db = new PouchDb('hello_world');
+const DB_NAME = 'hello_world'
+
+export let db = new PouchDb(DB_NAME);
 
 db.allDocs({ include_docs: true }).then(console.log);
 
 export const initDatabase = () => {
   return db.destroy().then(async () => {
-    db = new PouchDb('hello_world');
+    db = new PouchDb(DB_NAME);
 
     const p1 = await addProduct({ name: 'Tomate', price: 0.42 });
     const p2 = await addProduct({ name: 'Aubergine', price: 4 });
@@ -32,3 +36,18 @@ export const initDatabase = () => {
     db.bulkDocs([{ _id: 'init' }]).catch(console.error);
   });
 };
+
+export const loadDatabase = () =>{
+  loadCustomers();
+  loadProducts();
+  loadDeliveries();
+  loadInvoices();
+  loadFarm();
+}
+
+export const destroyDatabase=()=>{
+  return db.destroy().then(()=>{
+    db = new PouchDb(DB_NAME);
+    loadDatabase()
+  })
+}
