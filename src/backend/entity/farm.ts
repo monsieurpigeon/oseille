@@ -1,8 +1,6 @@
 import { db } from '../service/database';
 import { store } from '../service/store';
 import { DocumentKey } from '../service/pdf';
-import {Invoice} from "./invoice";
-import {Delivery} from "./delivery";
 
 export interface Farm {
   _id: string;
@@ -38,29 +36,25 @@ export const addFarm = () => {
 };
 
 export const updateFarmName = ({ title }: FarmInput) => {
-  db.get(FARM_KEY)
-    .then((doc) => {
-      db.put({
-        ...doc,
-        _id: FARM_KEY,
-        _rev: doc._rev,
-        title,
-      }).catch(console.error);
-    })
-    .then(() => loadFarm());
+  db.get(FARM_KEY).then((doc) => {
+    db.put({
+      ...doc,
+      _id: FARM_KEY,
+      _rev: doc._rev,
+      title,
+    }).catch(console.error);
+  });
 };
 
 export const updateFarmFooter = ({ footer }: FarmInput) => {
-  db.get(FARM_KEY)
-    .then((doc) => {
-      db.put({
-        ...doc,
-        _id: FARM_KEY,
-        _rev: doc._rev,
-        footer,
-      }).catch(console.error);
-    })
-    .then(() => loadFarm());
+  db.get(FARM_KEY).then((doc) => {
+    db.put({
+      ...doc,
+      _id: FARM_KEY,
+      _rev: doc._rev,
+      footer,
+    }).catch(console.error);
+  });
 };
 
 export const updateDocumentId = (type: DocumentKey) => {
@@ -80,6 +74,5 @@ export const updateDocumentId = (type: DocumentKey) => {
         }).catch(console.error);
       }
     })
-    .then(() => loadFarm())
     .catch(console.error);
 };

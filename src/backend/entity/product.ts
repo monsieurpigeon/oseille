@@ -34,7 +34,6 @@ export const addProduct = (product: ProductInput) => {
       type: 'Product',
     })
     .then((data) => data.id)
-    .then(loadProducts)
     .catch(console.error);
 };
 
@@ -43,9 +42,6 @@ export const updatePrice = (product: Product, price: number) => {
     .put({
       ...product,
       price,
-    })
-    .then(() => {
-      loadProducts();
     })
     .catch(console.error);
 };

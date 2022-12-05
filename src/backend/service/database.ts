@@ -14,10 +14,25 @@ export let db = new PouchDb(DB_NAME);
 
 db.allDocs({ include_docs: true }).then(console.log);
 
+let debounce: NodeJS.Timeout;
+
 export const initDatabase = () => {
   return db.destroy().then(async () => {
     db = new PouchDb(DB_NAME);
-
+    db.changes({
+      since: 'now',
+      live: true,
+    })
+      .on('change', function (change) {
+        console.log('CHANGE', change);
+        clearTimeout(debounce);
+        debounce = setTimeout(() => {
+          loadDatabase();
+        }, 300);
+      })
+      .on('error', function (err) {
+        console.log('ERROR', err);
+      });
     await addFarm();
 
     const p1 = await addProduct({ name: 'Tomate', price: 0.42, unit: 'kg' });
@@ -40,6 +55,7 @@ export const initDatabase = () => {
 };
 
 export const loadDatabase = () => {
+  console.log('LOAD DATABASE');
   loadCustomers();
   loadProducts();
   loadDeliveries();

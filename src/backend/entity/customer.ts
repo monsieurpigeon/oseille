@@ -26,7 +26,6 @@ export const addCustomer = (customer: CustomerInput) => {
       type: 'Customer',
     })
     .then((data) => data.id)
-    .then(loadCustomers)
     .catch(console.error);
 };
 
