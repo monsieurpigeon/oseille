@@ -8,6 +8,7 @@ import { addInvoiceId, Delivery } from './delivery';
 
 export interface Invoice {
   _id: string;
+  _rev: string;
   documentId: string;
   customerId: string;
   products: Array<{

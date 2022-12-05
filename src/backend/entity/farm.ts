@@ -1,6 +1,8 @@
 import { db } from '../service/database';
 import { store } from '../service/store';
 import { DocumentKey } from '../service/pdf';
+import {Invoice} from "./invoice";
+import {Delivery} from "./delivery";
 
 export interface Farm {
   _id: string;
@@ -63,7 +65,7 @@ export const updateFarmFooter = ({ footer }: FarmInput) => {
 
 export const updateDocumentId = (type: DocumentKey) => {
   db.get(FARM_KEY)
-    .then((doc) => {
+    .then((doc: any) => {
       if (type === 'Invoice') {
         db.put({
           ...doc,
