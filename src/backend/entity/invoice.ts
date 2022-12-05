@@ -4,10 +4,11 @@ import { Product } from './product';
 import { Customer } from './customer';
 import { updateDocumentId } from './farm';
 import { documentIdFormatter } from '../../utils/formatter';
-import { addInvoiceId } from './delivery';
+import { addInvoiceId, Delivery } from './delivery';
 
 export interface Invoice {
   _id: string;
+  documentId: string;
   customerId: string;
   products: Array<{
     productId: string;
@@ -38,8 +39,8 @@ export const loadInvoices = () => {
   });
 };
 
-export const addInvoice = (invoices: InvoiceInput[]) => {
-  invoices.map((delivery) => {
+export const addInvoice = (deliveries: Delivery[]) => {
+  deliveries.map((delivery) => {
     const { customer, products, _id, documentId } = delivery;
     db.post({
       documentId: documentIdFormatter(store.farm?.invoiceId || 0, 'Invoice'),

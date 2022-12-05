@@ -10,7 +10,7 @@ export function ProductEditModal({ product, handleClose }: any) {
     <div>
       <div>Modifier le produit</div>
       <div>{product.name}</div>
-      <div>Prix actuel : {priceFormatter(product.price)}</div>
+      <div>Prix actuel : {priceFormatter(product.price)} / {product.unit}</div>
       <div>Saisir le nouveau prix</div>
       <MyNumberInput
         placeholder="prix"

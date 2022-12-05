@@ -10,6 +10,7 @@ const StyledProductItem = styled.div`
   background: silver;
   border: 1px solid grey;
   border-radius: 5px;
+  width: 400px;
 `;
 
 const StyledLine = styled.div`
@@ -25,11 +26,10 @@ const StyledLine = styled.div`
 `;
 
 const StyledProductName = styled.div`
-  width: 300px;
 `;
 
 const StyledProductPrice = styled.div`
-  width: 100px;
+  flex-grow: 1;
   text-align: right;
 `;
 
@@ -39,7 +39,7 @@ export function ProductLine({ product }: any) {
     <StyledLine>
       <StyledProductItem key={product._id}>
         <StyledProductName>{product.name}</StyledProductName>
-        <StyledProductPrice>{product.price.toFixed(2)}€</StyledProductPrice>
+        <StyledProductPrice>€ / {product.unit} : {product.price.toFixed(2)}</StyledProductPrice>
       </StyledProductItem>
       <MyButton
         onClick={() => {

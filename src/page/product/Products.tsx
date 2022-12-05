@@ -37,7 +37,7 @@ export function Products() {
       <MyButton
         label="Ajouter"
         onClick={() => {
-          addProduct({ name, price: +price });
+          addProduct({ name, price: +price, unit: 'kg' });
           setName('');
         }}
       />

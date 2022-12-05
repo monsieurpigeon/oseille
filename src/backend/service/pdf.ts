@@ -25,7 +25,7 @@ export const exportDocument = ({ payload }: any) => {
     defaultStyle: {
       font: 'Roboto',
     },
-    footer: { text: `${title} genere gratuitement grace a Oseille - www.oseille.app`, alignment: 'center' },
+    footer: { text: store.farm?.footer, alignment: 'center' },
     content: [
       { text: `${title} - ${payload.documentId}`, style: 'header' },
       {
@@ -42,25 +42,31 @@ export const exportDocument = ({ payload }: any) => {
         style: 'tableExample',
         table: {
           headerRows: 1,
-          widths: ['*', '*', '*', '*'],
+          widths: ['*', '*', '*', '*', '*'],
           body: [
             [
-              'Produit',
-              { text: 'Prix', alignment: 'right' },
+              'Designation',
+
               { text: 'Quantite', alignment: 'right' },
+              { text: '' },
+              { text: 'Prix unitaire', alignment: 'right' },
               {
-                text: 'Total',
+                text: 'Montant',
                 alignment: 'right',
               },
             ],
             ...payload.products.map((el: { product: Product; quantity: number }) => {
               return [
                 el.product.name,
-                { text: priceFormatter(el.product.price), alignment: 'right' },
+
                 {
                   text: el.quantity,
                   alignment: 'right',
                 },
+                {
+                  text: el.product.unit,
+                  alignment: 'left',
+                },{ text: priceFormatter(el.product.price), alignment: 'right' },
                 { text: priceFormatter(el.product.price * el.quantity), alignment: 'right' },
               ];
             }),
@@ -77,8 +83,13 @@ export const exportDocument = ({ payload }: any) => {
         alignment: 'right',
       },
       { qr: payload._id, fit: '80' },
-      { text: 'Livraisons liees', alignment: 'right' },
-      ...payload.deliveryDocumentIds.map((text: string) => ({ text, alignment: 'right' })),
+      ...(payload.type === 'Invoice' ? [{ text: 'Livraisons liees', alignment: 'right' }] : []),
+      ...(payload.deliveryDocumentIds
+        ? payload.deliveryDocumentIds?.map((text: string) => ({
+            text,
+            alignment: 'right',
+          }))
+        : []),
     ],
     styles: {
       header: {

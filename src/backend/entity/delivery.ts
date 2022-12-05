@@ -9,6 +9,7 @@ export interface Delivery {
   _id: string;
   type: 'Delivery';
   customer: Customer;
+  documentId: string;
   products: Array<{
     product: Product;
     quantity: number;
@@ -52,7 +53,6 @@ export const addDelivery = async (delivery: DeliveryInput) => {
       documentId: documentIdFormatter(store.farm?.deliveryId || 0, 'Delivery'),
       type: 'Delivery',
     })
-      .then(console.log)
       .then(() => loadDeliveries())
       .then(() => {
         updateDocumentId('Delivery');
