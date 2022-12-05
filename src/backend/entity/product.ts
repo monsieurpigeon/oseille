@@ -6,17 +6,17 @@ export interface Product {
   _rev: string;
   type: 'Product';
   name: string;
-  unit: Units;
+  unit: Unit;
   price: number;
 }
 
 export interface ProductInput {
   name: string;
-  unit: Units;
+  unit: Unit;
   price: number;
 }
 
-type Units = 'kg' | 'piece';
+export type Unit = 'kg' | 'piece';
 
 export const loadProducts = (id?: string) => {
   db.find({
