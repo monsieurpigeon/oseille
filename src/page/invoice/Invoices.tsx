@@ -10,8 +10,8 @@ export function Invoices() {
 
   return (
     <MyScreenLayout>
-      <Link to="create">Nouveau</Link>
       <StyledH1>Factures</StyledH1>
+      <Link to="create">Nouveau</Link>
       {invoices.map((invoice: any) => {
         return (
           <div key={invoice._id}>

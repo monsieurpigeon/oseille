@@ -23,7 +23,6 @@ const StyledContent = styled.div`
 
 const StyledScreen = styled.main`
   flex-grow: 1;
-  padding: 12px;
   background-color: white;
   border-radius: 20px 0 0 20px;
   box-shadow: -6px -6px 10px 0 rgba(0, 0, 0, 0.2);

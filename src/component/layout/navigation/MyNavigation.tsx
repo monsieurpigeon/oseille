@@ -11,7 +11,8 @@ const navBarItems = [
 ];
 
 const StyledNav = styled.nav`
-  background-color: silver;
+  background-color: transparent;
+  z-index: 2;
 `;
 
 const StyledUl = styled.ul`

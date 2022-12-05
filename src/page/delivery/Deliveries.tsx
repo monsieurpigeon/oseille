@@ -11,8 +11,8 @@ export function Deliveries() {
 
   return (
     <MyScreenLayout>
-      <Link to="create">Nouveau</Link>
       <StyledH1>Livraisons</StyledH1>
+      <Link to="create">Nouveau</Link>
       {deliveries.map((delivery: any) => {
         return (
           <div key={delivery._id}>
