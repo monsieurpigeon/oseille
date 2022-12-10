@@ -10,6 +10,7 @@ import { Home } from './page/home/Home';
 import { Products } from './page/product/Products';
 import { Settings } from './page/settings/Settings';
 import { Invoices } from './page/invoice/Invoices';
+import { BackOffice } from './page/back-office/BackOffice';
 
 function App() {
   return (
@@ -56,6 +57,10 @@ function App() {
         <Route
           path="/settings"
           element={<Settings />}
+        />
+        <Route
+          path="/admin"
+          element={<BackOffice />}
         />
       </Routes>
     </MyMainLayout>
