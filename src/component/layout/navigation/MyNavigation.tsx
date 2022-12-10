@@ -1,5 +1,6 @@
 import { NavLink } from 'react-router-dom';
 import styled from 'styled-components';
+import { Box, ListItem, UnorderedList } from '@chakra-ui/react';
 
 const navBarItems = [
   { label: 'Produits', emoji: '🍓', path: 'product' },
@@ -9,11 +10,6 @@ const navBarItems = [
   { label: 'Reglages', emoji: '🔧', path: 'settings' },
   { label: 'Contact', emoji: '🖋️', path: 'contact' },
 ];
-
-const StyledNav = styled.nav`
-  background-color: transparent;
-  z-index: 2;
-`;
 
 const StyledUl = styled.ul`
   margin-top: 30px;
@@ -34,7 +30,7 @@ const StyledLink = styled(NavLink)`
   border-top: 2px solid transparent;
   border-bottom: 2px solid transparent;
   font-weight: bold;
-  
+
   &:hover {
     text-shadow: white 0 0 10px;
   }
@@ -50,16 +46,16 @@ const StyledLink = styled(NavLink)`
 
 export function MyNavigation() {
   return (
-    <StyledNav>
-      <StyledUl>
+    <Box>
+      <UnorderedList styleType="none">
         {navBarItems.map((item) => (
-          <li key={item.path}>
-            <StyledLink to={item.path}>
+          <ListItem key={item.path}>
+            <NavLink to={item.path}>
               {item.emoji} {item.label}
-            </StyledLink>
-          </li>
+            </NavLink>
+          </ListItem>
         ))}
-      </StyledUl>
-    </StyledNav>
+      </UnorderedList>
+    </Box>
   );
 }

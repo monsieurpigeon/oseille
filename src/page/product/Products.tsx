@@ -1,31 +1,31 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useSnapshot } from 'valtio';
 import { addProduct, store, Unit } from '../../backend';
 import { MyButton } from '../../component/form/button/MyButton';
 import { MyTextInput } from '../../component/form/input/MyTextInput';
 import { MyScreenLayout } from '../../component/layout/MyScreenLayout';
 import { MyNumberInput } from '../../component/form/input/MyNumberInput';
-import { StyledH1 } from '../../component/typography/MyFont';
-import styled from 'styled-components';
+import { MyH1 } from '../../component/typography/MyFont';
 import { ProductLine } from './ProductLine';
-import { MyModal } from '../../component/modal/MyModal';
 import { MySelect } from '../../component/form/select/MySelect';
-
-const StyledProducts = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  align-items: flex-start;
-`;
-
-const StyledTitle = styled.div`
-  display: flex;
-  gap: 20px;
-  align-items: center;
-`;
+import {
+  AlertDialog,
+  AlertDialogBody,
+  AlertDialogContent,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogOverlay,
+  Button,
+  Flex,
+  useDisclosure,
+} from '@chakra-ui/react';
 
 export function Products() {
-  const [isOpen, setIsOpen] = useState(false);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  // TODO fix this type
+  const cancelRef = useRef<any>();
+
   const [name, setName] = useState('');
   const [price, setPrice] = useState('0.00');
   const [unit, setUnit] = useState<Unit>('kg');
@@ -33,58 +33,84 @@ export function Products() {
 
   return (
     <MyScreenLayout>
-      <StyledTitle>
-        <StyledH1>Produits</StyledH1>
+      <Flex
+        gap={4}
+        alignItems="center"
+      >
+        <MyH1>Produits</MyH1>
         <MyButton
           label={'Nouveau'}
-          onClick={() => setIsOpen(true)}
+          onClick={onOpen}
         />
-      </StyledTitle>
-      {isOpen && (
-        <MyModal
-          isOpen={isOpen}
-          handleClose={() => setIsOpen(false)}
-        >
-          <MyTextInput
-            placeholder="nom du produit"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-          <MyNumberInput
-            placeholder="prix"
-            value={price}
-            onChange={(value) => setPrice(value)}
-          />
-          <MySelect
-            options={[
-              { value: 'kg', label: 'kg' },
-              { value: 'piece', label: 'piece' },
-            ]}
-            value={unit}
-            onChange={(e) => {
-              setUnit(e.target.value as Unit);
-            }}
-            placeholder={'unite ...'}
-          />
-          <MyButton
-            label="Ajouter"
-            onClick={() => {
-              addProduct({ name, price: +price, unit }).catch(console.error);
-              setName('');
-              setIsOpen(false);
-            }}
-          />
-        </MyModal>
-      )}
+      </Flex>
+      <AlertDialog
+        isOpen={isOpen}
+        leastDestructiveRef={cancelRef}
+        onClose={onClose}
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader
+              fontSize="lg"
+              fontWeight="bold"
+            >
+              Nouveau produit
+            </AlertDialogHeader>
 
-      <StyledProducts>
+            <AlertDialogBody>
+              <MyTextInput
+                placeholder="nom du produit"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+              />
+              <MyNumberInput
+                placeholder="prix"
+                value={price}
+                onChange={(value) => setPrice(value)}
+              />
+              <MySelect
+                options={[
+                  { value: 'kg', label: 'kg' },
+                  { value: 'piece', label: 'piece' },
+                ]}
+                value={unit}
+                onChange={(e) => {
+                  setUnit(e.target.value as Unit);
+                }}
+                placeholder={'unite ...'}
+              />
+            </AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button
+                ref={cancelRef}
+                onClick={onClose}
+              >
+                Annuler
+              </Button>
+              <Button
+                colorScheme="blue"
+                onClick={() => {
+                  addProduct({ name, price: +price, unit }).catch(console.error);
+                  setName('');
+                  onClose();
+                }}
+                ml={3}
+              >
+                Enregistrer
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
+      <Flex direction="column">
         {products.map((product: any) => (
           <ProductLine
             key={product._id}
             product={product}
           />
         ))}
-      </StyledProducts>
+      </Flex>
     </MyScreenLayout>
   );
 }

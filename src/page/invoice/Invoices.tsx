@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { useSnapshot } from 'valtio';
 import { exportDocument, store } from '../../backend';
 import { MyScreenLayout } from '../../component/layout/MyScreenLayout';
-import { StyledH1 } from '../../component/typography/MyFont';
+import { MyH1 } from '../../component/typography/MyFont';
 import { MyButton } from '../../component/form/button/MyButton';
 
 export function Invoices() {
@@ -10,7 +10,7 @@ export function Invoices() {
 
   return (
     <MyScreenLayout>
-      <StyledH1>Factures</StyledH1>
+      <MyH1>Factures</MyH1>
       <Link to="create">Nouveau</Link>
       {invoices.map((invoice: any) => {
         return (

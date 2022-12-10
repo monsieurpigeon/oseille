@@ -1,59 +1,107 @@
-import styled from 'styled-components';
 import { MyScreenLayout } from '../../component/layout/MyScreenLayout';
-import { StyledH1, StyledH2, StyledLink, StyledSubtitle, StyledUl } from '../../component/typography/MyFont';
+import { MyH1, MyH2, MyLink, MySubtitle } from '../../component/typography/MyFont';
+import { Flex, List, ListIcon, ListItem } from '@chakra-ui/react';
+import { CheckIcon, RepeatIcon, TimeIcon } from '@chakra-ui/icons';
 
-const StyledContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-`;
+type Status = 'todo' | 'doing' | 'done';
 
+const TODO: Array<{ text: string; status: Status }> = [
+  { text: 'Gérer une liste de produits avec un prix', status: 'done' },
+  { text: 'Gérer une liste de clients', status: 'done' },
+  { text: 'Changer les prix des produits facilement', status: 'done' },
+  { text: 'Générer un bon de livraison', status: 'done' },
+  { text: 'Calcul automatique des lignes de livraison', status: 'done' },
+  { text: 'Grouper des bons de livraison en une facture', status: 'doing' },
+  { text: 'Export .pdf des bons de livraison et des factures', status: 'done' },
+  { text: 'Import/Export de capsules temporelles pour protéger la data sur un autre support', status: 'todo' },
+];
+
+const NEXT: Array<{ text: string }> = [
+  { text: 'Gérer le status des documents (envoyé, payé)' },
+  { text: 'Suivi des ventes par client et par produit' },
+];
+
+const ROADMAP: Array<{ text: string }> = [{ text: 'Gestion des paniers en click-and-collect personnalisé' }];
+
+// TODO add a better typing to keep only Status as key
+const statusIcon: { [key: string]: { icon: typeof CheckIcon; color: string } } = {
+  done: { icon: CheckIcon, color: 'green.500' },
+  doing: { icon: RepeatIcon, color: 'blue.500' },
+  todo: { icon: TimeIcon, color: 'yellow.500' },
+};
 export function Home() {
   return (
     <MyScreenLayout>
-      <StyledContainer>
-        <StyledH1>Bienvenue sur Oseille</StyledH1>
-        <StyledSubtitle>L'application qui aide les maraîchers à gérer leur argent</StyledSubtitle>
+      <Flex
+        gap={4}
+        direction="column"
+      >
+        <MyH1>Bienvenue sur Oseille</MyH1>
+        <MySubtitle>L'application qui aide les maraîchers à gérer leur argent</MySubtitle>
         <p>Application gratuite, en code libre, et qui marche sans internet</p>
-        <StyledSubtitle>
+        <MySubtitle>
           Attention : Cette application est toujours en développement et va connaitre de gros changements jusqu'à nouvel
           ordre
-        </StyledSubtitle>
-        <StyledSubtitle>
-          Pour l'instant, des donnees de test seront utilise a chaque rechargement de la page
-        </StyledSubtitle>
-        <StyledH2>Fonctionnalités :</StyledH2>
-        <StyledUl>
-          <li>Gérer une liste de produits avec un prix</li>
-          <li>Gérer une liste de clients</li>
-          <li>Changer les prix des produits facilement</li>
-          <li>Générer un bon de livraison</li>
-          <li>Calcul automatique des lignes de livraison</li>
-          <li>Grouper des bons de livraison en une facture</li>
-          <li>Export .pdf des bons de livraison et des factures</li>
-          <li>Import/Export de capsules temporelles pour protéger la data sur un autre support</li>
-          <li>... et ensuite ...</li>
-          <li>Gérer le status des documents (envoyé, payé)</li>
-          <li>Suivi des ventes par client et par produit</li>
-          <li>... Plein d'autres choses ...</li>
-          <li>Gestion des paniers en click-and-collect personnalisé</li>
-          <li>... Envoyez moi vos idées</li>
-        </StyledUl>
-        <div>
-          <StyledLink
+        </MySubtitle>
+        <MySubtitle>Pour l'instant, des donnees de test seront utilise a chaque rechargement de la page</MySubtitle>
+        <MyH2>Fonctionnalités :</MyH2>
+        <List spacing={3}>
+          {TODO.map(({ status, text }) => {
+            return (
+              <ListItem>
+                <ListIcon
+                  as={statusIcon[status].icon}
+                  color={statusIcon[status].color}
+                />
+                {text}
+              </ListItem>
+            );
+          })}
+          <ListItem listStyleType="none">... et ensuite ...</ListItem>
+          {NEXT.map(({ text }) => {
+            return (
+              <ListItem>
+                <ListIcon
+                  as={statusIcon['todo'].icon}
+                  color={statusIcon['todo'].color}
+                />
+                {text}
+              </ListItem>
+            );
+          })}
+          <ListItem listStyleType="none">... Plein d'autres choses ...</ListItem>
+          {ROADMAP.map(({ text }) => {
+            return (
+              <ListItem>
+                <ListIcon
+                  as={statusIcon['todo'].icon}
+                  color={statusIcon['todo'].color}
+                />
+                {text}
+              </ListItem>
+            );
+          })}
+          <ListItem listStyleType="none">... Envoyez moi vos idées</ListItem>
+        </List>
+        <Flex gap={4}>
+          <MyLink
             href="https://www.facebook.com/maxime.pigeon/"
             target="_blank"
+            p={2}
+            border={'1px'}
           >
             Facebook
-          </StyledLink>
-          <StyledLink
+          </MyLink>
+          <MyLink
             href="https://www.linkedin.com/in/maxime-pigeon/"
             target="_blank"
+            p={2}
+            border={'1px'}
           >
             Linkedin
-          </StyledLink>
-        </div>
-      </StyledContainer>
+          </MyLink>
+        </Flex>
+      </Flex>
     </MyScreenLayout>
   );
 }

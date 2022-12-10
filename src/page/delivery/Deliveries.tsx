@@ -3,7 +3,7 @@ import { useSnapshot } from 'valtio';
 import { addInvoice, exportDocument, store } from '../../backend';
 import { MyScreenLayout } from '../../component/layout/MyScreenLayout';
 import React from 'react';
-import { StyledH1 } from '../../component/typography/MyFont';
+import { MyH1 } from '../../component/typography/MyFont';
 import { MyButton } from '../../component/form/button/MyButton';
 
 export function Deliveries() {
@@ -11,7 +11,7 @@ export function Deliveries() {
 
   return (
     <MyScreenLayout>
-      <StyledH1>Livraisons</StyledH1>
+      <MyH1>Livraisons</MyH1>
       <Link to="create">Nouveau</Link>
       {deliveries.map((delivery: any) => {
         return (

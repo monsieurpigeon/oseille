@@ -1,8 +1,8 @@
 import { MyScreenLayout } from '../../component/layout/MyScreenLayout';
-import { StyledH1, StyledH2 } from '../../component/typography/MyFont';
+import { MyH1, MyH2 } from '../../component/typography/MyFont';
 import { useEffect, useState } from 'react';
 import { useSnapshot } from 'valtio';
-import {destroyDatabase, store, updateFarmFooter, updateFarmName} from '../../backend';
+import { destroyDatabase, store, updateFarmFooter, updateFarmName } from '../../backend';
 import { MyTextInput } from '../../component/form/input/MyTextInput';
 import { MyButton } from '../../component/form/button/MyButton';
 
@@ -18,14 +18,14 @@ export function Settings() {
 
   return (
     <MyScreenLayout>
-      <StyledH1>Reglages</StyledH1>
+      <MyH1>Reglages</MyH1>
       <MyButton
         label="Armageddon"
         onClick={() => {
           destroyDatabase().catch(console.error);
         }}
       />
-      <StyledH2>Ma ferme</StyledH2>
+      <MyH2>Ma ferme</MyH2>
       {farm?.title ? (
         <div>{farm.title}</div>
       ) : (
@@ -45,7 +45,7 @@ export function Settings() {
           />
         </>
       )}
-      <StyledH2>Mon Footer</StyledH2>
+      <MyH2>Mon Footer</MyH2>
       <MyTextInput
         placeholder="s'affiche en bas des documents"
         value={farmFooter}

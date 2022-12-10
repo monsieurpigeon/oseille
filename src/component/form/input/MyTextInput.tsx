@@ -1,4 +1,5 @@
 import { ChangeEvent } from 'react';
+import { Input } from '@chakra-ui/react';
 
 export function MyTextInput({
   placeholder,
@@ -10,7 +11,7 @@ export function MyTextInput({
   onChange: (e: ChangeEvent<HTMLInputElement>) => void;
 }) {
   return (
-    <input
+    <Input
       type="text"
       placeholder={placeholder}
       value={value}

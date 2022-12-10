@@ -1,26 +1,14 @@
-import styled from 'styled-components';
-
-const StyledFooter = styled.footer`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: silver;
-  padding: 10px;
-`;
-
-const StyledContent = styled.div`
-  display: flex;
-`;
+import { Center, Flex, Link, Text } from '@chakra-ui/react';
 
 export function MyFooter() {
   return (
-    <StyledFooter>
-      <StyledContent>
-        <span>
+    <Center h="50px">
+      <Flex>
+        <Text>
           Fabriqué avec ❤️ & 🍅🍆🧄🥦🥬🌽🥕🧅🥔 à Bordeaux. Retrouvez le code source sur{' '}
-          <a href="https://github.com/monsieurpigeon/oseille">Github</a>
-        </span>
-      </StyledContent>
-    </StyledFooter>
+          <Link href="https://github.com/monsieurpigeon/oseille">Github</Link>
+        </Text>
+      </Flex>
+    </Center>
   );
 }

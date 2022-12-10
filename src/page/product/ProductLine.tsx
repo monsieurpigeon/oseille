@@ -1,67 +1,52 @@
-import { MyModal } from '../../component/modal/MyModal';
-import styled from 'styled-components';
-import { useState } from 'react';
+import { useRef } from 'react';
 import { ProductEditModal } from './ProductEditModal';
 import { MyButton } from '../../component/form/button/MyButton';
-
-const StyledProductItem = styled.div`
-  display: flex;
-  padding: 10px;
-  background: silver;
-  border: 1px solid grey;
-  border-radius: 5px;
-  width: 400px;
-`;
-
-const StyledLine = styled.div`
-  display: flex;
-  gap: 10px;
-
-  &:hover {
-    ${StyledProductItem} {
-      background: lightgrey;
-      border: 1px solid aqua;
-    }
-  }
-`;
-
-const StyledProductName = styled.div`
-`;
-
-const StyledProductPrice = styled.div`
-  flex-grow: 1;
-  text-align: right;
-`;
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogOverlay,
+  Flex,
+  Spacer,
+  Text,
+  useDisclosure,
+} from '@chakra-ui/react';
 
 export function ProductLine({ product }: any) {
-  const [isOpen, setIsOpen] = useState(false);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  // TODO fix this type
+  const cancelRef = useRef<any>();
+
   return (
-    <StyledLine>
-      <StyledProductItem key={product._id}>
-        <StyledProductName>{product.name}</StyledProductName>
-        <StyledProductPrice>€ / {product.unit} : {product.price.toFixed(2)}</StyledProductPrice>
-      </StyledProductItem>
+    <Flex>
+      <Flex
+        key={product._id}
+        alignItems="center"
+      >
+        <Text>{product.name}</Text>
+        <Spacer />
+        <Text>
+          € / {product.unit} : {product.price.toFixed(2)}
+        </Text>
+      </Flex>
       <MyButton
-        onClick={() => {
-          setIsOpen((v) => !v);
-        }}
+        onClick={onOpen}
         label="✏️"
       />
-      {isOpen && (
-        <MyModal
-          isOpen={isOpen}
-          handleClose={() => {
-            setIsOpen(false);
-          }}
-        >
-          <ProductEditModal
-            product={product}
-            handleClose={() => {
-              setIsOpen(false);
-            }}
-          />
-        </MyModal>
-      )}
-    </StyledLine>
+      <AlertDialog
+        isOpen={isOpen}
+        leastDestructiveRef={cancelRef}
+        onClose={onClose}
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <ProductEditModal
+              product={product}
+              handleClose={onClose}
+            />
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
+    </Flex>
   );
 }

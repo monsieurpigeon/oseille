@@ -9,6 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@chakra-ui/icons": "^2.0.13",
     "@chakra-ui/react": "^2.4.2",
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
@@ -23,7 +24,6 @@
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.39.6",
     "react-router-dom": "^6.4.3",
-    "styled-components": "^5.3.6",
     "valtio": "^1.7.6"
   },
   "devDependencies": {
@@ -31,7 +31,6 @@
     "@types/pouchdb": "^6.4.0",
     "@types/react": "^18.0.24",
     "@types/react-dom": "^18.0.8",
-    "@types/styled-components": "^5.1.26",
     "@vitejs/plugin-react": "^2.2.0",
     "typescript": "^4.6.4",
     "vite": "^3.2.3"

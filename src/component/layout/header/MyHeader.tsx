@@ -1,19 +1,18 @@
 import { Link } from 'react-router-dom';
-import styled from 'styled-components';
-
-const StyledHeader = styled.header`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px;
-  background-color: silver;
-`;
+import { Center, Flex, Spacer, Text } from '@chakra-ui/react';
 
 export function MyHeader() {
   return (
-    <StyledHeader>
-      <Link to="/">Oseille</Link>
+    <Flex>
+      <Center p="4">
+        <Link to="/">
+          <Text fontSize="2xl">Oseille</Text>
+        </Link>
+      </Center>
+      <Spacer />
+      <Center p="4">
         <p>😃</p>
-    </StyledHeader>
+      </Center>
+    </Flex>
   );
 }
