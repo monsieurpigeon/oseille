@@ -57,7 +57,7 @@ export function Home() {
               </ListItem>
             );
           })}
-          <ListItem listStyleType="none">... et ensuite ...</ListItem>
+          <ListItem listStyleType="none">... et ensuite...</ListItem>
           {NEXT.map(({ text }) => {
             return (
               <ListItem>
@@ -69,7 +69,7 @@ export function Home() {
               </ListItem>
             );
           })}
-          <ListItem listStyleType="none">... Plein d'autres choses ...</ListItem>
+          <ListItem listStyleType="none">... Plein d'autres choses...</ListItem>
           {ROADMAP.map(({ text }) => {
             return (
               <ListItem>
@@ -81,7 +81,8 @@ export function Home() {
               </ListItem>
             );
           })}
-          <ListItem listStyleType="none">... Envoyez moi vos idées</ListItem>
+          <ListItem listStyleType="none">... Je cherche des investisseurs serieux...</ListItem>
+          <ListItem listStyleType="none">... Dites moi de quoi vous avez besoin.</ListItem>
         </List>
         <Flex gap={4}>
           <MyLink
