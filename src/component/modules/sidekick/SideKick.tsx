@@ -21,7 +21,7 @@ export function SideKick() {
         setShow(true);
       }}
     >
-      {show && 'Bonjour, je suis votre assistant personnalise '}
+      {show && 'Bonjour, je suis votre cyber-benevole, je suis la pour vous aider '}
       <MyH3>{emojis[index]}</MyH3>
     </Flex>
   );
