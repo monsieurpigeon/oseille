@@ -1,4 +1,4 @@
-import { Heading, Link, LinkProps } from '@chakra-ui/react';
+import { Heading, HeadingProps, Link, LinkProps } from '@chakra-ui/react';
 import { ReactNode } from 'react';
 
 type FontProps = { children: ReactNode };
@@ -22,11 +22,12 @@ export const MyH2 = ({ children }: FontProps) => {
     </Heading>
   );
 };
-export const MyH3 = ({ children }: FontProps) => {
+export const MyH3 = ({ children, ...props }: FontProps & HeadingProps) => {
   return (
     <Heading
       as="h3"
       size="lg"
+      {...props}
     >
       {children}
     </Heading>
