@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Center, Flex, Spacer, Text } from '@chakra-ui/react';
+import { SideKick } from '../../modules/sidekick/SideKick';
 
 export function MyHeader() {
   return (
@@ -11,7 +12,7 @@ export function MyHeader() {
       </Center>
       <Spacer />
       <Center p="4">
-        <p>😃</p>
+        <SideKick />
       </Center>
     </Flex>
   );
