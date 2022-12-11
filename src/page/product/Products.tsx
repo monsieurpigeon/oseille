@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { useSnapshot } from 'valtio';
 import { addProduct, store, Unit } from '../../backend';
 import { MyButton } from '../../component/form/button/MyButton';
@@ -8,23 +8,11 @@ import { MyNumberInput } from '../../component/form/input/MyNumberInput';
 import { MyH1 } from '../../component/typography/MyFont';
 import { ProductLine } from './ProductLine';
 import { MySelect } from '../../component/form/select/MySelect';
-import {
-  AlertDialog,
-  AlertDialogBody,
-  AlertDialogContent,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogOverlay,
-  Button,
-  Flex,
-  useDisclosure,
-} from '@chakra-ui/react';
+import { Flex, useDisclosure } from '@chakra-ui/react';
+import { MySaveModal } from '../../component/modal/MySaveModal';
 
 export function Products() {
   const { isOpen, onOpen, onClose } = useDisclosure();
-
-  // TODO fix this type
-  const cancelRef = useRef<any>();
 
   const [name, setName] = useState('');
   const [price, setPrice] = useState('0.00');
@@ -43,66 +31,39 @@ export function Products() {
           onClick={onOpen}
         />
       </Flex>
-      <AlertDialog
+      <MySaveModal
         isOpen={isOpen}
-        leastDestructiveRef={cancelRef}
+        title="Nouveau produit"
         onClose={onClose}
+        onSubmit={() => {
+          addProduct({ name, price: +price, unit }).catch(console.error);
+          setName('');
+          setPrice('0.00');
+        }}
       >
-        <AlertDialogOverlay>
-          <AlertDialogContent>
-            <AlertDialogHeader
-              fontSize="lg"
-              fontWeight="bold"
-            >
-              Nouveau produit
-            </AlertDialogHeader>
+        <MyTextInput
+          placeholder="nom du produit"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
+        <MyNumberInput
+          placeholder="prix"
+          value={price}
+          onChange={(value) => setPrice(value)}
+        />
+        <MySelect
+          options={[
+            { value: 'kg', label: 'kg' },
+            { value: 'piece', label: 'piece' },
+          ]}
+          value={unit}
+          onChange={(e) => {
+            setUnit(e.target.value as Unit);
+          }}
+          placeholder={'unite ...'}
+        />
+      </MySaveModal>
 
-            <AlertDialogBody>
-              <MyTextInput
-                placeholder="nom du produit"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-              />
-              <MyNumberInput
-                placeholder="prix"
-                value={price}
-                onChange={(value) => setPrice(value)}
-              />
-              <MySelect
-                options={[
-                  { value: 'kg', label: 'kg' },
-                  { value: 'piece', label: 'piece' },
-                ]}
-                value={unit}
-                onChange={(e) => {
-                  setUnit(e.target.value as Unit);
-                }}
-                placeholder={'unite ...'}
-              />
-            </AlertDialogBody>
-
-            <AlertDialogFooter>
-              <Button
-                ref={cancelRef}
-                onClick={onClose}
-              >
-                Annuler
-              </Button>
-              <Button
-                colorScheme="blue"
-                onClick={() => {
-                  addProduct({ name, price: +price, unit }).catch(console.error);
-                  setName('');
-                  onClose();
-                }}
-                ml={3}
-              >
-                Enregistrer
-              </Button>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialogOverlay>
-      </AlertDialog>
       <Flex direction="column">
         {products.map((product: any) => (
           <ProductLine

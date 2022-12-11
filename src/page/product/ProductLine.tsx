@@ -1,21 +1,14 @@
-import { useRef } from 'react';
-import { ProductEditModal } from './ProductEditModal';
+import { useState } from 'react';
 import { MyButton } from '../../component/form/button/MyButton';
-import {
-  AlertDialog,
-  AlertDialogContent,
-  AlertDialogOverlay,
-  Flex,
-  Spacer,
-  Text,
-  useDisclosure,
-} from '@chakra-ui/react';
+import { Flex, Spacer, Text, useDisclosure } from '@chakra-ui/react';
+import { MySaveModal } from '../../component/modal/MySaveModal';
+import { priceFormatter } from '../../utils/formatter';
+import { MyNumberInput } from '../../component/form/input/MyNumberInput';
+import { updatePrice } from '../../backend';
 
 export function ProductLine({ product }: any) {
   const { isOpen, onOpen, onClose } = useDisclosure();
-
-  // TODO fix this type
-  const cancelRef = useRef<any>();
+  const [price, setPrice] = useState(product.price.toFixed(2));
 
   return (
     <Flex>
@@ -33,20 +26,24 @@ export function ProductLine({ product }: any) {
         onClick={onOpen}
         label="✏️"
       />
-      <AlertDialog
+
+      <MySaveModal
         isOpen={isOpen}
-        leastDestructiveRef={cancelRef}
+        title="Modifier le produit"
         onClose={onClose}
+        onSubmit={() => updatePrice(product, +price)}
       >
-        <AlertDialogOverlay>
-          <AlertDialogContent>
-            <ProductEditModal
-              product={product}
-              handleClose={onClose}
-            />
-          </AlertDialogContent>
-        </AlertDialogOverlay>
-      </AlertDialog>
+        <div>{product.name}</div>
+        <div>
+          Prix actuel : {priceFormatter(product.price)} / {product.unit}
+        </div>
+        <div>Saisir le nouveau prix</div>
+        <MyNumberInput
+          placeholder="prix"
+          value={price}
+          onChange={setPrice}
+        />
+      </MySaveModal>
     </Flex>
   );
 }
