@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import { useSnapshot } from 'valtio';
-import { addCustomer, getCustomer, store } from '../../backend';
+import { addCustomer, Customer, getCustomer, store } from '../../backend';
 import { MyScreenLayout } from '../../component/layout/MyScreenLayout';
 import { MyH1 } from '../../component/typography/MyFont';
 import {
@@ -26,7 +26,7 @@ export function Customers() {
 
   const [text, setText] = useState('');
   const { customers } = useSnapshot(store);
-  const [customer, setCustomer] = useState();
+  const [customer, setCustomer] = useState<Customer>();
 
   return (
     <MyScreenLayout>
@@ -57,7 +57,7 @@ export function Customers() {
             cursor="pointer"
             onClick={() => {
               onDrawerOpen();
-              getCustomer(customer._id).then((customer) => setCustomer(customer));
+              getCustomer(customer._id).then((customer) => setCustomer(customer as unknown as Customer));
             }}
           >
             {customer.name}
