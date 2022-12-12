@@ -1,7 +1,7 @@
-import { ReactNode } from 'react';
-import { MySaveModal } from './MySaveModal';
-import { MyButton } from '../form/button/MyButton';
 import { useDisclosure } from '@chakra-ui/react';
+import { ReactNode } from 'react';
+import { MyButton } from '../form/button/MyButton';
+import { MySaveModal } from './MySaveModal';
 
 type MyCreateModalProps = { children: ReactNode; title: string; onSubmit: () => void };
 export function MyCreateModal({ children, onSubmit, title }: MyCreateModalProps) {
@@ -18,6 +18,7 @@ export function MyCreateModal({ children, onSubmit, title }: MyCreateModalProps)
         title={title}
         onClose={onClose}
         onSubmit={onSubmit}
+        closeOnOverlayClick={false}
       >
         {children}
       </MySaveModal>

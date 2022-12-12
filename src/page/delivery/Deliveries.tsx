@@ -1,18 +1,37 @@
-import { Link } from 'react-router-dom';
-import { useSnapshot } from 'valtio';
-import { addInvoice, exportDocument, store } from '../../backend';
-import { MyScreenLayout } from '../../component/layout/MyScreenLayout';
+import { Flex } from '@chakra-ui/react';
 import React from 'react';
-import { MyH1 } from '../../component/typography/MyFont';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { useSnapshot } from 'valtio';
+import { addDelivery, addInvoice, DeliveryInput, exportDocument, store } from '../../backend';
 import { MyButton } from '../../component/form/button/MyButton';
+import { MyScreenLayout } from '../../component/layout/MyScreenLayout';
+import { MyCreateModal } from '../../component/modal/MyCreateModal';
+import { MyH1 } from '../../component/typography/MyFont';
+import { CreateDeliveries } from './CreateDeliveries';
 
 export function Deliveries() {
   const { deliveries } = useSnapshot(store);
 
+  const onSubmit: SubmitHandler<DeliveryInput> = (d) => {
+    addDelivery(d);
+  };
+
+  const { register, handleSubmit } = useForm<DeliveryInput>();
+
   return (
     <MyScreenLayout>
-      <MyH1>Livraisons</MyH1>
-      <Link to="create">Nouveau</Link>
+      <Flex
+        gap={4}
+        alignItems="center"
+      >
+        <MyH1>Livraisons</MyH1>
+        <MyCreateModal
+          title={'Nouvelle livraison'}
+          onSubmit={handleSubmit(onSubmit)}
+        >
+          <CreateDeliveries register={register} />
+        </MyCreateModal>
+      </Flex>
       {deliveries.map((delivery: any) => {
         return (
           <div key={delivery._id}>

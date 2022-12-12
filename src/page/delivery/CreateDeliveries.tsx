@@ -1,26 +1,20 @@
+import { Flex, Input, Select } from '@chakra-ui/react';
 import { useState } from 'react';
-import { SubmitHandler, useForm } from 'react-hook-form';
-import { useParams } from 'react-router-dom';
 import { useSnapshot } from 'valtio';
-import { addDelivery, DeliveryInput, store } from '../../backend';
+import { store } from '../../backend';
 import { MyButton } from '../../component/form/button/MyButton';
 
-export function CreateDeliveries() {
-  const { customerId = '' } = useParams();
+export function CreateDeliveries({ register }: any) {
   const { products, customers } = useSnapshot(store);
   const [count, setCount] = useState([0]);
-  const { register, handleSubmit } = useForm<DeliveryInput>();
-
-  const onSubmit: SubmitHandler<DeliveryInput> = (d) => {
-    console.log(d);
-    addDelivery(d);
-  };
 
   return (
-    <div>
-      CreateDelivery
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <select {...register('customerId')}>
+    <form>
+      <Flex
+        direction="column"
+        gap={8}
+      >
+        <Select {...register('customerId')}>
           {customers.map((customer) => {
             return (
               <option
@@ -31,12 +25,19 @@ export function CreateDeliveries() {
               </option>
             );
           })}
-        </select>
-        <div>
+        </Select>
+        <Flex
+          direction="column"
+          gap={2}
+        >
           {count.map((index) => {
             return (
-              <div key={index}>
-                <select {...register(`products.${index}.productId`)}>
+              <Flex
+                gap={2}
+                key={index}
+              >
+                <Select {...register(`products.${index}.productId`)}>
+                  <option value={undefined}>...</option>
                   {products.map((product) => {
                     return (
                       <option
@@ -47,12 +48,9 @@ export function CreateDeliveries() {
                       </option>
                     );
                   })}
-                </select>
-                <input
-                  type="number"
-                  {...register(`products.${index}.quantity`)}
-                />
-              </div>
+                </Select>
+                <Input {...register(`products.${index}.quantity`)} />
+              </Flex>
             );
           })}
           <MyButton
@@ -64,13 +62,8 @@ export function CreateDeliveries() {
               });
             }}
           />
-        </div>
-
-        <input
-          type="submit"
-          value="Valider"
-        />
-      </form>
-    </div>
+        </Flex>{' '}
+      </Flex>
+    </form>
   );
 }

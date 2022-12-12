@@ -1,4 +1,3 @@
-import { ReactNode, useRef } from 'react';
 import {
   AlertDialog,
   AlertDialogBody,
@@ -8,15 +7,25 @@ import {
   AlertDialogOverlay,
   Button,
 } from '@chakra-ui/react';
+import { ReactNode, useRef } from 'react';
 
-type MyModalProps = { children: ReactNode; isOpen: boolean; title: string; onClose: () => void; onSubmit: () => void };
+type MyModalProps = {
+  closeOnOverlayClick?: boolean;
+  children: ReactNode;
+  isOpen: boolean;
+  title: string;
+  onClose: () => void;
+  onSubmit: () => void;
+};
 
-export function MySaveModal({ children, title, isOpen, onClose, onSubmit }: MyModalProps) {
+export function MySaveModal({ children, title, isOpen, onClose, onSubmit, closeOnOverlayClick = true }: MyModalProps) {
   // TODO fix this type
   const cancelRef = useRef<any>();
 
   return (
     <AlertDialog
+      motionPreset="slideInBottom"
+      closeOnOverlayClick={closeOnOverlayClick}
       isOpen={isOpen}
       leastDestructiveRef={cancelRef}
       onClose={onClose}

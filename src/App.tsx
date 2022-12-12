@@ -1,15 +1,14 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { MyMainLayout } from './component/layout/MyMainLayout';
+import { BackOffice } from './page/back-office/BackOffice';
 import { Contact } from './page/contact/Contact';
 import { Customers } from './page/customer/Customers';
-import { CreateDeliveries } from './page/delivery/CreateDeliveries';
 import { Deliveries } from './page/delivery/Deliveries';
 import { Home } from './page/home/Home';
+import { Invoices } from './page/invoice/Invoices';
 import { Products } from './page/product/Products';
 import { Settings } from './page/settings/Settings';
-import { Invoices } from './page/invoice/Invoices';
-import { BackOffice } from './page/back-office/BackOffice';
 
 function App() {
   return (
@@ -32,15 +31,6 @@ function App() {
           path="delivery"
           element={<Deliveries />}
         />
-        <Route
-          path="delivery/create"
-          element={<CreateDeliveries />}
-        >
-          <Route
-            path=":customerId"
-            element={<CreateDeliveries />}
-          />
-        </Route>
         <Route
           path="invoice"
           element={<Invoices />}

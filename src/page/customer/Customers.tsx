@@ -1,8 +1,3 @@
-import { useRef, useState } from 'react';
-import { useSnapshot } from 'valtio';
-import { addCustomer, Customer, getCustomer, store } from '../../backend';
-import { MyScreenLayout } from '../../component/layout/MyScreenLayout';
-import { MyH1 } from '../../component/typography/MyFont';
 import {
   Box,
   Button,
@@ -16,9 +11,13 @@ import {
   Flex,
   useDisclosure,
 } from '@chakra-ui/react';
-import { Link } from 'react-router-dom';
-import { MyCreateModal } from '../../component/modal/MyCreateModal';
+import { useRef, useState } from 'react';
+import { useSnapshot } from 'valtio';
+import { addCustomer, Customer, getCustomer, store } from '../../backend';
 import { MyTextInput } from '../../component/form/input/MyTextInput';
+import { MyScreenLayout } from '../../component/layout/MyScreenLayout';
+import { MyCreateModal } from '../../component/modal/MyCreateModal';
+import { MyH1 } from '../../component/typography/MyFont';
 
 export function Customers() {
   const { isOpen: isDrawerOpen, onOpen: onDrawerOpen, onClose: onDrawerClose } = useDisclosure();
@@ -74,12 +73,9 @@ export function Customers() {
           <DrawerOverlay />
           <DrawerContent>
             <DrawerCloseButton />
-            <DrawerHeader>{customer.name}</DrawerHeader>
-
+            <DrawerHeader>Focus client</DrawerHeader>
             <DrawerBody>
-              <div>
-                <Link to={`/delivery/create/${customer._id}`}>Livrer</Link>
-              </div>
+              <div>{customer.name}</div>
             </DrawerBody>
 
             <DrawerFooter>
