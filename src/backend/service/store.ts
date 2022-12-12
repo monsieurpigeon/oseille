@@ -9,7 +9,6 @@ interface Store {
   products: Product[];
   product: Product | null;
   customers: Customer[];
-  customer: Customer | null;
   deliveries: Delivery[];
   delivery: Delivery | null;
   invoices: Invoice[];
@@ -21,10 +20,9 @@ export const store = proxy<Store>({
   products: [],
   product: null,
   customers: [],
-  customer: null,
   deliveries: [],
   delivery: null,
-  invoices:[],
+  invoices: [],
   invoice: null,
-  farm: null
+  farm: null,
 });

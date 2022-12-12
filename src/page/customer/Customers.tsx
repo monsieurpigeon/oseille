@@ -1,41 +1,99 @@
-import { useState } from 'react';
-import { Link, Outlet } from 'react-router-dom';
+import { useRef, useState } from 'react';
 import { useSnapshot } from 'valtio';
-import { addCustomer, store } from '../../backend';
-import { MyButton } from '../../component/form/button/MyButton';
-import { MyTextInput } from '../../component/form/input/MyTextInput';
+import { addCustomer, getCustomer, store } from '../../backend';
 import { MyScreenLayout } from '../../component/layout/MyScreenLayout';
 import { MyH1 } from '../../component/typography/MyFont';
-import { Flex } from '@chakra-ui/react';
+import {
+  Box,
+  Button,
+  Drawer,
+  DrawerBody,
+  DrawerCloseButton,
+  DrawerContent,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerOverlay,
+  Flex,
+  useDisclosure,
+} from '@chakra-ui/react';
+import { Link } from 'react-router-dom';
+import { MyCreateModal } from '../../component/modal/MyCreateModal';
+import { MyTextInput } from '../../component/form/input/MyTextInput';
 
 export function Customers() {
+  const { isOpen: isDrawerOpen, onOpen: onDrawerOpen, onClose: onDrawerClose } = useDisclosure();
+  const btnRef = useRef<any>();
+
   const [text, setText] = useState('');
   const { customers } = useSnapshot(store);
+  const [customer, setCustomer] = useState();
 
   return (
     <MyScreenLayout>
-      <MyH1>Clients</MyH1>
-      <MyTextInput
-        placeholder="Nouveau client"
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-      />
-      <MyButton
-        label="Ajouter"
-        onClick={() => {
-          addCustomer({ name: text });
-          setText('');
-        }}
-      />
+      <Flex
+        gap={4}
+        alignItems="center"
+      >
+        <MyH1>Clients</MyH1>
+        <MyCreateModal
+          onSubmit={() => {
+            addCustomer({ name: text });
+            setText('');
+          }}
+          title="Nouveau client"
+        >
+          <MyTextInput
+            placeholder="Nom du client"
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+          />
+        </MyCreateModal>
+      </Flex>
 
       {customers.map((customer: any) => (
         <div key={customer._id}>
-          <Link to={customer._id}>{customer.name}</Link>
+          <Box
+            ref={btnRef}
+            cursor="pointer"
+            onClick={() => {
+              onDrawerOpen();
+              getCustomer(customer._id).then((customer) => setCustomer(customer));
+            }}
+          >
+            {customer.name}
+          </Box>
         </div>
       ))}
-      <Flex>
-        <Outlet />
-      </Flex>
+      {!!customer && (
+        <Drawer
+          isOpen={isDrawerOpen}
+          placement="right"
+          onClose={onDrawerClose}
+          finalFocusRef={btnRef}
+        >
+          <DrawerOverlay />
+          <DrawerContent>
+            <DrawerCloseButton />
+            <DrawerHeader>{customer.name}</DrawerHeader>
+
+            <DrawerBody>
+              <div>
+                <Link to={`/delivery/create/${customer._id}`}>Livrer</Link>
+              </div>
+            </DrawerBody>
+
+            <DrawerFooter>
+              <Button
+                variant="outline"
+                mr={3}
+                onClick={onDrawerClose}
+              >
+                Retour
+              </Button>
+            </DrawerFooter>
+          </DrawerContent>
+        </Drawer>
+      )}
     </MyScreenLayout>
   );
 }

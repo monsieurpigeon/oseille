@@ -31,6 +31,6 @@ export const addCustomer = (customer: CustomerInput) => {
 
 export const getCustomer = (id: string) => {
   return db.get(id).then((result) => {
-    store.customer = result as unknown as Customer;
+    return result;
   });
 };

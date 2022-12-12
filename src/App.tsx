@@ -3,7 +3,6 @@ import { Route, Routes } from 'react-router-dom';
 import { MyMainLayout } from './component/layout/MyMainLayout';
 import { Contact } from './page/contact/Contact';
 import { Customers } from './page/customer/Customers';
-import { CustomerDetail } from './page/customer/detail/CustomerDetail';
 import { CreateDeliveries } from './page/delivery/CreateDeliveries';
 import { Deliveries } from './page/delivery/Deliveries';
 import { Home } from './page/home/Home';
@@ -27,12 +26,8 @@ function App() {
         <Route
           path="customer"
           element={<Customers />}
-        >
-          <Route
-            path=":id"
-            element={<CustomerDetail />}
-          />
-        </Route>
+        />
+
         <Route
           path="delivery"
           element={<Deliveries />}
