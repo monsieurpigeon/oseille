@@ -1,5 +1,5 @@
-import { NavLink } from 'react-router-dom';
 import { Box, ListItem, UnorderedList } from '@chakra-ui/react';
+import { NavLink } from 'react-router-dom';
 
 const navBarItems = [
   { label: 'Produits', emoji: '🍓', path: 'product' },
@@ -12,10 +12,18 @@ const navBarItems = [
 
 export function MyNavigation() {
   return (
-    <Box>
+    <Box
+      position="sticky"
+      top="100px"
+    >
       <UnorderedList styleType="none">
         {navBarItems.map((item) => (
-          <ListItem key={item.path}>
+          <ListItem
+            key={item.path}
+            p={4}
+            fontSize={20}
+            fontWeight="bold"
+          >
             <NavLink to={item.path}>
               {item.emoji} {item.label}
             </NavLink>

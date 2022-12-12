@@ -36,15 +36,15 @@ function App() {
           element={<Invoices />}
         />
         <Route
-          path="/contact"
+          path="contact"
           element={<Contact />}
         />
         <Route
-          path="/settings"
+          path="settings"
           element={<Settings />}
         />
         <Route
-          path="/admin"
+          path="admin"
           element={<BackOffice />}
         />
       </Routes>

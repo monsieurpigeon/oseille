@@ -7,6 +7,7 @@ import { MyButton } from '../../component/form/button/MyButton';
 import { MyScreenLayout } from '../../component/layout/MyScreenLayout';
 import { MyCreateModal } from '../../component/modal/MyCreateModal';
 import { MyH1 } from '../../component/typography/MyFont';
+import { priceFormatter } from '../../utils/formatter';
 import { CreateDeliveries } from './CreateDeliveries';
 
 export function Deliveries() {
@@ -34,32 +35,42 @@ export function Deliveries() {
       </Flex>
       {deliveries.map((delivery: any) => {
         return (
-          <div key={delivery._id}>
-            <div>
-              {delivery.customer.name} - {delivery.documentId}
-            </div>
-            {!delivery.invoiceId ? (
+          <Flex
+            direction="column"
+            p={4}
+            key={delivery._id}
+          >
+            <Flex
+              gap={4}
+              alignItems="center"
+            >
+              <div>
+                {delivery.customer.name} - {delivery.documentId}
+              </div>
+              {!delivery.invoiceId ? (
+                <MyButton
+                  onClick={() => {
+                    addInvoice([delivery]);
+                  }}
+                  label="Facturer"
+                />
+              ) : null}
               <MyButton
                 onClick={() => {
-                  addInvoice([delivery]);
+                  exportDocument({ payload: delivery });
                 }}
-                label="Facturer"
+                label="Export PDF"
               />
-            ) : null}
-            <MyButton
-              onClick={() => {
-                exportDocument({ payload: delivery });
-              }}
-              label="Export PDF"
-            />
+            </Flex>
+
             {delivery.products.map((el: any) => {
               return (
                 <div key={el.product._id}>
-                  {el.quantity} * {el.product.name} #{el.productId} - {el.product.price}
+                  {el.quantity} * {el.product.name} #{el.productId} - {priceFormatter(el.product.price)}
                 </div>
               );
             })}
-          </div>
+          </Flex>
         );
       })}
     </MyScreenLayout>
