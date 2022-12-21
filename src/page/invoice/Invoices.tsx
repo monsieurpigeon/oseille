@@ -1,9 +1,8 @@
-import { Link } from 'react-router-dom';
 import { useSnapshot } from 'valtio';
 import { exportDocument, store } from '../../backend';
+import { MyButton } from '../../component/form/button/MyButton';
 import { MyScreenLayout } from '../../component/layout/MyScreenLayout';
 import { MyH1 } from '../../component/typography/MyFont';
-import { MyButton } from '../../component/form/button/MyButton';
 
 export function Invoices() {
   const { invoices } = useSnapshot(store);
@@ -11,7 +10,6 @@ export function Invoices() {
   return (
     <MyScreenLayout>
       <MyH1>Factures</MyH1>
-      <Link to="create">Nouveau</Link>
       {invoices.map((invoice: any) => {
         return (
           <div key={invoice._id}>

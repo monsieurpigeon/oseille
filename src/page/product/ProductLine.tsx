@@ -1,10 +1,9 @@
-import { useState } from 'react';
-import { MyButton } from '../../component/form/button/MyButton';
 import { Flex, Spacer, Text, useDisclosure } from '@chakra-ui/react';
+import { useState } from 'react';
+import { updatePrice } from '../../backend';
+import { MyNumberInput } from '../../component/form/input/MyNumberInput';
 import { MySaveModal } from '../../component/modal/MySaveModal';
 import { priceFormatter } from '../../utils/formatter';
-import { MyNumberInput } from '../../component/form/input/MyNumberInput';
-import { updatePrice } from '../../backend';
 
 export function ProductLine({ product }: any) {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -22,10 +21,6 @@ export function ProductLine({ product }: any) {
           € / {product.unit} : {product.price.toFixed(2)}
         </Text>
       </Flex>
-      <MyButton
-        onClick={onOpen}
-        label="✏️"
-      />
 
       <MySaveModal
         isOpen={isOpen}

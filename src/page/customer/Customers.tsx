@@ -13,17 +13,16 @@ import {
 } from '@chakra-ui/react';
 import { useRef, useState } from 'react';
 import { useSnapshot } from 'valtio';
-import { addCustomer, Customer, getCustomer, store } from '../../backend';
-import { MyTextInput } from '../../component/form/input/MyTextInput';
+import { Customer, store } from '../../backend';
+import { getObject } from '../../backend/entity/common';
 import { MyScreenLayout } from '../../component/layout/MyScreenLayout';
-import { MyCreateModal } from '../../component/modal/MyCreateModal';
 import { MyH1 } from '../../component/typography/MyFont';
+import { CreateCustomer } from './CreateCustomer';
 
 export function Customers() {
-  const { isOpen: isDrawerOpen, onOpen: onDrawerOpen, onClose: onDrawerClose } = useDisclosure();
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const btnRef = useRef<any>();
 
-  const [text, setText] = useState('');
   const { customers } = useSnapshot(store);
   const [customer, setCustomer] = useState<Customer>();
 
@@ -34,19 +33,7 @@ export function Customers() {
         alignItems="center"
       >
         <MyH1>Clients</MyH1>
-        <MyCreateModal
-          onSubmit={() => {
-            addCustomer({ name: text });
-            setText('');
-          }}
-          title="Nouveau client"
-        >
-          <MyTextInput
-            placeholder="Nom du client"
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-          />
-        </MyCreateModal>
+        <CreateCustomer />
       </Flex>
 
       {customers.map((customer: any) => (
@@ -55,8 +42,8 @@ export function Customers() {
             ref={btnRef}
             cursor="pointer"
             onClick={() => {
-              onDrawerOpen();
-              getCustomer(customer._id).then((customer) => setCustomer(customer as unknown as Customer));
+              onOpen();
+              getObject(customer._id).then((customer) => setCustomer(customer as unknown as Customer));
             }}
           >
             {customer.name}
@@ -65,9 +52,9 @@ export function Customers() {
       ))}
       {!!customer && (
         <Drawer
-          isOpen={isDrawerOpen}
+          isOpen={isOpen}
           placement="right"
-          onClose={onDrawerClose}
+          onClose={onClose}
           finalFocusRef={btnRef}
         >
           <DrawerOverlay />
@@ -82,7 +69,7 @@ export function Customers() {
               <Button
                 variant="outline"
                 mr={3}
-                onClick={onDrawerClose}
+                onClick={onClose}
               >
                 Retour
               </Button>

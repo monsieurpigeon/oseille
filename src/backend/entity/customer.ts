@@ -28,9 +28,3 @@ export const addCustomer = (customer: CustomerInput) => {
     .then((data) => data.id)
     .catch(console.error);
 };
-
-export const getCustomer = (id: string) => {
-  return db.get(id).then((result) => {
-    return result;
-  });
-};

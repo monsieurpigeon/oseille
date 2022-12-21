@@ -1,22 +1,17 @@
+import { Box, Flex, Text, useDisclosure } from '@chakra-ui/react';
 import { useState } from 'react';
 import { useSnapshot } from 'valtio';
-import { addProduct, store, Unit } from '../../backend';
-import { MyTextInput } from '../../component/form/input/MyTextInput';
+import { Product, store } from '../../backend';
+import { getObject } from '../../backend/entity/common';
 import { MyScreenLayout } from '../../component/layout/MyScreenLayout';
-import { MyNumberInput } from '../../component/form/input/MyNumberInput';
 import { MyH1 } from '../../component/typography/MyFont';
-import { ProductLine } from './ProductLine';
-import { MySelect } from '../../component/form/select/MySelect';
-import { Flex, useDisclosure } from '@chakra-ui/react';
-import { MyCreateModal } from '../../component/modal/MyCreateModal';
+import { CreateProduct } from './CreateProduct';
+import { FocusProduct } from './FocusProduct';
 
 export function Products() {
   const { isOpen, onOpen, onClose } = useDisclosure();
-
-  const [name, setName] = useState('');
-  const [price, setPrice] = useState('0.00');
-  const [unit, setUnit] = useState<Unit>('kg');
   const { products } = useSnapshot(store);
+  const [product, setProduct] = useState<Product>();
 
   return (
     <MyScreenLayout>
@@ -25,46 +20,39 @@ export function Products() {
         alignItems="center"
       >
         <MyH1>Produits</MyH1>
-        <MyCreateModal
-          title={'Nouveau produit'}
-          onSubmit={() => {
-            addProduct({ name, price: +price, unit }).catch(console.error);
-            setName('');
-            setPrice('0.00');
-          }}
-        >
-          <MyTextInput
-            placeholder="nom du produit"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
-          <MyNumberInput
-            placeholder="prix"
-            value={price}
-            onChange={(value) => setPrice(value)}
-          />
-          <MySelect
-            options={[
-              { value: 'kg', label: 'kg' },
-              { value: 'piece', label: 'piece' },
-            ]}
-            value={unit}
-            onChange={(e) => {
-              setUnit(e.target.value as Unit);
+        <CreateProduct />
+      </Flex>
+      {products.map((product: any) => (
+        <div key={product._id}>
+          <Box
+            cursor="pointer"
+            onClick={() => {
+              onOpen();
+              getObject(product._id).then((product) => setProduct(product as unknown as Product));
             }}
-            placeholder={'unite ...'}
-          />
-        </MyCreateModal>
-      </Flex>
+            p={4}
+          >
+            <Flex
+              w={340}
+              justifyContent="space-between"
+            >
+              <Text>{product.name}</Text>
+              <Text>
+                € / {product.unit} : {product.price.toFixed(2)}
+              </Text>
+            </Flex>
+          </Box>
+        </div>
+      ))}
 
-      <Flex direction="column">
-        {products.map((product: any) => (
-          <ProductLine
-            key={product._id}
-            product={product}
-          />
-        ))}
-      </Flex>
+      {!!product && (
+        <FocusProduct
+          isOpen={isOpen}
+          onClose={onClose}
+          product={product}
+          onOpen={onOpen}
+        />
+      )}
     </MyScreenLayout>
   );
 }
