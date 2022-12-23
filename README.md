@@ -1,6 +1,6 @@
 # Oseille
 
-https://oseille.vercel.app/
+https://oseille.app/
 
 ## Requirements
 
