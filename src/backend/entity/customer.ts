@@ -5,10 +5,18 @@ export interface Customer {
   _id: string;
   type: 'Customer';
   name: string;
+  address1: string;
+  address2: string;
+  zip: string;
+  city: string;
 }
 
 export interface CustomerInput {
   name: string;
+  address1: string;
+  address2: string;
+  zip: string;
+  city: string;
 }
 
 export const loadCustomers = (id?: string) => {

@@ -63,6 +63,11 @@ export function Customers() {
             <DrawerHeader>Focus client</DrawerHeader>
             <DrawerBody>
               <div>{customer.name}</div>
+              <div>{customer.address1}</div>
+              <div>{customer.address2}</div>
+              <div>
+                {customer.zip} {customer.city}
+              </div>
             </DrawerBody>
 
             <DrawerFooter>

@@ -1,11 +1,15 @@
 import { db } from '../service/database';
-import { store } from '../service/store';
 import { DocumentKey } from '../service/pdf';
+import { store } from '../service/store';
 
 export interface Farm {
   _id: string;
   _rev: string;
   title: string;
+  address1: string;
+  address2: string;
+  zip: string;
+  city: string;
   invoiceId: number;
   footer: string;
   deliveryId: number;
@@ -13,6 +17,10 @@ export interface Farm {
 
 export interface FarmInput {
   title?: string;
+  address1?: string;
+  address2?: string;
+  zip?: string;
+  city?: string;
   footer?: string;
 }
 
@@ -35,13 +43,13 @@ export const addFarm = () => {
   });
 };
 
-export const updateFarmName = ({ title }: FarmInput) => {
+export const updateFarmName = (farm: FarmInput) => {
   db.get(FARM_KEY).then((doc) => {
     db.put({
       ...doc,
       _id: FARM_KEY,
       _rev: doc._rev,
-      title,
+      ...farm,
     }).catch(console.error);
   });
 };

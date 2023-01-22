@@ -1,7 +1,7 @@
 import * as pdfMake from 'pdfmake/build/pdfmake';
+import { priceFormatter } from '../../utils/formatter';
 import { Product } from '../entity/product';
 import { store } from './store';
-import { priceFormatter } from '../../utils/formatter';
 
 const fonts = {
   Roboto: {
@@ -33,7 +33,30 @@ export const exportDocument = ({ payload }: any) => {
         style: 'tableExample',
         table: {
           widths: ['*', '*'],
-          body: [[store.farm?.title || 'La ferme sans nom', { text: payload.customer.name, alignment: 'right' }]],
+          body: [
+            [
+              {
+                columns: [
+                  [
+                    { text: store.farm?.title || 'La ferme sans nom' },
+                    { text: store.farm?.address1 || '1 rue du chèque en bois' },
+                    { text: store.farm?.address2 || '' },
+                    { text: `${store.farm?.zip || '33000'} ${store.farm?.city || 'Bordeaux'}` },
+                  ],
+                ],
+              },
+              {
+                columns: [
+                  [
+                    { text: payload.customer.name, alignment: 'right' },
+                    { text: payload.customer.address1, alignment: 'right' },
+                    { text: payload.customer.address2, alignment: 'right' },
+                    { text: `${payload.customer.zip} ${payload.customer.city}`, alignment: 'right' },
+                  ],
+                ],
+              },
+            ],
+          ],
         },
       },
 
@@ -66,7 +89,8 @@ export const exportDocument = ({ payload }: any) => {
                 {
                   text: el.product.unit,
                   alignment: 'left',
-                },{ text: priceFormatter(el.product.price), alignment: 'right' },
+                },
+                { text: priceFormatter(el.product.price), alignment: 'right' },
                 { text: priceFormatter(el.product.price * el.quantity), alignment: 'right' },
               ];
             }),
