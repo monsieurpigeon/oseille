@@ -37,7 +37,7 @@ export function Home() {
         direction="column"
       >
         <MyH1>Bienvenue sur Oseille</MyH1>
-        <MySubtitle>L'application qui aide les maraîchers à gérer leur argent</MySubtitle>
+        <MySubtitle>L'application qui aide les maraîchers à gérer leur argent, entre autres...</MySubtitle>
         <p>Application gratuite, en code libre, et qui marche sans internet</p>
         <MySubtitle>
           Attention : Cette application est toujours en développement et va connaitre de gros changements jusqu'à nouvel
