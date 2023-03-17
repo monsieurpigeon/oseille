@@ -18,8 +18,8 @@ export function CreateDeliveries({ register }: any) {
           {customers.map((customer) => {
             return (
               <option
-                key={customer._id}
-                value={customer._id}
+                key={customer.id}
+                value={customer.id}
               >
                 {customer.name}
               </option>
@@ -41,8 +41,8 @@ export function CreateDeliveries({ register }: any) {
                   {products.map((product) => {
                     return (
                       <option
-                        value={product._id}
-                        key={product._id}
+                        value={product.id}
+                        key={product.id}
                       >
                         {product.name}
                       </option>

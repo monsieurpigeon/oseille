@@ -51,7 +51,7 @@ export const addInvoice = (deliveries: Delivery[]) => {
       type: 'Invoice',
     })
       .then((result) => {
-        addInvoiceId(result.id, delivery._id);
+        addInvoiceId(result.id, delivery.id);
         updateDocumentId('Invoice');
       })
       .catch(console.error);
