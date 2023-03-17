@@ -1,4 +1,4 @@
-import { db, relDb } from '../service/database';
+import { relDb } from '../service/database';
 import { store } from '../service/store';
 import { Customer, loadCustomer } from './customer';
 import { Product, loadProduct } from './product';
@@ -57,13 +57,11 @@ export const addDelivery = async (delivery: DeliveryInput) => {
 };
 
 export const addInvoiceId = (invoiceId: string, deliveryId: string) => {
-  db.get(deliveryId)
-    .then((delivery) => {
-      db.put({
-        ...delivery,
-        _rev: delivery._rev,
-        invoiceId,
-      }).catch(console.error);
+  relDb.rel
+    .find('delivery', deliveryId)
+    .then((result) => {
+      const delivery = result.deliveries[0];
+      relDb.rel.save('delivery', { ...delivery, invoiceId }).catch(console.error);
     })
     .catch(console.error);
 };

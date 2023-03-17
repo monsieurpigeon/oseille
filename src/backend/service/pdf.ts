@@ -107,7 +107,7 @@ export const exportDocument = ({ payload }: any) => {
         )}`,
         alignment: 'right',
       },
-      { qr: payload._id, fit: '80' },
+      { qr: payload.id, fit: '80' },
       ...(payload.type === 'Invoice' ? [{ text: 'Livraisons liees', alignment: 'right' }] : []),
       ...(payload.deliveryDocumentIds
         ? payload.deliveryDocumentIds?.map((text: string) => ({

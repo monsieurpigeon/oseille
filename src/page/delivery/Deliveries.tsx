@@ -1,5 +1,4 @@
 import { Flex } from '@chakra-ui/react';
-import React from 'react';
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useSnapshot } from 'valtio';
 import { addDelivery, addInvoice, DeliveryInput, exportDocument, store } from '../../backend';
@@ -65,7 +64,7 @@ export function Deliveries() {
 
             {delivery.products.map((el: any) => {
               return (
-                <div key={el.product._id}>
+                <div key={el.product.id}>
                   {el.quantity} * {el.product.name} #{el.productId} - {priceFormatter(el.product.price)}
                 </div>
               );
