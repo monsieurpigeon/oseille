@@ -42,7 +42,7 @@ export function Customers() {
             cursor="pointer"
             onClick={() => {
               onOpen();
-              loadCustomer(customer.id).then((result) => setCustomer(result.customers[0] as unknown as Customer));
+              loadCustomer(customer.id).then((customer) => setCustomer(customer as unknown as Customer));
             }}
           >
             {customer.name}

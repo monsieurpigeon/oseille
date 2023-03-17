@@ -17,7 +17,7 @@ export interface ProductInput {
 
 export type Unit = 'kg' | 'piece';
 
-export async function loadProducts(id: string) {
+export async function loadProducts() {
   const result = await relDb.rel.find('product');
   store.products = result.products.sort((a: Product, b: Product) => {
     return a.name.localeCompare(b.name);
@@ -25,7 +25,8 @@ export async function loadProducts(id: string) {
 }
 
 export async function loadProduct(id: string) {
-  return await relDb.rel.find('product', id);
+  const result = await relDb.rel.find('product', id);
+  return result.products[0];
 }
 
 export const addProduct = (product: ProductInput) => {

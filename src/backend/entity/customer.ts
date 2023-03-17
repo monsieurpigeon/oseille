@@ -26,7 +26,8 @@ export async function loadCustomers() {
 }
 
 export async function loadCustomer(id: string) {
-  return await relDb.rel.find('customer', id);
+  const result = await relDb.rel.find('customer', id);
+  return result.customers[0];
 }
 
 export const addCustomer = (customer: CustomerInput) => {

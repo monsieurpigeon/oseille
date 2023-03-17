@@ -28,7 +28,7 @@ export function Products() {
             cursor="pointer"
             onClick={() => {
               onOpen();
-              loadProduct(product.id).then((result) => setProduct(result.products[0] as unknown as Product));
+              loadProduct(product.id).then((result) => setProduct(product as unknown as Product));
             }}
             p={4}
           >

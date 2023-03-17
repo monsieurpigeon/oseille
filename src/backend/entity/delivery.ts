@@ -1,11 +1,12 @@
 import { db, relDb } from '../service/database';
 import { store } from '../service/store';
 import { Customer, loadCustomer } from './customer';
-import { Product } from './product';
+import { Product, loadProduct } from './product';
 import { documentIdFormatter } from '../../utils/formatter';
 import { updateDocumentId } from './farm';
 
 export interface Delivery {
+  id: string;
   customer: Customer;
   documentId: string;
   products: Array<{
@@ -38,7 +39,7 @@ export const addDelivery = async (delivery: DeliveryInput) => {
   const promise = async () => {
     const products = await Promise.all(
       delivery.products.map(async (el) => {
-        const product = await db.get(el.productId);
+        const product = await loadProduct(el.productId);
         return { ...el, product };
       }),
     );
@@ -46,11 +47,8 @@ export const addDelivery = async (delivery: DeliveryInput) => {
   };
 
   promise().then((deliveryFull) => {
-    db.post({
-      ...deliveryFull,
-      documentId: documentIdFormatter(store.farm?.deliveryId || 0, 'Delivery'),
-      type: 'Delivery',
-    })
+    relDb.rel
+      .save('delivery', { ...deliveryFull, documentId: documentIdFormatter(store.farm?.deliveryId || 0, 'Delivery') })
       .then(() => {
         updateDocumentId('Delivery');
       })

@@ -61,6 +61,7 @@ let debounce: NodeJS.Timeout;
 
 export const initDatabase = async () => {
   await addFarm();
+  loadFarm();
 
   const p1 = await addProduct({ name: 'Tomate', price: 0.42, unit: 'kg' });
   const p2 = await addProduct({ name: 'Aubergine', price: 4, unit: 'kg' });
@@ -80,34 +81,18 @@ export const initDatabase = async () => {
     city: 'Bordeaux',
   });
   const c3 = await addCustomer({
-    name: 'Epicerie de parisiens',
+    name: 'Épicerie de parisiens',
     address1: '1 rue du topinambour',
     address2: '',
     zip: '33000',
     city: 'Bordeaux',
   });
   addDelivery({
-    customerId: c1 || '',
+    customerId: c1.id || '',
     products: [
-      { productId: p1 || '', quantity: 17 },
-      { productId: p2 || '', quantity: 18.5 },
-      { productId: p3 || '', quantity: 19 },
-    ],
-  }).catch(console.error);
-
-  addDelivery({
-    customerId: c2 || '',
-    products: [
-      { productId: p1 || '', quantity: 1 },
-      { productId: p2 || '', quantity: 2 },
-    ],
-  }).catch(console.error);
-
-  addDelivery({
-    customerId: c3 || '',
-    products: [
-      { productId: p2 || '', quantity: 3 },
-      { productId: p3 || '', quantity: 4 },
+      { productId: p1.id || '', quantity: 17 },
+      { productId: p2.id || '', quantity: 18.5 },
+      { productId: p3.id || '', quantity: 19 },
     ],
   }).catch(console.error);
 
@@ -115,7 +100,6 @@ export const initDatabase = async () => {
 };
 
 export const loadDatabase = () => {
-  console.log('LOAD DATABASE');
   loadCustomers();
   loadProducts();
   loadDeliveries();
