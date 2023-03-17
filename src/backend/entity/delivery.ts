@@ -1,13 +1,11 @@
-import { db } from '../service/database';
+import { db, relDb } from '../service/database';
 import { store } from '../service/store';
-import { Customer } from './customer';
+import { Customer, loadCustomer } from './customer';
 import { Product } from './product';
 import { documentIdFormatter } from '../../utils/formatter';
 import { updateDocumentId } from './farm';
 
 export interface Delivery {
-  _id: string;
-  type: 'Delivery';
   customer: Customer;
   documentId: string;
   products: Array<{
@@ -26,17 +24,17 @@ export interface DeliveryInput {
   }>;
 }
 
-export const loadDeliveries = (id?: string) => {
-  db.find({
-    selector: { type: 'Delivery' },
-  }).then((result) => {
-    store.deliveries = result.docs as unknown as Delivery[];
-  });
-  return id;
-};
+export async function loadDeliveries() {
+  const result = await relDb.rel.find('delivery');
+  store.deliveries = result.deliveries;
+  // .sort((a: Customer, b: Customer) => {
+  //   return a.name.localeCompare(b.name);
+  // });
+}
 
 export const addDelivery = async (delivery: DeliveryInput) => {
-  const customer = await db.get(delivery.customerId);
+  const customer = await loadCustomer(delivery.customerId);
+  console.log({ customer });
   const promise = async () => {
     const products = await Promise.all(
       delivery.products.map(async (el) => {

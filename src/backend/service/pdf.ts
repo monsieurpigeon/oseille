@@ -2,6 +2,7 @@ import * as pdfMake from 'pdfmake/build/pdfmake';
 import { priceFormatter } from '../../utils/formatter';
 import { Product } from '../entity/product';
 import { store } from './store';
+import { DEFAULT_FARM } from '../../utils/defaults';
 
 const fonts = {
   Roboto: {
@@ -38,10 +39,10 @@ export const exportDocument = ({ payload }: any) => {
               {
                 columns: [
                   [
-                    { text: store.farm?.title || 'La ferme sans nom' },
-                    { text: store.farm?.address1 || '1 rue du chèque en bois' },
-                    { text: store.farm?.address2 || '' },
-                    { text: `${store.farm?.zip || '33000'} ${store.farm?.city || 'Bordeaux'}` },
+                    { text: store.farm?.title || DEFAULT_FARM.title },
+                    { text: store.farm?.address1 || DEFAULT_FARM.address1 },
+                    { text: store.farm?.address2 || DEFAULT_FARM.address2 },
+                    { text: `${store.farm?.zip || DEFAULT_FARM.zip} ${store.farm?.city || DEFAULT_FARM.city}` },
                   ],
                 ],
               },

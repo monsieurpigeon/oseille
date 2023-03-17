@@ -1,9 +1,8 @@
-import { db } from '../service/database';
+import { db, relDb } from '../service/database';
 import { store } from '../service/store';
 
 export interface Customer {
-  _id: string;
-  type: 'Customer';
+  id: string;
   name: string;
   address1: string;
   address2: string;
@@ -19,20 +18,17 @@ export interface CustomerInput {
   city: string;
 }
 
-export const loadCustomers = (id?: string) => {
-  db.find({
-    selector: { type: 'Customer' },
-  }).then((result) => {
-    store.customers = result.docs as unknown as Customer[];
+export async function loadCustomers() {
+  const result = await relDb.rel.find('customer');
+  store.customers = result.customers.sort((a: Customer, b: Customer) => {
+    return a.name.localeCompare(b.name);
   });
-  return id;
-};
+}
+
+export async function loadCustomer(id: string) {
+  return await relDb.rel.find('customer', id);
+}
+
 export const addCustomer = (customer: CustomerInput) => {
-  return db
-    .post({
-      ...customer,
-      type: 'Customer',
-    })
-    .then((data) => data.id)
-    .catch(console.error);
+  return relDb.rel.save('customer', customer);
 };

@@ -1,8 +1,16 @@
+import { loadFarm } from './entity/farm';
 import { initDatabase, loadDatabase } from './service/database';
 
-initDatabase().then(() => {
-  loadDatabase();
+loadFarm().then((data) => {
+  console.log({ data });
+  if (!data) {
+    initDatabase().then(() => {
+      loadDatabase();
+    });
+  }
 });
+
+loadDatabase();
 
 export * from './service/database';
 export * from './service/store';

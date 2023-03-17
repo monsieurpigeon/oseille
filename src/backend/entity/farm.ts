@@ -3,8 +3,6 @@ import { DocumentKey } from '../service/pdf';
 import { store } from '../service/store';
 
 export interface Farm {
-  _id: string;
-  _rev: string;
   title: string;
   address1: string;
   address2: string;
@@ -26,11 +24,15 @@ export interface FarmInput {
 
 export const FARM_KEY = 'myFarm';
 
-export const loadFarm = () => {
-  db.get(FARM_KEY).then((data) => {
-    store.farm = data as unknown as Farm;
-  });
-};
+export async function loadFarm() {
+  return db
+    .get(FARM_KEY)
+    .then((data) => {
+      store.farm = data as unknown as Farm;
+      return data;
+    })
+    .catch(console.error);
+}
 
 export const addFarm = () => {
   db.post({

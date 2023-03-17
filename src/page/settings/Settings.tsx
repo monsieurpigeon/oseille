@@ -5,6 +5,7 @@ import { MyButton } from '../../component/form/button/MyButton';
 import { MyTextInput } from '../../component/form/input/MyTextInput';
 import { MyScreenLayout } from '../../component/layout/MyScreenLayout';
 import { MyH1, MyH2 } from '../../component/typography/MyFont';
+import { DEFAULT_FARM } from '../../utils/defaults';
 
 const EMPTY_FARM: FarmInput = {
   title: '',
@@ -39,35 +40,35 @@ export function Settings() {
       ) : (
         <>
           <MyTextInput
-            placeholder="La ferme sans nom"
+            placeholder={DEFAULT_FARM.title}
             value={farmInput.title!}
             onChange={(e) => {
               setFarmInput((f) => ({ ...f, title: e.target.value }));
             }}
           />
           <MyTextInput
-            placeholder="1 rue du chèque en bois"
+            placeholder={DEFAULT_FARM.address1}
             value={farmInput.address1!}
             onChange={(e) => {
               setFarmInput((f) => ({ ...f, address1: e.target.value }));
             }}
           />
           <MyTextInput
-            placeholder="BP 12345"
+            placeholder={DEFAULT_FARM.address2}
             value={farmInput.address2!}
             onChange={(e) => {
               setFarmInput((f) => ({ ...f, address2: e.target.value }));
             }}
           />
           <MyTextInput
-            placeholder="33000"
+            placeholder={DEFAULT_FARM.zip}
             value={farmInput.zip!}
             onChange={(e) => {
               setFarmInput((f) => ({ ...f, zip: e.target.value }));
             }}
           />
           <MyTextInput
-            placeholder="Bordeaux"
+            placeholder={DEFAULT_FARM.city}
             value={farmInput.city!}
             onChange={(e) => {
               setFarmInput((f) => ({ ...f, city: e.target.value }));

@@ -1,10 +1,9 @@
-import { db } from '../service/database';
+import { db, relDb } from '../service/database';
 import { store } from '../service/store';
 
 export interface Product {
-  _id: string;
+  id: string;
   _rev: string;
-  type: 'Product';
   name: string;
   unit: Unit;
   price: number;
@@ -18,30 +17,21 @@ export interface ProductInput {
 
 export type Unit = 'kg' | 'piece';
 
-export const loadProducts = (id?: string) => {
-  db.find({
-    selector: { type: 'Product' },
-  }).then((result) => {
-    store.products = result.docs as unknown as Product[];
+export async function loadProducts(id: string) {
+  const result = await relDb.rel.find('product');
+  store.products = result.products.sort((a: Product, b: Product) => {
+    return a.name.localeCompare(b.name);
   });
-  return id;
-};
+}
+
+export async function loadProduct(id: string) {
+  return await relDb.rel.find('product', id);
+}
 
 export const addProduct = (product: ProductInput) => {
-  return db
-    .post({
-      ...product,
-      type: 'Product',
-    })
-    .then((data) => data.id)
-    .catch(console.error);
+  return relDb.rel.save('product', product);
 };
 
 export const updatePrice = (product: Product, price: number) => {
-  return db
-    .put({
-      ...product,
-      price,
-    })
-    .catch(console.error);
+  return relDb.rel.save('product', { ...product, price });
 };

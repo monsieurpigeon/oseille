@@ -1,8 +1,8 @@
 import { Box, Flex, Text, useDisclosure } from '@chakra-ui/react';
 import { useState } from 'react';
 import { useSnapshot } from 'valtio';
-import { Product, store } from '../../backend';
-import { getObject } from '../../backend/entity/common';
+import { Product, loadProduct, loadProducts, store } from '../../backend';
+import { getObject, getRelObject } from '../../backend/entity/common';
 import { MyScreenLayout } from '../../component/layout/MyScreenLayout';
 import { MyH1 } from '../../component/typography/MyFont';
 import { CreateProduct } from './CreateProduct';
@@ -22,13 +22,13 @@ export function Products() {
         <MyH1>Produits</MyH1>
         <CreateProduct />
       </Flex>
-      {products.map((product: any) => (
-        <div key={product._id}>
+      {products.map((product: Product) => (
+        <div key={product.id}>
           <Box
             cursor="pointer"
             onClick={() => {
               onOpen();
-              getObject(product._id).then((product) => setProduct(product as unknown as Product));
+              loadProduct(product.id).then((result) => setProduct(result.products[0] as unknown as Product));
             }}
             p={4}
           >

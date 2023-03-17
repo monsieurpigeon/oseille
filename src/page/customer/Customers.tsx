@@ -13,8 +13,7 @@ import {
 } from '@chakra-ui/react';
 import { useRef, useState } from 'react';
 import { useSnapshot } from 'valtio';
-import { Customer, store } from '../../backend';
-import { getObject } from '../../backend/entity/common';
+import { Customer, loadCustomer, store } from '../../backend';
 import { MyScreenLayout } from '../../component/layout/MyScreenLayout';
 import { MyH1 } from '../../component/typography/MyFont';
 import { CreateCustomer } from './CreateCustomer';
@@ -36,14 +35,14 @@ export function Customers() {
         <CreateCustomer />
       </Flex>
 
-      {customers.map((customer: any) => (
-        <div key={customer._id}>
+      {customers.map((customer: Customer) => (
+        <div key={customer.id}>
           <Box
             ref={btnRef}
             cursor="pointer"
             onClick={() => {
               onOpen();
-              getObject(customer._id).then((customer) => setCustomer(customer as unknown as Customer));
+              loadCustomer(customer.id).then((result) => setCustomer(result.customers[0] as unknown as Customer));
             }}
           >
             {customer.name}
