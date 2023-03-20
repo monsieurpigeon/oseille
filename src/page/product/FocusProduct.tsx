@@ -14,6 +14,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Product, Unit, loadProduct, updateProduct } from '../../backend';
 import { MyNumberInput } from '../../component/form/input/MyNumberInput';
 import { MySelect } from '../../component/form/select/MySelect';
+import { MyTextInput } from '../../component/form/input/MyTextInput';
 
 type FocusProductProps = {
   product: Product;
@@ -25,13 +26,11 @@ type FocusProductProps = {
 
 export function FocusProduct({ product, isOpen, onOpen, onUpdate, onClose }: FocusProductProps) {
   const btnRef = useRef<any>();
+  const [newProduct, setNewProduct] = useState({ price: product.price, unit: product.unit, name: product.name });
   const [editMode, setEditMode] = useState(false);
-  const [newPrice, setNewPrice] = useState(`${product.price}`);
-  const [newUnit, setNewUnit] = useState(product.unit);
 
   useEffect(() => {
-    setNewPrice(`${product.price}`);
-    setNewUnit(product.unit);
+    setNewProduct({ price: product.price, unit: product.unit, name: product.name });
   }, [product]);
 
   return (
@@ -46,11 +45,10 @@ export function FocusProduct({ product, isOpen, onOpen, onUpdate, onClose }: Foc
         <DrawerCloseButton />
         <DrawerHeader>Focus produit</DrawerHeader>
         <DrawerBody>
-          <Text>{product.name}</Text>
-          <Spacer />
-
           {!editMode && (
             <>
+              <Text>{product.name}</Text>
+              <Spacer />
               <Text>
                 € / {product.unit} : {product.price.toFixed(2)}
               </Text>
@@ -66,26 +64,38 @@ export function FocusProduct({ product, isOpen, onOpen, onUpdate, onClose }: Foc
           )}
           {editMode && (
             <>
+              <MyTextInput
+                placeholder={'Nom'}
+                value={newProduct.name}
+                onChange={(e) => {
+                  setNewProduct((p) => ({ ...p, name: e.target.value }));
+                }}
+              />
               <MySelect
                 options={[
                   { value: 'kg', label: 'kg' },
                   { value: 'piece', label: 'piece' },
                 ]}
-                value={newUnit}
+                value={newProduct.unit}
                 onChange={(e) => {
-                  setNewUnit(e.target.value as Unit);
+                  setNewProduct({ ...newProduct, unit: e.target.value as Unit });
                 }}
                 placeholder={'unite ...'}
               />
               <MyNumberInput
-                value={`${newPrice}`}
+                value={`${newProduct.price}`}
                 placeholder="price"
-                onChange={setNewPrice}
+                onChange={(price) => setNewProduct((p) => ({ ...p, price: +price }))}
               />
               <button
                 type="button"
                 onClick={() => {
-                  updateProduct({ ...product, price: +newPrice, unit: newUnit }).then(async (data) => {
+                  updateProduct({
+                    ...product,
+                    price: +newProduct.price,
+                    unit: newProduct.unit,
+                    name: newProduct.name,
+                  }).then(async (data) => {
                     const newProduct = await loadProduct(data.id);
                     onUpdate(newProduct);
                   });
