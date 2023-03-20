@@ -1,8 +1,7 @@
 import { Box, Flex, Text, useDisclosure } from '@chakra-ui/react';
 import { useState } from 'react';
 import { useSnapshot } from 'valtio';
-import { Product, loadProduct, loadProducts, store } from '../../backend';
-import { getObject, getRelObject } from '../../backend/entity/common';
+import { Product, loadProduct, store } from '../../backend';
 import { MyScreenLayout } from '../../component/layout/MyScreenLayout';
 import { MyH1 } from '../../component/typography/MyFont';
 import { CreateProduct } from './CreateProduct';
@@ -51,6 +50,7 @@ export function Products() {
           onClose={onClose}
           product={product}
           onOpen={onOpen}
+          onUpdate={setProduct}
         />
       )}
     </MyScreenLayout>

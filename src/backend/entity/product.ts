@@ -1,4 +1,4 @@
-import { db, relDb } from '../service/database';
+import { relDb } from '../service/database';
 import { store } from '../service/store';
 
 export interface Product {
@@ -33,6 +33,6 @@ export const addProduct = (product: ProductInput) => {
   return relDb.rel.save('product', product);
 };
 
-export const updatePrice = (product: Product, price: number) => {
-  return relDb.rel.save('product', { ...product, price });
+export const updateProduct = (product: Product) => {
+  return relDb.rel.save('product', product);
 };
