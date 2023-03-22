@@ -44,7 +44,7 @@ export function CreateDeliveries({ register }: any) {
                         value={product.id}
                         key={product.id}
                       >
-                        {product.name}
+                        {product.name} ({product.unit})
                       </option>
                     );
                   })}

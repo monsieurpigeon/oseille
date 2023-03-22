@@ -13,22 +13,17 @@ const fonts = {
   },
 };
 
-const titles = {
-  Delivery: 'Bon de livraison',
-  Invoice: 'Facture',
-};
-
 export type DocumentKey = 'Delivery' | 'Invoice';
 
 export const exportDocument = ({ payload }: any) => {
-  const title = titles[payload.type as DocumentKey] || '';
+  console.log({ payload }, payload.title);
   const docDefinition: any = {
     defaultStyle: {
       font: 'Roboto',
     },
     footer: { text: store.farm?.footer, alignment: 'center' },
     content: [
-      { text: `${title} - ${payload.documentId}`, style: 'header' },
+      { text: `${payload.documentId}`, style: 'header' },
       {
         layout: 'noBorders',
         style: 'tableExample',
