@@ -1,7 +1,7 @@
 import { Center, Flex, Link, Text } from '@chakra-ui/react';
 import { NavLink } from 'react-router-dom';
 
-export function MyFooter() {
+export function Footer() {
   return (
     <Center h="50px">
       <Flex>

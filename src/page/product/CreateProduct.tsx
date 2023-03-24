@@ -3,14 +3,14 @@ import { addProduct, Unit } from '../../backend';
 import { MyNumberInput } from '../../component/form/input/MyNumberInput';
 import { MyTextInput } from '../../component/form/input/MyTextInput';
 import { MySelect } from '../../component/form/select/MySelect';
-import { MyCreateModal } from '../../component/modal/MyCreateModal';
+import { CreateModal } from '../../component/modal/CreateModal';
 
 export function CreateProduct() {
   const [name, setName] = useState('');
   const [price, setPrice] = useState('0.00');
   const [unit, setUnit] = useState<Unit>('kg');
   return (
-    <MyCreateModal
+    <CreateModal
       title={'Nouveau produit'}
       onSubmit={() => {
         addProduct({ name, price: +price, unit }).catch(console.error);
@@ -39,6 +39,6 @@ export function CreateProduct() {
         }}
         placeholder={'unite ...'}
       />
-    </MyCreateModal>
+    </CreateModal>
   );
 }

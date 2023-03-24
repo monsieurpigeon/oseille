@@ -1,10 +1,10 @@
 import { useDisclosure } from '@chakra-ui/react';
 import { ReactNode } from 'react';
 import { MyButton } from '../form/button/MyButton';
-import { MySaveModal } from './MySaveModal';
+import { SaveModal } from './SaveModal';
 
-type MyCreateModalProps = { children: ReactNode; title: string; onSubmit: () => void };
-export function MyCreateModal({ children, onSubmit, title }: MyCreateModalProps) {
+type CreateModalProps = { children: ReactNode; title: string; onSubmit: () => void };
+export function CreateModal({ children, onSubmit, title }: CreateModalProps) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
@@ -13,7 +13,7 @@ export function MyCreateModal({ children, onSubmit, title }: MyCreateModalProps)
         label={'Nouveau'}
         onClick={onOpen}
       />
-      <MySaveModal
+      <SaveModal
         isOpen={isOpen}
         title={title}
         onClose={onClose}
@@ -21,7 +21,7 @@ export function MyCreateModal({ children, onSubmit, title }: MyCreateModalProps)
         closeOnOverlayClick={false}
       >
         {children}
-      </MySaveModal>
+      </SaveModal>
     </>
   );
 }

@@ -10,7 +10,7 @@ const navBarItems = [
   { label: 'Contact', emoji: '🖋️', path: 'contact' },
 ];
 
-export function MyNavigation() {
+export function Navigation() {
   return (
     <Box
       position="sticky"

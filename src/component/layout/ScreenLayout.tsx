@@ -1,5 +1,5 @@
 import { Box } from '@chakra-ui/react';
 
-export function MyScreenLayout({ children }: any) {
+export function ScreenLayout({ children }: any) {
   return <Box>{children}</Box>;
 }

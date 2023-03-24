@@ -3,8 +3,8 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 import { useSnapshot } from 'valtio';
 import { addDelivery, addInvoice, DeliveryInput, exportDocument, store } from '../../backend';
 import { MyButton } from '../../component/form/button/MyButton';
-import { MyScreenLayout } from '../../component/layout/MyScreenLayout';
-import { MyCreateModal } from '../../component/modal/MyCreateModal';
+import { ScreenLayout } from '../../component/layout/ScreenLayout';
+import { CreateModal } from '../../component/modal/CreateModal';
 import { MyH1 } from '../../component/typography/MyFont';
 import { priceFormatter } from '../../utils/formatter';
 import { CreateDeliveries } from './CreateDeliveries';
@@ -19,18 +19,18 @@ export function Deliveries() {
   const { register, handleSubmit } = useForm<DeliveryInput>();
 
   return (
-    <MyScreenLayout>
+    <ScreenLayout>
       <Flex
         gap={4}
         alignItems="center"
       >
         <MyH1>Livraisons</MyH1>
-        <MyCreateModal
+        <CreateModal
           title={'Nouvelle livraison'}
           onSubmit={handleSubmit(onSubmit)}
         >
           <CreateDeliveries register={register} />
-        </MyCreateModal>
+        </CreateModal>
       </Flex>
       {deliveries.map((delivery: any) => {
         return (
@@ -72,6 +72,6 @@ export function Deliveries() {
           </Flex>
         );
       })}
-    </MyScreenLayout>
+    </ScreenLayout>
   );
 }

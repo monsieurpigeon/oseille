@@ -1,14 +1,14 @@
 import { useSnapshot } from 'valtio';
 import { exportDocument, store } from '../../backend';
 import { MyButton } from '../../component/form/button/MyButton';
-import { MyScreenLayout } from '../../component/layout/MyScreenLayout';
+import { ScreenLayout } from '../../component/layout/ScreenLayout';
 import { MyH1 } from '../../component/typography/MyFont';
 
 export function Invoices() {
   const { invoices } = useSnapshot(store);
 
   return (
-    <MyScreenLayout>
+    <ScreenLayout>
       <MyH1>Factures</MyH1>
       {invoices.map((invoice: any) => {
         return (
@@ -32,6 +32,6 @@ export function Invoices() {
           </div>
         );
       })}
-    </MyScreenLayout>
+    </ScreenLayout>
   );
 }

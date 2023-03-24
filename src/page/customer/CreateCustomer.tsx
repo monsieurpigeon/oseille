@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { addCustomer, CustomerInput } from '../../backend';
 import { MyTextInput } from '../../component/form/input/MyTextInput';
-import { MyCreateModal } from '../../component/modal/MyCreateModal';
+import { CreateModal } from '../../component/modal/CreateModal';
 
 const EMPTY_CUSTOMER: CustomerInput = {
   name: '',
@@ -14,7 +14,7 @@ const EMPTY_CUSTOMER: CustomerInput = {
 export function CreateCustomer() {
   const [customer, setCustomer] = useState(EMPTY_CUSTOMER);
   return (
-    <MyCreateModal
+    <CreateModal
       onSubmit={() => {
         addCustomer(customer).catch(console.error);
         setCustomer(EMPTY_CUSTOMER);
@@ -46,6 +46,6 @@ export function CreateCustomer() {
         value={customer.city}
         onChange={(e) => setCustomer((customer) => ({ ...customer, city: e.target.value }))}
       />
-    </MyCreateModal>
+    </CreateModal>
   );
 }

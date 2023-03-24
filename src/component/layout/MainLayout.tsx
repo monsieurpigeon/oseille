@@ -1,10 +1,10 @@
 import { Box, Grid, GridItem } from '@chakra-ui/react';
 import { ReactNode } from 'react';
-import { MyFooter } from './footer/MyFooter';
-import { MyHeader } from './header/MyHeader';
-import { MyNavigation } from './navigation/MyNavigation';
+import { Footer } from './Footer';
+import { Header } from './Header';
+import { Navigation } from './Navigation';
 
-export function MyMainLayout({ children }: { children: ReactNode }) {
+export function MainLayout({ children }: { children: ReactNode }) {
   return (
     <Grid
       templateAreas={`"header header"
@@ -20,16 +20,16 @@ export function MyMainLayout({ children }: { children: ReactNode }) {
         position="sticky"
         top="0"
       >
-        <MyHeader />
+        <Header />
       </GridItem>
       <GridItem area={'nav'}>
-        <MyNavigation />
+        <Navigation />
       </GridItem>
       <GridItem area={'main'}>
         <Box>{children}</Box>
       </GridItem>
       <GridItem area={'footer'}>
-        <MyFooter />
+        <Footer />
       </GridItem>
     </Grid>
   );

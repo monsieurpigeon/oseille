@@ -1,8 +1,8 @@
 import { Center, Flex, Spacer, Text } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
-import { SideKick } from '../../modules/sidekick/SideKick';
+import { SideKick } from '../modules/sidekick/SideKick';
 
-export function MyHeader() {
+export function Header() {
   return (
     <Flex bg="white">
       <Center p="4">

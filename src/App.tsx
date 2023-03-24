@@ -1,6 +1,6 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
-import { MyMainLayout } from './component/layout/MyMainLayout';
+import { MainLayout } from './component/layout/MainLayout';
 import { BackOffice } from './page/back-office/BackOffice';
 import { Contact } from './page/contact/Contact';
 import { Customers } from './page/customer/Customers';
@@ -12,7 +12,7 @@ import { Settings } from './page/settings/Settings';
 
 function App() {
   return (
-    <MyMainLayout>
+    <MainLayout>
       <Routes>
         <Route
           path="/"
@@ -48,7 +48,7 @@ function App() {
           element={<BackOffice />}
         />
       </Routes>
-    </MyMainLayout>
+    </MainLayout>
   );
 }
 

@@ -14,7 +14,7 @@ import {
 import { useRef, useState } from 'react';
 import { useSnapshot } from 'valtio';
 import { Customer, loadCustomer, store } from '../../backend';
-import { MyScreenLayout } from '../../component/layout/MyScreenLayout';
+import { ScreenLayout } from '../../component/layout/ScreenLayout';
 import { MyH1 } from '../../component/typography/MyFont';
 import { CreateCustomer } from './CreateCustomer';
 
@@ -26,7 +26,7 @@ export function Customers() {
   const [customer, setCustomer] = useState<Customer>();
 
   return (
-    <MyScreenLayout>
+    <ScreenLayout>
       <Flex
         gap={4}
         alignItems="center"
@@ -81,6 +81,6 @@ export function Customers() {
           </DrawerContent>
         </Drawer>
       )}
-    </MyScreenLayout>
+    </ScreenLayout>
   );
 }

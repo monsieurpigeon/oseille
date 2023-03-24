@@ -1,11 +1,11 @@
-import { MyScreenLayout } from '../../component/layout/MyScreenLayout';
+import { ScreenLayout } from '../../component/layout/ScreenLayout';
 import { MyH1, MyH2, MyLink, MySubtitle } from '../../component/typography/MyFont';
 import { Flex, List, ListIcon, ListItem } from '@chakra-ui/react';
 import { CheckIcon, RepeatIcon, TimeIcon } from '@chakra-ui/icons';
 
 type Status = 'todo' | 'doing' | 'done';
 
-const TODO: Array<{ text: string; status: Status }> = [
+const TODO_ITEMS: Array<{ text: string; status: Status }> = [
   { text: 'Gérer une liste de produits avec un prix', status: 'done' },
   { text: 'Gérer une liste de clients', status: 'done' },
   { text: 'Changer les prix des produits facilement', status: 'done' },
@@ -31,7 +31,7 @@ const statusIcon: { [key: string]: { icon: typeof CheckIcon; color: string } } =
 };
 export function Home() {
   return (
-    <MyScreenLayout>
+    <ScreenLayout>
       <Flex
         gap={4}
         direction="column"
@@ -46,7 +46,7 @@ export function Home() {
         <MySubtitle>Pour l'instant, des donnees de test seront utilise a chaque rechargement de la page</MySubtitle>
         <MyH2>Fonctionnalités :</MyH2>
         <List spacing={3}>
-          {TODO.map(({ status, text }) => {
+          {TODO_ITEMS.map(({ status, text }) => {
             return (
               <ListItem>
                 <ListIcon
@@ -81,7 +81,6 @@ export function Home() {
               </ListItem>
             );
           })}
-          <ListItem listStyleType="none">... Je cherche des investisseurs serieux...</ListItem>
           <ListItem listStyleType="none">... Dites moi de quoi vous avez besoin.</ListItem>
         </List>
         <Flex gap={4}>
@@ -99,10 +98,10 @@ export function Home() {
             p={2}
             border={'1px'}
           >
-            Linkedin
+            LinkedIn
           </MyLink>
         </Flex>
       </Flex>
-    </MyScreenLayout>
+    </ScreenLayout>
   );
 }

@@ -3,7 +3,7 @@ import { useSnapshot } from 'valtio';
 import { destroyDatabase, FarmInput, store, updateFarmFooter, updateFarmName } from '../../backend';
 import { MyButton } from '../../component/form/button/MyButton';
 import { MyTextInput } from '../../component/form/input/MyTextInput';
-import { MyScreenLayout } from '../../component/layout/MyScreenLayout';
+import { ScreenLayout } from '../../component/layout/ScreenLayout';
 import { MyH1, MyH2 } from '../../component/typography/MyFont';
 import { DEFAULT_FARM } from '../../utils/defaults';
 
@@ -26,8 +26,8 @@ export function Settings() {
   }, [farm]);
 
   return (
-    <MyScreenLayout>
-      <MyH1>Reglages</MyH1>
+    <ScreenLayout>
+      <MyH1>Réglages</MyH1>
       <MyButton
         label="Armageddon"
         onClick={() => {
@@ -97,6 +97,6 @@ export function Settings() {
           updateFarmFooter({ footer: farmFooter });
         }}
       />
-    </MyScreenLayout>
+    </ScreenLayout>
   );
 }

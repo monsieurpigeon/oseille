@@ -9,7 +9,7 @@ import {
 } from '@chakra-ui/react';
 import { ReactNode, useRef } from 'react';
 
-type MyModalProps = {
+type ModalProps = {
   closeOnOverlayClick?: boolean;
   children: ReactNode;
   isOpen: boolean;
@@ -18,7 +18,7 @@ type MyModalProps = {
   onSubmit: () => void;
 };
 
-export function MySaveModal({ children, title, isOpen, onClose, onSubmit, closeOnOverlayClick = true }: MyModalProps) {
+export function SaveModal({ children, title, isOpen, onClose, onSubmit, closeOnOverlayClick = true }: ModalProps) {
   // TODO fix this type
   const cancelRef = useRef<any>();
 

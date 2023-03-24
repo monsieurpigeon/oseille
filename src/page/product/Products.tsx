@@ -2,7 +2,7 @@ import { Box, Flex, Text, useDisclosure } from '@chakra-ui/react';
 import { useState } from 'react';
 import { useSnapshot } from 'valtio';
 import { Product, loadProduct, store } from '../../backend';
-import { MyScreenLayout } from '../../component/layout/MyScreenLayout';
+import { ScreenLayout } from '../../component/layout/ScreenLayout';
 import { MyH1 } from '../../component/typography/MyFont';
 import { CreateProduct } from './CreateProduct';
 import { FocusProduct } from './FocusProduct';
@@ -13,7 +13,7 @@ export function Products() {
   const [product, setProduct] = useState<Product>();
 
   return (
-    <MyScreenLayout>
+    <ScreenLayout>
       <Flex
         gap={4}
         alignItems="center"
@@ -53,6 +53,6 @@ export function Products() {
           onUpdate={setProduct}
         />
       )}
-    </MyScreenLayout>
+    </ScreenLayout>
   );
 }
