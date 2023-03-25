@@ -3,6 +3,7 @@ import { ReactNode } from 'react';
 import { ListItem, ListItems } from '../list-items/ListItems';
 import { MyH1 } from '../typography/MyFont';
 import './style.css';
+import { MyButton } from '../form/button/MyButton';
 
 export function CatalogueLayout({ children }: { children: React.ReactNode }) {
   return <div className="catalog-layout">{children}</div>;
@@ -67,20 +68,16 @@ export function CatalogDetail({
     <div>
       {show && (
         <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
-          <div
-            style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              marginBottom: '1rem',
-            }}
-          >
-            <div>Détail</div>
-            <button onClick={onClear}>X</button>
-          </div>
+          <Flex alignItems="center">
+            <MyH1>Détail</MyH1>
+            <Spacer />
+            <MyButton
+              onClick={onUpdate}
+              label="Enregistrer"
+            />
+          </Flex>
 
           <div style={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}>{children}</div>
-          <button onClick={onUpdate}>Enregistrer</button>
         </div>
       )}
     </div>

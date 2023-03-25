@@ -43,7 +43,6 @@ export function Home() {
           Attention : Cette application est toujours en développement et va connaitre de gros changements jusqu'à nouvel
           ordre
         </MySubtitle>
-        <MySubtitle>Pour l'instant, des donnees de test seront utilise a chaque rechargement de la page</MySubtitle>
         <MyH2>Fonctionnalités :</MyH2>
         <List spacing={3}>
           {TODO_ITEMS.map(({ status, text }) => {
