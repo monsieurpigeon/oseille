@@ -32,7 +32,7 @@ export function Products() {
               key={entity.id}
               label={`${entity.name} - ${entity.price || 0}€ /${entity.unit}`}
               selected={selected?.id === entity.id}
-              onClick={() => setSelected(entity)}
+              onClick={() => setSelected((e) => (e === entity ? undefined : entity))}
             />
           ))}
         </CatalogList>

@@ -29,7 +29,7 @@ export function Customers() {
               key={entity.id}
               label={`${entity.name}`}
               selected={selected?.id === entity.id}
-              onClick={() => setSelected(entity)}
+              onClick={() => setSelected((e) => (e === entity ? undefined : entity))}
             />
           ))}
         </CatalogList>
