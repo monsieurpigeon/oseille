@@ -1,58 +1,72 @@
-import { Box, Flex, Text, useDisclosure } from '@chakra-ui/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSnapshot } from 'valtio';
-import { Product, loadProduct, store } from '../../backend';
+import { Product, Unit, store, updateProduct } from '../../backend';
+import { CatalogCard, CatalogDetail, CatalogList, CatalogueLayout } from '../../component/catalog/Catalog';
+import { NumberLabelInput } from '../../component/form/NumberInput';
+import { TextLabelInput } from '../../component/form/TextInput';
+import { MySelect } from '../../component/form/select/MySelect';
 import { ScreenLayout } from '../../component/layout/ScreenLayout';
-import { MyH1 } from '../../component/typography/MyFont';
+import { PRODUCT_UNITS } from '../../utils/defaults';
 import { CreateProduct } from './CreateProduct';
-import { FocusProduct } from './FocusProduct';
 
 export function Products() {
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const { products } = useSnapshot(store);
-  const [product, setProduct] = useState<Product>();
+  const [selected, setSelected] = useState<Product>();
+  const snap = useSnapshot(store);
+
+  useEffect(() => {
+    const updated = store.products.find((p) => p.id === selected?.id);
+    if (updated) {
+      setSelected(updated);
+    }
+  }, [snap]);
 
   return (
     <ScreenLayout>
-      <Flex
-        gap={4}
-        alignItems="center"
-      >
-        <MyH1>Produits</MyH1>
-        <CreateProduct />
-      </Flex>
-      {products.map((product: Product) => (
-        <div key={product.id}>
-          <Box
-            cursor="pointer"
-            onClick={() => {
-              onOpen();
-              loadProduct(product.id).then((result) => setProduct(product as unknown as Product));
-            }}
-            p={4}
-          >
-            <Flex
-              w={340}
-              justifyContent="space-between"
-            >
-              <Text>{product.name}</Text>
-              <Text>
-                € / {product.unit} : {product.price.toFixed(2)}
-              </Text>
-            </Flex>
-          </Box>
-        </div>
-      ))}
-
-      {!!product && (
-        <FocusProduct
-          isOpen={isOpen}
-          onClose={onClose}
-          product={product}
-          onOpen={onOpen}
-          onUpdate={setProduct}
-        />
-      )}
+      <CatalogueLayout>
+        <CatalogList
+          title="Mes Produits"
+          slot={<CreateProduct />}
+        >
+          {store.products.map((entity) => (
+            <CatalogCard
+              key={entity.id}
+              label={`${entity.name} - ${entity.price || 0}€ /${entity.unit}`}
+              selected={selected?.id === entity.id}
+              onClick={() => setSelected(entity)}
+            />
+          ))}
+        </CatalogList>
+        <CatalogDetail
+          onUpdate={() => selected && updateProduct({ ...selected })}
+          show={!!selected}
+          onClear={() => setSelected(undefined)}
+        >
+          {selected && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '50px' }}>
+              <div>
+                <TextLabelInput
+                  value={selected.name}
+                  label="Nom"
+                  onChange={(e) => setSelected({ ...selected, name: e.target.value })}
+                />
+                <NumberLabelInput
+                  value={selected.price || 0}
+                  label="Prix"
+                  onChange={(e) => setSelected({ ...selected, price: +e.target.value })}
+                />
+                <MySelect
+                  options={PRODUCT_UNITS}
+                  value={selected.unit}
+                  onChange={(e) => {
+                    setSelected({ ...selected, unit: e.target.value as Unit });
+                  }}
+                  placeholder={'unite ...'}
+                />
+              </div>
+            </div>
+          )}
+        </CatalogDetail>
+      </CatalogueLayout>
     </ScreenLayout>
   );
 }

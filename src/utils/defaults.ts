@@ -5,3 +5,8 @@ export const DEFAULT_FARM = {
   zip: '33000',
   city: 'Bordeaux',
 };
+
+export const PRODUCT_UNITS = [
+  { value: 'kg', label: 'kg' },
+  { value: 'piece', label: 'piece' },
+];

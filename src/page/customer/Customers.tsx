@@ -1,86 +1,76 @@
-import {
-  Box,
-  Button,
-  Drawer,
-  DrawerBody,
-  DrawerCloseButton,
-  DrawerContent,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerOverlay,
-  Flex,
-  useDisclosure,
-} from '@chakra-ui/react';
-import { useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSnapshot } from 'valtio';
-import { Customer, loadCustomer, store } from '../../backend';
+import { Customer, store, updateCustomer } from '../../backend';
+import { CatalogCard, CatalogDetail, CatalogList, CatalogueLayout } from '../../component/catalog/Catalog';
+import { TextLabelInput } from '../../component/form/TextInput';
 import { ScreenLayout } from '../../component/layout/ScreenLayout';
-import { MyH1 } from '../../component/typography/MyFont';
 import { CreateCustomer } from './CreateCustomer';
 
 export function Customers() {
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const btnRef = useRef<any>();
+  const [selected, setSelected] = useState<Customer>();
+  const snap = useSnapshot(store);
 
-  const { customers } = useSnapshot(store);
-  const [customer, setCustomer] = useState<Customer>();
+  useEffect(() => {
+    const updated = store.customers.find((p) => p.id === selected?.id);
+    if (updated) {
+      setSelected(updated);
+    }
+  }, [snap]);
 
   return (
     <ScreenLayout>
-      <Flex
-        gap={4}
-        alignItems="center"
-      >
-        <MyH1>Clients</MyH1>
-        <CreateCustomer />
-      </Flex>
-
-      {customers.map((customer: Customer) => (
-        <div key={customer.id}>
-          <Box
-            ref={btnRef}
-            cursor="pointer"
-            onClick={() => {
-              onOpen();
-              loadCustomer(customer.id).then((customer) => setCustomer(customer as unknown as Customer));
-            }}
-          >
-            {customer.name}
-          </Box>
-        </div>
-      ))}
-      {!!customer && (
-        <Drawer
-          isOpen={isOpen}
-          placement="right"
-          onClose={onClose}
-          finalFocusRef={btnRef}
+      <CatalogueLayout>
+        <CatalogList
+          title="Mes Clients"
+          slot={<CreateCustomer />}
         >
-          <DrawerOverlay />
-          <DrawerContent>
-            <DrawerCloseButton />
-            <DrawerHeader>Focus client</DrawerHeader>
-            <DrawerBody>
-              <div>{customer.name}</div>
-              <div>{customer.address1}</div>
-              <div>{customer.address2}</div>
+          {store.customers.map((entity) => (
+            <CatalogCard
+              key={entity.id}
+              label={`${entity.name}`}
+              selected={selected?.id === entity.id}
+              onClick={() => setSelected(entity)}
+            />
+          ))}
+        </CatalogList>
+        <CatalogDetail
+          onUpdate={() => selected && updateCustomer({ ...selected })}
+          show={!!selected}
+          onClear={() => setSelected(undefined)}
+        >
+          {selected && (
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '50px' }}>
               <div>
-                {customer.zip} {customer.city}
+                <TextLabelInput
+                  value={selected.name}
+                  label="Nom"
+                  onChange={(e) => setSelected({ ...selected, name: e.target.value })}
+                />
+                <TextLabelInput
+                  value={selected.address1}
+                  label="Adresse 1"
+                  onChange={(e) => setSelected({ ...selected, address1: e.target.value })}
+                />
+                <TextLabelInput
+                  value={selected.address2}
+                  label="Adresse 2"
+                  onChange={(e) => setSelected({ ...selected, address2: e.target.value })}
+                />
+                <TextLabelInput
+                  value={selected.zip}
+                  label="Code postal"
+                  onChange={(e) => setSelected({ ...selected, zip: e.target.value })}
+                />
+                <TextLabelInput
+                  value={selected.city}
+                  label="Ville"
+                  onChange={(e) => setSelected({ ...selected, city: e.target.value })}
+                />
               </div>
-            </DrawerBody>
-
-            <DrawerFooter>
-              <Button
-                variant="outline"
-                mr={3}
-                onClick={onClose}
-              >
-                Retour
-              </Button>
-            </DrawerFooter>
-          </DrawerContent>
-        </Drawer>
-      )}
+            </div>
+          )}
+        </CatalogDetail>
+      </CatalogueLayout>
     </ScreenLayout>
   );
 }

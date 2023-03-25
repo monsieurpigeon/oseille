@@ -1,4 +1,4 @@
-import { db, relDb } from '../service/database';
+import { relDb } from '../service/database';
 import { store } from '../service/store';
 
 export interface Customer {
@@ -31,5 +31,9 @@ export async function loadCustomer(id: string) {
 }
 
 export const addCustomer = (customer: CustomerInput) => {
+  return relDb.rel.save('customer', customer);
+};
+
+export const updateCustomer = (customer: Customer) => {
   return relDb.rel.save('customer', customer);
 };

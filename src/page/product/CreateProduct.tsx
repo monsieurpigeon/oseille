@@ -4,6 +4,7 @@ import { MyNumberInput } from '../../component/form/input/MyNumberInput';
 import { MyTextInput } from '../../component/form/input/MyTextInput';
 import { MySelect } from '../../component/form/select/MySelect';
 import { CreateModal } from '../../component/modal/CreateModal';
+import { PRODUCT_UNITS } from '../../utils/defaults';
 
 export function CreateProduct() {
   const [name, setName] = useState('');
@@ -29,10 +30,7 @@ export function CreateProduct() {
         onChange={(value) => setPrice(value)}
       />
       <MySelect
-        options={[
-          { value: 'kg', label: 'kg' },
-          { value: 'piece', label: 'piece' },
-        ]}
+        options={PRODUCT_UNITS}
         value={unit}
         onChange={(e) => {
           setUnit(e.target.value as Unit);
