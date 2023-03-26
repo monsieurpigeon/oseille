@@ -4,7 +4,7 @@ import { useSnapshot } from 'valtio';
 import { Customer, Delivery, addInvoice, exportDocument, store } from '../../backend';
 import { CatalogDetail, CatalogList, CatalogueLayout } from '../../component/catalog/Catalog';
 import { ScreenLayout } from '../../component/layout/ScreenLayout';
-import { priceFormatter } from '../../utils/formatter';
+import { dateFormatter, priceFormatter } from '../../utils/formatter';
 import { CreateDeliveries } from './CreateDeliveries';
 
 export function Deliveries() {
@@ -40,7 +40,11 @@ export function Deliveries() {
           {selected && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '50px' }}>
               <div>
-                <div>{selected.documentId}</div>
+                <div>
+                  {selected.documentId}
+                  {selected.invoiceId ? ` - Facturé` : ''}
+                </div>
+                <div>{dateFormatter(selected.deliveredAt)}</div>
                 <div>{selected.customer.name}</div>
                 <table>
                   <thead>
@@ -88,13 +92,14 @@ function DeliveryCustomer({
         {customer.name}
         {!!Object.values(toInvoice).filter((i) => i).length && (
           <button
+            style={{ marginLeft: '30px', border: '1px solid grey', padding: '0px 10px', borderRadius: '5px' }}
             onClick={() => {
               addInvoice(
                 Object.entries(toInvoice)
                   .filter(([key, value]) => value)
                   .map(([key]) => store.deliveries.find((delivery) => delivery.id === key))
                   .filter((d) => !!d) as Delivery[],
-              );
+              ).then(() => setToInvoice({}));
             }}
           >
             Facturer {Object.values(toInvoice).filter((i) => i).length}
@@ -102,42 +107,53 @@ function DeliveryCustomer({
         )}
       </div>
       <div>
-        {store.deliveries
-          .filter((delivery) => delivery.customerId === customer.id)
-          .map((delivery: Delivery) => {
-            return (
-              <Flex
-                gap={3}
-                key={delivery.id}
-              >
-                <input
-                  type="checkbox"
-                  id={delivery.id}
-                  // rome-ignore lint/complexity/useSimplifiedLogicExpression: <explanation>
-                  checked={toInvoice[delivery.id] || false}
-                  onChange={() =>
-                    setToInvoice((i) => ({
-                      ...i,
-                      [delivery.id]: !i[delivery.id],
-                    }))
-                  }
-                />
-                <div
-                  onClick={() => setSelected((e) => (e === delivery ? undefined : delivery))}
-                  onKeyDown={() => {}}
-                >
-                  {delivery.documentId} {delivery.invoiceId ? 'Facturé' : ''}
-                  <button
-                    onClick={() => {
-                      exportDocument({ payload: delivery, type: 'Delivery' });
-                    }}
-                  >
-                    EXPORT
-                  </button>
-                </div>
-              </Flex>
-            );
-          })}
+        {' '}
+        <table style={{ borderCollapse: 'separate', borderSpacing: '20px 0' }}>
+          <tbody>
+            {store.deliveries
+              .filter((delivery) => delivery.customerId === customer.id)
+              .map((delivery: Delivery) => {
+                return (
+                  <tr>
+                    <td>
+                      {!delivery.invoiceId && (
+                        <input
+                          type="checkbox"
+                          id={delivery.id}
+                          // rome-ignore lint/complexity/useSimplifiedLogicExpression: <explanation>
+                          checked={toInvoice[delivery.id] || false}
+                          onChange={() =>
+                            setToInvoice((i) => ({
+                              ...i,
+                              [delivery.id]: !i[delivery.id],
+                            }))
+                          }
+                        />
+                      )}
+                    </td>
+                    <td>
+                      <div
+                        onClick={() => setSelected((e) => (e === delivery ? undefined : delivery))}
+                        onKeyDown={() => {}}
+                      >
+                        {delivery.documentId}
+                      </div>
+                    </td>
+                    <td>{dateFormatter(delivery.deliveredAt)}</td>
+                    <td>
+                      <button
+                        onClick={() => {
+                          exportDocument({ payload: delivery, type: 'Delivery' });
+                        }}
+                      >
+                        EXPORT
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}{' '}
+          </tbody>
+        </table>
       </div>
     </div>
   );

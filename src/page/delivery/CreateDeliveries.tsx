@@ -9,10 +9,13 @@ import { SubmitHandler, useForm } from 'react-hook-form';
 export function CreateDeliveries() {
   const { products, customers } = useSnapshot(store);
   const [count, setCount] = useState([0]);
-  const { register, handleSubmit } = useForm<DeliveryInput>();
+  const { register, handleSubmit, reset } = useForm<DeliveryInput>();
 
   const onSubmit: SubmitHandler<DeliveryInput> = (d) => {
-    addDelivery(d);
+    addDelivery(d).then(() => {
+      reset();
+      setCount([0]);
+    });
   };
 
   return (
@@ -37,6 +40,10 @@ export function CreateDeliveries() {
               );
             })}
           </Select>
+          <Input
+            type="date"
+            {...register('deliveredAt')}
+          />
           <Flex
             direction="column"
             gap={2}

@@ -7,6 +7,7 @@ import { updateDocumentId } from './farm';
 
 export interface Delivery {
   id: string;
+  deliveredAt: string;
   customer: Customer;
   customerId: string;
   documentId: string;
@@ -20,6 +21,7 @@ export interface Delivery {
 
 export interface DeliveryInput {
   customerId: string;
+  deliveredAt: string;
   products: Array<{
     productId: string;
     quantity: number;
@@ -29,10 +31,9 @@ export interface DeliveryInput {
 
 export async function loadDeliveries() {
   const result = await relDb.rel.find('delivery');
-  store.deliveries = result.deliveries;
-  // .sort((a: Customer, b: Customer) => {
-  //   return a.name.localeCompare(b.name);
-  // });
+  store.deliveries = result.deliveries.sort((a: Delivery, b: Delivery) => {
+    return new Date(a.deliveredAt).getTime() - new Date(b.deliveredAt).getTime();
+  });
 }
 
 export const addDelivery = async (delivery: DeliveryInput) => {

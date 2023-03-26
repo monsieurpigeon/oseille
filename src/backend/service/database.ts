@@ -28,16 +28,10 @@ export const relDb = db.setSchema([
   {
     singular: 'delivery',
     plural: 'deliveries',
-    relations: {
-      invoice: { belongsTo: 'invoice' },
-    },
   },
   {
     singular: 'invoice',
     plural: 'invoices',
-    relations: {
-      deliveries: { hasMany: 'delivery' },
-    },
   },
 ]);
 
@@ -89,6 +83,7 @@ export const initDatabase = async () => {
   });
   addDelivery({
     customerId: c1.id || '',
+    deliveredAt: '2023-07-14',
     products: [
       { productId: p1.id || '', quantity: 17 },
       { productId: p2.id || '', quantity: 18.5 },

@@ -39,7 +39,7 @@ export const addInvoice = (deliveries: Delivery[]) => {
     deliveries,
   };
 
-  relDb.rel
+  return relDb.rel
     .save('invoice', invoice)
     .then((result) => {
       invoice.deliveryIds.map((id) => {

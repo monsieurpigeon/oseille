@@ -16,12 +16,14 @@ const TODO_ITEMS: Array<{ text: string; status: Status }> = [
   { text: 'Import/Export de capsules temporelles pour protéger la data sur un autre support', status: 'todo' },
 ];
 
-const NEXT: Array<{ text: string }> = [
-  { text: 'Gérer le status des documents (envoyé, payé)' },
-  { text: 'Suivi des ventes par client et par produit' },
+const NEXT: Array<{ text: string; status: Status }> = [
+  { text: 'Gérer le status des documents (envoyé, payé)', status: 'todo' },
+  { text: 'Suivi des ventes par client et par produit', status: 'todo' },
 ];
 
-const ROADMAP: Array<{ text: string }> = [{ text: 'Gestion des paniers en click-and-collect personnalisé' }];
+const ROADMAP: Array<{ text: string; status: Status }> = [
+  { text: 'Gestion des paniers en click-and-collect personnalisé', status: 'todo' },
+];
 
 // TODO add a better typing to keep only Status as key
 const statusIcon: { [key: string]: { icon: typeof CheckIcon; color: string } } = {
@@ -45,41 +47,26 @@ export function Home() {
         </MySubtitle>
         <MyH2>Fonctionnalités :</MyH2>
         <List spacing={3}>
-          {TODO_ITEMS.map(({ status, text }) => {
-            return (
-              <ListItem>
-                <ListIcon
-                  as={statusIcon[status].icon}
-                  color={statusIcon[status].color}
-                />
-                {text}
-              </ListItem>
-            );
-          })}
+          {TODO_ITEMS.map((item) => (
+            <TodoItem
+              key={item.text}
+              item={item}
+            />
+          ))}
           <ListItem listStyleType="none">... et ensuite...</ListItem>
-          {NEXT.map(({ text }) => {
-            return (
-              <ListItem>
-                <ListIcon
-                  as={statusIcon['todo'].icon}
-                  color={statusIcon['todo'].color}
-                />
-                {text}
-              </ListItem>
-            );
-          })}
+          {NEXT.map((item) => (
+            <TodoItem
+              key={item.text}
+              item={item}
+            />
+          ))}
           <ListItem listStyleType="none">... Plein d'autres choses...</ListItem>
-          {ROADMAP.map(({ text }) => {
-            return (
-              <ListItem>
-                <ListIcon
-                  as={statusIcon['todo'].icon}
-                  color={statusIcon['todo'].color}
-                />
-                {text}
-              </ListItem>
-            );
-          })}
+          {ROADMAP.map((item) => (
+            <TodoItem
+              key={item.text}
+              item={item}
+            />
+          ))}
           <ListItem listStyleType="none">... Dites moi de quoi vous avez besoin.</ListItem>
         </List>
         <Flex gap={4}>
@@ -102,5 +89,17 @@ export function Home() {
         </Flex>
       </Flex>
     </ScreenLayout>
+  );
+}
+
+function TodoItem({ item }: { item: { text: string; status: string } }) {
+  return (
+    <ListItem>
+      <ListIcon
+        as={statusIcon[item.status].icon}
+        color={statusIcon[item.status].color}
+      />
+      {item.text}
+    </ListItem>
   );
 }

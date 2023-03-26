@@ -14,3 +14,10 @@ export function documentIdFormatter(value: number, type: DocumentKey) {
     return `FA-${numbers}`;
   } else return '';
 }
+
+export function dateFormatter(value: string) {
+  if (!value) {
+    return 'Date erronée';
+  }
+  return new Date(value).toLocaleDateString();
+}

@@ -1,8 +1,9 @@
 import * as pdfMake from 'pdfmake/build/pdfmake';
-import { priceFormatter } from '../../utils/formatter';
+import { dateFormatter, priceFormatter } from '../../utils/formatter';
 import { Product } from '../entity/product';
 import { store } from './store';
 import { DEFAULT_FARM } from '../../utils/defaults';
+import { Delivery } from '../entity/delivery';
 
 const fonts = {
   Roboto: {
@@ -15,7 +16,7 @@ const fonts = {
 
 export type DocumentKey = 'Delivery' | 'Invoice';
 
-const getLines = (payload, type: DocumentKey) => {
+const getLines = (payload: any, type: DocumentKey) => {
   if (type === 'Delivery') {
     return {
       layout: 'lightHorizontalLines',
@@ -57,7 +58,6 @@ const getLines = (payload, type: DocumentKey) => {
   }
 
   if (type === 'Invoice') {
-    console.log(payload.deliveries);
     return {
       layout: 'lightHorizontalLines',
       style: 'tableExample',
@@ -76,10 +76,9 @@ const getLines = (payload, type: DocumentKey) => {
               alignment: 'right',
             },
           ],
-          ...payload.deliveries.flatMap((id: string) => {
-            const delivery = store.deliveries.find((d) => d.id === id);
+          ...payload.deliveries.flatMap((delivery: Delivery) => {
             return [
-              [delivery?.documentId, '', '', '', ''],
+              [delivery?.documentId, dateFormatter(delivery?.deliveredAt || ''), '', '', ''],
               ...delivery?.products.map((el) => {
                 return [
                   el.product.name,
@@ -104,7 +103,7 @@ const getLines = (payload, type: DocumentKey) => {
   }
 };
 
-const getPrice = (payload, type: DocumentKey) => {
+const getPrice = (payload: any, type: DocumentKey) => {
   if (type === 'Delivery')
     return payload.products.reduce(
       (acc: number, el: { product: Product; quantity: number }) => acc + el.product.price * el.quantity,
@@ -112,58 +111,19 @@ const getPrice = (payload, type: DocumentKey) => {
     );
   if (type === 'Invoice')
     return payload.deliveries
-      .flatMap((id: string) => {
-        const delivery = store.deliveries.find((d) => d.id === id);
+      .flatMap((delivery: Delivery) => {
         return delivery?.products;
       })
       .reduce((acc: number, el: { product: Product; quantity: number }) => acc + el.product.price * el.quantity, 0);
 };
 
 export const exportDocument = ({ payload, type }: any) => {
-  let lines;
-  if (payload.documentId[0] === 'B') {
-    lines = {
-      layout: 'lightHorizontalLines',
-      style: 'tableExample',
-      table: {
-        headerRows: 1,
-        widths: ['*', '*', '*', '*', '*'],
-        body: [
-          [
-            'Designation',
-
-            { text: 'Quantite', alignment: 'right' },
-            { text: '' },
-            { text: 'Prix unitaire', alignment: 'right' },
-            {
-              text: 'Montant',
-              alignment: 'right',
-            },
-          ],
-          ...payload.products.map((el: { product: Product; quantity: number }) => {
-            return [
-              el.product.name,
-
-              {
-                text: el.quantity,
-                alignment: 'right',
-              },
-              {
-                text: el.product.unit,
-                alignment: 'left',
-              },
-              { text: priceFormatter(el.product.price), alignment: 'right' },
-              { text: priceFormatter(el.product.price * el.quantity), alignment: 'right' },
-            ];
-          }),
-        ],
-      },
-    };
-  }
-
   const docDefinition: any = {
     defaultStyle: {
       font: 'Roboto',
+    },
+    info: {
+      title: payload.documentId,
     },
     footer: { text: store.farm?.footer, alignment: 'center' },
     content: [
@@ -206,13 +166,6 @@ export const exportDocument = ({ payload, type }: any) => {
         alignment: 'right',
       },
       { qr: payload.id, fit: '80' },
-      ...(payload.type === 'Invoice' ? [{ text: 'Livraisons liees', alignment: 'right' }] : []),
-      ...(payload.deliveryDocumentIds
-        ? payload.deliveryDocumentIds?.map((text: string) => ({
-            text,
-            alignment: 'right',
-          }))
-        : []),
     ],
     styles: {
       header: {
@@ -236,5 +189,5 @@ export const exportDocument = ({ payload, type }: any) => {
     },
   };
 
-  pdfMake.createPdf(docDefinition, undefined, fonts).open();
+  pdfMake.createPdf(docDefinition, undefined, fonts).download(payload.documentId);
 };
