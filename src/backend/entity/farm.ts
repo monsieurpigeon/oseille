@@ -37,7 +37,7 @@ export async function loadFarm() {
 export const addFarm = () => {
   db.post({
     _id: FARM_KEY,
-    footer: 'Tous nos produits sont certifies par FR-BIO-IT\ngenere gratuitement grace a Oseille - www.oseille.app',
+    footer: 'Tous nos produits sont certifies par FR-BIO-IT',
     invoiceId: 1,
     deliveryId: 1,
   }).then(() => {

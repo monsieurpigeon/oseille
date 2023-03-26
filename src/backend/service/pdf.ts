@@ -125,7 +125,10 @@ export const exportDocument = ({ payload, type }: any) => {
     info: {
       title: payload.documentId,
     },
-    footer: { text: store.farm?.footer, alignment: 'center' },
+    footer: {
+      text: `${store.farm?.footer}\nGénère gratuitement grâce à Oseille - www.oseille.app`,
+      alignment: 'center',
+    },
     content: [
       { text: `${payload.documentId}`, style: 'header' },
       {
