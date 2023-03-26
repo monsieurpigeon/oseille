@@ -1,7 +1,7 @@
 import { Flex } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { useSnapshot } from 'valtio';
-import { Customer, Delivery, store } from '../../backend';
+import { Customer, Delivery, addInvoice, exportDocument, store } from '../../backend';
 import { CatalogDetail, CatalogList, CatalogueLayout } from '../../component/catalog/Catalog';
 import { ScreenLayout } from '../../component/layout/ScreenLayout';
 import { priceFormatter } from '../../utils/formatter';
@@ -85,7 +85,21 @@ function DeliveryCustomer({
   return (
     <div>
       <div>
-        {customer.name} :{Object.values(toInvoice).filter((i) => i).length}
+        {customer.name}
+        {!!Object.values(toInvoice).filter((i) => i).length && (
+          <button
+            onClick={() => {
+              addInvoice(
+                Object.entries(toInvoice)
+                  .filter(([key, value]) => value)
+                  .map(([key]) => store.deliveries.find((delivery) => delivery.id === key))
+                  .filter((d) => !!d) as Delivery[],
+              );
+            }}
+          >
+            Facturer {Object.values(toInvoice).filter((i) => i).length}
+          </button>
+        )}
       </div>
       <div>
         {store.deliveries
@@ -112,7 +126,14 @@ function DeliveryCustomer({
                   onClick={() => setSelected((e) => (e === delivery ? undefined : delivery))}
                   onKeyDown={() => {}}
                 >
-                  {delivery.documentId}
+                  {delivery.documentId} {delivery.invoiceId ? 'Facturé' : ''}
+                  <button
+                    onClick={() => {
+                      exportDocument({ payload: delivery, type: 'Delivery' });
+                    }}
+                  >
+                    EXPORT
+                  </button>
                 </div>
               </Flex>
             );

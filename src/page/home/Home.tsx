@@ -11,7 +11,7 @@ const TODO_ITEMS: Array<{ text: string; status: Status }> = [
   { text: 'Changer les prix des produits facilement', status: 'done' },
   { text: 'Générer un bon de livraison', status: 'done' },
   { text: 'Calcul automatique des lignes de livraison', status: 'done' },
-  { text: 'Grouper des bons de livraison en une facture', status: 'doing' },
+  { text: 'Grouper des bons de livraison en une facture', status: 'done' },
   { text: 'Export .pdf des bons de livraison et des factures', status: 'done' },
   { text: 'Import/Export de capsules temporelles pour protéger la data sur un autre support', status: 'todo' },
 ];

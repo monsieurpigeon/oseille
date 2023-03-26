@@ -10,6 +10,7 @@ export interface Delivery {
   customer: Customer;
   customerId: string;
   documentId: string;
+  invoiceId?: string;
   products: Array<{
     product: Product;
     quantity: number;
@@ -36,15 +37,16 @@ export async function loadDeliveries() {
 
 export const addDelivery = async (delivery: DeliveryInput) => {
   const customer = await loadCustomer(delivery.customerId);
-  console.log({ customer });
   const promise = async () => {
     const products = await Promise.all(
-      delivery.products.map(async (el) => {
-        const product = await loadProduct(el.productId);
-        return { ...el, product };
-      }),
+      delivery.products
+        .filter((p) => p.productId !== '...')
+        .map(async (el) => {
+          const product = await loadProduct(el.productId);
+          return { ...el, product };
+        }),
     );
-    return { ...delivery, customer, products };
+    return { ...delivery, customer, products: products.filter((p) => !!p) };
   };
 
   promise().then((deliveryFull) => {

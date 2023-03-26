@@ -8,25 +8,20 @@ import { addInvoiceId, Delivery } from './delivery';
 
 export interface Invoice {
   id: string;
+  customer: Customer;
   documentId: string;
   customerId: string;
-  products: Array<{
-    productId: string;
-    name: string;
-    quantity: number;
-    price: number;
-    totalPrice: number;
-  }>;
+  deliveryIds: string[];
+  deliveries: Delivery[];
 }
 
 export interface InvoiceInput {
-  id: string;
   customer: Customer;
-  products: Array<{
-    product: Product;
-    quantity: number;
-    totalPrice: number;
-  }>;
+  customerId: string;
+  documentId: string;
+  deliveryIds: string[];
+  deliveryDocumentIds: string[];
+  deliveries: Delivery[];
 }
 
 export async function loadInvoices() {
@@ -35,21 +30,22 @@ export async function loadInvoices() {
 }
 
 export const addInvoice = (deliveries: Delivery[]) => {
-  deliveries.map((delivery) => {
-    const { customer, products, id, documentId } = delivery;
+  const invoice: InvoiceInput = {
+    documentId: documentIdFormatter(store.farm?.invoiceId || 0, 'Invoice'),
+    customer: deliveries[0].customer,
+    customerId: deliveries[0].customerId,
+    deliveryIds: deliveries.map((d) => d.id),
+    deliveryDocumentIds: deliveries.map((d) => d.documentId),
+    deliveries,
+  };
 
-    relDb.rel
-      .save('invoice', {
-        documentId: documentIdFormatter(store.farm?.invoiceId || 0, 'Invoice'),
-        customer,
-        products,
-        deliveryIds: [id],
-        deliveryDocumentIds: [documentId],
-      })
-      .then((result) => {
-        addInvoiceId(result.id, delivery.id);
-        updateDocumentId('Invoice');
-      })
-      .catch(console.error);
-  });
+  relDb.rel
+    .save('invoice', invoice)
+    .then((result) => {
+      invoice.deliveryIds.map((id) => {
+        addInvoiceId(result.id, id);
+      });
+      updateDocumentId('Invoice');
+    })
+    .catch(console.error);
 };

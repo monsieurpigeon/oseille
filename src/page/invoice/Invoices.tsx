@@ -1,5 +1,5 @@
 import { useSnapshot } from 'valtio';
-import { exportDocument, store } from '../../backend';
+import { Invoice, Product, exportDocument, store } from '../../backend';
 import { MyButton } from '../../component/form/button/MyButton';
 import { ScreenLayout } from '../../component/layout/ScreenLayout';
 import { MyH1 } from '../../component/typography/MyFont';
@@ -10,22 +10,34 @@ export function Invoices() {
   return (
     <ScreenLayout>
       <MyH1>Factures</MyH1>
-      {invoices.map((invoice: any) => {
+      {invoices.map((invoice: Invoice) => {
+        console.log({ invoice });
         return (
-          <div key={invoice._id}>
+          <div key={invoice.id}>
             <div>
               {invoice.customer.name} - {invoice.documentId}
             </div>
-            {invoice.products.map((el: any) => {
+            {invoice.deliveries.map((el: any) => {
+              const delivery = store.deliveries.find((d) => d.id === el);
+
               return (
-                <div key={el.product._id}>
-                  {el.quantity} * {el.product.name} #{el.productId} - {el.product.price}
+                <div key={delivery?.id}>
+                  {delivery?.documentId}
+                  <div>
+                    {delivery?.products.map((product) => {
+                      return (
+                        <div>
+                          {product.quantity} * {product?.product?.name}
+                        </div>
+                      );
+                    })}
+                  </div>
                 </div>
               );
             })}
             <MyButton
               onClick={() => {
-                exportDocument({ payload: invoice });
+                exportDocument({ payload: invoice, type: 'Invoice' });
               }}
               label="Export PDF"
             />

@@ -15,8 +15,152 @@ const fonts = {
 
 export type DocumentKey = 'Delivery' | 'Invoice';
 
-export const exportDocument = ({ payload }: any) => {
-  console.log({ payload }, payload.title);
+const getLines = (payload, type: DocumentKey) => {
+  if (type === 'Delivery') {
+    return {
+      layout: 'lightHorizontalLines',
+      style: 'tableExample',
+      table: {
+        headerRows: 1,
+        widths: ['*', '*', '*', '*', '*'],
+        body: [
+          [
+            'Designation',
+
+            { text: 'Quantite', alignment: 'right' },
+            { text: '' },
+            { text: 'Prix unitaire', alignment: 'right' },
+            {
+              text: 'Montant',
+              alignment: 'right',
+            },
+          ],
+          ...payload.products.map((el: { product: Product; quantity: number }) => {
+            return [
+              el.product.name,
+
+              {
+                text: el.quantity,
+                alignment: 'right',
+              },
+              {
+                text: el.product.unit,
+                alignment: 'left',
+              },
+              { text: priceFormatter(el.product.price), alignment: 'right' },
+              { text: priceFormatter(el.product.price * el.quantity), alignment: 'right' },
+            ];
+          }),
+        ],
+      },
+    };
+  }
+
+  if (type === 'Invoice') {
+    console.log(payload.deliveries);
+    return {
+      layout: 'lightHorizontalLines',
+      style: 'tableExample',
+      table: {
+        headerRows: 1,
+        widths: ['*', '*', '*', '*', '*'],
+        body: [
+          [
+            'Designation',
+
+            { text: 'Quantite', alignment: 'right' },
+            { text: '' },
+            { text: 'Prix unitaire', alignment: 'right' },
+            {
+              text: 'Montant',
+              alignment: 'right',
+            },
+          ],
+          ...payload.deliveries.flatMap((id: string) => {
+            const delivery = store.deliveries.find((d) => d.id === id);
+            return [
+              [delivery?.documentId, '', '', '', ''],
+              ...delivery?.products.map((el) => {
+                return [
+                  el.product.name,
+
+                  {
+                    text: el.quantity,
+                    alignment: 'right',
+                  },
+                  {
+                    text: el.product.unit,
+                    alignment: 'left',
+                  },
+                  { text: priceFormatter(el.product.price), alignment: 'right' },
+                  { text: priceFormatter(el.product.price * el.quantity), alignment: 'right' },
+                ];
+              }),
+            ];
+          }),
+        ],
+      },
+    };
+  }
+};
+
+const getPrice = (payload, type: DocumentKey) => {
+  if (type === 'Delivery')
+    return payload.products.reduce(
+      (acc: number, el: { product: Product; quantity: number }) => acc + el.product.price * el.quantity,
+      0,
+    );
+  if (type === 'Invoice')
+    return payload.deliveries
+      .flatMap((id: string) => {
+        const delivery = store.deliveries.find((d) => d.id === id);
+        return delivery?.products;
+      })
+      .reduce((acc: number, el: { product: Product; quantity: number }) => acc + el.product.price * el.quantity, 0);
+};
+
+export const exportDocument = ({ payload, type }: any) => {
+  let lines;
+  if (payload.documentId[0] === 'B') {
+    lines = {
+      layout: 'lightHorizontalLines',
+      style: 'tableExample',
+      table: {
+        headerRows: 1,
+        widths: ['*', '*', '*', '*', '*'],
+        body: [
+          [
+            'Designation',
+
+            { text: 'Quantite', alignment: 'right' },
+            { text: '' },
+            { text: 'Prix unitaire', alignment: 'right' },
+            {
+              text: 'Montant',
+              alignment: 'right',
+            },
+          ],
+          ...payload.products.map((el: { product: Product; quantity: number }) => {
+            return [
+              el.product.name,
+
+              {
+                text: el.quantity,
+                alignment: 'right',
+              },
+              {
+                text: el.product.unit,
+                alignment: 'left',
+              },
+              { text: priceFormatter(el.product.price), alignment: 'right' },
+              { text: priceFormatter(el.product.price * el.quantity), alignment: 'right' },
+            ];
+          }),
+        ],
+      },
+    };
+  }
+
   const docDefinition: any = {
     defaultStyle: {
       font: 'Roboto',
@@ -55,51 +199,10 @@ export const exportDocument = ({ payload }: any) => {
           ],
         },
       },
+      getLines(payload, type),
 
       {
-        layout: 'lightHorizontalLines',
-        style: 'tableExample',
-        table: {
-          headerRows: 1,
-          widths: ['*', '*', '*', '*', '*'],
-          body: [
-            [
-              'Designation',
-
-              { text: 'Quantite', alignment: 'right' },
-              { text: '' },
-              { text: 'Prix unitaire', alignment: 'right' },
-              {
-                text: 'Montant',
-                alignment: 'right',
-              },
-            ],
-            ...payload.products.map((el: { product: Product; quantity: number }) => {
-              return [
-                el.product.name,
-
-                {
-                  text: el.quantity,
-                  alignment: 'right',
-                },
-                {
-                  text: el.product.unit,
-                  alignment: 'left',
-                },
-                { text: priceFormatter(el.product.price), alignment: 'right' },
-                { text: priceFormatter(el.product.price * el.quantity), alignment: 'right' },
-              ];
-            }),
-          ],
-        },
-      },
-      {
-        text: `Total       ${priceFormatter(
-          payload.products.reduce(
-            (acc: number, el: { product: Product; quantity: number }) => acc + el.product.price * el.quantity,
-            0,
-          ),
-        )}`,
+        text: `Total       ${priceFormatter(getPrice(payload, type))}`,
         alignment: 'right',
       },
       { qr: payload.id, fit: '80' },

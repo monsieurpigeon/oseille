@@ -12,5 +12,5 @@ export function documentIdFormatter(value: number, type: DocumentKey) {
     return `BL-${numbers}`;
   } else if (type === 'Invoice') {
     return `FA-${numbers}`;
-  }
+  } else return '';
 }
