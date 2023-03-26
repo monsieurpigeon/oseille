@@ -63,9 +63,9 @@ export const initDatabase = async () => {
   await addFarm();
   loadFarm();
 
-  const p1 = await addProduct({ name: 'Tomate', price: 0.42, unit: 'kg' });
+  const p1 = await addProduct({ name: 'Tomate', price: 4.2, unit: 'kg' });
   const p2 = await addProduct({ name: 'Aubergine', price: 4, unit: 'kg' });
-  const p3 = await addProduct({ name: 'Pastèque', price: 42, unit: 'piece' });
+  const p3 = await addProduct({ name: 'Pastèque', price: 4.2, unit: 'piece' });
   const c1 = await addCustomer({
     name: 'Biocoop',
     address1: '1 rue du potiron',
