@@ -1,9 +1,10 @@
+import { Flex } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { useSnapshot } from 'valtio';
-import { Delivery, store } from '../../backend';
-import { CatalogCard, CatalogDetail, CatalogList, CatalogueLayout } from '../../component/catalog/Catalog';
-import { TextLabelInput } from '../../component/form/TextInput';
+import { Customer, Delivery, store } from '../../backend';
+import { CatalogDetail, CatalogList, CatalogueLayout } from '../../component/catalog/Catalog';
 import { ScreenLayout } from '../../component/layout/ScreenLayout';
+import { priceFormatter } from '../../utils/formatter';
 import { CreateDeliveries } from './CreateDeliveries';
 
 export function Deliveries() {
@@ -24,33 +25,99 @@ export function Deliveries() {
           title="Mes Livraisons"
           slot={<CreateDeliveries />}
         >
-          {store.deliveries.map((entity) => (
-            <CatalogCard
-              key={entity.id}
-              label={`${entity.id}`}
-              selected={selected?.id === entity.id}
-              onClick={() => setSelected((e) => (e === entity ? undefined : entity))}
+          {store.customers.map((customer) => (
+            <DeliveryCustomer
+              customer={customer}
+              setSelected={setSelected}
+              key={customer.id}
             />
           ))}
         </CatalogList>
         <CatalogDetail
-          onUpdate={console.log}
           show={!!selected}
           onClear={() => setSelected(undefined)}
         >
           {selected && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '50px' }}>
               <div>
-                <TextLabelInput
-                  value={selected.id}
-                  label="Nom"
-                  onChange={(e) => setSelected({ ...selected, id: e.target.value })}
-                />
+                <div>{selected.documentId}</div>
+                <div>{selected.customer.name}</div>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Produit</th>
+                      <th>Quantité</th>
+                      <th>Prix unitaire</th>
+                      <th>Total</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {selected.products.map((product) => (
+                      <tr key={product.product.id}>
+                        <td>{product.product.name}</td>
+                        <td>
+                          {product.quantity} {product.product.unit}
+                        </td>
+                        <td>{priceFormatter(product.product.price)}</td>
+                        <td>{priceFormatter(product.product.price * product.quantity)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             </div>
           )}
         </CatalogDetail>
       </CatalogueLayout>
     </ScreenLayout>
+  );
+}
+
+function DeliveryCustomer({
+  customer,
+  setSelected,
+}: {
+  customer: Customer;
+  setSelected: (value: React.SetStateAction<Delivery | undefined>) => void;
+}) {
+  const [toInvoice, setToInvoice] = useState<{ [key: string]: boolean }>({});
+
+  return (
+    <div>
+      <div>
+        {customer.name} :{Object.values(toInvoice).filter((i) => i).length}
+      </div>
+      <div>
+        {store.deliveries
+          .filter((delivery) => delivery.customerId === customer.id)
+          .map((delivery: Delivery) => {
+            return (
+              <Flex
+                gap={3}
+                key={delivery.id}
+              >
+                <input
+                  type="checkbox"
+                  id={delivery.id}
+                  // rome-ignore lint/complexity/useSimplifiedLogicExpression: <explanation>
+                  checked={toInvoice[delivery.id] || false}
+                  onChange={() =>
+                    setToInvoice((i) => ({
+                      ...i,
+                      [delivery.id]: !i[delivery.id],
+                    }))
+                  }
+                />
+                <div
+                  onClick={() => setSelected((e) => (e === delivery ? undefined : delivery))}
+                  onKeyDown={() => {}}
+                >
+                  {delivery.documentId}
+                </div>
+              </Flex>
+            );
+          })}
+      </div>
+    </div>
   );
 }

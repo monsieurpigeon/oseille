@@ -60,7 +60,7 @@ export function CatalogDetail({
   onClear,
 }: {
   children: React.ReactNode;
-  onUpdate: () => void;
+  onUpdate?: () => void;
   show: boolean;
   onClear: () => void;
 }) {
@@ -71,10 +71,12 @@ export function CatalogDetail({
           <Flex alignItems="center">
             <MyH1>Détail</MyH1>
             <Spacer />
-            <MyButton
-              onClick={onUpdate}
-              label="Enregistrer"
-            />
+            {onUpdate && (
+              <MyButton
+                onClick={onUpdate}
+                label="Enregistrer"
+              />
+            )}
           </Flex>
 
           <div style={{ display: 'flex', flexDirection: 'column', flexGrow: 1 }}>{children}</div>

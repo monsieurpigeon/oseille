@@ -8,6 +8,7 @@ import { updateDocumentId } from './farm';
 export interface Delivery {
   id: string;
   customer: Customer;
+  customerId: string;
   documentId: string;
   products: Array<{
     product: Product;
