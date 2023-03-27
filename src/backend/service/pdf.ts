@@ -36,28 +36,35 @@ const getLines = (payload: any, type: DocumentKey) => {
               alignment: 'right',
             },
           ],
-          ...payload.products.map((el: { product: Product; quantity: number }) => {
-            return [
-              el.product.name,
+          ...payload.products
+            .sort((a: Product, b: Product) => a.name.localeCompare(b.name))
+            .map((el: { product: Product; quantity: number }) => {
+              return [
+                el.product.name,
 
-              {
-                text: el.quantity,
-                alignment: 'right',
-              },
-              {
-                text: el.product.unit,
-                alignment: 'left',
-              },
-              { text: priceFormatter(el.product.price), alignment: 'right' },
-              { text: priceFormatter(el.product.price * el.quantity), alignment: 'right' },
-            ];
-          }),
+                {
+                  text: el.quantity,
+                  alignment: 'right',
+                },
+                {
+                  text: el.product.unit,
+                  alignment: 'left',
+                },
+                { text: priceFormatter(el.product.price), alignment: 'right' },
+                { text: priceFormatter(el.product.price * el.quantity), alignment: 'right' },
+              ];
+            }),
         ],
       },
     };
   }
 
   if (type === 'Invoice') {
+    const deliveries = payload.deliveries
+      .map((id: string) => {
+        return store.deliveries.find((d) => d.id === id);
+      })
+      .sort((a: Delivery, b: Delivery) => a.documentId.localeCompare(b.documentId));
     return {
       layout: 'lightHorizontalLines',
       style: 'tableExample',
@@ -76,28 +83,27 @@ const getLines = (payload: any, type: DocumentKey) => {
               alignment: 'right',
             },
           ],
-          ...payload.deliveries.flatMap((id: string) => {
-            const delivery = store.deliveries.find((d) => d.id === id);
-            if (!delivery) return null;
-
+          ...deliveries.flatMap((delivery: Delivery) => {
             return [
               [delivery?.documentId, dateFormatter(delivery?.deliveredAt || ''), '', '', ''],
-              ...delivery?.products.map((el) => {
-                return [
-                  el.product.name,
+              ...delivery?.products
+                .sort((a, b) => a.product.name.localeCompare(b.product.name))
+                .map((el) => {
+                  return [
+                    el.product.name,
 
-                  {
-                    text: el.quantity,
-                    alignment: 'right',
-                  },
-                  {
-                    text: el.product.unit,
-                    alignment: 'left',
-                  },
-                  { text: priceFormatter(el.product.price), alignment: 'right' },
-                  { text: priceFormatter(el.product.price * el.quantity), alignment: 'right' },
-                ];
-              }),
+                    {
+                      text: el.quantity,
+                      alignment: 'right',
+                    },
+                    {
+                      text: el.product.unit,
+                      alignment: 'left',
+                    },
+                    { text: priceFormatter(el.product.price), alignment: 'right' },
+                    { text: priceFormatter(el.product.price * el.quantity), alignment: 'right' },
+                  ];
+                }),
             ];
           }),
         ],

@@ -42,6 +42,7 @@ export const relDb = db.setSchema([
 ]);
 
 db.allDocs({ include_docs: true }).then(console.log);
+
 db.changes({
   since: 'now',
   live: true,

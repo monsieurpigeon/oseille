@@ -13,6 +13,7 @@ export interface Delivery {
   documentId: string;
   invoiceId?: string;
   products: Array<{
+    // TODO rename lines
     product: Product;
     quantity: number;
     totalPrice: number;
@@ -23,6 +24,7 @@ export interface DeliveryInput {
   customerId: string;
   deliveredAt: string;
   products: Array<{
+    // TODO rename lines
     productId: string;
     quantity: number;
     totalPrice?: number;

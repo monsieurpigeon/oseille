@@ -42,7 +42,7 @@ export function Deliveries() {
               <div>
                 <div>
                   {selected.documentId}
-                  {selected.invoiceId ? ` - Facturé` : ''}
+                  {selected.invoiceId ? ' - Facturé' : ''}
                 </div>
                 <div>{dateFormatter(selected.deliveredAt)}</div>
                 <div>{selected.customer.name}</div>
@@ -114,7 +114,7 @@ function DeliveryCustomer({
               .filter((delivery) => delivery.customerId === customer.id)
               .map((delivery: Delivery) => {
                 return (
-                  <tr>
+                  <tr key={delivery.id}>
                     <td>
                       {!delivery.invoiceId && (
                         <input
@@ -151,7 +151,7 @@ function DeliveryCustomer({
                     </td>
                   </tr>
                 );
-              })}{' '}
+              })}
           </tbody>
         </table>
       </div>

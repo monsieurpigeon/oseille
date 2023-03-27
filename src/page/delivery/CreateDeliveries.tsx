@@ -1,20 +1,23 @@
 import { Flex, Input, Select } from '@chakra-ui/react';
-import { useState } from 'react';
+import { SubmitHandler, useFieldArray, useForm } from 'react-hook-form';
 import { useSnapshot } from 'valtio';
 import { DeliveryInput, addDelivery, store } from '../../backend';
 import { MyButton } from '../../component/form/button/MyButton';
 import { CreateModal } from '../../component/modal/CreateModal';
-import { SubmitHandler, useForm } from 'react-hook-form';
 
 export function CreateDeliveries() {
   const { products, customers } = useSnapshot(store);
-  const [count, setCount] = useState([0]);
-  const { register, handleSubmit, reset } = useForm<DeliveryInput>();
+  const { control, register, handleSubmit, reset } = useForm<DeliveryInput>({
+    defaultValues: { deliveredAt: new Date().toISOString().split('T')[0] },
+  });
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'products',
+  });
 
   const onSubmit: SubmitHandler<DeliveryInput> = (d) => {
     addDelivery(d).then(() => {
       reset();
-      setCount([0]);
     });
   };
 
@@ -22,6 +25,7 @@ export function CreateDeliveries() {
     <CreateModal
       title={''}
       onSubmit={handleSubmit(onSubmit)}
+      onCancel={remove}
     >
       <form>
         <Flex
@@ -29,6 +33,7 @@ export function CreateDeliveries() {
           gap={8}
         >
           <Select {...register('customerId')}>
+            <option value={undefined}>Choisir un client</option>
             {customers.map((customer) => {
               return (
                 <option
@@ -42,45 +47,50 @@ export function CreateDeliveries() {
           </Select>
           <Input
             type="date"
-            {...register('deliveredAt')}
+            {...register('deliveredAt', { required: true })}
           />
           <Flex
             direction="column"
             gap={2}
           >
-            {count.map((index) => {
-              return (
-                <Flex
-                  gap={2}
-                  key={index}
-                >
-                  <Select {...register(`products.${index}.productId`)}>
-                    <option value={undefined}>...</option>
-                    {products.map((product) => {
-                      return (
-                        <option
-                          value={product.id}
-                          key={product.id}
-                        >
-                          {product.name} ({product.unit})
-                        </option>
-                      );
-                    })}
-                  </Select>
-                  <Input {...register(`products.${index}.quantity`)} />
-                </Flex>
-              );
-            })}
+            {fields.map((field, index) => (
+              <Flex
+                gap={2}
+                key={field.id}
+              >
+                <Select {...register(`products.${index}.productId`)}>
+                  <option value={undefined}>...</option>
+                  {products.map((product) => {
+                    return (
+                      <option
+                        value={product.id}
+                        key={product.id}
+                      >
+                        {product.name} ({product.unit})
+                      </option>
+                    );
+                  })}
+                </Select>
+                <Input
+                  type="number"
+                  min={0}
+                  {...register(`products.${index}.quantity`)}
+                />
+                <MyButton
+                  label="X"
+                  onClick={() => {
+                    remove(index);
+                  }}
+                />
+              </Flex>
+            ))}
             <MyButton
               label={'ajouter produit'}
               onClick={() => {
-                const maxIndex = Math.max(...count);
-                setCount((prev) => {
-                  return [...prev, maxIndex + 1];
-                });
+                append({ productId: '', quantity: 0 });
               }}
             />
-          </Flex>{' '}
+          </Flex>
         </Flex>
       </form>
     </CreateModal>

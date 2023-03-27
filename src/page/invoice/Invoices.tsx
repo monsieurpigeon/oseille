@@ -21,9 +21,9 @@ export function Invoices() {
               <div key={delivery?.id}>
                 {delivery?.documentId}
                 <div>
-                  {delivery?.products.map((product) => {
+                  {delivery?.products.map((product, index) => {
                     return (
-                      <div>
+                      <div key={`${index}`}>
                         {product.quantity} * {product?.product?.name}
                       </div>
                     );

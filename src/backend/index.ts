@@ -2,7 +2,6 @@ import { loadFarm } from './entity/farm';
 import { initDatabase, loadDatabase } from './service/database';
 
 loadFarm().then((data) => {
-  console.log({ data });
   if (!data) {
     initDatabase().then(() => {
       loadDatabase();
