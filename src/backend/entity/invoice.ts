@@ -12,7 +12,7 @@ export interface Invoice {
   documentId: string;
   customerId: string;
   deliveryIds: string[];
-  deliveries: Delivery[];
+  deliveries: string[];
 }
 
 export interface InvoiceInput {

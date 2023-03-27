@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useSnapshot } from 'valtio';
-import { destroyDatabase, FarmInput, store, updateFarmFooter, updateFarmName } from '../../backend';
+import { db, destroyDatabase, exportData, FarmInput, store, updateFarmFooter, updateFarmName } from '../../backend';
 import { MyButton } from '../../component/form/button/MyButton';
 import { MyTextInput } from '../../component/form/input/MyTextInput';
 import { ScreenLayout } from '../../component/layout/ScreenLayout';
 import { MyH1, MyH2 } from '../../component/typography/MyFont';
 import { DEFAULT_FARM } from '../../utils/defaults';
+import FileUploadSingle from '../../component/form/FileUploadSingle';
 
 const EMPTY_FARM: FarmInput = {
   title: '',
@@ -34,6 +35,16 @@ export function Settings() {
           destroyDatabase().catch(console.error);
         }}
       />
+      <MyButton
+        label="Export"
+        onClick={() => {
+          db.allDocs({ include_docs: true })
+            .then((data) => data.rows.map(({ doc }) => doc))
+            .then((data) => exportData(data))
+            .catch(console.error);
+        }}
+      />
+      <FileUploadSingle />
       <MyH2>Ma ferme</MyH2>
       {farm?.title ? (
         <div>{farm.title}</div>

@@ -14,7 +14,9 @@ export function Invoices() {
           <div>
             {invoice.customer.name} - {invoice.documentId}
           </div>
-          {invoice.deliveries.map((delivery) => {
+          {invoice.deliveries.map((id) => {
+            const delivery = store.deliveries.find((d) => d.id === id);
+            if (!delivery) return null;
             return (
               <div key={delivery?.id}>
                 {delivery?.documentId}

@@ -76,7 +76,10 @@ const getLines = (payload: any, type: DocumentKey) => {
               alignment: 'right',
             },
           ],
-          ...payload.deliveries.flatMap((delivery: Delivery) => {
+          ...payload.deliveries.flatMap((id: string) => {
+            const delivery = store.deliveries.find((d) => d.id === id);
+            if (!delivery) return null;
+
             return [
               [delivery?.documentId, dateFormatter(delivery?.deliveredAt || ''), '', '', ''],
               ...delivery?.products.map((el) => {
@@ -111,7 +114,9 @@ const getPrice = (payload: any, type: DocumentKey) => {
     );
   if (type === 'Invoice')
     return payload.deliveries
-      .flatMap((delivery: Delivery) => {
+      .flatMap((id: string) => {
+        const delivery = store.deliveries.find((d) => d.id === id);
+        if (!delivery) return null;
         return delivery?.products;
       })
       .reduce((acc: number, el: { product: Product; quantity: number }) => acc + el.product.price * el.quantity, 0);
