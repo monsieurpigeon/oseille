@@ -1,7 +1,9 @@
-import { useState } from 'react';
+import { Box, Input, Text } from '@chakra-ui/react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { z } from 'zod';
 import { addCustomer, CustomerInput } from '../../backend';
-import { MyTextInput } from '../../component/form/input/MyTextInput';
-import { CreateModal } from '../../component/modal/CreateModal';
+import { MyCreateModal } from '../../component/modal/MyCreateModal';
 
 const EMPTY_CUSTOMER: CustomerInput = {
   name: '',
@@ -11,41 +13,66 @@ const EMPTY_CUSTOMER: CustomerInput = {
   zip: '',
 };
 
+const schema = z.object({
+  name: z.string().min(1),
+  address1: z.string().min(1),
+  address2: z.string(),
+  city: z.string().min(1),
+  zip: z.string().min(1),
+});
+
 export function CreateCustomer() {
-  const [customer, setCustomer] = useState(EMPTY_CUSTOMER);
+  const { register, handleSubmit, reset } = useForm<CustomerInput>({
+    resolver: zodResolver(schema),
+    defaultValues: EMPTY_CUSTOMER,
+  });
+
+  const onCreate: SubmitHandler<CustomerInput> = (d) => {
+    return addCustomer(d);
+  };
+
   return (
-    <CreateModal
-      onSubmit={() => {
-        addCustomer(customer).catch(console.error);
-        setCustomer(EMPTY_CUSTOMER);
-      }}
+    <MyCreateModal
+      onCreate={onCreate}
+      handleSubmit={handleSubmit}
+      reset={reset}
       title="Nouveau client"
     >
-      <MyTextInput
-        placeholder="Nom du client"
-        value={customer.name}
-        onChange={(e) => setCustomer((customer) => ({ ...customer, name: e.target.value }))}
-      />
-      <MyTextInput
-        placeholder="Adresse 1"
-        value={customer.address1}
-        onChange={(e) => setCustomer((customer) => ({ ...customer, address1: e.target.value }))}
-      />
-      <MyTextInput
-        placeholder="Adresse 2"
-        value={customer.address2}
-        onChange={(e) => setCustomer((customer) => ({ ...customer, address2: e.target.value }))}
-      />
-      <MyTextInput
-        placeholder="Code postal"
-        value={customer.zip}
-        onChange={(e) => setCustomer((customer) => ({ ...customer, zip: e.target.value }))}
-      />
-      <MyTextInput
-        placeholder="Ville"
-        value={customer.city}
-        onChange={(e) => setCustomer((customer) => ({ ...customer, city: e.target.value }))}
-      />
-    </CreateModal>
+      <Box p={1}>
+        <Text>Nom</Text>
+        <Input
+          placeholder="Biocoop"
+          {...register('name')}
+        />
+      </Box>
+      <Box p={1}>
+        <Text>Adresse 1</Text>
+        <Input
+          placeholder="42 rue du petit-pois"
+          {...register('address1')}
+        />
+      </Box>
+      <Box p={1}>
+        <Text>Adresse 2</Text>
+        <Input
+          placeholder=""
+          {...register('address2')}
+        />
+      </Box>
+      <Box p={1}>
+        <Text>Code postal</Text>
+        <Input
+          placeholder="33000"
+          {...register('zip')}
+        />
+      </Box>
+      <Box p={1}>
+        <Text>Ville</Text>
+        <Input
+          placeholder="Bordeaux"
+          {...register('city')}
+        />
+      </Box>
+    </MyCreateModal>
   );
 }

@@ -1,42 +1,61 @@
-import { useState } from 'react';
-import { addProduct, Unit } from '../../backend';
-import { MyNumberInput } from '../../component/form/input/MyNumberInput';
-import { MyTextInput } from '../../component/form/input/MyTextInput';
-import { MySelect } from '../../component/form/select/MySelect';
-import { CreateModal } from '../../component/modal/CreateModal';
-import { PRODUCT_UNITS } from '../../utils/defaults';
+import { Box, Input, Select, Text } from '@chakra-ui/react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { ProductInput, addProduct } from '../../backend';
+import { MyNumberInput } from '../../component/form/MyNumberInput';
+import { MyCreateModal } from '../../component/modal/MyCreateModal';
+
+const schema = z.object({
+  name: z.string().min(1),
+  price: z.string(),
+  unit: z.string(),
+});
 
 export function CreateProduct() {
-  const [name, setName] = useState('');
-  const [price, setPrice] = useState('0.00');
-  const [unit, setUnit] = useState<Unit>('kg');
+  const { control, register, handleSubmit, reset } = useForm<ProductInput>({
+    resolver: zodResolver(schema),
+    defaultValues: {
+      name: '',
+      price: 0,
+      unit: 'kg',
+    },
+  });
+
+  const onCreate: SubmitHandler<ProductInput> = (d) => {
+    return addProduct(d);
+  };
+
   return (
-    <CreateModal
-      title={'Nouveau produit'}
-      onSubmit={() => {
-        addProduct({ name, price: +price, unit }).catch(console.error);
-        setName('');
-        setPrice('0.00');
-      }}
+    <MyCreateModal
+      onCreate={onCreate}
+      handleSubmit={handleSubmit}
+      reset={reset}
+      title="Nouveau produit"
     >
-      <MyTextInput
-        placeholder="nom du produit"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-      />
-      <MyNumberInput
-        placeholder="prix"
-        value={price}
-        onChange={(value) => setPrice(value)}
-      />
-      <MySelect
-        options={PRODUCT_UNITS}
-        value={unit}
-        onChange={(e) => {
-          setUnit(e.target.value as Unit);
-        }}
-        placeholder={'unite ...'}
-      />
-    </CreateModal>
+      <Box p={1}>
+        <Text>Nom</Text>
+        <Input
+          placeholder="Tomates cerises"
+          {...register('name')}
+        />
+      </Box>
+      <Box p={1}>
+        <Text>Prix</Text>
+        <MyNumberInput
+          control={control}
+          name="price"
+          min={0}
+          step={0.2}
+        />
+      </Box>
+      <Box p={1}>
+        <Text>Unité</Text>
+        <Select {...register('unit')}>
+          <option value={'kg'}>kg</option>
+          <option value={'piece'}>piece</option>
+        </Select>
+      </Box>
+    </MyCreateModal>
   );
 }

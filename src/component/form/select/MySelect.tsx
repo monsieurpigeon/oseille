@@ -9,15 +9,16 @@ interface Options {
 type MySelectProps = {
   options: Options[];
   placeholder: string;
-  value: string;
+  value?: string;
   onChange: ChangeEventHandler<HTMLSelectElement>;
 };
-export function MySelect({ options, placeholder, value, onChange }: MySelectProps) {
+export function MySelect({ options, placeholder, value, onChange, ...rest }: MySelectProps) {
   return (
     <Select
       placeholder={placeholder}
       value={value}
       onChange={onChange}
+      {...rest}
     >
       {options.map(({ label, value }) => (
         <option

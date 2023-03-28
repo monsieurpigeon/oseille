@@ -13,6 +13,7 @@
     "@chakra-ui/react": "^2.4.2",
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
+    "@hookform/resolvers": "^3.0.0",
     "@pdfme/generator": "^1.0.17",
     "events": "^3.3.0",
     "framer-motion": "^6.5.1",
@@ -25,7 +26,8 @@
     "react-hook-form": "^7.39.6",
     "react-router-dom": "^6.4.3",
     "relational-pouch": "^4.0.4",
-    "valtio": "^1.7.6"
+    "valtio": "^1.7.6",
+    "zod": "^3.21.4"
   },
   "devDependencies": {
     "@types/pdfmake": "^0.2.2",
