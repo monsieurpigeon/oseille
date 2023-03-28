@@ -1,6 +1,6 @@
 import { Box, Input, Select, Text } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { ProductInput, addProduct } from '../../backend';
 import { MyNumberInput } from '../../component/form/MyNumberInput';
@@ -22,13 +22,9 @@ export function CreateProduct() {
     },
   });
 
-  const onCreate: SubmitHandler<ProductInput> = (d) => {
-    return addProduct(d);
-  };
-
   return (
     <MyCreateModal
-      onCreate={onCreate}
+      onCreate={addProduct}
       handleSubmit={handleSubmit}
       reset={reset}
       title="Nouveau produit"

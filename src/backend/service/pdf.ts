@@ -36,8 +36,10 @@ const getLines = (payload: any, type: DocumentKey) => {
               alignment: 'right',
             },
           ],
-          ...payload.products
-            .sort((a: Product, b: Product) => a.name.localeCompare(b.name))
+          ...payload.lines
+            .sort((a: { product: Product; quantity: number }, b: { product: Product; quantity: number }) =>
+              a.product.name.localeCompare(b.product.name),
+            )
             .map((el: { product: Product; quantity: number }) => {
               return [
                 el.product.name,
@@ -86,7 +88,7 @@ const getLines = (payload: any, type: DocumentKey) => {
           ...deliveries.flatMap((delivery: Delivery) => {
             return [
               [delivery?.documentId, dateFormatter(delivery?.deliveredAt || ''), '', '', ''],
-              ...delivery?.products
+              ...delivery.lines
                 .sort((a, b) => a.product.name.localeCompare(b.product.name))
                 .map((el) => {
                   return [
@@ -114,7 +116,7 @@ const getLines = (payload: any, type: DocumentKey) => {
 
 const getPrice = (payload: any, type: DocumentKey) => {
   if (type === 'Delivery')
-    return payload.products.reduce(
+    return payload.lines.reduce(
       (acc: number, el: { product: Product; quantity: number }) => acc + el.product.price * el.quantity,
       0,
     );
@@ -123,7 +125,7 @@ const getPrice = (payload: any, type: DocumentKey) => {
       .flatMap((id: string) => {
         const delivery = store.deliveries.find((d) => d.id === id);
         if (!delivery) return null;
-        return delivery?.products;
+        return delivery?.lines;
       })
       .reduce((acc: number, el: { product: Product; quantity: number }) => acc + el.product.price * el.quantity, 0);
 };

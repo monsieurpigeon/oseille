@@ -30,7 +30,8 @@ export async function loadProduct(id: string) {
 }
 
 export const addProduct = (product: ProductInput) => {
-  return relDb.rel.save('product', product);
+  // TODO : better way to do this
+  return relDb.rel.save('product', { ...product, price: +product.price });
 };
 
 export const updateProduct = (product: Product) => {

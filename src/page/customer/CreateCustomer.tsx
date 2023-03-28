@@ -1,8 +1,8 @@
 import { Box, Input, Text } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { SubmitHandler, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { addCustomer, CustomerInput } from '../../backend';
+import { CustomerInput, addCustomer } from '../../backend';
 import { MyCreateModal } from '../../component/modal/MyCreateModal';
 
 const EMPTY_CUSTOMER: CustomerInput = {
@@ -27,13 +27,9 @@ export function CreateCustomer() {
     defaultValues: EMPTY_CUSTOMER,
   });
 
-  const onCreate: SubmitHandler<CustomerInput> = (d) => {
-    return addCustomer(d);
-  };
-
   return (
     <MyCreateModal
-      onCreate={onCreate}
+      onCreate={addCustomer}
       handleSubmit={handleSubmit}
       reset={reset}
       title="Nouveau client"

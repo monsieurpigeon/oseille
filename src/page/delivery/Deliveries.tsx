@@ -1,4 +1,3 @@
-import { Flex } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { useSnapshot } from 'valtio';
 import { Customer, Delivery, addInvoice, exportDocument, store } from '../../backend';
@@ -56,14 +55,14 @@ export function Deliveries() {
                     </tr>
                   </thead>
                   <tbody>
-                    {selected.products.map((product) => (
-                      <tr key={product.product.id}>
-                        <td>{product.product.name}</td>
+                    {selected.lines.map((line, index) => (
+                      <tr key={`${index}`}>
+                        <td>{line.product.name}</td>
                         <td>
-                          {product.quantity} {product.product.unit}
+                          {line.quantity} {line.product.unit}
                         </td>
-                        <td>{priceFormatter(product.product.price)}</td>
-                        <td>{priceFormatter(product.product.price * product.quantity)}</td>
+                        <td>{priceFormatter(line.product.price)}</td>
+                        <td>{priceFormatter(line.product.price * line.quantity)}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -86,6 +85,8 @@ function DeliveryCustomer({
 }) {
   const [toInvoice, setToInvoice] = useState<{ [key: string]: boolean }>({});
 
+  const deliveries = store.deliveries.filter((delivery) => delivery.customerId === customer.id);
+
   return (
     <div>
       <div>
@@ -106,13 +107,12 @@ function DeliveryCustomer({
           </button>
         )}
       </div>
-      <div>
-        {' '}
-        <table style={{ borderCollapse: 'separate', borderSpacing: '20px 0' }}>
-          <tbody>
-            {store.deliveries
-              .filter((delivery) => delivery.customerId === customer.id)
-              .map((delivery: Delivery) => {
+      {deliveries.length === 0 && <div>Aucune livraison</div>}
+      {deliveries.length > 0 && (
+        <div>
+          <table style={{ borderCollapse: 'separate', borderSpacing: '20px 0' }}>
+            <tbody>
+              {deliveries.map((delivery: Delivery) => {
                 return (
                   <tr key={delivery.id}>
                     <td>
@@ -152,9 +152,10 @@ function DeliveryCustomer({
                   </tr>
                 );
               })}
-          </tbody>
-        </table>
-      </div>
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 }

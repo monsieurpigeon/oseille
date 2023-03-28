@@ -1,5 +1,5 @@
 import { useSnapshot } from 'valtio';
-import { Invoice, Product, exportDocument, store } from '../../backend';
+import { exportDocument, store } from '../../backend';
 import { MyButton } from '../../component/form/button/MyButton';
 import { ScreenLayout } from '../../component/layout/ScreenLayout';
 import { MyH1 } from '../../component/typography/MyFont';
@@ -18,13 +18,13 @@ export function Invoices() {
             const delivery = store.deliveries.find((d) => d.id === id);
             if (!delivery) return null;
             return (
-              <div key={delivery?.id}>
-                {delivery?.documentId}
+              <div key={delivery.id}>
+                {delivery.documentId}
                 <div>
-                  {delivery?.products.map((product, index) => {
+                  {delivery.lines.map((line, index) => {
                     return (
                       <div key={`${index}`}>
-                        {product.quantity} * {product?.product?.name}
+                        {line.quantity} * {line.product.name}
                       </div>
                     );
                   })}

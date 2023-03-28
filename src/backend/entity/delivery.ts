@@ -12,8 +12,7 @@ export interface Delivery {
   customerId: string;
   documentId: string;
   invoiceId?: string;
-  products: Array<{
-    // TODO rename lines
+  lines: Array<{
     product: Product;
     quantity: number;
     totalPrice: number;
@@ -23,8 +22,7 @@ export interface Delivery {
 export interface DeliveryInput {
   customerId: string;
   deliveredAt: string;
-  products: Array<{
-    // TODO rename lines
+  lines: Array<{
     productId: string;
     quantity: number;
     totalPrice?: number;
@@ -34,22 +32,22 @@ export interface DeliveryInput {
 export async function loadDeliveries() {
   const result = await relDb.rel.find('delivery');
   store.deliveries = result.deliveries.sort((a: Delivery, b: Delivery) => {
-    return new Date(a.deliveredAt).getTime() - new Date(b.deliveredAt).getTime();
+    return a.documentId.localeCompare(b.documentId);
   });
 }
 
 export const addDelivery = async (delivery: DeliveryInput) => {
   const customer = await loadCustomer(delivery.customerId);
   const promise = async () => {
-    const products = await Promise.all(
-      delivery.products
+    const lines = await Promise.all(
+      delivery.lines
         .filter((p) => p.productId !== '...')
         .map(async (el) => {
           const product = await loadProduct(el.productId);
           return { ...el, product };
         }),
     );
-    return { ...delivery, customer, products: products.filter((p) => !!p) };
+    return { ...delivery, customer, lines: lines.filter((p) => !!p).map((l) => ({ ...l, quantity: +l.quantity })) };
   };
 
   promise().then((deliveryFull) => {
