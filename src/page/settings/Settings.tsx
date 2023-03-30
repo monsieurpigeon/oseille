@@ -7,6 +7,7 @@ import { ScreenLayout } from '../../component/layout/ScreenLayout';
 import { MyH1, MyH2 } from '../../component/typography/MyFont';
 import { DEFAULT_FARM } from '../../utils/defaults';
 import FileUploadSingle from '../../component/form/FileUploadSingle';
+import { ConfirmationModal } from '../../component/modal/ConfirmationModal';
 
 const EMPTY_FARM: FarmInput = {
   title: '',
@@ -29,19 +30,24 @@ export function Settings() {
   return (
     <ScreenLayout>
       <MyH1>Réglages</MyH1>
-      <MyButton
-        label="Armageddon"
-        onClick={() => {
-          destroyDatabase().catch(console.error);
-        }}
-      />
-      <MyButton
+
+      <ConfirmationModal
         label="Export"
-        onClick={() => {
+        title="Tout récupérer"
+        message="Vous allez récupérer une copie de toute votre base de donnée dans un fichier, à faire régulièrement et stocker sur un support différent"
+        onConfirm={() => {
           db.allDocs({ include_docs: true })
             .then((data) => data.rows.map(({ doc }) => doc))
             .then((data) => exportData(data))
             .catch(console.error);
+        }}
+      />
+      <ConfirmationModal
+        label="Armageddon"
+        title="Tout effacer"
+        message="Vous allez supprimer toute la base de donnée, assurez vous d'avoir bien fait un export de vos données"
+        onConfirm={() => {
+          destroyDatabase().catch(console.error);
         }}
       />
       <FileUploadSingle />
