@@ -36,7 +36,6 @@ export function Customers() {
         <CatalogDetail
           onUpdate={() => selected && updateCustomer({ ...selected })}
           show={!!selected}
-          onClear={() => setSelected(undefined)}
         >
           {selected && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '50px' }}>

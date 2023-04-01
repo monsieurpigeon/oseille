@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useSnapshot } from 'valtio';
 import { Customer, Delivery, addInvoice, exportDocument, store } from '../../backend';
-import { CatalogDetail, CatalogList, CatalogueLayout } from '../../component/catalog/Catalog';
+import { CatalogDetail, CatalogList, CatalogMasterCard, CatalogueLayout } from '../../component/catalog/Catalog';
 import { ScreenLayout } from '../../component/layout/ScreenLayout';
 import { dateFormatter, priceFormatter } from '../../utils/formatter';
 import { CreateDeliveries } from './CreateDeliveries';
@@ -32,10 +32,7 @@ export function Deliveries() {
             />
           ))}
         </CatalogList>
-        <CatalogDetail
-          show={!!selected}
-          onClear={() => setSelected(undefined)}
-        >
+        <CatalogDetail show={!!selected}>
           {selected && (
             <div style={{ display: 'flex', flexDirection: 'column', gap: '50px' }}>
               <div>
@@ -88,25 +85,28 @@ function DeliveryCustomer({
   const deliveries = store.deliveries.filter((delivery) => delivery.customerId === customer.id);
 
   return (
-    <div>
-      <div>
-        {customer.name}
-        {!!Object.values(toInvoice).filter((i) => i).length && (
-          <button
-            style={{ marginLeft: '30px', border: '1px solid grey', padding: '0px 10px', borderRadius: '5px' }}
-            onClick={() => {
-              addInvoice(
-                Object.entries(toInvoice)
-                  .filter(([key, value]) => value)
-                  .map(([key]) => store.deliveries.find((delivery) => delivery.id === key))
-                  .filter((d) => !!d) as Delivery[],
-              ).then(() => setToInvoice({}));
-            }}
-          >
-            Facturer {Object.values(toInvoice).filter((i) => i).length}
-          </button>
-        )}
-      </div>
+    <CatalogMasterCard
+      label={
+        <div>
+          {customer.name}
+          {!!Object.values(toInvoice).filter((i) => i).length && (
+            <button
+              style={{ marginLeft: '30px', border: '1px solid grey', padding: '0px 10px', borderRadius: '5px' }}
+              onClick={() => {
+                addInvoice(
+                  Object.entries(toInvoice)
+                    .filter(([key, value]) => value)
+                    .map(([key]) => store.deliveries.find((delivery) => delivery.id === key))
+                    .filter((d) => !!d) as Delivery[],
+                ).then(() => setToInvoice({}));
+              }}
+            >
+              Facturer {Object.values(toInvoice).filter((i) => i).length}
+            </button>
+          )}
+        </div>
+      }
+    >
       {deliveries.length === 0 && <div>Aucune livraison</div>}
       {deliveries.length > 0 && (
         <div>
@@ -156,6 +156,6 @@ function DeliveryCustomer({
           </table>
         </div>
       )}
-    </div>
+    </CatalogMasterCard>
   );
 }

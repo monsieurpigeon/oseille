@@ -4,7 +4,7 @@ import { SideKick } from '../modules/sidekick/SideKick';
 
 export function Header() {
   return (
-    <Flex bg="white">
+    <Flex>
       <Center p="4">
         <Link to="/">
           <Text fontSize="2xl">Oseille</Text>

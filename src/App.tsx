@@ -9,6 +9,7 @@ import { Home } from './page/home/Home';
 import { Invoices } from './page/invoice/Invoices';
 import { Products } from './page/product/Products';
 import { Settings } from './page/settings/Settings';
+import { NewProduct } from './page/product/NewProduct';
 
 function App() {
   return (
@@ -20,7 +21,7 @@ function App() {
         />
         <Route
           path="product"
-          element={<Products />}
+          element={<NewProduct />}
         />
         <Route
           path="customer"

@@ -1,13 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useSnapshot } from 'valtio';
-import { Product, Unit, store, updateProduct } from '../../backend';
-import { CatalogCard, CatalogDetail, CatalogList, CatalogueLayout } from '../../component/catalog/Catalog';
-import { NumberLabelInput } from '../../component/form/NumberInput';
-import { TextLabelInput } from '../../component/form/TextInput';
-import { MySelect } from '../../component/form/select/MySelect';
+import { Product, store } from '../../backend';
+import { CatalogCard, CatalogList, CatalogueLayout } from '../../component/catalog/Catalog';
 import { ScreenLayout } from '../../component/layout/ScreenLayout';
-import { PRODUCT_UNITS } from '../../utils/defaults';
 import { CreateProduct } from './CreateProduct';
+import { ProductDetail } from './ProductDetail';
 
 export function Products() {
   const [selected, setSelected] = useState<Product>();
@@ -36,36 +33,7 @@ export function Products() {
             />
           ))}
         </CatalogList>
-        <CatalogDetail
-          onUpdate={() => selected && updateProduct({ ...selected })}
-          show={!!selected}
-          onClear={() => setSelected(undefined)}
-        >
-          {selected && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '50px' }}>
-              <div>
-                <TextLabelInput
-                  value={selected.name}
-                  label="Nom"
-                  onChange={(e) => setSelected({ ...selected, name: e.target.value })}
-                />
-                <NumberLabelInput
-                  value={selected.price || 0}
-                  label="Prix"
-                  onChange={(e) => setSelected({ ...selected, price: +e.target.value })}
-                />
-                <MySelect
-                  options={PRODUCT_UNITS}
-                  value={selected.unit}
-                  onChange={(e) => {
-                    setSelected({ ...selected, unit: e.target.value as Unit });
-                  }}
-                  placeholder={'unite ...'}
-                />
-              </div>
-            </div>
-          )}
-        </CatalogDetail>
+        <ProductDetail selected={selected} />
       </CatalogueLayout>
     </ScreenLayout>
   );

@@ -30,6 +30,9 @@ export function ListItem({ children }: ListItemProps) {
         justifyContent: 'space-between',
         cursor: 'pointer',
         userSelect: 'none',
+        padding: '10px',
+        backgroundColor: 'lightgray',
+        borderRadius: '5px',
       }}
     >
       {children}

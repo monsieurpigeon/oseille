@@ -12,10 +12,7 @@ const navBarItems = [
 
 export function Navigation() {
   return (
-    <Box
-      position="sticky"
-      top="100px"
-    >
+    <Box>
       <UnorderedList styleType="none">
         {navBarItems.map((item) => (
           <ListItem
