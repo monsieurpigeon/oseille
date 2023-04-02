@@ -1,7 +1,7 @@
-import { MyH1, MyH2, MyLink, MySubtitle } from '../../component/typography/MyFont';
-import { Flex, List, ListIcon, ListItem } from '@chakra-ui/react';
 import { CheckIcon, RepeatIcon, TimeIcon } from '@chakra-ui/icons';
+import { List, ListIcon, ListItem } from '@chakra-ui/react';
 import { NavLink } from 'react-router-dom';
+import { MyH1, MyH2, MySubtitle } from '../../component/typography/MyFont';
 
 type Status = 'todo' | 'doing' | 'done';
 
@@ -50,25 +50,6 @@ export function Home() {
             <p className="bold">
               Faites régulièrement des exports depuis la page <NavLink to="settings">Réglages</NavLink>.
             </p>
-
-            <Flex gap={4}>
-              <MyLink
-                href="https://www.facebook.com/maxime.pigeon/"
-                target="_blank"
-                p={2}
-                border={'1px'}
-              >
-                Facebook
-              </MyLink>
-              <MyLink
-                href="https://www.linkedin.com/in/maxime-pigeon/"
-                target="_blank"
-                p={2}
-                border={'1px'}
-              >
-                LinkedIn
-              </MyLink>
-            </Flex>
           </div>
         </div>
         <div className="catalog-side">
