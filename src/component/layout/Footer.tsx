@@ -3,7 +3,10 @@ import { NavLink } from 'react-router-dom';
 
 export function Footer() {
   return (
-    <Center h="50px">
+    <Center
+      h="50px"
+      borderTop="2px solid lightcyan"
+    >
       <Flex>
         <Text>
           Fabriqué avec ❤️ & 🍅<NavLink to={'admin'}>🍆</NavLink>🧄🥦🥬🌽🥕🧅🥔 à Bordeaux. Retrouvez le code source sur{' '}

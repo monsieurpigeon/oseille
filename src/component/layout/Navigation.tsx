@@ -6,27 +6,22 @@ const navBarItems = [
   { label: 'Clients', emoji: '🤴', path: 'customer' },
   { label: 'Livraisons', emoji: '🧺', path: 'delivery' },
   { label: 'Factures', emoji: '🧲', path: 'invoice' },
-  { label: 'Reglages', emoji: '🔧', path: 'settings' },
+  { label: 'Réglages', emoji: '🔧', path: 'settings' },
   { label: 'Contact', emoji: '🖋️', path: 'contact' },
 ];
 
 export function Navigation() {
   return (
-    <Box>
-      <UnorderedList styleType="none">
-        {navBarItems.map((item) => (
-          <ListItem
-            key={item.path}
-            p={4}
-            fontSize={20}
-            fontWeight="bold"
-          >
-            <NavLink to={item.path}>
-              {item.emoji} {item.label}
-            </NavLink>
-          </ListItem>
-        ))}
-      </UnorderedList>
-    </Box>
+    <div className="navigation-list">
+      {navBarItems.map((item) => (
+        <NavLink
+          key={item.path}
+          to={item.path}
+          className="navigation-item"
+        >
+          {item.emoji} {item.label}
+        </NavLink>
+      ))}
+    </div>
   );
 }

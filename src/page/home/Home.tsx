@@ -1,7 +1,7 @@
-import { ScreenLayout } from '../../component/layout/ScreenLayout';
 import { MyH1, MyH2, MyLink, MySubtitle } from '../../component/typography/MyFont';
 import { Flex, List, ListIcon, ListItem } from '@chakra-ui/react';
 import { CheckIcon, RepeatIcon, TimeIcon } from '@chakra-ui/icons';
+import { NavLink } from 'react-router-dom';
 
 type Status = 'todo' | 'doing' | 'done';
 
@@ -23,6 +23,7 @@ const NEXT: Array<{ text: string; status: Status }> = [
 
 const ROADMAP: Array<{ text: string; status: Status }> = [
   { text: 'Gestion des paniers en click-and-collect personnalisé', status: 'todo' },
+  { text: 'Assolement, cahier de culture', status: 'todo' },
 ];
 
 // TODO add a better typing to keep only Status as key
@@ -33,62 +34,71 @@ const statusIcon: { [key: string]: { icon: typeof CheckIcon; color: string } } =
 };
 export function Home() {
   return (
-    <ScreenLayout>
-      <Flex
-        gap={4}
-        direction="column"
-      >
-        <MyH1>Bienvenue sur Oseille</MyH1>
-        <MySubtitle>L'application qui aide les maraîchers à gérer leur argent, entre autres...</MySubtitle>
-        <p>Application gratuite, en code libre, et qui marche sans internet</p>
-        <MySubtitle>
-          Attention : Cette application est toujours en développement et va connaitre de gros changements jusqu'à nouvel
-          ordre
-        </MySubtitle>
-        <MyH2>Fonctionnalités :</MyH2>
-        <List spacing={3}>
-          {TODO_ITEMS.map((item) => (
-            <TodoItem
-              key={item.text}
-              item={item}
-            />
-          ))}
-          <ListItem listStyleType="none">... et ensuite...</ListItem>
-          {NEXT.map((item) => (
-            <TodoItem
-              key={item.text}
-              item={item}
-            />
-          ))}
-          <ListItem listStyleType="none">... Plein d'autres choses...</ListItem>
-          {ROADMAP.map((item) => (
-            <TodoItem
-              key={item.text}
-              item={item}
-            />
-          ))}
-          <ListItem listStyleType="none">... Dites moi de quoi vous avez besoin.</ListItem>
-        </List>
-        <Flex gap={4}>
-          <MyLink
-            href="https://www.facebook.com/maxime.pigeon/"
-            target="_blank"
-            p={2}
-            border={'1px'}
-          >
-            Facebook
-          </MyLink>
-          <MyLink
-            href="https://www.linkedin.com/in/maxime-pigeon/"
-            target="_blank"
-            p={2}
-            border={'1px'}
-          >
-            LinkedIn
-          </MyLink>
-        </Flex>
-      </Flex>
-    </ScreenLayout>
+    <>
+      <div className="catalog">
+        <div className="catalog-side">
+          <div className="catalog-header">
+            <MyH1>Bienvenue sur Oseille</MyH1>
+          </div>
+          <div className="catalog-list">
+            <MySubtitle>L'application qui aide les maraîchers à gérer leur argent, entre autres...</MySubtitle>
+            <MySubtitle>Application gratuite, en code libre, et qui marche sans internet</MySubtitle>
+            <p>
+              <span className="bold">Attention</span> : Cette application est toujours en développement et va connaître
+              de gros changements jusqu'à nouvel ordre
+            </p>
+            <p className="bold">
+              Faites régulièrement des exports depuis la page <NavLink to="settings">Réglages</NavLink>.
+            </p>
+
+            <Flex gap={4}>
+              <MyLink
+                href="https://www.facebook.com/maxime.pigeon/"
+                target="_blank"
+                p={2}
+                border={'1px'}
+              >
+                Facebook
+              </MyLink>
+              <MyLink
+                href="https://www.linkedin.com/in/maxime-pigeon/"
+                target="_blank"
+                p={2}
+                border={'1px'}
+              >
+                LinkedIn
+              </MyLink>
+            </Flex>
+          </div>
+        </div>
+        <div className="catalog-side">
+          <MyH2>Fonctionnalités :</MyH2>
+          <List spacing={3}>
+            {TODO_ITEMS.map((item) => (
+              <TodoItem
+                key={item.text}
+                item={item}
+              />
+            ))}
+            <ListItem listStyleType="none">... et ensuite...</ListItem>
+            {NEXT.map((item) => (
+              <TodoItem
+                key={item.text}
+                item={item}
+              />
+            ))}
+            <ListItem listStyleType="none">... Plein d'autres choses...</ListItem>
+            {ROADMAP.map((item) => (
+              <TodoItem
+                key={item.text}
+                item={item}
+              />
+            ))}
+            <ListItem listStyleType="none">... Dites moi de quoi vous avez besoin.</ListItem>
+          </List>
+        </div>
+      </div>
+    </>
   );
 }
 

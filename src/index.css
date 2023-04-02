@@ -8,7 +8,7 @@
 .catalog-side {
   display: flex;
   flex-direction: column;
-  padding: 20px;
+  padding: 0 20px;
 }
 
 .catalog-header {
@@ -33,6 +33,22 @@
   margin-top: 20px;
 }
 
+.catalog-sub-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.faded {
+  color: grey;
+  font-style: italic;
+  margin-left: 30px;
+}
+
 .catalog-item {
   display: flex;
   align-items: center;
@@ -46,10 +62,31 @@
 }
 
 .catalog-item.selected {
-  background-color: lightblue;
+  background-color: lightcyan;
   border: 1px solid salmon;
 }
 
 .catalog-item:hover {
   border: 1px solid black;
+}
+
+.navigation-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.navigation-item {
+  padding: 15px;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.navigation-item.active {
+  background-color: lightcyan;
+  border-right: 2px solid cyan;
+}
+
+.navigation-item:hover {
+  background-color: lightcyan;
 }

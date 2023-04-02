@@ -4,47 +4,11 @@ import { MyH1 } from '../typography/MyFont';
 import './style.css';
 import { MyButton } from '../form/button/MyButton';
 
-export function CatalogueLayout({ children }: { children: React.ReactNode }) {
-  return <div className="catalog-layout">{children}</div>;
-}
-
-export function CatalogCard({ label, onClick, selected }: { label: string; onClick: () => void; selected?: boolean }) {
-  return (
-    <div
-      className={`list-item ${selected && 'selected'}`}
-      onClick={onClick}
-      onKeyDown={() => {}}
-    >
-      <div>{label}</div>
-    </div>
-  );
-}
-
 export function CatalogMasterCard({ label, children }: { label: string | ReactNode; children: ReactNode }) {
   return (
     <div className="catalog-master-card">
       <div style={{ height: '35px' }}>{label}</div>
       <div className="catalog-master-card-content">{children}</div>
-    </div>
-  );
-}
-
-export function CatalogList({ title, slot, children }: { title: string; slot?: ReactNode; children: React.ReactNode }) {
-  return (
-    <div>
-      <Flex alignItems="center">
-        <MyH1>{title}</MyH1>
-        <Spacer />
-        {slot}
-      </Flex>
-      <Spacer />
-      <Flex
-        direction="column"
-        gap={3}
-        style={{ height: '100%', overflowY: 'scroll' }}
-      >
-        {children}
-      </Flex>
     </div>
   );
 }

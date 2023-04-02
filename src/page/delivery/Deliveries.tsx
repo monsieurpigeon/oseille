@@ -1,14 +1,40 @@
-import { useEffect, useState } from 'react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useEffect, useRef, useState } from 'react';
 import { useSnapshot } from 'valtio';
-import { Customer, Delivery, addInvoice, exportDocument, store } from '../../backend';
-import { CatalogDetail, CatalogList, CatalogMasterCard, CatalogueLayout } from '../../component/catalog/Catalog';
-import { ScreenLayout } from '../../component/layout/ScreenLayout';
-import { dateFormatter, priceFormatter } from '../../utils/formatter';
-import { CreateDeliveries } from './CreateDeliveries';
+
+import { Button, useDisclosure } from '@chakra-ui/react';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
+import { Customer, Delivery, DeliveryInput, addDelivery, addInvoice, exportDocument, store } from '../../backend';
+import { CatalogMasterCard } from '../../component/catalog/Catalog';
+import { CreateModal } from '../../component/modal/CreateModal';
+import { MyH1 } from '../../component/typography/MyFont';
+import { dateFormatter } from '../../utils/formatter';
+import { DeliveryDetail } from './DeliveryDetail';
+import { DeliveryFields } from './DeliveryFields';
+
+export const deliverySchema = z.object({
+  customerId: z.string().min(1),
+  deliveredAt: z.string(),
+  lines: z
+    .object({
+      productId: z.string().min(1),
+      quantity: z.string(),
+    })
+    .array()
+    .nonempty(),
+});
 
 export function Deliveries() {
   const [selected, setSelected] = useState<Delivery>();
   const snap = useSnapshot(store);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const cancelRef = useRef<any>();
+
+  const { control, register, handleSubmit, reset } = useForm<DeliveryInput>({
+    resolver: zodResolver(deliverySchema),
+    defaultValues: { customerId: '', deliveredAt: new Date().toISOString().split('T')[0] },
+  });
 
   useEffect(() => {
     const updated = store.deliveries.find((p) => p.id === selected?.id);
@@ -17,59 +43,84 @@ export function Deliveries() {
     }
   }, [snap]);
 
+  const handleClose = () => {
+    onClose();
+    setTimeout(() => {
+      reset();
+    }, 100);
+  };
+
+  const onSubmit = (e: DeliveryInput) => addDelivery(e).then(handleClose).catch(console.error);
+
   return (
-    <ScreenLayout>
-      <CatalogueLayout>
-        <CatalogList
-          title="Mes Livraisons"
-          slot={<CreateDeliveries />}
-        >
-          {store.customers.map((customer) => (
-            <DeliveryCustomer
-              customer={customer}
-              setSelected={setSelected}
-              key={customer.id}
-            />
-          ))}
-        </CatalogList>
-        <CatalogDetail show={!!selected}>
-          {selected && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '50px' }}>
-              <div>
-                <div>
-                  {selected.documentId}
-                  {selected.invoiceId ? ' - Facturé' : ''}
-                </div>
-                <div>{dateFormatter(selected.deliveredAt)}</div>
-                <div>{selected.customer.name}</div>
-                <table>
-                  <thead>
-                    <tr>
-                      <th>Produit</th>
-                      <th>Quantité</th>
-                      <th>Prix unitaire</th>
-                      <th>Total</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {selected.lines.map((line, index) => (
-                      <tr key={`${index}`}>
-                        <td>{line.product.name}</td>
-                        <td>
-                          {line.quantity} {line.product.unit}
-                        </td>
-                        <td>{priceFormatter(line.product.price)}</td>
-                        <td>{priceFormatter(line.product.price * line.quantity)}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+    <div className="catalog">
+      <div className="catalog-side">
+        <div className="catalog-header">
+          <MyH1>Mes Livraisons</MyH1>
+          <Button
+            colorScheme="twitter"
+            onClick={onOpen}
+          >
+            Nouveau
+          </Button>
+          <CreateModal
+            isOpen={isOpen}
+            cancelRef={cancelRef}
+            title="Nouveau produit"
+            onClose={handleClose}
+            onSubmit={handleSubmit(onSubmit)}
+            body={
+              <DeliveryFields
+                register={register}
+                control={control}
+              />
+            }
+            footer={
+              <>
+                <Button
+                  ref={cancelRef}
+                  onClick={handleClose}
+                >
+                  Annuler
+                </Button>
+                <Button
+                  colorScheme="blue"
+                  type="submit"
+                  ml={3}
+                >
+                  Enregistrer
+                </Button>
+              </>
+            }
+          />
+        </div>
+        <div className="catalog-list">
+          {store.customers.map((customer) => {
+            const deliveries = store.deliveries.filter((delivery) => delivery.customerId === customer.id);
+            return (
+              <div
+                className="catalog-sub-list"
+                key={customer.id}
+              >
+                <div className="bold">{customer.name}</div>
+                {deliveries.length === 0 && <div className="faded">Pas de livraison</div>}
+                {deliveries.map((entity) => (
+                  <div
+                    className={`catalog-item ${selected?.id === entity.id && 'selected'}`}
+                    key={entity.id}
+                    onClick={() => setSelected((e) => (e?.id === entity.id ? undefined : { ...entity }))}
+                    onKeyDown={() => {}}
+                  >
+                    {`${entity.documentId}`}
+                  </div>
+                ))}
               </div>
-            </div>
-          )}
-        </CatalogDetail>
-      </CatalogueLayout>
-    </ScreenLayout>
+            );
+          })}
+        </div>
+      </div>
+      <div className="catalog-side">{selected && <DeliveryDetail selected={selected} />}</div>
+    </div>
   );
 }
 
