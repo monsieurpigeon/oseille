@@ -57,7 +57,6 @@
 
 .catalog-item {
   display: flex;
-  flex-grow: 1;
   align-items: center;
   background-color: lightgray;
   justify-content: space-between;
@@ -66,6 +65,10 @@
   border-radius: 5px;
   user-select: none;
   cursor: pointer;
+}
+
+.grow {
+  flex-grow: 1;
 }
 
 .catalog-item.selected {

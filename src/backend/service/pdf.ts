@@ -4,6 +4,7 @@ import { Product } from '../entity/product';
 import { store } from './store';
 import { DEFAULT_FARM } from '../../utils/defaults';
 import { Delivery } from '../entity/delivery';
+import { getDeliveryPrice, getInvoicePrice } from '../../utils/aggregations';
 
 const fonts = {
   Roboto: {
@@ -115,19 +116,15 @@ const getLines = (payload: any, type: DocumentKey) => {
 };
 
 const getPrice = (payload: any, type: DocumentKey) => {
-  if (type === 'Delivery')
-    return payload.lines.reduce(
-      (acc: number, el: { product: Product; quantity: number }) => acc + el.product.price * el.quantity,
-      0,
-    );
-  if (type === 'Invoice')
-    return payload.deliveries
-      .flatMap((id: string) => {
-        const delivery = store.deliveries.find((d) => d.id === id);
-        if (!delivery) return null;
-        return delivery?.lines;
-      })
-      .reduce((acc: number, el: { product: Product; quantity: number }) => acc + el.product.price * el.quantity, 0);
+  if (type === 'Delivery') {
+    return getDeliveryPrice(payload);
+  }
+
+  if (type === 'Invoice') {
+    return getInvoicePrice(payload);
+  }
+
+  return -1;
 };
 
 export const exportDocument = ({ payload, type }: any) => {

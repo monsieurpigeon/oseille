@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useSnapshot } from 'valtio';
-import { db, destroyDatabase, exportData, FarmInput, store, updateFarmFooter, updateFarmName } from '../../backend';
+import { FarmInput, db, destroyDatabase, exportData, store, updateFarmFooter, updateFarmName } from '../../backend';
+import FileUploadSingle from '../../component/form/FileUploadSingle';
 import { MyButton } from '../../component/form/button/MyButton';
 import { MyTextInput } from '../../component/form/input/MyTextInput';
+import { ConfirmationModal } from '../../component/modal/ConfirmationModal';
 import { MyH1, MyH2 } from '../../component/typography/MyFont';
 import { DEFAULT_FARM } from '../../utils/defaults';
-import FileUploadSingle from '../../component/form/FileUploadSingle';
-import { ConfirmationModal } from '../../component/modal/ConfirmationModal';
 
 const EMPTY_FARM: FarmInput = {
   title: '',
@@ -116,6 +116,7 @@ export function Settings() {
           />
           <ConfirmationModal
             label="Armageddon"
+            color="red"
             title="Tout effacer"
             message="Vous allez supprimer toute la base de donnée, assurez vous d'avoir bien fait un export de vos données"
             onConfirm={() => {

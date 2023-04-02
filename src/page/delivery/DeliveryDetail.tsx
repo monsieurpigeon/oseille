@@ -1,5 +1,6 @@
 import { Button, Flex, Spacer } from '@chakra-ui/react';
 import { Delivery, Product, exportDocument, store } from '../../backend';
+import { DeliveryDescription } from '../../component/table/DeliveryDescription';
 import { MyH1 } from '../../component/typography/MyFont';
 import { dateFormatter, priceFormatter } from '../../utils/formatter';
 
@@ -31,7 +32,7 @@ export const DeliveryDetail = ({ selected }: { selected: Delivery }) => {
         <Flex>
           <div>{selected.customer.name}</div>
           <Spacer />
-          <div>
+          <div className="bold">
             {priceFormatter(
               selected.lines.reduce(
                 (acc: number, el: { product: Product; quantity: number }) => acc + el.product.price * el.quantity,
@@ -40,29 +41,7 @@ export const DeliveryDetail = ({ selected }: { selected: Delivery }) => {
             )}
           </div>
         </Flex>
-
-        <table style={{ width: '100%', textAlign: 'right', marginTop: '20px' }}>
-          <thead>
-            <tr>
-              <th>Produit</th>
-              <th>Quantité</th>
-              <th>Prix unitaire</th>
-              <th>Total</th>
-            </tr>
-          </thead>
-          <tbody>
-            {selected.lines.map((line, index) => (
-              <tr key={`${index}`}>
-                <td>{line.product.name}</td>
-                <td>
-                  {line.quantity} {line.product.unit}
-                </td>
-                <td>{priceFormatter(line.product.price)}</td>
-                <td>{priceFormatter(line.product.price * line.quantity)}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <DeliveryDescription delivery={selected} />
       </div>
     </>
   );

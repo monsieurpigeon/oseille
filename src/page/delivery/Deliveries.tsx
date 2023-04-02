@@ -94,7 +94,7 @@ export function Deliveries() {
         </div>
         <div className="catalog-list">
           {store.customers.map((customer) => (
-            <NewDeliveryCustomer
+            <DeliveryCustomer
               selected={selected}
               customer={customer}
               setSelected={setSelected}
@@ -107,7 +107,7 @@ export function Deliveries() {
   );
 }
 
-function NewDeliveryCustomer({ customer, selected, setSelected }: any) {
+function DeliveryCustomer({ customer, selected, setSelected }: any) {
   const [toInvoice, setToInvoice] = useState<{ [key: string]: boolean }>({});
   const deliveries = store.deliveries.filter((delivery) => delivery.customerId === customer.id);
 
@@ -141,7 +141,7 @@ function NewDeliveryCustomer({ customer, selected, setSelected }: any) {
       {deliveries.map((delivery) => (
         <div className="catalog-item-select">
           <div
-            className={`catalog-item ${selected?.id === delivery.id && 'selected'}`}
+            className={`catalog-item grow ${selected?.id === delivery.id && 'selected'}`}
             key={delivery.id}
             onClick={() => setSelected((e: Delivery) => (e?.id === delivery.id ? undefined : { ...delivery }))}
             onKeyDown={() => {}}
