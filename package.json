@@ -37,7 +37,8 @@
     "@vitejs/plugin-react": "^2.2.0",
     "typescript": "^4.6.4",
     "vite": "^3.2.3",
-    "vite-plugin-pwa": "^0.14.7"
+    "vite-plugin-pwa": "^0.14.7",
+    "workbox-window": "^6.5.4"
   },
   "resolutions": {
     "styled-components": "^5"
