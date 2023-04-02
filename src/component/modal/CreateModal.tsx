@@ -1,32 +1,36 @@
-import { useDisclosure } from '@chakra-ui/react';
-import { ReactNode } from 'react';
-import { MyButton } from '../form/button/MyButton';
-import { SaveModal } from './SaveModal';
+import {
+  AlertDialog,
+  AlertDialogOverlay,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogBody,
+  AlertDialogFooter,
+} from '@chakra-ui/react';
 
-type CreateModalProps = { children: ReactNode; title: string; onSubmit: () => void; onCancel?: () => void };
-export function CreateModal({ children, onSubmit, onCancel, title }: CreateModalProps) {
-  const { isOpen, onOpen, onClose } = useDisclosure();
-
+export const CreateModal = ({ title, body, footer, isOpen, cancelRef, onClose, onSubmit }: any) => {
   return (
-    <>
-      <MyButton
-        label={'Nouveau'}
-        onClick={onOpen}
-      />
-      <SaveModal
-        isOpen={isOpen}
-        title={title}
-        onClose={() => {
-          onCancel?.();
-          onClose();
-        }}
-        onSubmit={onSubmit}
-        closeOnOverlayClick={false}
-      >
-        {children}
-      </SaveModal>
-    </>
-  );
-}
+    <AlertDialog
+      motionPreset="slideInBottom"
+      closeOnOverlayClick={false}
+      isOpen={isOpen}
+      leastDestructiveRef={cancelRef}
+      onClose={onClose}
+    >
+      <form onSubmit={onSubmit}>
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader
+              fontSize="lg"
+              fontWeight="bold"
+            >
+              {title}
+            </AlertDialogHeader>
+            <AlertDialogBody>{body}</AlertDialogBody>
 
-// TODO : DEPRECATED
+            <AlertDialogFooter>{footer}</AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </form>
+    </AlertDialog>
+  );
+};

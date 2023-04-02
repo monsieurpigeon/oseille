@@ -2,14 +2,14 @@ import { Button } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { Product, ProductInput, updateProduct } from '../../backend';
+import { Customer, CustomerInput, updateCustomer } from '../../backend';
 import { MyH1 } from '../../component/typography/MyFont';
-import { ProductFields } from './ProductFields';
-import { productSchema } from './Products';
+import { CustomerFields } from './CustomerFields';
+import { customerSchema } from './Customers';
 
-export const ProductDetail = ({ selected }: { selected: Product }) => {
-  const { control, register, handleSubmit, reset } = useForm<ProductInput>({
-    resolver: zodResolver(productSchema),
+export const CustomerDetail = ({ selected }: { selected: Customer }) => {
+  const { control, register, handleSubmit, reset } = useForm<CustomerInput>({
+    resolver: zodResolver(customerSchema),
     defaultValues: selected,
   });
 
@@ -17,8 +17,8 @@ export const ProductDetail = ({ selected }: { selected: Product }) => {
     reset(selected);
   }, [selected]);
 
-  const onSubmit = (e: ProductInput) => {
-    selected && updateProduct({ ...selected, ...e });
+  const onSubmit = (e: CustomerInput) => {
+    selected && updateCustomer({ ...selected, ...e });
   };
 
   return (
@@ -34,7 +34,7 @@ export const ProductDetail = ({ selected }: { selected: Product }) => {
         </Button>
       </div>
 
-      <ProductFields
+      <CustomerFields
         register={register}
         control={control}
       />

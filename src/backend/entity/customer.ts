@@ -3,6 +3,7 @@ import { store } from '../service/store';
 
 export interface Customer {
   id: string;
+  _rev: string;
   name: string;
   address1: string;
   address2: string;
