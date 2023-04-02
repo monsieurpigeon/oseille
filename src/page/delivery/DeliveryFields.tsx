@@ -1,9 +1,8 @@
-import { Box, Flex, Input, Select, Text } from '@chakra-ui/react';
-import { MyNumberInput } from '../../component/form/MyNumberInput';
-import { MyButton } from '../../component/form/button/MyButton';
+import { Box, Button, Flex, Input, Select, Text } from '@chakra-ui/react';
+import { useFieldArray } from 'react-hook-form';
 import { useSnapshot } from 'valtio';
 import { store } from '../../backend';
-import { useFieldArray } from 'react-hook-form';
+import { MyNumberInput } from '../../component/form/MyNumberInput';
 
 export function DeliveryFields({ control, register }: any) {
   const { fields, append, remove } = useFieldArray({
@@ -65,16 +64,20 @@ export function DeliveryFields({ control, register }: any) {
                 name={`lines.${index}.quantity`}
                 min={0}
               />
-              <MyButton
-                label="X"
+              <Button
+                colorScheme="red"
                 onClick={() => remove(index)}
-              />
+              >
+                X
+              </Button>
             </Flex>
           ))}
-          <MyButton
-            label={'Ajouter produit'}
+          <Button
+            colorScheme="yellow"
             onClick={() => append({ productId: '', quantity: 0 })}
-          />
+          >
+            Ajouter produit
+          </Button>
         </Flex>
       </Box>
     </>

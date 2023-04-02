@@ -1,5 +1,5 @@
 import { Button, Flex, Spacer } from '@chakra-ui/react';
-import { Delivery, Product, exportDocument } from '../../backend';
+import { Delivery, Product, exportDocument, store } from '../../backend';
 import { MyH1 } from '../../component/typography/MyFont';
 import { dateFormatter, priceFormatter } from '../../utils/formatter';
 
@@ -21,7 +21,9 @@ export const DeliveryDetail = ({ selected }: { selected: Delivery }) => {
         <Flex>
           <div>
             {selected.documentId}
-            {selected.invoiceId ? ' - Facturé' : ''}
+            {selected.invoiceId
+              ? ` - Facture ${store.invoices.find((invoice) => invoice.id === selected.invoiceId)?.documentId}`
+              : ''}
           </div>
           <Spacer />
           <div>{dateFormatter(selected.deliveredAt)}</div>

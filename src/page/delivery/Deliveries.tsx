@@ -1,15 +1,13 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useSnapshot } from 'valtio';
 
 import { Button, useDisclosure } from '@chakra-ui/react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { Customer, Delivery, DeliveryInput, addDelivery, addInvoice, exportDocument, store } from '../../backend';
-import { CatalogMasterCard } from '../../component/catalog/Catalog';
+import { Delivery, DeliveryInput, addDelivery, addInvoice, store } from '../../backend';
 import { CreateModal } from '../../component/modal/CreateModal';
 import { MyH1 } from '../../component/typography/MyFont';
-import { dateFormatter } from '../../utils/formatter';
 import { DeliveryDetail } from './DeliveryDetail';
 import { DeliveryFields } from './DeliveryFields';
 
@@ -84,7 +82,7 @@ export function Deliveries() {
                   Annuler
                 </Button>
                 <Button
-                  colorScheme="blue"
+                  colorScheme="twitter"
                   type="submit"
                   ml={3}
                 >
@@ -95,28 +93,13 @@ export function Deliveries() {
           />
         </div>
         <div className="catalog-list">
-          {store.customers.map((customer) => {
-            const deliveries = store.deliveries.filter((delivery) => delivery.customerId === customer.id);
-            return (
-              <div
-                className="catalog-sub-list"
-                key={customer.id}
-              >
-                <div className="bold">{customer.name}</div>
-                {deliveries.length === 0 && <div className="faded">Pas de livraison</div>}
-                {deliveries.map((entity) => (
-                  <div
-                    className={`catalog-item ${selected?.id === entity.id && 'selected'}`}
-                    key={entity.id}
-                    onClick={() => setSelected((e) => (e?.id === entity.id ? undefined : { ...entity }))}
-                    onKeyDown={() => {}}
-                  >
-                    {`${entity.documentId}`}
-                  </div>
-                ))}
-              </div>
-            );
-          })}
+          {store.customers.map((customer) => (
+            <NewDeliveryCustomer
+              selected={selected}
+              customer={customer}
+              setSelected={setSelected}
+            />
+          ))}
         </div>
       </div>
       <div className="catalog-side">{selected && <DeliveryDetail selected={selected} />}</div>
@@ -124,89 +107,63 @@ export function Deliveries() {
   );
 }
 
-function DeliveryCustomer({
-  customer,
-  setSelected,
-}: {
-  customer: Customer;
-  setSelected: (value: React.SetStateAction<Delivery | undefined>) => void;
-}) {
+function NewDeliveryCustomer({ customer, selected, setSelected }: any) {
   const [toInvoice, setToInvoice] = useState<{ [key: string]: boolean }>({});
-
   const deliveries = store.deliveries.filter((delivery) => delivery.customerId === customer.id);
 
+  const facturable = useMemo(() => {
+    return Object.values(toInvoice).filter((val) => val).length;
+  }, [toInvoice]);
+
   return (
-    <CatalogMasterCard
-      label={
-        <div>
-          {customer.name}
-          {!!Object.values(toInvoice).filter((i) => i).length && (
-            <button
-              style={{ marginLeft: '30px', border: '1px solid grey', padding: '0px 10px', borderRadius: '5px' }}
-              onClick={() => {
-                addInvoice(
-                  Object.entries(toInvoice)
-                    .filter(([key, value]) => value)
-                    .map(([key]) => store.deliveries.find((delivery) => delivery.id === key))
-                    .filter((d) => !!d) as Delivery[],
-                ).then(() => setToInvoice({}));
-              }}
-            >
-              Facturer {Object.values(toInvoice).filter((i) => i).length}
-            </button>
-          )}
-        </div>
-      }
+    <div
+      className="catalog-sub-list"
+      key={customer.id}
     >
-      {deliveries.length === 0 && <div>Aucune livraison</div>}
-      {deliveries.length > 0 && (
-        <div>
-          <table style={{ borderCollapse: 'separate', borderSpacing: '20px 0' }}>
-            <tbody>
-              {deliveries.map((delivery: Delivery) => {
-                return (
-                  <tr key={delivery.id}>
-                    <td>
-                      {!delivery.invoiceId && (
-                        <input
-                          type="checkbox"
-                          id={delivery.id}
-                          // rome-ignore lint/complexity/useSimplifiedLogicExpression: <explanation>
-                          checked={toInvoice[delivery.id] || false}
-                          onChange={() =>
-                            setToInvoice((i) => ({
-                              ...i,
-                              [delivery.id]: !i[delivery.id],
-                            }))
-                          }
-                        />
-                      )}
-                    </td>
-                    <td>
-                      <div
-                        onClick={() => setSelected((e) => (e === delivery ? undefined : delivery))}
-                        onKeyDown={() => {}}
-                      >
-                        {delivery.documentId}
-                      </div>
-                    </td>
-                    <td>{dateFormatter(delivery.deliveredAt)}</td>
-                    <td>
-                      <button
-                        onClick={() => {
-                          exportDocument({ payload: delivery, type: 'Delivery' });
-                        }}
-                      >
-                        EXPORT
-                      </button>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+      <div className="catalog-sub-list-customer">
+        <div className="bold">{customer.name}</div>
+        <Button
+          disabled={!facturable}
+          onClick={() => {
+            addInvoice(
+              Object.entries(toInvoice)
+                .filter(([key, value]) => value)
+                .map(([key]) => store.deliveries.find((delivery) => delivery.id === key))
+                .filter((d) => !!d) as Delivery[],
+            ).then(() => setToInvoice({}));
+          }}
+        >
+          Facturer{!!facturable && ` ${facturable} BL${facturable > 1 ? 's' : ''}`}
+        </Button>
+      </div>
+
+      {deliveries.length === 0 && <div className="faded">Pas de livraison</div>}
+      {deliveries.map((delivery) => (
+        <div className="catalog-item-select">
+          <div
+            className={`catalog-item ${selected?.id === delivery.id && 'selected'}`}
+            key={delivery.id}
+            onClick={() => setSelected((e: Delivery) => (e?.id === delivery.id ? undefined : { ...delivery }))}
+            onKeyDown={() => {}}
+          >
+            {`${delivery.documentId}`}
+          </div>
+          {!delivery.invoiceId ? (
+            <input
+              type="checkbox"
+              id={delivery.id}
+              // rome-ignore lint/complexity/useSimplifiedLogicExpression: <explanation>
+              checked={toInvoice[delivery.id] || false}
+              onChange={() =>
+                setToInvoice((i) => ({
+                  ...i,
+                  [delivery.id]: !i[delivery.id],
+                }))
+              }
+            />
+          ) : null}
         </div>
-      )}
-    </CatalogMasterCard>
+      ))}
+    </div>
   );
 }

@@ -1,4 +1,3 @@
-import { Box, ListItem, UnorderedList } from '@chakra-ui/react';
 import { NavLink } from 'react-router-dom';
 
 const navBarItems = [

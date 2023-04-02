@@ -39,6 +39,12 @@
   gap: 10px;
 }
 
+.catalog-sub-list-customer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 .bold {
   font-weight: bold;
 }
@@ -51,10 +57,11 @@
 
 .catalog-item {
   display: flex;
+  flex-grow: 1;
   align-items: center;
   background-color: lightgray;
   justify-content: space-between;
-  border: 1px solid grey;
+  border: 1px solid gray;
   padding: 10px;
   border-radius: 5px;
   user-select: none;
@@ -63,11 +70,29 @@
 
 .catalog-item.selected {
   background-color: lightcyan;
-  border: 1px solid salmon;
+  border: 1px solid cyan;
+}
+
+.catalog-item.selected:hover {
+  background-color: lightcyan;
+  border: 1px dashed cyan;
 }
 
 .catalog-item:hover {
-  border: 1px solid black;
+  border: 1px dashed black;
+}
+
+.catalog-item-select {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+}
+
+.catalog-item-select input {
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
 }
 
 .navigation-list {
