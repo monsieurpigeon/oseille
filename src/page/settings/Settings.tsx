@@ -1,13 +1,14 @@
+import { Box, Button, Flex, HStack, Input, Text } from '@chakra-ui/react';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { useSnapshot } from 'valtio';
-import { db, destroyDatabase, exportData, FarmInput, store, updateFarmFooter, updateFarmName } from '../../backend';
-import { MyButton } from '../../component/form/button/MyButton';
-import { MyTextInput } from '../../component/form/input/MyTextInput';
-import { ScreenLayout } from '../../component/layout/ScreenLayout';
-import { MyH1, MyH2 } from '../../component/typography/MyFont';
-import { DEFAULT_FARM } from '../../utils/defaults';
+import { z } from 'zod';
+import { FarmInput, db, destroyDatabase, exportData, store, updateFarm } from '../../backend';
 import FileUploadSingle from '../../component/form/FileUploadSingle';
 import { ConfirmationModal } from '../../component/modal/ConfirmationModal';
+import { MyH1, MyH2 } from '../../component/typography/MyFont';
+import { DEFAULT_FARM, DEFAULT_FOOTER } from '../../utils/defaults';
 
 const EMPTY_FARM: FarmInput = {
   title: '',
@@ -15,105 +16,117 @@ const EMPTY_FARM: FarmInput = {
   address2: '',
   zip: '',
   city: '',
+  footer: '',
 };
 
+export const farmSchema = z.object({
+  title: z.string().min(1),
+  address1: z.string().min(1),
+  address2: z.string(),
+  zip: z.string().min(1),
+  city: z.string().min(1),
+  footer: z.string(),
+});
+
 export function Settings() {
-  const [farmInput, setFarmInput] = useState(EMPTY_FARM);
-  const [farmFooter, setFarmFooter] = useState('');
   const { farm } = useSnapshot(store);
 
+  const { register, handleSubmit, reset } = useForm<FarmInput>({
+    resolver: zodResolver(farmSchema),
+    defaultValues: { ...EMPTY_FARM, ...farm },
+  });
+
   useEffect(() => {
-    setFarmInput((f) => ({ ...f, title: farmInput.title || '' }));
-    setFarmFooter(farm?.footer || '');
+    if (farm) reset(farm);
   }, [farm]);
 
+  const onSubmit = (e: FarmInput) => farm && updateFarm({ ...farm, ...e }).catch(console.error);
+
   return (
-    <ScreenLayout>
-      <MyH1>Réglages</MyH1>
+    <div className="catalog">
+      <div className="catalog-side">
+        <div className="catalog-header">
+          <MyH1>Réglages</MyH1>
+        </div>
+        <div className="catalog-list">
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <MyH2>Ma ferme</MyH2>
+            {
+              <Flex
+                direction="column"
+                gap="3"
+                marginBottom="20px"
+              >
+                <Input
+                  placeholder={DEFAULT_FARM.title}
+                  {...register('title')}
+                />
+                <Input
+                  placeholder={DEFAULT_FARM.address1}
+                  {...register('address1')}
+                />
+                <Input
+                  placeholder={DEFAULT_FARM.address2}
+                  {...register('address2')}
+                />
+                <HStack>
+                  <Input
+                    placeholder={DEFAULT_FARM.zip}
+                    {...register('zip')}
+                  />
 
-      <ConfirmationModal
-        label="Export"
-        title="Tout récupérer"
-        message="Vous allez récupérer une copie de toute votre base de donnée dans un fichier, à faire régulièrement et stocker sur un support différent"
-        onConfirm={() => {
-          db.allDocs({ include_docs: true })
-            .then((data) => data.rows.map(({ doc }) => doc))
-            .then((data) => exportData(data))
-            .catch(console.error);
-        }}
-      />
-      <ConfirmationModal
-        label="Armageddon"
-        title="Tout effacer"
-        message="Vous allez supprimer toute la base de donnée, assurez vous d'avoir bien fait un export de vos données"
-        onConfirm={() => {
-          destroyDatabase().catch(console.error);
-        }}
-      />
-      <FileUploadSingle />
-      <MyH2>Ma ferme</MyH2>
-      {farm?.title ? (
-        <div>{farm.title}</div>
-      ) : (
-        <>
-          <MyTextInput
-            placeholder={DEFAULT_FARM.title}
-            value={farmInput.title!}
-            onChange={(e) => {
-              setFarmInput((f) => ({ ...f, title: e.target.value }));
-            }}
-          />
-          <MyTextInput
-            placeholder={DEFAULT_FARM.address1}
-            value={farmInput.address1!}
-            onChange={(e) => {
-              setFarmInput((f) => ({ ...f, address1: e.target.value }));
-            }}
-          />
-          <MyTextInput
-            placeholder={DEFAULT_FARM.address2}
-            value={farmInput.address2!}
-            onChange={(e) => {
-              setFarmInput((f) => ({ ...f, address2: e.target.value }));
-            }}
-          />
-          <MyTextInput
-            placeholder={DEFAULT_FARM.zip}
-            value={farmInput.zip!}
-            onChange={(e) => {
-              setFarmInput((f) => ({ ...f, zip: e.target.value }));
-            }}
-          />
-          <MyTextInput
-            placeholder={DEFAULT_FARM.city}
-            value={farmInput.city!}
-            onChange={(e) => {
-              setFarmInput((f) => ({ ...f, city: e.target.value }));
-            }}
-          />
+                  <Input
+                    placeholder={DEFAULT_FARM.city}
+                    {...register('city')}
+                  />
+                </HStack>
 
-          <MyButton
-            label="Baptiser"
-            onClick={() => {
-              updateFarmName(farmInput);
+                <Button type="submit">Baptiser</Button>
+              </Flex>
+            }
+            <MyH2>Mon Footer</MyH2>
+            <Flex
+              direction="column"
+              gap={3}
+            >
+              <Text>S'affiche en bas des documents</Text>
+              <Input
+                placeholder={DEFAULT_FOOTER}
+                {...register('footer')}
+              />
+              <Button type="submit">Mettre à jour</Button>
+            </Flex>
+          </form>
+        </div>
+      </div>
+      <div className="catalog-side">
+        <div className="catalog-header">
+          <MyH1>Import / Export</MyH1>
+        </div>
+        <div className="catalog-list">
+          <ConfirmationModal
+            label="Export"
+            title="Tout récupérer"
+            message="Vous allez récupérer une copie de toute votre base de donnée dans un fichier, à faire régulièrement et stocker sur un support différent"
+            onConfirm={() => {
+              db.allDocs({ include_docs: true })
+                .then((data) => data.rows.map(({ doc }) => doc))
+                .then((data) => exportData(data))
+                .catch(console.error);
             }}
           />
-        </>
-      )}
-      <MyH2>Mon Footer</MyH2>
-      <MyTextInput
-        placeholder="s'affiche en bas des documents"
-        value={farmFooter}
-        onChange={(e) => {
-          setFarmFooter(e.target.value);
-        }}
-      />
-      <MyButton
-        label="Mettre a jour"
-        onClick={() => {
-          updateFarmFooter({ footer: farmFooter });
-        }}
-      />
-    </ScreenLayout>
+          <ConfirmationModal
+            label="Armageddon"
+            color="red"
+            title="Tout effacer"
+            message="Vous allez supprimer toute la base de donnée, assurez vous d'avoir bien fait un export de vos données"
+            onConfirm={() => {
+              destroyDatabase().catch(console.error);
+            }}
+          />
+          <FileUploadSingle />
+        </div>
+      </div>
+    </div>
   );
 }

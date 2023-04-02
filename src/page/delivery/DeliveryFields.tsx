@@ -1,52 +1,23 @@
-import { Box, Flex, Input, Select, Text } from '@chakra-ui/react';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useFieldArray, useForm } from 'react-hook-form';
+import { Box, Button, Flex, Input, Select, Text } from '@chakra-ui/react';
+import { useFieldArray } from 'react-hook-form';
 import { useSnapshot } from 'valtio';
-import { z } from 'zod';
-import { DeliveryInput, addDelivery, store } from '../../backend';
+import { store } from '../../backend';
 import { MyNumberInput } from '../../component/form/MyNumberInput';
-import { MyButton } from '../../component/form/button/MyButton';
-import { MyCreateModal } from '../../component/modal/MyCreateModal';
 
-const schema = z.object({
-  customerId: z.string().min(1),
-  deliveredAt: z.string(),
-  lines: z
-    .object({
-      productId: z.string().min(1),
-      quantity: z.string(),
-    })
-    .array()
-    .nonempty(),
-});
-
-export function CreateDeliveries() {
-  const { products, customers } = useSnapshot(store);
-  const { control, register, handleSubmit, reset } = useForm<DeliveryInput>({
-    resolver: zodResolver(schema),
-    defaultValues: { customerId: '', deliveredAt: new Date().toISOString().split('T')[0] },
-  });
-
+export function DeliveryFields({ control, register }: any) {
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'lines',
   });
 
+  const snap = useSnapshot(store);
   return (
-    <MyCreateModal
-      onCreate={addDelivery}
-      handleSubmit={handleSubmit}
-      reset={() => {
-        remove();
-        reset();
-      }}
-      title="Nouvelle livraison"
-    >
+    <>
       <Box p={1}>
         <Text>Client</Text>
         <Select {...register('customerId')}>
           <option value="">Choisir un client</option>
-          {customers.map((customer) => {
+          {store.customers.map((customer) => {
             return (
               <option
                 key={customer.id}
@@ -79,7 +50,7 @@ export function CreateDeliveries() {
             >
               <Select {...register(`lines.${index}.productId`)}>
                 <option value="">...</option>
-                {products.map((product) => (
+                {store.products.map((product) => (
                   <option
                     value={product.id}
                     key={product.id}
@@ -93,18 +64,22 @@ export function CreateDeliveries() {
                 name={`lines.${index}.quantity`}
                 min={0}
               />
-              <MyButton
-                label="X"
+              <Button
+                colorScheme="red"
                 onClick={() => remove(index)}
-              />
+              >
+                X
+              </Button>
             </Flex>
           ))}
-          <MyButton
-            label={'Ajouter produit'}
+          <Button
+            colorScheme="yellow"
             onClick={() => append({ productId: '', quantity: 0 })}
-          />
+          >
+            Ajouter produit
+          </Button>
         </Flex>
       </Box>
-    </MyCreateModal>
+    </>
   );
 }

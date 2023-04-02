@@ -64,40 +64,6 @@ export const initDatabase = async () => {
   await addFarm();
   loadFarm();
 
-  // const p1 = await addProduct({ name: 'Tomate', price: 4.2, unit: 'kg' });
-  // const p2 = await addProduct({ name: 'Aubergine', price: 4, unit: 'kg' });
-  // const p3 = await addProduct({ name: 'Pastèque', price: 4.2, unit: 'piece' });
-  // const c1 = await addCustomer({
-  //   name: 'Biocoop',
-  //   address1: '1 rue du potiron',
-  //   address2: '',
-  //   zip: '33000',
-  //   city: 'Bordeaux',
-  // });
-  // const c2 = await addCustomer({
-  //   name: 'Restaurant super chic',
-  //   address1: "1 rue de l'endive",
-  //   address2: '',
-  //   zip: '33000',
-  //   city: 'Bordeaux',
-  // });
-  // const c3 = await addCustomer({
-  //   name: 'Épicerie de parisiens',
-  //   address1: '1 rue du topinambour',
-  //   address2: '',
-  //   zip: '33000',
-  //   city: 'Bordeaux',
-  // });
-  // addDelivery({
-  //   customerId: c1.id || '',
-  //   deliveredAt: '2023-07-14',
-  //   products: [
-  //     { productId: p1.id || '', quantity: 17 },
-  //     { productId: p2.id || '', quantity: 18.5 },
-  //     { productId: p3.id || '', quantity: 19 },
-  //   ],
-  // }).catch(console.error);
-
   db.bulkDocs([{ _id: 'init' }]).catch(console.error);
 };
 

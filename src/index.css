@@ -1,0 +1,120 @@
+.catalog {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 10px;
+  height: 100%;
+}
+
+.catalog-side {
+  display: flex;
+  flex-direction: column;
+  padding: 0 20px;
+}
+
+.catalog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.catalog-list::-webkit-scrollbar {
+  display: none;
+}
+
+.catalog-list {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  height: 0;
+  overflow-y: scroll;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+  margin-top: 20px;
+}
+
+.catalog-sub-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.catalog-sub-list-customer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.bold {
+  font-weight: bold;
+}
+
+.faded {
+  color: grey;
+  font-style: italic;
+  margin-left: 30px;
+}
+
+.catalog-item {
+  display: flex;
+  align-items: center;
+  background-color: lightgray;
+  justify-content: space-between;
+  border: 1px solid gray;
+  padding: 10px;
+  border-radius: 5px;
+  user-select: none;
+  cursor: pointer;
+}
+
+.grow {
+  flex-grow: 1;
+}
+
+.catalog-item.selected {
+  background-color: lightcyan;
+  border: 1px solid cyan;
+}
+
+.catalog-item.selected:hover {
+  background-color: lightcyan;
+  border: 1px dashed cyan;
+}
+
+.catalog-item:hover {
+  border: 1px dashed black;
+}
+
+.catalog-item-select {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+}
+
+.catalog-item-select input {
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+}
+
+.navigation-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.navigation-item {
+  padding: 15px;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.navigation-item.active {
+  background-color: lightcyan;
+  border-right: 2px solid cyan;
+}
+
+.navigation-item:hover {
+  background-color: lightcyan;
+}

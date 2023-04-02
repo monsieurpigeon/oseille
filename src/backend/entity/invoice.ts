@@ -13,6 +13,7 @@ export interface Invoice {
   customerId: string;
   deliveryIds: string[];
   deliveries: string[];
+  createdAt: string;
 }
 
 export interface InvoiceInput {
@@ -22,6 +23,7 @@ export interface InvoiceInput {
   deliveryIds: string[];
   deliveryDocumentIds: string[];
   deliveries: Delivery[];
+  createdAt: string;
 }
 
 export async function loadInvoices() {
@@ -30,6 +32,7 @@ export async function loadInvoices() {
 }
 
 export const addInvoice = (deliveries: Delivery[]) => {
+  const createdAt = new Date().toUTCString();
   const invoice: InvoiceInput = {
     documentId: documentIdFormatter(store.farm?.invoiceId || 0, 'Invoice'),
     customer: deliveries[0].customer,
@@ -37,6 +40,7 @@ export const addInvoice = (deliveries: Delivery[]) => {
     deliveryIds: deliveries.map((d) => d.id),
     deliveryDocumentIds: deliveries.map((d) => d.documentId),
     deliveries,
+    createdAt,
   };
 
   return relDb.rel

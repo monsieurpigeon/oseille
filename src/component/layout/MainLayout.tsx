@@ -1,4 +1,4 @@
-import { Box, Grid, GridItem } from '@chakra-ui/react';
+import { Grid, GridItem } from '@chakra-ui/react';
 import { ReactNode } from 'react';
 import { Footer } from './Footer';
 import { Header } from './Header';
@@ -10,10 +10,9 @@ export function MainLayout({ children }: { children: ReactNode }) {
       templateAreas={`"header header"
                   "nav main"
                   "footer footer"`}
-      gridTemplateRows={'auto 15fr auto'}
+      gridTemplateRows={'auto 1fr'}
       gridTemplateColumns={'auto 1fr'}
-      gap={4}
-      h="100vh"
+      height="100vh"
     >
       <GridItem
         area={'header'}
@@ -25,9 +24,7 @@ export function MainLayout({ children }: { children: ReactNode }) {
       <GridItem area={'nav'}>
         <Navigation />
       </GridItem>
-      <GridItem area={'main'}>
-        <Box>{children}</Box>
-      </GridItem>
+      <GridItem area={'main'}>{children}</GridItem>
       <GridItem area={'footer'}>
         <Footer />
       </GridItem>

@@ -1,15 +1,17 @@
-import { db } from '../service/database';
+import { relDb } from '../service/database';
 import { DocumentKey } from '../service/pdf';
 import { store } from '../service/store';
 
 export interface Farm {
+  id: string;
+  _rev: string;
   title: string;
   address1: string;
   address2: string;
   zip: string;
   city: string;
-  invoiceId: number;
   footer: string;
+  invoiceId: number;
   deliveryId: number;
 }
 
@@ -25,64 +27,32 @@ export interface FarmInput {
 export const FARM_KEY = 'myFarm';
 
 export async function loadFarm() {
-  return db
-    .get(FARM_KEY)
-    .then((data) => {
-      store.farm = data as unknown as Farm;
-      return data;
-    })
-    .catch(console.error);
+  const result = await relDb.rel.find('farm', FARM_KEY);
+  store.farm = result.farms[0];
+  return result.farms.length;
 }
 
-export const addFarm = () => {
-  db.post({
-    _id: FARM_KEY,
+export async function addFarm() {
+  await relDb.rel.save('farm', {
+    id: FARM_KEY,
     footer: 'Tous nos produits sont certifies par FR-BIO-IT',
     invoiceId: 1,
     deliveryId: 1,
-  }).then(() => {
-    loadFarm();
   });
+  loadFarm();
+}
+
+export const updateFarm = (farm: Farm) => {
+  console.log({ farm });
+  return relDb.rel.save('farm', farm);
 };
 
-export const updateFarmName = (farm: FarmInput) => {
-  db.get(FARM_KEY).then((doc) => {
-    db.put({
-      ...doc,
-      _id: FARM_KEY,
-      _rev: doc._rev,
-      ...farm,
-    }).catch(console.error);
-  });
-};
+export async function updateDocumentId(type: DocumentKey) {
+  const result = await relDb.rel.find('farm', FARM_KEY);
 
-export const updateFarmFooter = ({ footer }: FarmInput) => {
-  db.get(FARM_KEY).then((doc) => {
-    db.put({
-      ...doc,
-      _id: FARM_KEY,
-      _rev: doc._rev,
-      footer,
-    }).catch(console.error);
-  });
-};
-
-export const updateDocumentId = (type: DocumentKey) => {
-  db.get(FARM_KEY)
-    .then((doc: any) => {
-      if (type === 'Invoice') {
-        db.put({
-          ...doc,
-          _rev: doc._rev,
-          invoiceId: doc.invoiceId + 1,
-        }).catch(console.error);
-      } else if (type === 'Delivery') {
-        db.put({
-          ...doc,
-          _rev: doc._rev,
-          deliveryId: doc.deliveryId + 1,
-        }).catch(console.error);
-      }
-    })
-    .catch(console.error);
-};
+  if (type === 'Invoice') {
+    updateFarm({ ...result.farms[0], invoiceId: result.farms[0].invoiceId + 1 });
+  } else if (type === 'Delivery') {
+    updateFarm({ ...result.farms[0], deliveryId: result.farms[0].deliveryId + 1 });
+  }
+}

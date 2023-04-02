@@ -6,7 +6,7 @@ export const MyH1 = ({ children }: FontProps) => {
   return (
     <Heading
       as="h1"
-      size="2xl"
+      size="lg"
     >
       {children}
     </Heading>
@@ -16,7 +16,7 @@ export const MyH2 = ({ children }: FontProps) => {
   return (
     <Heading
       as="h2"
-      size="xl"
+      size="md"
     >
       {children}
     </Heading>

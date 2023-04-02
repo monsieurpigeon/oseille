@@ -10,14 +10,14 @@ import {
 } from '@chakra-ui/react';
 import { useRef } from 'react';
 
-export function ConfirmationModal({ label, title, message, onConfirm }: any) {
+export function ConfirmationModal({ label, title, message, onConfirm, color = 'twitter' }: any) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef<any>();
 
   return (
     <>
       <Button
-        colorScheme="twitter"
+        colorScheme={color}
         onClick={onOpen}
       >
         {label}

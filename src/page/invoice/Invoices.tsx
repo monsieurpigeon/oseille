@@ -1,45 +1,63 @@
+import { useState } from 'react';
 import { useSnapshot } from 'valtio';
-import { exportDocument, store } from '../../backend';
-import { MyButton } from '../../component/form/button/MyButton';
-import { ScreenLayout } from '../../component/layout/ScreenLayout';
+import { Invoice, store } from '../../backend';
 import { MyH1 } from '../../component/typography/MyFont';
+import { InvoiceDetail } from './InvoiceDetail';
 
 export function Invoices() {
-  const { invoices } = useSnapshot(store);
+  const [selected, setSelected] = useState<Invoice>();
+  const snap = useSnapshot(store);
+
   return (
-    <ScreenLayout>
-      <MyH1>Factures</MyH1>
+    <div className="catalog">
+      <div className="catalog-side">
+        <div className="catalog-header">
+          <MyH1>Mes Factures</MyH1>
+        </div>
+        <div className="catalog-list">
+          {store.customers.map((customer) => (
+            <InvoiceCustomer
+              key={customer.id}
+              selected={selected}
+              customer={customer}
+              setSelected={setSelected}
+            />
+          ))}
+        </div>
+      </div>
+      <div className="catalog-side">{selected && <InvoiceDetail selected={selected} />}</div>
+    </div>
+  );
+}
+
+function InvoiceCustomer({ customer, selected, setSelected }: any) {
+  const invoices = store.invoices.filter((invoice) => invoice.customerId === customer.id);
+
+  return (
+    <div
+      className="catalog-sub-list"
+      key={customer.id}
+    >
+      <div className="catalog-sub-list-customer">
+        <div className="bold">{customer.name}</div>
+      </div>
+
+      {invoices.length === 0 && <div className="faded">Pas de facture</div>}
       {invoices.map((invoice) => (
-        <div key={invoice.id}>
-          <div>
-            {invoice.customer.name} - {invoice.documentId}
+        <div
+          className="catalog-item-select"
+          key={invoice.id}
+        >
+          <div
+            className={`catalog-item grow ${selected?.id === invoice.id && 'selected'}`}
+            key={invoice.id}
+            onClick={() => setSelected((e: Invoice) => (e?.id === invoice.id ? undefined : { ...invoice }))}
+            onKeyDown={() => {}}
+          >
+            {`${invoice.documentId}`}
           </div>
-          {invoice.deliveries.map((id) => {
-            const delivery = store.deliveries.find((d) => d.id === id);
-            if (!delivery) return null;
-            return (
-              <div key={delivery.id}>
-                {delivery.documentId}
-                <div>
-                  {delivery.lines.map((line, index) => {
-                    return (
-                      <div key={`${index}`}>
-                        {line.quantity} * {line.product.name}
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            );
-          })}
-          <MyButton
-            onClick={() => {
-              exportDocument({ payload: invoice, type: 'Invoice' });
-            }}
-            label="Export PDF"
-          />
         </div>
       ))}
-    </ScreenLayout>
+    </div>
   );
 }

@@ -4,14 +4,19 @@ import { SideKick } from '../modules/sidekick/SideKick';
 
 export function Header() {
   return (
-    <Flex bg="white">
-      <Center p="4">
+    <Flex
+      borderBottom="4px solid lightcyan"
+      h="50"
+      marginBottom="20px"
+    >
+      <Center marginLeft="20px">
         <Link to="/">
           <Text fontSize="2xl">Oseille</Text>
         </Link>
       </Center>
+
       <Spacer />
-      <Center p="4">
+      <Center marginRight="20px">
         <SideKick />
       </Center>
     </Flex>

@@ -7,8 +7,8 @@ import { Customers } from './page/customer/Customers';
 import { Deliveries } from './page/delivery/Deliveries';
 import { Home } from './page/home/Home';
 import { Invoices } from './page/invoice/Invoices';
-import { Products } from './page/product/Products';
 import { Settings } from './page/settings/Settings';
+import { Products } from './page/product/Products';
 
 function App() {
   return (

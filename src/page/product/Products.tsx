@@ -1,17 +1,36 @@
-import { useEffect, useState } from 'react';
+import { Button, useDisclosure } from '@chakra-ui/react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useEffect, useRef, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { useSnapshot } from 'valtio';
-import { Product, Unit, store, updateProduct } from '../../backend';
-import { CatalogCard, CatalogDetail, CatalogList, CatalogueLayout } from '../../component/catalog/Catalog';
-import { NumberLabelInput } from '../../component/form/NumberInput';
-import { TextLabelInput } from '../../component/form/TextInput';
-import { MySelect } from '../../component/form/select/MySelect';
-import { ScreenLayout } from '../../component/layout/ScreenLayout';
-import { PRODUCT_UNITS } from '../../utils/defaults';
-import { CreateProduct } from './CreateProduct';
+import { z } from 'zod';
+import { Product, ProductInput, addProduct, store } from '../../backend';
+import { CreateModal } from '../../component/modal/CreateModal';
+import { MyH1 } from '../../component/typography/MyFont';
+import { ProductDetail } from './ProductDetail';
+import { ProductFields } from './ProductFields';
+import { priceFormatter } from '../../utils/formatter';
+
+export const productSchema = z.object({
+  name: z.string().min(1),
+  price: z.string(),
+  unit: z.string(),
+});
 
 export function Products() {
   const [selected, setSelected] = useState<Product>();
   const snap = useSnapshot(store);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const cancelRef = useRef<any>();
+
+  const { control, register, handleSubmit, reset } = useForm<ProductInput>({
+    resolver: zodResolver(productSchema),
+    defaultValues: {
+      name: '',
+      price: 0,
+      unit: 'kg',
+    },
+  });
 
   useEffect(() => {
     const updated = store.products.find((p) => p.id === selected?.id);
@@ -20,53 +39,71 @@ export function Products() {
     }
   }, [snap]);
 
+  const handleClose = () => {
+    onClose();
+    setTimeout(() => {
+      reset();
+    }, 100);
+  };
+
+  const onSubmit = (e: ProductInput) => addProduct(e).then(handleClose).catch(console.error);
+
   return (
-    <ScreenLayout>
-      <CatalogueLayout>
-        <CatalogList
-          title="Mes Produits"
-          slot={<CreateProduct />}
-        >
+    <div className="catalog">
+      <div className="catalog-side">
+        <div className="catalog-header">
+          <MyH1>Mes Produits</MyH1>
+          <Button
+            colorScheme="twitter"
+            onClick={onOpen}
+          >
+            Nouveau
+          </Button>
+          <CreateModal
+            isOpen={isOpen}
+            cancelRef={cancelRef}
+            title="Nouveau produit"
+            onClose={handleClose}
+            onSubmit={handleSubmit(onSubmit)}
+            body={
+              <ProductFields
+                register={register}
+                control={control}
+              />
+            }
+            footer={
+              <>
+                <Button
+                  ref={cancelRef}
+                  onClick={handleClose}
+                >
+                  Annuler
+                </Button>
+                <Button
+                  colorScheme="twitter"
+                  type="submit"
+                  ml={3}
+                >
+                  Enregistrer
+                </Button>
+              </>
+            }
+          />
+        </div>
+        <div className="catalog-list">
           {store.products.map((entity) => (
-            <CatalogCard
+            <div
+              className={`catalog-item ${selected?.id === entity.id && 'selected'}`}
               key={entity.id}
-              label={`${entity.name} - ${entity.price || 0}€ /${entity.unit}`}
-              selected={selected?.id === entity.id}
-              onClick={() => setSelected((e) => (e === entity ? undefined : entity))}
-            />
-          ))}
-        </CatalogList>
-        <CatalogDetail
-          onUpdate={() => selected && updateProduct({ ...selected })}
-          show={!!selected}
-          onClear={() => setSelected(undefined)}
-        >
-          {selected && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '50px' }}>
-              <div>
-                <TextLabelInput
-                  value={selected.name}
-                  label="Nom"
-                  onChange={(e) => setSelected({ ...selected, name: e.target.value })}
-                />
-                <NumberLabelInput
-                  value={selected.price || 0}
-                  label="Prix"
-                  onChange={(e) => setSelected({ ...selected, price: +e.target.value })}
-                />
-                <MySelect
-                  options={PRODUCT_UNITS}
-                  value={selected.unit}
-                  onChange={(e) => {
-                    setSelected({ ...selected, unit: e.target.value as Unit });
-                  }}
-                  placeholder={'unite ...'}
-                />
-              </div>
+              onClick={() => setSelected((e) => (e?.id === entity.id ? undefined : { ...entity }))}
+              onKeyDown={() => {}}
+            >
+              {`${entity.name} - ${priceFormatter(entity.price || 0)} /${entity.unit}`}
             </div>
-          )}
-        </CatalogDetail>
-      </CatalogueLayout>
-    </ScreenLayout>
+          ))}
+        </div>
+      </div>
+      <div className="catalog-side">{selected && <ProductDetail selected={selected} />}</div>
+    </div>
   );
 }
