@@ -58,9 +58,9 @@
 .catalog-item {
   display: flex;
   align-items: center;
-  background-color: lightgray;
+  background-color: lightyellow;
   justify-content: space-between;
-  border: 1px solid gray;
+  border: 1px solid yellow;
   padding: 10px;
   border-radius: 5px;
   user-select: none;
