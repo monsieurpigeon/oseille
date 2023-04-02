@@ -18,6 +18,7 @@ export function DeliveryDescription({ delivery }: { delivery: Delivery }) {
             <td>{line.product.name}</td>
             <td>
               {line.quantity} {line.product.unit}
+              {line.quantity > 1 ? 's' : ''}
             </td>
             <td>{priceFormatter(line.product.price)}</td>
             <td>{priceFormatter(line.product.price * line.quantity)}</td>

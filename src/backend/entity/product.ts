@@ -35,5 +35,5 @@ export const addProduct = (product: ProductInput) => {
 };
 
 export const updateProduct = (product: Product) => {
-  return relDb.rel.save('product', product);
+  return relDb.rel.save('product', { ...product, price: +product.price });
 };

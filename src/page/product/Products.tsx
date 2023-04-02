@@ -9,6 +9,7 @@ import { CreateModal } from '../../component/modal/CreateModal';
 import { MyH1 } from '../../component/typography/MyFont';
 import { ProductDetail } from './ProductDetail';
 import { ProductFields } from './ProductFields';
+import { priceFormatter } from '../../utils/formatter';
 
 export const productSchema = z.object({
   name: z.string().min(1),
@@ -97,7 +98,7 @@ export function Products() {
               onClick={() => setSelected((e) => (e?.id === entity.id ? undefined : { ...entity }))}
               onKeyDown={() => {}}
             >
-              {`${entity.name} - ${entity.price || 0}€ /${entity.unit}`}
+              {`${entity.name} - ${priceFormatter(entity.price || 0)} /${entity.unit}`}
             </div>
           ))}
         </div>
