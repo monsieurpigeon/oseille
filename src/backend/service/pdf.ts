@@ -136,7 +136,7 @@ export const exportDocument = ({ payload, type }: any) => {
       title: payload.documentId,
     },
     footer: {
-      text: `${store.farm?.footer}\nGénère gratuitement grâce à Oseille - www.oseille.app`,
+      text: `${store.farm?.footer}\nGénéré gratuitement grâce à Oseille - www.oseille.app`,
       alignment: 'center',
     },
     content: [
