@@ -1,7 +1,8 @@
 import { Box, Button, Flex, Input, Select, Text } from '@chakra-ui/react';
 import { useSnapshot } from 'valtio';
-import { store } from '../../backend';
+import { DeliveryInput, store } from '../../backend';
 import { MyNumberInput } from '../../component/form/MyNumberInput';
+import { FieldArrayWithId } from 'react-hook-form';
 
 export function DeliveryFields({ control, register, fields, append, remove }: any) {
   const snap = useSnapshot(store);
@@ -37,7 +38,7 @@ export function DeliveryFields({ control, register, fields, append, remove }: an
           direction="column"
           gap={2}
         >
-          {fields.map((field, index) => (
+          {fields.map((field: FieldArrayWithId<DeliveryInput, 'lines', 'id'>, index: number) => (
             <Flex
               gap={2}
               key={field.id}
