@@ -3,7 +3,7 @@ import { defineConfig } from 'vite';
 import { VitePWA, VitePWAOptions } from 'vite-plugin-pwa';
 
 const manifestForPlugin: Partial<VitePWAOptions> = {
-  registerType: 'prompt',
+  registerType: 'autoUpdate',
   includeAssets: ['favicon.ico'],
   workbox: {
     maximumFileSizeToCacheInBytes: 3000000,
