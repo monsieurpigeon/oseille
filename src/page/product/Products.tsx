@@ -13,7 +13,7 @@ import { priceFormatter } from '../../utils/formatter';
 
 export const productSchema = z.object({
   name: z.string().min(1),
-  price: z.string(),
+  price: z.number(),
   unit: z.string(),
 });
 

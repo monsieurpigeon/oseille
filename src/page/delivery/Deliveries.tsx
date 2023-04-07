@@ -17,7 +17,7 @@ export const deliverySchema = z.object({
   lines: z
     .object({
       productId: z.string().min(1),
-      quantity: z.string(),
+      quantity: z.number(),
     })
     .array()
     .nonempty(),
