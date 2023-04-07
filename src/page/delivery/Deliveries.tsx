@@ -3,7 +3,7 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useSnapshot } from 'valtio';
 
 import { Button, useDisclosure } from '@chakra-ui/react';
-import { useForm } from 'react-hook-form';
+import { useFieldArray, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { Delivery, DeliveryInput, addDelivery, addInvoice, store } from '../../backend';
 import { CreateModal } from '../../component/modal/CreateModal';
@@ -17,7 +17,7 @@ export const deliverySchema = z.object({
   lines: z
     .object({
       productId: z.string().min(1),
-      quantity: z.number(),
+      quantity: z.number().gt(0),
     })
     .array()
     .nonempty(),
@@ -34,6 +34,11 @@ export function Deliveries() {
     defaultValues: { customerId: '', deliveredAt: new Date().toISOString().split('T')[0] },
   });
 
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'lines',
+  });
+
   useEffect(() => {
     const updated = store.deliveries.find((p) => p.id === selected?.id);
     if (updated) {
@@ -45,6 +50,7 @@ export function Deliveries() {
     onClose();
     setTimeout(() => {
       reset();
+      remove();
     }, 100);
   };
 
@@ -71,6 +77,9 @@ export function Deliveries() {
               <DeliveryFields
                 register={register}
                 control={control}
+                fields={fields}
+                append={append}
+                remove={remove}
               />
             }
             footer={

@@ -95,7 +95,7 @@ export function Products() {
             <div
               className={`catalog-item ${selected?.id === entity.id && 'selected'}`}
               key={entity.id}
-              onClick={() => setSelected((e) => (e?.id === entity.id ? undefined : entity))}
+              onClick={() => setSelected((e) => (e?.id === entity.id ? undefined : { ...entity }))}
               onKeyDown={() => {}}
             >
               {`${entity.name} - ${priceFormatter(entity.price || 0)} /${entity.unit}`}

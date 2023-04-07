@@ -1,15 +1,9 @@
 import { Box, Button, Flex, Input, Select, Text } from '@chakra-ui/react';
-import { useFieldArray } from 'react-hook-form';
 import { useSnapshot } from 'valtio';
 import { store } from '../../backend';
 import { MyNumberInput } from '../../component/form/MyNumberInput';
 
-export function DeliveryFields({ control, register }: any) {
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: 'lines',
-  });
-
+export function DeliveryFields({ control, register, fields, append, remove }: any) {
   const snap = useSnapshot(store);
   return (
     <>
