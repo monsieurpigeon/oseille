@@ -8,7 +8,7 @@ const pwaOptions: Partial<VitePWAOptions> = {
   manifest: {
     name: 'Oseille',
     short_name: 'Oseille',
-    icons: [{ src: '/favicon.ico', sizes: 'any', type: 'image/svg+xml' }],
+    icons: [{ src: '/favicon.ico', sizes: 'any', type: 'image/x-icon' }],
     theme_color: '#ffffff',
     background_color: '#ffffff',
     display: 'standalone',
