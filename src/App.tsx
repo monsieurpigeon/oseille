@@ -12,7 +12,6 @@ import { Products } from './page/product/Products';
 function App() {
   return (
     <MainLayout>
-      MODEZ
       <Routes>
         <Route
           path="/"
