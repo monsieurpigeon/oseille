@@ -11,7 +11,6 @@ export function MyNumberInput({ control, name, min, max, step }: any) {
   return (
     <Controller
       control={control}
-      shouldUnregister={true}
       name={name}
       render={({ field }) => (
         <NumberInput

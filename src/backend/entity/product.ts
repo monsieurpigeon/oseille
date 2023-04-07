@@ -31,9 +31,9 @@ export async function loadProduct(id: string) {
 
 export const addProduct = (product: ProductInput) => {
   // TODO : better way to do this
-  return relDb.rel.save('product', { ...product, price: +product.price });
+  return relDb.rel.save('product', product);
 };
 
 export const updateProduct = (product: Product) => {
-  return relDb.rel.save('product', { ...product, price: +product.price });
+  return relDb.rel.save('product', product);
 };
