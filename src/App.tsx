@@ -1,4 +1,3 @@
-import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { MainLayout } from './component/layout/MainLayout';
 import { BackOffice } from './page/back-office/BackOffice';
@@ -13,6 +12,7 @@ import { Products } from './page/product/Products';
 function App() {
   return (
     <MainLayout>
+      MODEZ
       <Routes>
         <Route
           path="/"
