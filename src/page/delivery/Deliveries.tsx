@@ -104,6 +104,7 @@ export function Deliveries() {
         <div className="catalog-list">
           {store.customers.map((customer) => (
             <DeliveryCustomer
+              key={customer.id}
               selected={selected}
               customer={customer}
               setSelected={setSelected}
@@ -148,7 +149,10 @@ function DeliveryCustomer({ customer, selected, setSelected }: any) {
 
       {deliveries.length === 0 && <div className="faded">Pas de livraison</div>}
       {deliveries.map((delivery) => (
-        <div className="catalog-item-select">
+        <div
+          className="catalog-item-select"
+          key={delivery.id}
+        >
           <div
             className={`catalog-item grow ${selected?.id === delivery.id && 'selected'}`}
             key={delivery.id}
