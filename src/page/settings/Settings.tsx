@@ -1,7 +1,7 @@
-import { Box, Button, Flex, HStack, Input, Text } from '@chakra-ui/react';
+import { Box, Button, Checkbox, Flex, FormControl, FormLabel, HStack, Input, Switch, Text } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import { useSnapshot } from 'valtio';
 import { z } from 'zod';
 import { FarmInput, db, destroyDatabase, exportData, store, updateFarm } from '../../backend';
@@ -17,6 +17,7 @@ const EMPTY_FARM: FarmInput = {
   zip: '',
   city: '',
   footer: '',
+  showTVA: false,
 };
 
 export const farmSchema = z.object({
@@ -26,12 +27,13 @@ export const farmSchema = z.object({
   zip: z.string().min(1),
   city: z.string().min(1),
   footer: z.string(),
+  showTVA: z.boolean(),
 });
 
 export function Settings() {
   const { farm } = useSnapshot(store);
 
-  const { register, handleSubmit, reset } = useForm<FarmInput>({
+  const { control, register, handleSubmit, reset } = useForm<FarmInput>({
     resolver: zodResolver(farmSchema),
     defaultValues: { ...EMPTY_FARM, ...farm },
   });
@@ -84,16 +86,35 @@ export function Settings() {
                 <Button type="submit">Baptiser</Button>
               </Flex>
             }
-            <MyH2>Mon Footer</MyH2>
+            <MyH2>Mes Documents</MyH2>
             <Flex
               direction="column"
               gap={3}
             >
-              <Text>S'affiche en bas des documents</Text>
-              <Input
-                placeholder={DEFAULT_FOOTER}
-                {...register('footer')}
-              />
+              <Box p={3}>
+                <Text>S'affiche en bas des documents</Text>
+                <Input
+                  placeholder={DEFAULT_FOOTER}
+                  {...register('footer')}
+                />
+              </Box>
+              <Box p={3}>
+                <Controller
+                  control={control}
+                  name="showTVA"
+                  render={({ field: { onChange, value, ref } }) => (
+                    <>
+                      <FormLabel htmlFor="showTVA">Afficher la TVA</FormLabel>
+                      <Switch
+                        isChecked={value}
+                        onChange={onChange}
+                        ref={ref}
+                      />
+                    </>
+                  )}
+                />
+              </Box>
+
               <Button type="submit">Mettre à jour</Button>
             </Flex>
           </form>

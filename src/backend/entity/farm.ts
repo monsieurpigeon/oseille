@@ -13,6 +13,7 @@ export interface Farm {
   footer: string;
   invoiceId: number;
   deliveryId: number;
+  showTVA?: boolean;
 }
 
 export interface FarmInput {
@@ -22,6 +23,7 @@ export interface FarmInput {
   zip?: string;
   city?: string;
   footer?: string;
+  showTVA?: boolean;
 }
 
 export const FARM_KEY = 'myFarm';
@@ -38,6 +40,7 @@ export async function addFarm() {
     footer: 'Tous nos produits sont certifies par FR-BIO-IT',
     invoiceId: 1,
     deliveryId: 1,
+    showTVA: false,
   });
   loadFarm();
 }

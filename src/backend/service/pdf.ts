@@ -17,21 +17,53 @@ const fonts = {
 
 export type DocumentKey = 'Delivery' | 'Invoice';
 
-const getLines = (payload: any, type: DocumentKey) => {
+const getLines = (payload: any, type: DocumentKey, showTVA: boolean = false) => {
+  const priceHeaders = () => {
+    if (showTVA) {
+      return [
+        { text: 'Prix HT', alignment: 'right' },
+        { text: 'TVA', alignment: 'right' },
+        { text: 'Prix TTC', alignment: 'right' },
+      ];
+    } else {
+      return [{ text: 'Prix unitaire', alignment: 'right' }];
+    }
+  };
+
+  const priceLines = (el) => {
+    if (showTVA) {
+      return [
+        { text: priceFormatter(el.product.price), alignment: 'right' },
+        { text: 'TVA', alignment: 'right' },
+        { text: 'TVA', alignment: 'right' },
+      ];
+    } else {
+      return [{ text: priceFormatter(el.product.price), alignment: 'right' }];
+    }
+  };
+
+  const widths = () => {
+    if (showTVA) {
+      return ['*', '*', '*', '*', '*', '*', '*'];
+    } else {
+      return ['*', '*', '*', '*', '*'];
+    }
+  };
+
   if (type === 'Delivery') {
     return {
       layout: 'lightHorizontalLines',
       style: 'tableExample',
       table: {
         headerRows: 1,
-        widths: ['*', '*', '*', '*', '*'],
+        widths: widths(),
         body: [
           [
             'Designation',
 
             { text: 'Quantite', alignment: 'right' },
             { text: '' },
-            { text: 'Prix unitaire', alignment: 'right' },
+            ...priceHeaders(),
             {
               text: 'Montant',
               alignment: 'right',
@@ -53,7 +85,7 @@ const getLines = (payload: any, type: DocumentKey) => {
                   text: el.product.unit,
                   alignment: 'left',
                 },
-                { text: priceFormatter(el.product.price), alignment: 'right' },
+                ...priceLines(el),
                 { text: priceFormatter(el.product.price * el.quantity), alignment: 'right' },
               ];
             }),
@@ -73,14 +105,14 @@ const getLines = (payload: any, type: DocumentKey) => {
       style: 'tableExample',
       table: {
         headerRows: 1,
-        widths: ['*', '*', '*', '*', '*'],
+        widths: widths(),
         body: [
           [
-            'Designation',
+            'Désignation',
 
-            { text: 'Quantite', alignment: 'right' },
+            { text: 'Quantité', alignment: 'right' },
             { text: '' },
-            { text: 'Prix unitaire', alignment: 'right' },
+            ...priceHeaders,
             {
               text: 'Montant',
               alignment: 'right',
@@ -103,7 +135,7 @@ const getLines = (payload: any, type: DocumentKey) => {
                       text: el.product.unit,
                       alignment: 'left',
                     },
-                    { text: priceFormatter(el.product.price), alignment: 'right' },
+                    ...priceLines(el),
                     { text: priceFormatter(el.product.price * el.quantity), alignment: 'right' },
                   ];
                 }),
@@ -128,6 +160,8 @@ const getPrice = (payload: any, type: DocumentKey) => {
 };
 
 export const exportDocument = ({ payload, type }: any) => {
+  const showTVA = store.farm?.showTVA;
+
   const docDefinition: any = {
     defaultStyle: {
       font: 'Roboto',
@@ -172,7 +206,7 @@ export const exportDocument = ({ payload, type }: any) => {
           ],
         },
       },
-      getLines(payload, type),
+      getLines(payload, type, showTVA),
 
       {
         text: `Total       ${priceFormatter(getPrice(payload, type))}`,
