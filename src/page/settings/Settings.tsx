@@ -84,7 +84,7 @@ export function Settings() {
                 <Button type="submit">Baptiser</Button>
               </Flex>
             }
-            <MyH2>Mon Footer</MyH2>
+            <MyH2>Mon pied de page</MyH2>
             <Flex
               direction="column"
               gap={3}
