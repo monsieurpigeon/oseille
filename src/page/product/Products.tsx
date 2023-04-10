@@ -23,7 +23,7 @@ export function Products() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef<any>();
 
-  const { control, register, handleSubmit, reset } = useForm<ProductInput>({
+  const { register, handleSubmit, reset } = useForm<ProductInput>({
     resolver: zodResolver(productSchema),
     defaultValues: {
       name: '',
@@ -35,7 +35,7 @@ export function Products() {
   useEffect(() => {
     const updated = store.products.find((p) => p.id === selected?.id);
     if (updated) {
-      setSelected(updated);
+      setSelected({ ...updated });
     }
   }, [snap]);
 
@@ -65,12 +65,7 @@ export function Products() {
             title="Nouveau produit"
             onClose={handleClose}
             onSubmit={handleSubmit(onSubmit)}
-            body={
-              <ProductFields
-                register={register}
-                control={control}
-              />
-            }
+            body={<ProductFields register={register} />}
             footer={
               <>
                 <Button

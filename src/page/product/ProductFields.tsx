@@ -1,7 +1,6 @@
 import { Box, Input, Select, Text } from '@chakra-ui/react';
-import { MyNumberInput } from '../../component/form/MyNumberInput';
 
-export const ProductFields = ({ register, control }: any) => {
+export const ProductFields = ({ register }: any) => {
   return (
     <>
       <Box p={1}>
@@ -13,11 +12,10 @@ export const ProductFields = ({ register, control }: any) => {
       </Box>
       <Box p={1}>
         <Text>Prix</Text>
-        <MyNumberInput
-          control={control}
-          name="price"
-          min={0}
-          step={0.2}
+        <Input
+          {...register('price', {
+            valueAsNumber: true,
+          })}
         />
       </Box>
       <Box p={1}>

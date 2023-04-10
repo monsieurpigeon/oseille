@@ -43,7 +43,6 @@ export async function addFarm() {
 }
 
 export const updateFarm = (farm: Farm) => {
-  console.log({ farm });
   return relDb.rel.save('farm', farm);
 };
 

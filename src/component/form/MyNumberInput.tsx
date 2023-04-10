@@ -13,17 +13,16 @@ export function MyNumberInput({ control, name, min, max, step }: any) {
       control={control}
       shouldUnregister={true}
       name={name}
-      render={({ field }) => (
+      render={({ field: { ref, ...restField } }) => (
         <NumberInput
           min={min}
           max={max}
           step={step}
-          value={field.value}
-          onChange={(value) => field.onChange(+value)}
+          {...restField}
         >
           <NumberInputField
-            ref={field.ref}
-            name={field.name}
+            ref={ref}
+            name={restField.name}
           />
           <NumberInputStepper>
             <NumberIncrementStepper />

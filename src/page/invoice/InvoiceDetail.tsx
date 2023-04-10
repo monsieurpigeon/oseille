@@ -15,10 +15,7 @@ export const InvoiceDetail = ({ selected }: { selected: Invoice }) => {
         <MyH1>Détail</MyH1>
         <Button
           colorScheme="twitter"
-          onClick={() => {
-            console.log(JSON.stringify(selected, null, 4));
-            exportDocument({ payload: selected, type: 'Invoice' });
-          }}
+          onClick={() => exportDocument({ payload: selected, type: 'Invoice' })}
           ml={3}
         >
           Exporter
@@ -41,7 +38,10 @@ export const InvoiceDetail = ({ selected }: { selected: Invoice }) => {
           if (!delivery) return null;
 
           return (
-            <div style={{ marginTop: '15px' }}>
+            <div
+              style={{ marginTop: '15px' }}
+              key={id}
+            >
               <div>
                 {delivery.documentId} - {dateFormatter(delivery.deliveredAt)} -{' '}
                 {priceFormatter(getDeliveryPrice(delivery))}

@@ -76,7 +76,6 @@ export function Deliveries() {
             body={
               <DeliveryFields
                 register={register}
-                control={control}
                 fields={fields}
                 append={append}
                 remove={remove}
