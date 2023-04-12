@@ -7,9 +7,9 @@ import { z } from 'zod';
 import { Product, ProductInput, addProduct, store } from '../../backend';
 import { CreateModal } from '../../component/modal/CreateModal';
 import { MyH1 } from '../../component/typography/MyFont';
+import { priceFormatter } from '../../utils/formatter';
 import { ProductDetail } from './ProductDetail';
 import { ProductFields } from './ProductFields';
-import { priceFormatter } from '../../utils/formatter';
 
 export const productSchema = z.object({
   name: z.string().min(1),
@@ -23,7 +23,7 @@ export function Products() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef<any>();
 
-  const { register, handleSubmit, reset } = useForm<ProductInput>({
+  const { control, register, handleSubmit, reset } = useForm<ProductInput>({
     resolver: zodResolver(productSchema),
     defaultValues: {
       name: '',
@@ -65,7 +65,12 @@ export function Products() {
             title="Nouveau produit"
             onClose={handleClose}
             onSubmit={handleSubmit(onSubmit)}
-            body={<ProductFields register={register} />}
+            body={
+              <ProductFields
+                control={control}
+                register={register}
+              />
+            }
             footer={
               <>
                 <Button

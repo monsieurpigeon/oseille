@@ -1,9 +1,10 @@
 import { Box, Button, Flex, Input, Select, Text } from '@chakra-ui/react';
+import { FieldArrayWithId } from 'react-hook-form';
 import { useSnapshot } from 'valtio';
 import { DeliveryInput, store } from '../../backend';
-import { FieldArrayWithId } from 'react-hook-form';
+import { MyNumberInput } from '../../component/form/MyNumberInput';
 
-export function DeliveryFields({ register, fields, append, remove }: any) {
+export function DeliveryFields({ control, register, fields, append, remove }: any) {
   const snap = useSnapshot(store);
   return (
     <>
@@ -53,10 +54,10 @@ export function DeliveryFields({ register, fields, append, remove }: any) {
                   </option>
                 ))}
               </Select>
-              <Input
-                {...register(`lines.${index}.quantity`, {
-                  valueAsNumber: true,
-                })}
+              <MyNumberInput
+                control={control}
+                name={`lines.${index}.quantity`}
+                min={0}
               />
               <Button
                 colorScheme="red"

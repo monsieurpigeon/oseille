@@ -1,9 +1,8 @@
+import { Button, useDisclosure } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { useSnapshot } from 'valtio';
-
-import { Button, useDisclosure } from '@chakra-ui/react';
 import { useFieldArray, useForm } from 'react-hook-form';
+import { useSnapshot } from 'valtio';
 import { z } from 'zod';
 import { Delivery, DeliveryInput, addDelivery, addInvoice, store } from '../../backend';
 import { CreateModal } from '../../component/modal/CreateModal';
@@ -75,6 +74,7 @@ export function Deliveries() {
             onSubmit={handleSubmit(onSubmit)}
             body={
               <DeliveryFields
+                control={control}
                 register={register}
                 fields={fields}
                 append={append}
