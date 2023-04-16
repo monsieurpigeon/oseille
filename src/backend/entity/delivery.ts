@@ -1,10 +1,10 @@
+import { documentIdFormatter } from '../../utils/formatter';
 import { relDb } from '../service/database';
 import { store } from '../service/store';
 import { Customer, loadCustomer } from './customer';
-import { Product, loadProduct } from './product';
-import { documentIdFormatter } from '../../utils/formatter';
 import { updateDocumentId } from './farm';
 import { getPrice } from './price';
+import { ProductWithPrice, loadProduct } from './product';
 
 export interface Delivery {
   id: string;
@@ -14,7 +14,7 @@ export interface Delivery {
   documentId: string;
   invoiceId?: string;
   lines: Array<{
-    product: Product;
+    product: ProductWithPrice;
     quantity: number;
     totalPrice: number;
   }>;

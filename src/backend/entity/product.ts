@@ -8,6 +8,10 @@ export interface Product {
   unit: Unit;
 }
 
+export interface ProductWithPrice extends Product {
+  price: number;
+}
+
 export interface ProductInput {
   name: string;
   unit: Unit;

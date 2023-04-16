@@ -1,20 +1,17 @@
-import { Delivery, Invoice, Product, store } from '../backend';
+import { Delivery, Invoice, ProductWithPrice, store } from '../backend';
 
 export function getDeliveryPrice(delivery: Delivery): number {
-  return delivery.lines.reduce(
-    (acc: number, el: { product: Product; quantity: number }) => acc + el.product.price * el.quantity,
-    0,
-  );
+  return delivery.lines.reduce((acc, el) => acc + el.product.price * el.quantity, 0);
 }
 
 export function getInvoicePrice(invoice: Invoice): number {
   return invoice.deliveries
-    .flatMap((id: string) => {
+    .flatMap((id) => {
       const delivery = store.deliveries.find((d) => d.id === id);
       if (!delivery) return null;
       return delivery.lines;
     })
-    .reduce((acc: number, el) => {
+    .reduce((acc, el) => {
       if (!el) return acc;
       return acc + el.product.price * el.quantity;
     }, 0);

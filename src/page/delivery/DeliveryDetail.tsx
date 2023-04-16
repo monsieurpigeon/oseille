@@ -1,5 +1,5 @@
 import { Button, Flex, Spacer } from '@chakra-ui/react';
-import { Delivery, Product, exportDocument, store } from '../../backend';
+import { Delivery, Product, ProductWithPrice, exportDocument, store } from '../../backend';
 import { DeliveryDescription } from '../../component/table/DeliveryDescription';
 import { MyH1 } from '../../component/typography/MyFont';
 import { dateFormatter, priceFormatter } from '../../utils/formatter';
@@ -33,12 +33,7 @@ export const DeliveryDetail = ({ selected }: { selected: Delivery }) => {
           <div>{selected.customer.name}</div>
           <Spacer />
           <div className="bold">
-            {priceFormatter(
-              selected.lines.reduce(
-                (acc: number, el: { product: Product; quantity: number }) => acc + el.product.price * el.quantity,
-                0,
-              ),
-            )}
+            {priceFormatter(selected.lines.reduce((acc, el) => acc + el.product.price * el.quantity, 0))}
           </div>
         </Flex>
         <DeliveryDescription delivery={selected} />

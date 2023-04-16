@@ -1,6 +1,6 @@
 import * as pdfMake from 'pdfmake/build/pdfmake';
 import { dateFormatter, priceFormatter } from '../../utils/formatter';
-import { Product } from '../entity/product';
+import { Product, ProductWithPrice } from '../entity/product';
 import { store } from './store';
 import { DEFAULT_FARM } from '../../utils/defaults';
 import { Delivery } from '../entity/delivery';
@@ -38,10 +38,13 @@ const getLines = (payload: any, type: DocumentKey) => {
             },
           ],
           ...payload.lines
-            .sort((a: { product: Product; quantity: number }, b: { product: Product; quantity: number }) =>
-              a.product.name.localeCompare(b.product.name),
+            .sort(
+              (
+                a: { product: ProductWithPrice; quantity: number },
+                b: { product: ProductWithPrice; quantity: number },
+              ) => a.product.name.localeCompare(b.product.name),
             )
-            .map((el: { product: Product; quantity: number }) => {
+            .map((el: { product: ProductWithPrice; quantity: number }) => {
               return [
                 el.product.name,
 
