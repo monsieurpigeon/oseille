@@ -6,6 +6,7 @@ import { addDelivery, loadDeliveries } from '../entity/delivery';
 import { addFarm, loadFarm } from '../entity/farm';
 import { loadInvoices } from '../entity/invoice';
 import { addProduct, loadProducts } from '../entity/product';
+import { loadPrices } from '../entity/price';
 
 PouchDb.plugin(find).plugin(rel);
 
@@ -24,6 +25,14 @@ export const relDb = db.setSchema([
   {
     singular: 'customer',
     plural: 'customers',
+  },
+  {
+    singular: 'price',
+    plural: 'prices',
+    relations: {
+      product: { belongsTo: 'product' },
+      customer: { belongsTo: 'customer' },
+    },
   },
   {
     singular: 'delivery',
@@ -73,6 +82,7 @@ export const loadDatabase = () => {
   loadDeliveries();
   loadInvoices();
   loadFarm();
+  loadPrices();
 };
 
 export const destroyDatabase = () => {

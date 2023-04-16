@@ -16,6 +16,7 @@ export * from './service/store';
 export * from './service/pdf';
 export * from './entity/customer';
 export * from './entity/product';
+export * from './entity/price';
 export * from './entity/delivery';
 export * from './entity/invoice';
 export * from './entity/farm';

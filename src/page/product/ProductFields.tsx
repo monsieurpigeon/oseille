@@ -11,15 +11,7 @@ export const ProductFields = ({ control, register }: any) => {
           {...register('name')}
         />
       </Box>
-      <Box p={1}>
-        <Text>Prix</Text>
-        <MyNumberInput
-          control={control}
-          name="price"
-          min={0}
-          step={0.2}
-        />
-      </Box>
+
       <Box p={1}>
         <Text>Unité</Text>
         <Select {...register('unit')}>

@@ -1,6 +1,5 @@
 import { relDb } from '../service/database';
 import { store } from '../service/store';
-import { Product } from './product';
 import { Customer } from './customer';
 import { updateDocumentId } from './farm';
 import { documentIdFormatter } from '../../utils/formatter';
@@ -46,9 +45,7 @@ export const addInvoice = (deliveries: Delivery[]) => {
   return relDb.rel
     .save('invoice', invoice)
     .then((result) => {
-      invoice.deliveryIds.map((id) => {
-        addInvoiceId(result.id, id);
-      });
+      invoice.deliveryIds.map((id) => addInvoiceId(result.id, id));
       updateDocumentId('Invoice');
     })
     .catch(console.error);

@@ -4,6 +4,7 @@ import { Customer, loadCustomer } from './customer';
 import { Product, loadProduct } from './product';
 import { documentIdFormatter } from '../../utils/formatter';
 import { updateDocumentId } from './farm';
+import { getPrice } from './price';
 
 export interface Delivery {
   id: string;
@@ -44,7 +45,8 @@ export const addDelivery = async (delivery: DeliveryInput) => {
         .filter((p) => p.productId !== '...')
         .map(async (el) => {
           const product = await loadProduct(el.productId);
-          return { ...el, product };
+          const price = await getPrice({ product: el.productId, customer: delivery.customerId });
+          return { ...el, product: { ...product, price: price?.value || 0 } };
         }),
     );
     return { ...delivery, customer, lines: lines.filter((p) => !!p).map((l) => ({ ...l, quantity: +l.quantity })) };
@@ -53,9 +55,7 @@ export const addDelivery = async (delivery: DeliveryInput) => {
   promise().then((deliveryFull) => {
     relDb.rel
       .save('delivery', { ...deliveryFull, documentId: documentIdFormatter(store.farm?.deliveryId || 0, 'Delivery') })
-      .then(() => {
-        updateDocumentId('Delivery');
-      })
+      .then(() => updateDocumentId('Delivery'))
       .catch(console.error);
   });
 };

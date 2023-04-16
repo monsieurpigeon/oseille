@@ -6,8 +6,9 @@ import { MyH1, MyH2, MySubtitle } from '../../component/typography/MyFont';
 type Status = 'todo' | 'doing' | 'done';
 
 const TODO_ITEMS: Array<{ text: string; status: Status }> = [
-  { text: 'Gérer une liste de produits avec un prix', status: 'done' },
+  { text: 'Gérer une liste de produits', status: 'done' },
   { text: 'Gérer une liste de clients', status: 'done' },
+  { text: 'Gérer une liste de prix par client', status: 'done' },
   { text: 'Changer les prix des produits facilement', status: 'done' },
   { text: 'Générer un bon de livraison', status: 'done' },
   { text: 'Calcul automatique des lignes de livraison', status: 'done' },

@@ -7,7 +7,7 @@ import {
 } from '@chakra-ui/react';
 import { Controller } from 'react-hook-form';
 
-export function MyNumberInput({ control, name, min, max, step }: any) {
+export function MyNumberInput({ control, name, min, max, step, ...props }: any) {
   return (
     <Controller
       control={control}
@@ -26,6 +26,7 @@ export function MyNumberInput({ control, name, min, max, step }: any) {
               field.onChange(value);
             }
           }}
+          {...props}
         >
           <NumberInputField
             ref={field.ref}

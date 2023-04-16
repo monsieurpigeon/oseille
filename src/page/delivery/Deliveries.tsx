@@ -28,7 +28,7 @@ export function Deliveries() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef<any>();
 
-  const { control, register, handleSubmit, reset } = useForm<DeliveryInput>({
+  const { control, register, handleSubmit, reset, watch } = useForm<DeliveryInput>({
     resolver: zodResolver(deliverySchema),
     defaultValues: { customerId: '', deliveredAt: new Date().toISOString().split('T')[0] },
   });
@@ -79,6 +79,7 @@ export function Deliveries() {
                 fields={fields}
                 append={append}
                 remove={remove}
+                watch={watch}
               />
             }
             footer={

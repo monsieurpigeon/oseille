@@ -1,0 +1,7 @@
+.scroll-table {
+  border: 1px solid red;
+}
+
+.scroll-table thead tr th {
+  width: 2500px;
+}

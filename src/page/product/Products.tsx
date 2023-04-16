@@ -7,13 +7,11 @@ import { z } from 'zod';
 import { Product, ProductInput, addProduct, store } from '../../backend';
 import { CreateModal } from '../../component/modal/CreateModal';
 import { MyH1 } from '../../component/typography/MyFont';
-import { priceFormatter } from '../../utils/formatter';
 import { ProductDetail } from './ProductDetail';
 import { ProductFields } from './ProductFields';
 
 export const productSchema = z.object({
   name: z.string().min(1),
-  price: z.number(),
   unit: z.string(),
 });
 
@@ -27,7 +25,6 @@ export function Products() {
     resolver: zodResolver(productSchema),
     defaultValues: {
       name: '',
-      price: 0,
       unit: 'kg',
     },
   });
@@ -98,7 +95,7 @@ export function Products() {
               onClick={() => setSelected((e) => (e?.id === entity.id ? undefined : { ...entity }))}
               onKeyDown={() => {}}
             >
-              {`${entity.name} - ${priceFormatter(entity.price || 0)} /${entity.unit}`}
+              {`${entity.name} /${entity.unit}`}
             </div>
           ))}
         </div>

@@ -8,6 +8,7 @@ import { Home } from './page/home/Home';
 import { Invoices } from './page/invoice/Invoices';
 import { Settings } from './page/settings/Settings';
 import { Products } from './page/product/Products';
+import { Prices } from './page/prices/Prices';
 
 function App() {
   return (
@@ -25,7 +26,10 @@ function App() {
           path="customer"
           element={<Customers />}
         />
-
+        <Route
+          path="prices"
+          element={<Prices />}
+        />
         <Route
           path="delivery"
           element={<Deliveries />}

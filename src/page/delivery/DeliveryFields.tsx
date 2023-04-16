@@ -3,9 +3,23 @@ import { FieldArrayWithId } from 'react-hook-form';
 import { useSnapshot } from 'valtio';
 import { DeliveryInput, store } from '../../backend';
 import { MyNumberInput } from '../../component/form/MyNumberInput';
+import { useMemo } from 'react';
+import { priceFormatter } from '../../utils/formatter';
 
-export function DeliveryFields({ control, register, fields, append, remove }: any) {
+export function DeliveryFields({ watch, control, register, fields, append, remove }: any) {
   const snap = useSnapshot(store);
+
+  const watchCustomer = watch('customerId');
+
+  const products = useMemo(() => {
+    const prices = store.prices.filter((price) => price.customer === watchCustomer);
+    return store.products
+      .filter((product) => prices.map((price) => price.product).includes(product.id))
+      .map((product) => ({
+        ...product,
+        price: prices.find((price) => price.product === product.id)?.value || 0,
+      }));
+  }, [watchCustomer]);
   return (
     <>
       <Box p={1}>
@@ -45,12 +59,12 @@ export function DeliveryFields({ control, register, fields, append, remove }: an
             >
               <Select {...register(`lines.${index}.productId`)}>
                 <option value="">...</option>
-                {store.products.map((product) => (
+                {products.map((product) => (
                   <option
                     value={product.id}
                     key={product.id}
                   >
-                    {product.name} ({product.unit})
+                    {product.name} {priceFormatter(product.price)}/{product.unit}
                   </option>
                 ))}
               </Select>

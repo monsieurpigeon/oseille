@@ -4,6 +4,7 @@ import { Delivery } from '../entity/delivery';
 import { Product } from '../entity/product';
 import { Invoice } from '../entity/invoice';
 import { Farm } from '../entity/farm';
+import { Price } from '../entity/price';
 
 interface Store {
   products: Product[];
@@ -14,6 +15,7 @@ interface Store {
   invoices: Invoice[];
   invoice: Invoice | null;
   farm: Farm | null;
+  prices: Price[];
 }
 
 export const store = proxy<Store>({
@@ -25,4 +27,5 @@ export const store = proxy<Store>({
   invoices: [],
   invoice: null,
   farm: null,
+  prices: [],
 });
