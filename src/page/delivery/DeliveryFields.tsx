@@ -1,12 +1,12 @@
 import { Box, Button, Flex, Input, Select, Text } from '@chakra-ui/react';
 import { FieldArrayWithId } from 'react-hook-form';
 import { useSnapshot } from 'valtio';
-import { DeliveryInput, store } from '../../backend';
+import { DeliveryInput, getPrice, store } from '../../backend';
 import { MyNumberInput } from '../../component/form/MyNumberInput';
 import { useMemo } from 'react';
 import { priceFormatter } from '../../utils/formatter';
 
-export function DeliveryFields({ watch, control, register, fields, append, remove }: any) {
+export function DeliveryFields({ watch, control, register, fields, append, remove, setValue, getValues }: any) {
   const snap = useSnapshot(store);
 
   const watchCustomer = watch('customerId');
@@ -57,7 +57,16 @@ export function DeliveryFields({ watch, control, register, fields, append, remov
               gap={2}
               key={field.id}
             >
-              <Select {...register(`lines.${index}.productId`)}>
+              <Select
+                {...register(`lines.${index}.productId`, {
+                  onChange: (e: any) => {
+                    setValue(
+                      `lines.${index}.price`,
+                      getPrice({ customer: watchCustomer, product: e.target.value })?.value,
+                    );
+                  },
+                })}
+              >
                 <option value="">...</option>
                 {products.map((product) => (
                   <option
@@ -68,6 +77,12 @@ export function DeliveryFields({ watch, control, register, fields, append, remov
                   </option>
                 ))}
               </Select>
+              <MyNumberInput
+                control={control}
+                name={`lines.${index}.price`}
+                min={0}
+                step={0.01}
+              />
               <MyNumberInput
                 control={control}
                 name={`lines.${index}.quantity`}

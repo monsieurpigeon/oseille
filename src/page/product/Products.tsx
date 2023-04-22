@@ -1,4 +1,4 @@
-import { Button, useDisclosure } from '@chakra-ui/react';
+import { Button, Flex, Spacer, useDisclosure } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -9,10 +9,12 @@ import { CreateModal } from '../../component/modal/CreateModal';
 import { MyH1 } from '../../component/typography/MyFont';
 import { ProductDetail } from './ProductDetail';
 import { ProductFields } from './ProductFields';
+import { useFarmParameters } from '../../utils/hooks/useFarmParameters';
 
 export const productSchema = z.object({
   name: z.string().min(1),
   unit: z.string(),
+  tva: z.string().optional(),
 });
 
 export function Products() {
@@ -20,12 +22,14 @@ export function Products() {
   const snap = useSnapshot(store);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef<any>();
+  const { isTVA } = useFarmParameters();
 
   const { control, register, handleSubmit, reset } = useForm<ProductInput>({
     resolver: zodResolver(productSchema),
     defaultValues: {
       name: '',
       unit: 'kg',
+      tva: '5.5',
     },
   });
 
@@ -95,7 +99,11 @@ export function Products() {
               onClick={() => setSelected((e) => (e?.id === entity.id ? undefined : { ...entity }))}
               onKeyDown={() => {}}
             >
-              {`${entity.name} /${entity.unit}`}
+              <Flex width="100%">
+                <div>{`${entity.name} /${entity.unit}`}</div>
+                <Spacer />
+                {isTVA && <div>TVA : {entity.tva || '5.5'}%</div>}
+              </Flex>
             </div>
           ))}
         </div>

@@ -13,6 +13,7 @@ export interface Farm {
   footer: string;
   invoiceId: number;
   deliveryId: number;
+  isTVA?: string;
 }
 
 export interface FarmInput {
@@ -22,6 +23,7 @@ export interface FarmInput {
   zip?: string;
   city?: string;
   footer?: string;
+  isTVA?: string;
 }
 
 export const FARM_KEY = 'myFarm';

@@ -26,6 +26,7 @@ export interface DeliveryInput {
   lines: Array<{
     productId: string;
     quantity: number;
+    price: number;
     totalPrice?: number;
   }>;
 }
@@ -41,13 +42,10 @@ export const addDelivery = async (delivery: DeliveryInput) => {
   const customer = await loadCustomer(delivery.customerId);
   const promise = async () => {
     const lines = await Promise.all(
-      delivery.lines
-        .filter((p) => p.productId !== '...')
-        .map(async (el) => {
-          const product = await loadProduct(el.productId);
-          const price = await getPrice({ product: el.productId, customer: delivery.customerId });
-          return { ...el, product: { ...product, price: price?.value || 0 } };
-        }),
+      delivery.lines.map(async (el) => {
+        const product = await loadProduct(el.productId);
+        return { ...el, product: { ...product, price: +el.price || 0 } };
+      }),
     );
     return { ...delivery, customer, lines: lines.filter((p) => !!p).map((l) => ({ ...l, quantity: +l.quantity })) };
   };

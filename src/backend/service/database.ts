@@ -61,7 +61,7 @@ db.changes({
     clearTimeout(debounce);
     debounce = setTimeout(() => {
       loadDatabase();
-    }, 300);
+    }, 100);
   })
   .on('error', function (err) {
     console.log('ERROR', err);

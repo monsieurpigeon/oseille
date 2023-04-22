@@ -6,6 +6,7 @@ export interface Product {
   _rev: string;
   name: string;
   unit: Unit;
+  tva: string;
 }
 
 export interface ProductWithPrice extends Product {
@@ -15,6 +16,7 @@ export interface ProductWithPrice extends Product {
 export interface ProductInput {
   name: string;
   unit: Unit;
+  tva: string;
 }
 
 export type Unit = 'kg' | 'piece';
