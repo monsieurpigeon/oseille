@@ -24,6 +24,7 @@ export const ProductFields = ({ control, register }: any) => {
         <Box p={1}>
           <Text>Taux de TVA</Text>
           <Select {...register('tva')}>
+            <option value={'0'}>0%</option>
             <option value={'5.5'}>5.5%</option>
             <option value={'10'}>10%</option>
             <option value={'20'}>20%</option>

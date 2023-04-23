@@ -1,8 +1,8 @@
 .catalog {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-gap: 10px;
+  grid-template-columns: 40% 60%;
   height: 100%;
+  width: 100%;
 }
 
 .catalog-full {

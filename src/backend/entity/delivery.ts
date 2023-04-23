@@ -2,12 +2,12 @@ import { documentIdFormatter } from '../../utils/formatter';
 import { relDb } from '../service/database';
 import { store } from '../service/store';
 import { Customer, loadCustomer } from './customer';
-import { updateDocumentId } from './farm';
-import { getPrice } from './price';
+import { loadFarm, updateDocumentId } from './farm';
 import { ProductWithPrice, loadProduct } from './product';
 
 export interface Delivery {
   id: string;
+  isTVA: boolean;
   deliveredAt: string;
   customer: Customer;
   customerId: string;
@@ -21,6 +21,7 @@ export interface Delivery {
 }
 
 export interface DeliveryInput {
+  isTVA: boolean;
   customerId: string;
   deliveredAt: string;
   lines: Array<{
@@ -40,6 +41,7 @@ export async function loadDeliveries() {
 
 export const addDelivery = async (delivery: DeliveryInput) => {
   const customer = await loadCustomer(delivery.customerId);
+  await loadFarm();
   const promise = async () => {
     const lines = await Promise.all(
       delivery.lines.map(async (el) => {
@@ -47,7 +49,12 @@ export const addDelivery = async (delivery: DeliveryInput) => {
         return { ...el, product: { ...product, price: +el.price || 0 } };
       }),
     );
-    return { ...delivery, customer, lines: lines.filter((p) => !!p).map((l) => ({ ...l, quantity: +l.quantity })) };
+    return {
+      ...delivery,
+      isTVA: store.farm?.isTVA === 'oui',
+      customer,
+      lines: lines.filter((p) => !!p).map((l) => ({ ...l, quantity: +l.quantity })),
+    };
   };
 
   promise().then((deliveryFull) => {

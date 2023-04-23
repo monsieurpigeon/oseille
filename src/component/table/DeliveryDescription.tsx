@@ -1,30 +1,75 @@
+import { Table, TableContainer, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react';
 import { Delivery } from '../../backend';
 import { priceFormatter } from '../../utils/formatter';
+import { getDeliveryPrice, getDeliveryTaxes } from '../../utils/aggregations';
 
 export function DeliveryDescription({ delivery }: { delivery: Delivery }) {
   return (
-    <table style={{ width: '100%', textAlign: 'right' }}>
-      <thead>
-        <tr>
-          <th>Produit</th>
-          <th>Quantité</th>
-          <th>Prix unitaire</th>
-          <th>Total</th>
-        </tr>
-      </thead>
-      <tbody>
-        {delivery.lines.map((line, index) => (
-          <tr key={`${index}`}>
-            <td>{line.product.name}</td>
-            <td>
-              {line.quantity} {line.product.unit}
-              {line.quantity > 1 ? 's' : ''}
-            </td>
-            <td>{priceFormatter(line.product.price)}</td>
-            <td>{priceFormatter(line.product.price * line.quantity)}</td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
+    <TableContainer>
+      <Table size="sm">
+        <Thead>
+          <Tr>
+            <Th width="50%">Produit</Th>
+            <Th>Quantité</Th>
+            <Th isNumeric>P.U. {delivery.isTVA && 'HT'}</Th>
+            <Th isNumeric>Total {delivery.isTVA && 'HT'}</Th>
+            {delivery.isTVA && (
+              <>
+                <Th isNumeric>Total TVA</Th>
+                <Th isNumeric>Total TTC</Th>
+              </>
+            )}
+          </Tr>
+        </Thead>
+        <Tbody>
+          {delivery.lines.map((line, index) => (
+            <Tr key={`${index}`}>
+              <Td whiteSpace="pre-wrap">{line.product.name}</Td>
+              <Td>
+                {line.quantity} {line.product.unit}
+                {line.quantity > 1 ? 's' : ''}
+              </Td>
+              <Td isNumeric>{priceFormatter(line.product.price)}</Td>
+              <Td isNumeric>{priceFormatter(line.product.price * line.quantity)}</Td>
+              {delivery.isTVA && (
+                <>
+                  <Td isNumeric>{priceFormatter(line.product.price * line.quantity * (+line.product.tva / 100))}</Td>
+                  <Td isNumeric>
+                    {priceFormatter(line.product.price * line.quantity * (1 + +line.product.tva / 100))}
+                  </Td>
+                </>
+              )}
+            </Tr>
+          ))}
+          <Tr>
+            <Td></Td>
+            <Td></Td>
+            <Td></Td>
+            <Td
+              isNumeric
+              fontWeight="bold"
+            >
+              {priceFormatter(getDeliveryPrice(delivery))}
+            </Td>
+            {delivery.isTVA && (
+              <>
+                <Td
+                  isNumeric
+                  fontWeight="bold"
+                >
+                  {priceFormatter(getDeliveryTaxes(delivery))}
+                </Td>
+                <Td
+                  isNumeric
+                  fontWeight="bold"
+                >
+                  {priceFormatter(getDeliveryPrice(delivery) + getDeliveryTaxes(delivery))}
+                </Td>
+              </>
+            )}
+          </Tr>
+        </Tbody>
+      </Table>
+    </TableContainer>
   );
 }

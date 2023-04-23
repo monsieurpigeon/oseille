@@ -1,4 +1,4 @@
-import { Button, Flex, Spacer, useDisclosure } from '@chakra-ui/react';
+import { Button, Flex, Spacer, useDisclosure, Text } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -102,7 +102,7 @@ export function Products() {
               <Flex width="100%">
                 <div>{`${entity.name} /${entity.unit}`}</div>
                 <Spacer />
-                {isTVA && <div>TVA : {entity.tva || '5.5'}%</div>}
+                <Text whiteSpace="nowrap">{isTVA && <div>TVA : {entity.tva || '5.5'}%</div>}</Text>
               </Flex>
             </div>
           ))}
