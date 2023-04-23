@@ -7,6 +7,7 @@ import { Customer, Product } from '../../backend';
 import { Price, PriceInput, addPrice } from '../../backend/entity/price';
 import { MyNumberInput } from '../../component/form/MyNumberInput';
 import { priceFormatter } from '../../utils/formatter';
+import { useFarmParameters } from '../../utils/hooks/useFarmParameters';
 
 export const priceSchema = z.object({
   value: z.number().gt(0),
@@ -21,13 +22,16 @@ export function PriceNumberInput({
   customer: Customer;
   price: Price | undefined;
 }) {
-  const { control, handleSubmit, reset } = useForm<PriceInput>({
+  const { isTVA } = useFarmParameters();
+  const { watch, control, handleSubmit, reset } = useForm<PriceInput>({
     resolver: zodResolver(priceSchema),
     defaultValues: {
       value: price?.value || 0,
     },
   });
   const [isEdit, setIsEdit] = useState(false);
+
+  const watchValue = watch('value') || price?.value;
 
   const handleClose = () => {
     setIsEdit(false);
@@ -42,6 +46,8 @@ export function PriceNumberInput({
       .then(handleClose)
       .catch(console.error);
 
+  const tva = +product.tva || 5.5;
+
   return (
     <div>
       {isEdit ? (
@@ -52,7 +58,7 @@ export function PriceNumberInput({
                 control={control}
                 name="value"
                 min={0}
-                step={0.2}
+                step={0.01}
                 size="sm"
               />
               <Button
@@ -62,10 +68,11 @@ export function PriceNumberInput({
                 OK
               </Button>
             </div>
+            {isTVA && <div>{priceFormatter(+watchValue! * (1 + tva / 100))}TTC</div>}
           </form>
         </div>
       ) : (
-        <button onClick={() => setIsEdit(true)}>{price ? priceFormatter(price.value) : <AddPrice />}</button>
+        <button onClick={() => setIsEdit(true)}>{price ? `${priceFormatter(price.value)}HT` : <AddPrice />}</button>
       )}
     </div>
   );

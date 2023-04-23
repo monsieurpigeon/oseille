@@ -1,8 +1,8 @@
-import { Button, Flex, Spacer } from '@chakra-ui/react';
-import { Delivery, Product, ProductWithPrice, exportDocument, store } from '../../backend';
+import { Button } from '@chakra-ui/react';
+import { Delivery, exportDocument, store } from '../../backend';
+import { DeliveryDescriptionLine } from '../../component/shared/Delivery';
 import { DeliveryDescription } from '../../component/table/DeliveryDescription';
 import { MyH1 } from '../../component/typography/MyFont';
-import { dateFormatter, priceFormatter } from '../../utils/formatter';
 
 export const DeliveryDetail = ({ selected }: { selected: Delivery }) => {
   return (
@@ -19,23 +19,10 @@ export const DeliveryDetail = ({ selected }: { selected: Delivery }) => {
       </div>
 
       <div>
-        <Flex>
-          <div>
-            {selected.documentId}
-            {selected.invoiceId
-              ? ` - Facture ${store.invoices.find((invoice) => invoice.id === selected.invoiceId)?.documentId}`
-              : ''}
-          </div>
-          <Spacer />
-          <div>{dateFormatter(selected.deliveredAt)}</div>
-        </Flex>
-        <Flex>
-          <div>{selected.customer.name}</div>
-          <Spacer />
-          <div className="bold">
-            {priceFormatter(selected.lines.reduce((acc, el) => acc + el.product.price * el.quantity, 0))}
-          </div>
-        </Flex>
+        <DeliveryDescriptionLine delivery={selected} />
+        {!!selected.invoiceId && (
+          <div>{store.invoices.find((invoice) => invoice.id === selected.invoiceId)?.documentId}</div>
+        )}
         <DeliveryDescription delivery={selected} />
       </div>
     </>

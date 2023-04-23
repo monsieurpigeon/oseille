@@ -14,7 +14,7 @@ export const ProductDetail = ({ selected }: { selected: Product }) => {
   });
 
   useEffect(() => {
-    reset(selected);
+    reset({ ...selected, tva: selected.tva || '5.5' });
   }, [selected]);
 
   const onSubmit = (e: ProductInput) => {

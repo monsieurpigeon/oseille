@@ -1,6 +1,6 @@
-import { Box, Button, Flex, HStack, Input, Text } from '@chakra-ui/react';
+import { Button, Flex, FormControl, FormLabel, HStack, Input, Select, Switch, Text } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useSnapshot } from 'valtio';
 import { z } from 'zod';
@@ -17,6 +17,7 @@ const EMPTY_FARM: FarmInput = {
   zip: '',
   city: '',
   footer: '',
+  isTVA: 'non',
 };
 
 export const farmSchema = z.object({
@@ -26,6 +27,7 @@ export const farmSchema = z.object({
   zip: z.string().min(1),
   city: z.string().min(1),
   footer: z.string(),
+  isTVA: z.string(),
 });
 
 export function Settings() {
@@ -50,52 +52,72 @@ export function Settings() {
         </div>
         <div className="catalog-list">
           <form onSubmit={handleSubmit(onSubmit)}>
-            <MyH2>Ma ferme</MyH2>
-            {
+            <FormControl>
+              <MyH2>Ma ferme</MyH2>
+              {
+                <Flex
+                  direction="column"
+                  gap="3"
+                  marginBottom="20px"
+                >
+                  <Input
+                    placeholder={DEFAULT_FARM.title}
+                    {...register('title')}
+                  />
+                  <Input
+                    placeholder={DEFAULT_FARM.address1}
+                    {...register('address1')}
+                  />
+                  <Input
+                    placeholder={DEFAULT_FARM.address2}
+                    {...register('address2')}
+                  />
+                  <HStack>
+                    <Input
+                      placeholder={DEFAULT_FARM.zip}
+                      {...register('zip')}
+                    />
+
+                    <Input
+                      placeholder={DEFAULT_FARM.city}
+                      {...register('city')}
+                    />
+                  </HStack>
+
+                  <Button type="submit">Baptiser</Button>
+                </Flex>
+              }
+
+              <MyH2>Ma configuration</MyH2>
               <Flex
                 direction="column"
-                gap="3"
-                marginBottom="20px"
+                mt={3}
+                mb={3}
               >
-                <Input
-                  placeholder={DEFAULT_FARM.title}
-                  {...register('title')}
-                />
-                <Input
-                  placeholder={DEFAULT_FARM.address1}
-                  {...register('address1')}
-                />
-                <Input
-                  placeholder={DEFAULT_FARM.address2}
-                  {...register('address2')}
-                />
-                <HStack>
-                  <Input
-                    placeholder={DEFAULT_FARM.zip}
-                    {...register('zip')}
-                  />
-
-                  <Input
-                    placeholder={DEFAULT_FARM.city}
-                    {...register('city')}
-                  />
-                </HStack>
-
-                <Button type="submit">Baptiser</Button>
+                <FormLabel
+                  flexGrow={1}
+                  htmlFor="isTVA"
+                >
+                  Gérer la TVA ?
+                </FormLabel>
+                <Select {...register('isTVA')}>
+                  <option value="non">NON</option>
+                  <option value="oui">OUI</option>
+                </Select>
               </Flex>
-            }
-            <MyH2>Mon pied de page</MyH2>
-            <Flex
-              direction="column"
-              gap={3}
-            >
-              <Text>S'affiche en bas des documents</Text>
-              <Input
-                placeholder={DEFAULT_FOOTER}
-                {...register('footer')}
-              />
-              <Button type="submit">Mettre à jour</Button>
-            </Flex>
+
+              <Flex
+                direction="column"
+                gap={3}
+              >
+                <Text>Mon pied de page: S'affiche en bas des documents</Text>
+                <Input
+                  placeholder={DEFAULT_FOOTER}
+                  {...register('footer')}
+                />
+                <Button type="submit">Mettre à jour</Button>
+              </Flex>
+            </FormControl>
           </form>
         </div>
       </div>

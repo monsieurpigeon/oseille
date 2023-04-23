@@ -16,6 +16,7 @@ export const deliverySchema = z.object({
   lines: z
     .object({
       productId: z.string().min(1),
+      price: z.number().gt(0),
       quantity: z.number().gt(0),
     })
     .array()
@@ -28,7 +29,7 @@ export function Deliveries() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef<any>();
 
-  const { control, register, handleSubmit, reset, watch } = useForm<DeliveryInput>({
+  const { control, register, handleSubmit, reset, watch, setValue, getValues } = useForm<DeliveryInput>({
     resolver: zodResolver(deliverySchema),
     defaultValues: { customerId: '', deliveredAt: new Date().toISOString().split('T')[0] },
   });
@@ -80,6 +81,8 @@ export function Deliveries() {
                 append={append}
                 remove={remove}
                 watch={watch}
+                setValue={setValue}
+                getValues={getValues}
               />
             }
             footer={

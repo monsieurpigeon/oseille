@@ -1,15 +1,17 @@
-import { Box, Button, Flex, Input, Select, Text } from '@chakra-ui/react';
+import { Box, Button, Flex, Grid, GridItem, Input, Select, Text } from '@chakra-ui/react';
+import { useMemo } from 'react';
 import { FieldArrayWithId } from 'react-hook-form';
 import { useSnapshot } from 'valtio';
-import { DeliveryInput, store } from '../../backend';
+import { DeliveryInput, getPrice, store } from '../../backend';
 import { MyNumberInput } from '../../component/form/MyNumberInput';
-import { useMemo } from 'react';
 import { priceFormatter } from '../../utils/formatter';
+import { useFarmParameters } from '../../utils/hooks/useFarmParameters';
 
-export function DeliveryFields({ watch, control, register, fields, append, remove }: any) {
+export function DeliveryFields({ watch, control, register, fields, append, remove, setValue }: any) {
   const snap = useSnapshot(store);
 
   const watchCustomer = watch('customerId');
+  const { isTVA } = useFarmParameters();
 
   const products = useMemo(() => {
     const prices = store.prices.filter((price) => price.customer === watchCustomer);
@@ -46,49 +48,83 @@ export function DeliveryFields({ watch, control, register, fields, append, remov
         />
       </Box>
 
-      <Box p={1}>
+      <Flex
+        direction="column"
+        gap={1}
+      >
         <Text>Lignes produit</Text>
-        <Flex
-          direction="column"
-          gap={2}
+        <Grid
+          gap={1}
+          templateColumns="3fr 2fr 2fr auto"
         >
+          {fields.length > 0 && (
+            <>
+              <GridItem>Produit</GridItem>
+              <GridItem>Prix{isTVA && ' HT'}</GridItem>
+              <GridItem>Quantité</GridItem>
+              <GridItem></GridItem>
+            </>
+          )}
+
           {fields.map((field: FieldArrayWithId<DeliveryInput, 'lines', 'id'>, index: number) => (
-            <Flex
-              gap={2}
-              key={field.id}
-            >
-              <Select {...register(`lines.${index}.productId`)}>
-                <option value="">...</option>
-                {products.map((product) => (
-                  <option
-                    value={product.id}
-                    key={product.id}
-                  >
-                    {product.name} {priceFormatter(product.price)}/{product.unit}
-                  </option>
-                ))}
-              </Select>
-              <MyNumberInput
-                control={control}
-                name={`lines.${index}.quantity`}
-                min={0}
-              />
-              <Button
-                colorScheme="red"
-                onClick={() => remove(index)}
-              >
-                X
-              </Button>
-            </Flex>
+            <>
+              <GridItem key={`${index}-a`}>
+                <Select
+                  {...register(`lines.${index}.productId`, {
+                    onChange: (e: any) => {
+                      setValue(
+                        `lines.${index}.price`,
+                        getPrice({ customer: watchCustomer, product: e.target.value })?.value,
+                      );
+                    },
+                  })}
+                >
+                  <option value="">...</option>
+                  {products.map((product) => (
+                    <option
+                      value={product.id}
+                      key={product.id}
+                    >
+                      {product.name} {priceFormatter(product.price)}
+                      {isTVA && 'HT'}/{product.unit}
+                    </option>
+                  ))}
+                </Select>
+              </GridItem>
+              <GridItem key={`${index}-b`}>
+                <MyNumberInput
+                  control={control}
+                  name={`lines.${index}.price`}
+                  min={0}
+                  step={0.01}
+                />
+              </GridItem>
+              <GridItem key={`${index}-c`}>
+                <MyNumberInput
+                  control={control}
+                  name={`lines.${index}.quantity`}
+                  min={0}
+                />
+              </GridItem>
+              <GridItem key={`${index}-d`}>
+                <Button
+                  colorScheme="red"
+                  onClick={() => remove(index)}
+                >
+                  X
+                </Button>
+              </GridItem>
+            </>
           ))}
-          <Button
-            colorScheme="yellow"
-            onClick={() => append({ productId: '', quantity: 0 })}
-          >
-            Ajouter produit
-          </Button>
-        </Flex>
-      </Box>
+        </Grid>
+
+        <Button
+          colorScheme="yellow"
+          onClick={() => append({ productId: '', quantity: 0 })}
+        >
+          Ajouter produit
+        </Button>
+      </Flex>
     </>
   );
 }

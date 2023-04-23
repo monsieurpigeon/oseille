@@ -1,14 +1,12 @@
-import { Button, Flex, Spacer } from '@chakra-ui/react';
-import { useMemo } from 'react';
+import { Button, Flex } from '@chakra-ui/react';
 import { Invoice, exportDocument, store } from '../../backend';
+import { DeliveryDescriptionLine } from '../../component/shared/Delivery';
 import { DeliveryDescription } from '../../component/table/DeliveryDescription';
+import { InvoiceTotals } from '../../component/table/InvoiceTotals';
 import { MyH1 } from '../../component/typography/MyFont';
-import { getDeliveryPrice, getInvoicePrice } from '../../utils/aggregations';
-import { dateFormatter, priceFormatter } from '../../utils/formatter';
+import { dateFormatter } from '../../utils/formatter';
 
 export const InvoiceDetail = ({ selected }: { selected: Invoice }) => {
-  const price = useMemo(() => getInvoicePrice(selected), [selected]);
-
   return (
     <>
       <div className="catalog-header">
@@ -23,16 +21,15 @@ export const InvoiceDetail = ({ selected }: { selected: Invoice }) => {
       </div>
 
       <div>
-        <Flex>
-          <div>{selected.documentId}</div>
-          <Spacer />
-          <div>{dateFormatter(selected.createdAt)}</div>
-        </Flex>
-        <Flex>
+        <Flex
+          gap={5}
+          fontWeight="bold"
+        >
           <div>{selected.customer.name}</div>
-          <Spacer />
-          <div className="bold">{priceFormatter(price)}</div>
+          <div>{dateFormatter(selected.createdAt)}</div>
+          <div>{selected.documentId}</div>
         </Flex>
+
         {selected.deliveries.map((id) => {
           const delivery = store.deliveries.find((delivery) => delivery.id === id);
           if (!delivery) return null;
@@ -42,14 +39,17 @@ export const InvoiceDetail = ({ selected }: { selected: Invoice }) => {
               style={{ marginTop: '15px' }}
               key={id}
             >
-              <div>
-                {delivery.documentId} - {dateFormatter(delivery.deliveredAt)} -{' '}
-                {priceFormatter(getDeliveryPrice(delivery))}
-              </div>
+              <DeliveryDescriptionLine delivery={delivery} />
               <DeliveryDescription delivery={delivery} />
             </div>
           );
         })}
+        <Flex
+          justifyContent="flex-end"
+          mt={5}
+        >
+          <InvoiceTotals invoice={selected} />
+        </Flex>
       </div>
     </>
   );
