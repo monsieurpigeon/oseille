@@ -1,10 +1,16 @@
 import * as pdfMake from 'pdfmake/build/pdfmake';
 import { dateFormatter, priceFormatter } from '../../utils/formatter';
-import { Product, ProductWithPrice } from '../entity/product';
+import { ProductWithPrice } from '../entity/product';
 import { store } from './store';
 import { DEFAULT_FARM } from '../../utils/defaults';
 import { Delivery } from '../entity/delivery';
-import { getDeliveryPrice, getInvoicePrice } from '../../utils/aggregations';
+import {
+  getDeliveryPrice,
+  getDeliveryTaxes,
+  getInvoicePrice,
+  getInvoiceTaxes,
+  getIsTVA,
+} from '../../utils/aggregations';
 
 const fonts = {
   Roboto: {
@@ -19,23 +25,36 @@ export type DocumentKey = 'Delivery' | 'Invoice';
 
 const getLines = (payload: any, type: DocumentKey) => {
   if (type === 'Delivery') {
+    const isTVA = payload.isTVA;
     return {
       layout: 'lightHorizontalLines',
       style: 'tableExample',
       table: {
         headerRows: 1,
-        widths: ['*', '*', '*', '*', '*'],
+        widths: ['*', 'auto', 'auto', 'auto', 'auto', ...(isTVA ? ['auto', 'auto'] : [])],
         body: [
           [
             'Designation',
 
-            { text: 'Quantite', alignment: 'right' },
-            { text: '' },
-            { text: 'Prix unitaire', alignment: 'right' },
+            { text: 'Quantité', alignment: 'right' },
+            { text: 'Unité' },
+            { text: `P.U. ${isTVA ? 'HT' : ''}`, alignment: 'right' },
             {
-              text: 'Montant',
+              text: `Total ${isTVA ? 'HT' : ''}`,
               alignment: 'right',
             },
+            ...(isTVA
+              ? [
+                  {
+                    text: `Total TVA`,
+                    alignment: 'right',
+                  },
+                  {
+                    text: `Total TTC`,
+                    alignment: 'right',
+                  },
+                ]
+              : []),
           ],
           ...payload.lines
             .sort(
@@ -58,6 +77,18 @@ const getLines = (payload: any, type: DocumentKey) => {
                 },
                 { text: priceFormatter(el.product.price), alignment: 'right' },
                 { text: priceFormatter(el.product.price * el.quantity), alignment: 'right' },
+                ...(isTVA
+                  ? [
+                      {
+                        text: priceFormatter((el.product.price * el.quantity * +el.product.tva) / 100),
+                        alignment: 'right',
+                      },
+                      {
+                        text: priceFormatter(el.product.price * el.quantity * (1 + +el.product.tva / 100)),
+                        alignment: 'right',
+                      },
+                    ]
+                  : []),
               ];
             }),
         ],
@@ -66,6 +97,7 @@ const getLines = (payload: any, type: DocumentKey) => {
   }
 
   if (type === 'Invoice') {
+    const isTVA = getIsTVA(payload);
     const deliveries = payload.deliveries
       .map((id: string) => {
         return store.deliveries.find((d) => d.id === id);
@@ -76,22 +108,40 @@ const getLines = (payload: any, type: DocumentKey) => {
       style: 'tableExample',
       table: {
         headerRows: 1,
-        widths: ['*', '*', '*', '*', '*'],
+        widths: ['*', 'auto', 'auto', 'auto', 'auto', ...(isTVA ? ['auto', 'auto'] : [])],
         body: [
           [
-            'Designation',
-
-            { text: 'Quantite', alignment: 'right' },
-            { text: '' },
-            { text: 'Prix unitaire', alignment: 'right' },
+            'Désignation',
+            { text: 'Quantité', alignment: 'right' },
+            { text: 'Unité' },
+            { text: `P.U. ${isTVA ? 'HT' : ''}`, alignment: 'right' },
             {
-              text: 'Montant',
+              text: `Total ${isTVA ? 'HT' : ''}`,
               alignment: 'right',
             },
+            ...(isTVA
+              ? [
+                  {
+                    text: `Total TVA`,
+                    alignment: 'right',
+                  },
+                  {
+                    text: `Total TTC`,
+                    alignment: 'right',
+                  },
+                ]
+              : []),
           ],
           ...deliveries.flatMap((delivery: Delivery) => {
             return [
-              [delivery?.documentId, dateFormatter(delivery?.deliveredAt || ''), '', '', ''],
+              [
+                { text: `${delivery?.documentId} - ${dateFormatter(delivery?.deliveredAt || '')}` },
+                '',
+                '',
+                '',
+                '',
+                ...(isTVA ? ['', ''] : []),
+              ],
               ...delivery.lines
                 .sort((a, b) => a.product.name.localeCompare(b.product.name))
                 .map((el) => {
@@ -108,6 +158,18 @@ const getLines = (payload: any, type: DocumentKey) => {
                     },
                     { text: priceFormatter(el.product.price), alignment: 'right' },
                     { text: priceFormatter(el.product.price * el.quantity), alignment: 'right' },
+                    ...(isTVA
+                      ? [
+                          {
+                            text: priceFormatter((el.product.price * el.quantity * +el.product.tva) / 100),
+                            alignment: 'right',
+                          },
+                          {
+                            text: priceFormatter(el.product.price * el.quantity * (1 + +el.product.tva / 100)),
+                            alignment: 'right',
+                          },
+                        ]
+                      : []),
                   ];
                 }),
             ];
@@ -130,7 +192,21 @@ const getPrice = (payload: any, type: DocumentKey) => {
   return -1;
 };
 
+const getTaxes = (payload: any, type: DocumentKey) => {
+  if (type === 'Delivery') {
+    return getDeliveryTaxes(payload);
+  }
+
+  if (type === 'Invoice') {
+    return getInvoiceTaxes(payload);
+  }
+
+  return -1;
+};
+
 export const exportDocument = ({ payload, type }: any) => {
+  const isTVA = type === 'Delivery' ? payload.isTVA : getIsTVA(payload);
+
   const docDefinition: any = {
     defaultStyle: {
       font: 'Roboto',
@@ -176,10 +252,45 @@ export const exportDocument = ({ payload, type }: any) => {
         },
       },
       getLines(payload, type),
-
       {
-        text: `Total       ${priceFormatter(getPrice(payload, type))}`,
-        alignment: 'right',
+        layout: 'noBorders',
+        style: 'tableExample',
+        table: {
+          widths: ['*', 'auto'],
+          body: [
+            [
+              '',
+              {
+                layout: 'noBorders',
+                table: {
+                  alignment: 'right',
+                  widths: ['auto', 'auto', 'auto'],
+                  body: [
+                    [
+                      `Total${isTVA ? ' HT' : ''}`,
+                      ':',
+                      { text: priceFormatter(getPrice(payload, type)), alignment: 'right' },
+                    ],
+                    ...(isTVA
+                      ? [
+                          ['Total TVA', ':', { text: priceFormatter(getTaxes(payload, type)), alignment: 'right' }],
+                          [
+                            'Net à payer',
+                            ':',
+                            {
+                              text: priceFormatter(getPrice(payload, type) + getTaxes(payload, type)),
+                              alignment: 'right',
+                              bold: true,
+                            },
+                          ],
+                        ]
+                      : []),
+                  ],
+                },
+              },
+            ],
+          ],
+        },
       },
       { qr: payload.id, fit: '80' },
     ],
@@ -205,5 +316,6 @@ export const exportDocument = ({ payload, type }: any) => {
     },
   };
 
-  pdfMake.createPdf(docDefinition, undefined, fonts).download(payload.documentId);
+  //pdfMake.createPdf(docDefinition, undefined, fonts).download(payload.documentId);
+  pdfMake.createPdf(docDefinition, undefined, fonts).open();
 };
