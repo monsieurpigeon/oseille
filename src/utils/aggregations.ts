@@ -1,11 +1,12 @@
 import { Delivery, Invoice, store } from '../backend';
+import { computeTaxes } from './compute';
 
 export function getDeliveryPrice(delivery: Delivery): number {
   return delivery.lines.reduce((acc, el) => acc + el.product.price * el.quantity, 0);
 }
 
 export function getDeliveryTaxes(delivery: Delivery): number {
-  return delivery.lines.reduce((acc, el) => acc + (el.product.price * el.quantity * +el.product.tva) / 100, 0);
+  return delivery.lines.reduce((acc, el) => acc + computeTaxes(el.product.price, el.quantity, el.product.tva), 0);
 }
 
 export function getInvoicePrice(invoice: Invoice): number {
@@ -30,7 +31,7 @@ export function getInvoiceTaxes(invoice: Invoice): number {
     })
     .reduce((acc, el) => {
       if (!el) return acc;
-      return acc + (el.product.price * el.quantity * +el.product.tva) / 100;
+      return acc + computeTaxes(el.product.price, el.quantity, el.product.tva);
     }, 0);
 }
 

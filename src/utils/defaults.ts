@@ -19,6 +19,8 @@ export const PRODUCT_UNITS = [
   { value: 'piece', label: 'piece' },
 ];
 
+export const DEFAULT_TAX = '5.5';
+
 export const TVA_RATES = [
   { value: '0', label: '0%' },
   { value: '5.5', label: '5.5%' },

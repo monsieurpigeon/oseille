@@ -11,6 +11,7 @@ import {
   getInvoiceTaxes,
   getIsTVA,
 } from '../../utils/aggregations';
+import { computeTaxes } from '../../utils/compute';
 
 const fonts = {
   Roboto: {
@@ -80,11 +81,13 @@ const getLines = (payload: any, type: DocumentKey) => {
                 ...(isTVA
                   ? [
                       {
-                        text: priceFormatter((el.product.price * el.quantity * +el.product.tva) / 100),
+                        text: priceFormatter(computeTaxes(el.product.price, el.quantity, el.product.tva)),
                         alignment: 'right',
                       },
                       {
-                        text: priceFormatter(el.product.price * el.quantity * (1 + +el.product.tva / 100)),
+                        text: priceFormatter(
+                          el.product.price * el.quantity + computeTaxes(el.product.price, el.quantity, el.product.tva),
+                        ),
                         alignment: 'right',
                       },
                     ]
@@ -161,11 +164,14 @@ const getLines = (payload: any, type: DocumentKey) => {
                     ...(isTVA
                       ? [
                           {
-                            text: priceFormatter((el.product.price * el.quantity * +el.product.tva) / 100),
+                            text: priceFormatter(computeTaxes(el.product.price, el.quantity, el.product.tva)),
                             alignment: 'right',
                           },
                           {
-                            text: priceFormatter(el.product.price * el.quantity * (1 + +el.product.tva / 100)),
+                            text: priceFormatter(
+                              el.product.price * el.quantity +
+                                computeTaxes(el.product.price, el.quantity, el.product.tva),
+                            ),
                             alignment: 'right',
                           },
                         ]

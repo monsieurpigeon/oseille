@@ -2,6 +2,7 @@ import { Table, TableContainer, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/reac
 import { Delivery } from '../../backend';
 import { priceFormatter } from '../../utils/formatter';
 import { getDeliveryPrice, getDeliveryTaxes } from '../../utils/aggregations';
+import { computeTaxes } from '../../utils/compute';
 
 export function DeliveryDescription({ delivery }: { delivery: Delivery }) {
   return (
@@ -33,9 +34,12 @@ export function DeliveryDescription({ delivery }: { delivery: Delivery }) {
               <Td isNumeric>{priceFormatter(line.product.price * line.quantity)}</Td>
               {delivery.isTVA && (
                 <>
-                  <Td isNumeric>{priceFormatter(line.product.price * line.quantity * (+line.product.tva / 100))}</Td>
+                  <Td isNumeric>{priceFormatter(computeTaxes(line.product.price, line.quantity, line.product.tva))}</Td>
                   <Td isNumeric>
-                    {priceFormatter(line.product.price * line.quantity * (1 + +line.product.tva / 100))}
+                    {priceFormatter(
+                      line.product.price * line.quantity +
+                        computeTaxes(line.product.price, line.quantity, line.product.tva),
+                    )}
                   </Td>
                 </>
               )}
