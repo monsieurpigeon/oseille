@@ -316,6 +316,6 @@ export const exportDocument = ({ payload, type }: any) => {
     },
   };
 
-  //pdfMake.createPdf(docDefinition, undefined, fonts).download(payload.documentId);
-  pdfMake.createPdf(docDefinition, undefined, fonts).open();
+  pdfMake.createPdf(docDefinition, undefined, fonts).download(payload.documentId);
+  //pdfMake.createPdf(docDefinition, undefined, fonts).open();
 };
