@@ -1,5 +1,5 @@
 import { relDb } from '../service/database';
-import { DocumentKey } from '../service/pdf/pdf';
+import { DocumentType } from '../service/pdf/pdf';
 import { store } from '../service/store';
 
 export interface Farm {
@@ -48,12 +48,12 @@ export const updateFarm = (farm: Farm) => {
   return relDb.rel.save('farm', farm);
 };
 
-export async function updateDocumentId(type: DocumentKey) {
+export async function updateDocumentId(type: DocumentType) {
   const result = await relDb.rel.find('farm', FARM_KEY);
 
-  if (type === 'Invoice') {
-    updateFarm({ ...result.farms[0], invoiceId: result.farms[0].invoiceId + 1 });
-  } else if (type === 'Delivery') {
+  if (type === DocumentType.delivery) {
     updateFarm({ ...result.farms[0], deliveryId: result.farms[0].deliveryId + 1 });
+  } else if (type === DocumentType.invoice) {
+    updateFarm({ ...result.farms[0], invoiceId: result.farms[0].invoiceId + 1 });
   }
 }
