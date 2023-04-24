@@ -13,23 +13,27 @@ export interface Delivery {
   customerId: string;
   documentId: string;
   invoiceId?: string;
-  lines: Array<{
-    product: ProductWithPrice;
-    quantity: number;
-    totalPrice: number;
-  }>;
+  lines: Array<DeliveryLine>;
+}
+
+export interface DeliveryLine {
+  product: ProductWithPrice;
+  quantity: number;
+  totalPrice: number;
 }
 
 export interface DeliveryInput {
   isTVA: boolean;
   customerId: string;
   deliveredAt: string;
-  lines: Array<{
-    productId: string;
-    quantity: number;
-    price: number;
-    totalPrice?: number;
-  }>;
+  lines: Array<DeliveryLineInput>;
+}
+
+export interface DeliveryLineInput {
+  productId: string;
+  quantity: number;
+  price: number;
+  totalPrice?: number;
 }
 
 export async function loadDeliveries() {

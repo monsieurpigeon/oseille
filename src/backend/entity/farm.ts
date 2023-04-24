@@ -1,5 +1,5 @@
 import { relDb } from '../service/database';
-import { DocumentKey } from '../service/pdf';
+import { DocumentKey } from '../service/pdf/pdf';
 import { store } from '../service/store';
 
 export interface Farm {

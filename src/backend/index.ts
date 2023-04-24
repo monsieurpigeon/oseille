@@ -13,7 +13,7 @@ loadDatabase();
 
 export * from './service/database';
 export * from './service/store';
-export * from './service/pdf';
+export * from './service/pdf/pdf';
 export * from './entity/customer';
 export * from './entity/product';
 export * from './entity/price';
