@@ -1,4 +1,4 @@
-import { Box, Input, Text } from '@chakra-ui/react';
+import { Box, Input, Text, Textarea } from '@chakra-ui/react';
 import { DEFAULT_CUSTOMER } from '../../utils/defaults';
 
 export function CustomerFields({ control, register }: any) {
@@ -37,6 +37,13 @@ export function CustomerFields({ control, register }: any) {
         <Input
           placeholder={DEFAULT_CUSTOMER.city}
           {...register('city')}
+        />
+      </Box>
+      <Box p={1}>
+        <Text>Notes</Text>
+        <Textarea
+          placeholder="06 12 34 56 78, bonjour@maferme.fr"
+          {...register('notes')}
         />
       </Box>
     </>

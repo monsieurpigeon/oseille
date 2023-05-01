@@ -1,3 +1,4 @@
+import { EMPTY_CUSTOMER } from '../../utils/defaults';
 import { relDb } from '../service/database';
 import { store } from '../service/store';
 
@@ -9,6 +10,7 @@ export interface Customer {
   address2: string;
   zip: string;
   city: string;
+  notes: string;
 }
 
 export interface CustomerInput {
@@ -17,13 +19,16 @@ export interface CustomerInput {
   address2: string;
   zip: string;
   city: string;
+  notes: string;
 }
 
 export async function loadCustomers() {
   const result = await relDb.rel.find('customer');
-  store.customers = result.customers.sort((a: Customer, b: Customer) => {
-    return a.name.localeCompare(b.name);
-  });
+  store.customers = result.customers
+    .map((c: Customer) => ({ ...EMPTY_CUSTOMER, ...c }))
+    .sort((a: Customer, b: Customer) => {
+      return a.name.localeCompare(b.name);
+    });
 }
 
 export async function loadCustomer(id: string) {

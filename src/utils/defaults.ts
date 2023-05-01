@@ -6,12 +6,22 @@ export const DEFAULT_FARM = {
   city: 'Bordeaux',
 };
 
+export const EMPTY_CUSTOMER = {
+  name: '',
+  address1: '',
+  address2: '',
+  zip: '',
+  city: '',
+  notes: '',
+};
+
 export const DEFAULT_CUSTOMER = {
   name: 'Biocoop',
   address1: '42 rue du chèque en bois',
   address2: '',
   zip: '33000',
   city: 'Bordeaux',
+  notes: '',
 };
 
 export const PRODUCT_UNITS = [

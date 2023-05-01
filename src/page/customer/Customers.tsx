@@ -9,6 +9,7 @@ import { CreateModal } from '../../component/modal/CreateModal';
 import { MyH1 } from '../../component/typography/MyFont';
 import { CustomerDetail } from './CustomerDetail';
 import { CustomerFields } from './CustomerFields';
+import { EMPTY_CUSTOMER } from '../../utils/defaults';
 
 export const customerSchema = z.object({
   name: z.string().min(1),
@@ -16,6 +17,7 @@ export const customerSchema = z.object({
   address2: z.string(),
   zip: z.string().min(1),
   city: z.string().min(1),
+  notes: z.string(),
 });
 
 export function Customers() {
@@ -26,13 +28,7 @@ export function Customers() {
 
   const { control, register, handleSubmit, reset } = useForm<CustomerInput>({
     resolver: zodResolver(customerSchema),
-    defaultValues: {
-      name: '',
-      address1: '',
-      address2: '',
-      zip: '',
-      city: '',
-    },
+    defaultValues: EMPTY_CUSTOMER,
   });
 
   useEffect(() => {
