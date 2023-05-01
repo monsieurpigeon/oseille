@@ -6,14 +6,17 @@ import './backend';
 import './index.css';
 import { ChakraProvider } from '@chakra-ui/react';
 import { inject } from '@vercel/analytics';
+import { ConfirmContextProvider } from './component/modal/confirm-dialog/ConfirmContext';
 
 inject();
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <ChakraProvider>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
+      <ConfirmContextProvider>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </ConfirmContextProvider>
     </ChakraProvider>
   </React.StrictMode>,
 );

@@ -6,9 +6,9 @@ import { useSnapshot } from 'valtio';
 import { z } from 'zod';
 import { FarmInput, db, destroyDatabase, exportData, store, updateFarm } from '../../backend';
 import FileUploadSingle from '../../component/form/FileUploadSingle';
-import { ConfirmationModal } from '../../component/modal/ConfirmationModal';
 import { MyH1, MyH2 } from '../../component/typography/MyFont';
 import { DEFAULT_FARM, DEFAULT_FOOTER } from '../../utils/defaults';
+import { useConfirm } from '../../component/modal/confirm-dialog/ConfirmContext';
 
 const EMPTY_FARM: FarmInput = {
   title: '',
@@ -32,6 +32,7 @@ export const farmSchema = z.object({
 
 export function Settings() {
   const { farm } = useSnapshot(store);
+  const { confirm } = useConfirm();
 
   const { register, handleSubmit, reset } = useForm<FarmInput>({
     resolver: zodResolver(farmSchema),
@@ -43,6 +44,32 @@ export function Settings() {
   }, [farm]);
 
   const onSubmit = (e: FarmInput) => farm && updateFarm({ ...farm, ...e }).catch(console.error);
+
+  const exportDb = async () => {
+    if (
+      await confirm({
+        title: 'Tout récupérer',
+        message:
+          'Vous allez récupérer une copie de toute votre base de donnée dans un fichier, à faire régulièrement et stocker sur un support différent',
+      })
+    ) {
+      db.allDocs({ include_docs: true })
+        .then((data) => data.rows.map(({ doc }) => doc))
+        .then((data) => exportData(data))
+        .catch(console.error);
+    }
+  };
+
+  const destroyDb = async () => {
+    if (
+      await confirm({
+        title: 'Tout effacer',
+        message: `Vous allez supprimer toute la base de donnée, assurez vous d'avoir bien fait un export de vos données`,
+      })
+    ) {
+      destroyDatabase().catch(console.error);
+    }
+  };
 
   return (
     <div className="catalog">
@@ -126,26 +153,18 @@ export function Settings() {
           <MyH1>Import / Export</MyH1>
         </div>
         <div className="catalog-list">
-          <ConfirmationModal
-            label="Export"
-            title="Tout récupérer"
-            message="Vous allez récupérer une copie de toute votre base de donnée dans un fichier, à faire régulièrement et stocker sur un support différent"
-            onConfirm={() => {
-              db.allDocs({ include_docs: true })
-                .then((data) => data.rows.map(({ doc }) => doc))
-                .then((data) => exportData(data))
-                .catch(console.error);
-            }}
-          />
-          <ConfirmationModal
-            label="Armageddon"
-            color="red"
-            title="Tout effacer"
-            message="Vous allez supprimer toute la base de donnée, assurez vous d'avoir bien fait un export de vos données"
-            onConfirm={() => {
-              destroyDatabase().catch(console.error);
-            }}
-          />
+          <Button
+            colorScheme="twitter"
+            onClick={exportDb}
+          >
+            Export
+          </Button>
+          <Button
+            colorScheme="red"
+            onClick={destroyDb}
+          >
+            Armageddon
+          </Button>
           <FileUploadSingle />
         </div>
       </div>
