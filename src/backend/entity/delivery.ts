@@ -19,6 +19,7 @@ export interface Delivery {
 export interface DeliveryLine {
   product: ProductWithPrice;
   quantity: number;
+  price: number;
   totalPrice: number;
 }
 
@@ -75,6 +76,32 @@ export const addInvoiceId = (invoiceId: string, deliveryId: string) => {
     .then((result) => {
       const delivery = result.deliveries[0];
       relDb.rel.save('delivery', { ...delivery, invoiceId }).catch(console.error);
+    })
+    .catch(console.error);
+};
+
+export const updateDelivery = async (delivery: Delivery, input: DeliveryInput) => {
+  const customer = await loadCustomer(input.customerId);
+  await loadFarm();
+  const promise = async () => {
+    const lines = await Promise.all(
+      input.lines.map(async (el) => {
+        const product = await loadProduct(el.productId);
+        return { ...el, product: { ...product, price: +el.price || 0 } };
+      }),
+    );
+    return {
+      ...input,
+      isTVA: store.farm?.isTVA === 'oui',
+      customer,
+      lines: lines.filter((p) => !!p).map((l) => ({ ...l, quantity: +l.quantity })),
+    };
+  };
+
+  promise()
+    .then((deliveryFull) => {
+      console.log({ deliveryFull, delivery });
+      relDb.rel.save('delivery', { ...delivery, ...deliveryFull }).catch(console.error);
     })
     .catch(console.error);
 };

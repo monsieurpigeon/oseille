@@ -60,8 +60,8 @@ export function DeliveryFields({ watch, control, register, fields, append, remov
           {fields.length > 0 && (
             <>
               <GridItem>Produit</GridItem>
-              <GridItem>Prix{isTVA && ' HT'}</GridItem>
               <GridItem>Quantité</GridItem>
+              <GridItem>Prix{isTVA && ' HT'}</GridItem>
               <GridItem></GridItem>
             </>
           )}
@@ -91,19 +91,19 @@ export function DeliveryFields({ watch, control, register, fields, append, remov
                   ))}
                 </Select>
               </GridItem>
+              <GridItem key={`${index}-c`}>
+                <MyNumberInput
+                  control={control}
+                  name={`lines.${index}.quantity`}
+                  min={0}
+                />
+              </GridItem>
               <GridItem key={`${index}-b`}>
                 <MyNumberInput
                   control={control}
                   name={`lines.${index}.price`}
                   min={0}
                   step={0.01}
-                />
-              </GridItem>
-              <GridItem key={`${index}-c`}>
-                <MyNumberInput
-                  control={control}
-                  name={`lines.${index}.quantity`}
-                  min={0}
                 />
               </GridItem>
               <GridItem key={`${index}-d`}>

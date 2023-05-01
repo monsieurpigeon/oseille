@@ -29,6 +29,13 @@ export function Deliveries() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef<any>();
 
+  useEffect(() => {
+    const updated = store.deliveries.find((p) => p.id === selected?.id);
+    if (updated) {
+      setSelected(updated);
+    }
+  }, [snap]);
+
   const { control, register, handleSubmit, reset, watch, setValue, getValues } = useForm<DeliveryInput>({
     resolver: zodResolver(deliverySchema),
     defaultValues: { customerId: '', deliveredAt: new Date().toISOString().split('T')[0] },
