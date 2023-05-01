@@ -92,7 +92,6 @@ export const updateDelivery = async (delivery: Delivery, input: DeliveryInput) =
     );
     return {
       ...input,
-      isTVA: store.farm?.isTVA === 'oui',
       customer,
       lines: lines.filter((p) => !!p).map((l) => ({ ...l, quantity: +l.quantity })),
     };
