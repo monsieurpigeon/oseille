@@ -1,5 +1,6 @@
 import { Box, Input, Select, Text } from '@chakra-ui/react';
 import { useFarmParameters } from '../../utils/hooks/useFarmParameters';
+import { PRODUCT_UNITS } from '../../utils/defaults';
 
 export const ProductFields = ({ control, register }: any) => {
   const { isTVA } = useFarmParameters();
@@ -16,8 +17,14 @@ export const ProductFields = ({ control, register }: any) => {
       <Box p={1}>
         <Text>Unité</Text>
         <Select {...register('unit')}>
-          <option value={'kg'}>kg</option>
-          <option value={'piece'}>piece</option>
+          {PRODUCT_UNITS.map(({ value, label }) => (
+            <option
+              key={value}
+              value={value}
+            >
+              {label}
+            </option>
+          ))}
         </Select>
       </Box>
       {isTVA && (

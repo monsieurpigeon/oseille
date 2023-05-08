@@ -27,6 +27,7 @@ export const DEFAULT_CUSTOMER = {
 export const PRODUCT_UNITS = [
   { value: 'kg', label: 'kg' },
   { value: 'piece', label: 'piece' },
+  { value: 'botte', label: 'botte' },
 ];
 
 export const DEFAULT_TAX = '5.5';
