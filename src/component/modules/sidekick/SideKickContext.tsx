@@ -1,6 +1,6 @@
 import { PropsWithChildren, createContext, useContext, useState } from 'react';
 
-const defaultValue = {
+const defaultValue: { sentence: string; say: (sentence: string) => void; shutUp: () => void } = {
   sentence: '',
   say: (sentence: string) => undefined,
   shutUp: () => undefined,
