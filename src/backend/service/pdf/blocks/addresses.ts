@@ -1,8 +1,9 @@
 import { DEFAULT_FARM } from '../../../../utils/defaults';
 import { Customer } from '../../../entity/customer';
 import { store } from '../../store';
+import { DocumentType } from '../pdf';
 
-export const addresses = (payload: { customer: Customer }) => ({
+export const addresses = (payload: { customer: Customer }, type: DocumentType) => ({
   layout: 'noBorders',
   style: 'tableExample',
   table: {
@@ -26,6 +27,7 @@ export const addresses = (payload: { customer: Customer }) => ({
               { text: payload.customer.address1, alignment: 'right' },
               { text: payload.customer.address2, alignment: 'right' },
               { text: `${payload.customer.zip} ${payload.customer.city}`, alignment: 'right' },
+              ...(type === DocumentType.delivery ? [{ text: payload.customer.phone, alignment: 'right' }] : []),
             ],
           ],
         },

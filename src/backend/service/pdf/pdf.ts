@@ -34,7 +34,7 @@ export const exportDocument = ({ payload, type }: any) => {
     },
     content: [
       { text: `${payload.documentId}`, style: 'header' },
-      addresses(payload),
+      addresses(payload, type),
       lines(payload, type),
       totals(payload, type),
       { qr: payload.id, fit: '80' },

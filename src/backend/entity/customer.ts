@@ -11,6 +11,7 @@ export interface Customer {
   zip: string;
   city: string;
   notes: string;
+  phone: string;
 }
 
 export interface CustomerInput {
@@ -20,6 +21,7 @@ export interface CustomerInput {
   zip: string;
   city: string;
   notes: string;
+  phone: string;
 }
 
 export async function loadCustomers() {

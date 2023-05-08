@@ -40,9 +40,16 @@ export function CustomerFields({ control, register }: any) {
         />
       </Box>
       <Box p={1}>
+        <Text>Téléphone (visible sur Bon de livraison)</Text>
+        <Input
+          placeholder="06 45 66 56 55"
+          {...register('phone')}
+        />
+      </Box>
+      <Box p={1}>
         <Text>Notes</Text>
         <Textarea
-          placeholder="06 12 34 56 78, bonjour@maferme.fr"
+          placeholder="bonjour@maferme.fr"
           {...register('notes')}
         />
       </Box>

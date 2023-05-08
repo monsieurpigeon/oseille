@@ -13,6 +13,7 @@ export const EMPTY_CUSTOMER = {
   zip: '',
   city: '',
   notes: '',
+  phone: '',
 };
 
 export const DEFAULT_CUSTOMER = {
@@ -22,6 +23,7 @@ export const DEFAULT_CUSTOMER = {
   zip: '33000',
   city: 'Bordeaux',
   notes: '',
+  phone: '',
 };
 
 export const PRODUCT_UNITS = [

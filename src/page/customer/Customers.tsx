@@ -18,6 +18,7 @@ export const customerSchema = z.object({
   zip: z.string().min(1),
   city: z.string().min(1),
   notes: z.string(),
+  phone: z.string(),
 });
 
 export function Customers() {
