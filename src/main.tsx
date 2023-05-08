@@ -7,15 +7,18 @@ import './index.css';
 import { ChakraProvider } from '@chakra-ui/react';
 import { inject } from '@vercel/analytics';
 import { ConfirmContextProvider } from './component/modal/confirm-dialog/ConfirmContext';
+import { SideKickContextProvider } from './component/modules/sidekick/SideKickContext';
 
 inject();
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <ChakraProvider>
       <ConfirmContextProvider>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
+        <SideKickContextProvider>
+          <BrowserRouter>
+            <App />
+          </BrowserRouter>
+        </SideKickContextProvider>
       </ConfirmContextProvider>
     </ChakraProvider>
   </React.StrictMode>,

@@ -13,7 +13,7 @@ export interface Price {
 
 export interface PriceInput {
   value: number;
-  customer: Customer;
+  customer: Customer | 'DEFAULT';
   product: Product;
 }
 
@@ -32,4 +32,8 @@ export const updatePrice = (price: Price) => {
 
 export const getPrice = ({ customer, product }: { customer: string; product: string }) => {
   return store.prices.find((price) => price.customer === customer && price.product === product);
+};
+
+export const deletePrice = (price: Price) => {
+  return relDb.rel.del('price', price);
 };

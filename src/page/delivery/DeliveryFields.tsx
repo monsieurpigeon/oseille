@@ -13,15 +13,25 @@ export function DeliveryFields({ watch, control, register, fields, append, remov
   const watchCustomer = watch('customerId');
   const { isTVA } = useFarmParameters();
 
-  const products = useMemo(() => {
-    const prices = store.prices.filter((price) => price.customer === watchCustomer);
-    return store.products
+  const { products, prices } = useMemo(() => {
+    const productPrices = store.prices.filter((price) => price.customer === watchCustomer);
+    const productsList = productPrices.map((price) => price.product);
+    const defaultPrices = store.prices.filter(
+      (price) => price.customer === 'DEFAULT' && !productsList.includes(price.product),
+    );
+
+    const prices = [...productPrices, ...defaultPrices];
+
+    const products = store.products
       .filter((product) => prices.map((price) => price.product).includes(product.id))
       .map((product) => ({
         ...product,
         price: prices.find((price) => price.product === product.id)?.value || 0,
       }));
+
+    return { products, prices };
   }, [watchCustomer]);
+
   return (
     <>
       <Box p={1}>
@@ -72,10 +82,7 @@ export function DeliveryFields({ watch, control, register, fields, append, remov
                 <Select
                   {...register(`lines.${index}.productId`, {
                     onChange: (e: any) => {
-                      setValue(
-                        `lines.${index}.price`,
-                        getPrice({ customer: watchCustomer, product: e.target.value })?.value,
-                      );
+                      setValue(`lines.${index}.price`, prices.find((price) => price.product === e.target.value)?.value);
                     },
                   })}
                 >
