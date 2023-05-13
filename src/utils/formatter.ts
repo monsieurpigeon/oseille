@@ -1,4 +1,5 @@
 import { DocumentType } from '../backend';
+import { DEFAULT_TAX } from './defaults';
 
 export function priceFormatter(value: number) {
   return `${value.toFixed(2)} €`;
@@ -20,4 +21,11 @@ export function dateFormatter(value: string) {
     return 'Date erronée';
   }
   return new Date(value).toLocaleDateString();
+}
+
+export function TVAFormatter(value: string) {
+  if (!value) {
+    return 'Erreur TVA';
+  }
+  return `${value || DEFAULT_TAX}%`;
 }

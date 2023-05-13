@@ -10,6 +10,7 @@ import { MyH1 } from '../../component/typography/MyFont';
 import { ProductDetail } from './ProductDetail';
 import { ProductFields } from './ProductFields';
 import { useFarmParameters } from '../../utils/hooks/useFarmParameters';
+import { TVAFormatter } from '../../utils/formatter';
 
 export const productSchema = z.object({
   name: z.string().min(1),
@@ -102,7 +103,7 @@ export function Products() {
               <Flex width="100%">
                 <div>{`${entity.name} /${entity.unit}`}</div>
                 <Spacer />
-                <Text whiteSpace="nowrap">{isTVA && <div>TVA : {entity.tva || '5.5'}%</div>}</Text>
+                <Text whiteSpace="nowrap">{isTVA && <div>TVA: {TVAFormatter(entity.tva)}</div>}</Text>
               </Flex>
             </div>
           ))}
