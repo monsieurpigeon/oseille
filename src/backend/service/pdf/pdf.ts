@@ -3,6 +3,7 @@ import { store } from '../store';
 import { addresses } from './blocks/addresses';
 import { lines } from './blocks/lines';
 import { totals } from './blocks/totals';
+import { FrBio01 } from '../../../utils/labels';
 
 const fonts = {
   Roboto: {
@@ -20,6 +21,15 @@ export const DocumentType = {
 
 export type DocumentType = typeof DocumentType[keyof typeof DocumentType];
 
+const getBioLogo = (label: string | undefined) => {
+  switch (label) {
+    case 'fr-bio-01':
+      return FrBio01;
+    default:
+      return '';
+  }
+};
+
 export const exportDocument = ({ payload, type }: any) => {
   const docDefinition: any = {
     defaultStyle: {
@@ -28,19 +38,29 @@ export const exportDocument = ({ payload, type }: any) => {
     info: {
       title: payload.documentId,
     },
-    footer: {
-      text: `${store.farm?.footer}\nGénéré gratuitement grâce à Oseille - www.oseille.app`,
-      alignment: 'center',
-    },
+    footer: [
+      {
+        text: store.farm?.footer,
+        alignment: 'center',
+      },
+      {
+        text: 'Généré gratuitement grâce à Oseille - www.oseille.app',
+        alignment: 'center',
+        color: 'grey',
+        characterSpacing: 1,
+        fontSize: 10,
+      },
+    ],
     content: [
+      addresses(payload, type, !!store.farm?._attachements?.logo, store.farm?.bioLabel !== 'non'),
       { text: `${payload.documentId}`, style: 'header' },
-      addresses(payload, type, !!store.farm?._attachements?.logo),
       lines(payload, type),
       totals(payload, type),
       { columns: [{ qr: payload.id, fit: '80' }, { text: `Notes: ${payload.notes ?? ''}` }] },
     ],
     images: {
       logo: store.farm?._attachements?.logo?.data || '',
+      bio: getBioLogo(store.farm?.bioLabel),
     },
     styles: {
       header: {

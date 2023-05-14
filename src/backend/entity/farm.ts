@@ -14,6 +14,7 @@ export interface Farm {
   invoiceId: number;
   deliveryId: number;
   isTVA?: string;
+  bioLabel: string;
   _attachements: {
     logo: {
       data: string;
@@ -29,6 +30,7 @@ export interface FarmInput {
   city?: string;
   footer?: string;
   isTVA?: string;
+  bioLabel?: string;
 }
 
 export interface LogoInput {

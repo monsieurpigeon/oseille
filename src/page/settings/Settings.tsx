@@ -19,6 +19,7 @@ const EMPTY_FARM: FarmInput = {
   city: '',
   footer: '',
   isTVA: 'non',
+  bioLabel: 'non',
 };
 
 export const farmSchema = z.object({
@@ -29,6 +30,7 @@ export const farmSchema = z.object({
   city: z.string().min(1),
   footer: z.string(),
   isTVA: z.string(),
+  bioLabel: z.string(),
 });
 
 export function Settings() {
@@ -132,6 +134,23 @@ export function Settings() {
                 <Select {...register('isTVA')}>
                   <option value="non">NON</option>
                   <option value="oui">OUI</option>
+                </Select>
+              </Flex>
+
+              <Flex
+                direction="column"
+                mt={3}
+                mb={3}
+              >
+                <FormLabel
+                  flexGrow={1}
+                  htmlFor="isTVA"
+                >
+                  Agriculture biologique ?
+                </FormLabel>
+                <Select {...register('bioLabel')}>
+                  <option value="non">NON</option>
+                  <option value="fr-bio-01">FR-BIO-01</option>
                 </Select>
               </Flex>
 

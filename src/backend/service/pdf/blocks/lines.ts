@@ -91,7 +91,7 @@ export const lines = (payload: any, type: DocumentType) => {
           ...deliveries.flatMap((delivery: Delivery) => {
             return [
               [
-                { text: `${delivery?.documentId} - ${dateFormatter(delivery?.deliveredAt || '')}` },
+                { text: `${delivery?.documentId} - ${dateFormatter(delivery?.deliveredAt || '')}`, bold: true },
                 '',
                 '',
                 '',
