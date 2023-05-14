@@ -9,7 +9,7 @@ export const addresses = (payload: { customer: Customer }, type: DocumentType, h
       ? [
           {
             image: 'logo',
-            fit: [150, 150],
+            fit: [120, 120],
           },
         ]
       : []),
@@ -19,6 +19,9 @@ export const addresses = (payload: { customer: Customer }, type: DocumentType, h
       { text: store.farm?.address1 || DEFAULT_FARM.address1 },
       { text: store.farm?.address2 || DEFAULT_FARM.address2 },
       { text: `${store.farm?.zip || DEFAULT_FARM.zip} ${store.farm?.city || DEFAULT_FARM.city}` },
+      { text: `${store.farm?.phone || ''}` },
+      { text: `${store.farm?.email || ''}` },
+      ...(store.farm?.tva ? [{ text: `N° TVA: ${store.farm?.tva || ''}` }] : []),
     ],
     [
       ...(hasBio

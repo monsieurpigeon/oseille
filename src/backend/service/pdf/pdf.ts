@@ -4,6 +4,9 @@ import { addresses } from './blocks/addresses';
 import { lines } from './blocks/lines';
 import { totals } from './blocks/totals';
 import { FrBio01 } from '../../../utils/labels';
+import { dateFormatter } from '../../../utils/formatter';
+import { getIsTVA } from '../../../utils/aggregations';
+import { taxes } from './blocks/taxes';
 
 const fonts = {
   Roboto: {
@@ -31,6 +34,8 @@ const getBioLogo = (label: string | undefined) => {
 };
 
 export const exportDocument = ({ payload, type }: any) => {
+  const isTVA = type === DocumentType.delivery ? payload.isTVA : getIsTVA(payload);
+
   const docDefinition: any = {
     defaultStyle: {
       font: 'Roboto',
@@ -54,9 +59,14 @@ export const exportDocument = ({ payload, type }: any) => {
     content: [
       addresses(payload, type, !!store.farm?._attachements?.logo, store.farm?.bioLabel !== 'non'),
       { text: `${payload.documentId}`, style: 'header' },
+      {
+        text: `Date: ${dateFormatter(type === DocumentType.invoice ? payload.createdAt : payload.deliveredAt)}`,
+        style: 'header',
+      },
       lines(payload, type),
-      totals(payload, type),
-      { columns: [{ qr: payload.id, fit: '80' }, { text: `Notes: ${payload.notes ?? ''}` }] },
+      ...(isTVA && type === DocumentType.invoice ? [taxes(payload)] : []),
+      totals(payload, type, store.farm),
+      { columns: [{ qr: payload.id, fit: '50' }, { text: `Notes: ${payload.notes ?? ''}` }] },
     ],
     images: {
       logo: store.farm?._attachements?.logo?.data || '',

@@ -5,6 +5,7 @@ import { ProductWithPrice } from '../../../entity/product';
 import { DocumentType } from '../pdf';
 import { store } from '../../store';
 import { Delivery, DeliveryLine } from '../../../entity/delivery';
+import { TVA_RATES } from '../../../../utils/defaults';
 
 export const lines = (payload: any, type: DocumentType) => {
   if (type === DocumentType.delivery) {
@@ -14,7 +15,7 @@ export const lines = (payload: any, type: DocumentType) => {
       style: 'tableExample',
       table: {
         headerRows: 1,
-        widths: ['*', 'auto', 'auto', 'auto', 'auto', ...(isTVA ? ['auto', 'auto'] : [])],
+        widths: ['*', 'auto', 'auto', 'auto', 'auto', ...(isTVA ? ['auto'] : [])],
         body: [
           [
             'Designation',
@@ -29,11 +30,7 @@ export const lines = (payload: any, type: DocumentType) => {
             ...(isTVA
               ? [
                   {
-                    text: `Total TVA`,
-                    alignment: 'right',
-                  },
-                  {
-                    text: `Total TTC`,
+                    text: `Code TVA`,
                     alignment: 'right',
                   },
                 ]
@@ -64,7 +61,7 @@ export const lines = (payload: any, type: DocumentType) => {
       style: 'tableExample',
       table: {
         headerRows: 1,
-        widths: ['*', 'auto', 'auto', 'auto', 'auto', ...(isTVA ? ['auto', 'auto'] : [])],
+        widths: ['*', 'auto', 'auto', 'auto', 'auto', ...(isTVA ? ['auto'] : [])],
         body: [
           [
             'Désignation',
@@ -78,11 +75,7 @@ export const lines = (payload: any, type: DocumentType) => {
             ...(isTVA
               ? [
                   {
-                    text: `Total TVA`,
-                    alignment: 'right',
-                  },
-                  {
-                    text: `Total TTC`,
+                    text: `Code TVA`,
                     alignment: 'right',
                   },
                 ]
@@ -96,7 +89,7 @@ export const lines = (payload: any, type: DocumentType) => {
                 '',
                 '',
                 '',
-                ...(isTVA ? ['', ''] : []),
+                ...(isTVA ? [''] : []),
               ],
               ...delivery.lines
                 .sort((a, b) => a.product.name.localeCompare(b.product.name))
@@ -126,13 +119,7 @@ const productLine = (el: DeliveryLine, isTVA: boolean) => {
     ...(isTVA
       ? [
           {
-            text: priceFormatter(computeTaxes(el.product.price, el.quantity, el.product.tva)),
-            alignment: 'right',
-          },
-          {
-            text: priceFormatter(
-              el.product.price * el.quantity + computeTaxes(el.product.price, el.quantity, el.product.tva),
-            ),
+            text: TVA_RATES.find((rate) => rate.value === el.product.tva)?.code || '1',
             alignment: 'right',
           },
         ]

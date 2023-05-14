@@ -10,11 +10,19 @@ export interface Farm {
   address2: string;
   zip: string;
   city: string;
+  phone: string;
+  email: string;
   footer: string;
   invoiceId: number;
   deliveryId: number;
   isTVA?: string;
   bioLabel: string;
+  rib: string;
+  iban: string;
+  bic: string;
+  siret: string;
+  naf: string;
+  tva: string;
   _attachements: {
     logo: {
       data: string;
@@ -28,9 +36,17 @@ export interface FarmInput {
   address2?: string;
   zip?: string;
   city?: string;
+  phone?: string;
+  email?: string;
   footer?: string;
   isTVA?: string;
   bioLabel?: string;
+  rib?: string;
+  iban?: string;
+  bic?: string;
+  siret?: string;
+  naf?: string;
+  tva?: string;
 }
 
 export interface LogoInput {
