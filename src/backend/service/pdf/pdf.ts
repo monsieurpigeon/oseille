@@ -57,7 +57,12 @@ export const exportDocument = ({ payload, type }: any) => {
       },
     ],
     content: [
-      addresses(payload, type, !!store.farm?._attachements?.logo, store.farm?.bioLabel !== 'non'),
+      addresses(
+        payload,
+        type,
+        !!store.farm?._attachements?.logo,
+        !!store.farm?.bioLabel && store.farm?.bioLabel !== 'non',
+      ),
       { text: `${payload.documentId}`, style: 'header' },
       {
         text: `Date: ${dateFormatter(type === DocumentType.invoice ? payload.createdAt : payload.deliveredAt)}`,
