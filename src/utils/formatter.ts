@@ -1,3 +1,4 @@
+import { addDays } from 'date-fns';
 import { DocumentType } from '../backend';
 import { DEFAULT_TAX } from './defaults';
 
@@ -21,6 +22,15 @@ export function dateFormatter(value: string) {
     return 'Date erronée';
   }
   return new Date(value).toLocaleDateString();
+}
+
+export function dateFormatterDelay(value: string, days: number) {
+  if (!value) {
+    return 'Date erronée';
+  }
+  const date = new Date(value);
+  const delayedDate = addDays(date, days);
+  return dateFormatter(delayedDate.toISOString());
 }
 
 export function TVAFormatter(value: string) {

@@ -5,7 +5,9 @@ import {
   getInvoiceTaxes,
   getIsTVA,
 } from '../../../../utils/aggregations';
-import { priceFormatter } from '../../../../utils/formatter';
+import { DEFAULT_INVOICE_DELAY } from '../../../../utils/defaults';
+import { dateFormatterDelay, priceFormatter } from '../../../../utils/formatter';
+import { Farm } from '../../../entity/farm';
 import { DocumentType } from '../pdf';
 
 const getPrice = (payload: any, type: DocumentType) => {
@@ -32,7 +34,7 @@ const getTaxes = (payload: any, type: DocumentType) => {
   return -1;
 };
 
-export const totals = (payload: any, type: DocumentType) => {
+export const totals = (payload: any, type: DocumentType, farm: Farm | null) => {
   const isTVA = type === DocumentType.delivery ? payload.isTVA : getIsTVA(payload);
   const totalHT = getPrice(payload, type);
   const totalTaxes = getTaxes(payload, type);
@@ -40,15 +42,54 @@ export const totals = (payload: any, type: DocumentType) => {
     layout: 'noBorders',
     style: 'tableExample',
     table: {
-      widths: ['*', 'auto'],
+      widths: ['*', 10, 130],
       body: [
         [
-          '',
+          type === DocumentType.invoice
+            ? [
+                {
+                  columns: [
+                    { text: 'Échéance', bold: true, width: 150 },
+                    { text: dateFormatterDelay(payload.createdAt, DEFAULT_INVOICE_DELAY) },
+                  ],
+                  margin: [0, 4],
+                },
+                {
+                  text: 'Escompte pour paiement anticipé : néant',
+                  margin: [0, 4],
+                },
+                {
+                  text: 'En cas de retard de paiement, montant forfaitaire de 40€ pour frais de recouvrement',
+                },
+                ...(farm?.rib
+                  ? [
+                      {
+                        text: `RIB : ${farm.rib}`,
+                        bold: true,
+                        margin: [0, 4],
+                      },
+                    ]
+                  : []),
+                ...(farm?.iban
+                  ? [
+                      {
+                        text: `IBAN ${farm.iban} BIC ${farm.bic ?? ''}`,
+                        bold: true,
+                        margin: [0, 4],
+                      },
+                    ]
+                  : []),
+                ...(farm?.siret
+                  ? [{ text: `Siret : ${farm.siret} - code naf : ${farm.naf ?? ''}`, margin: [0, 4] }]
+                  : []),
+              ]
+            : [],
+          {},
           {
             layout: 'noBorders',
             table: {
               alignment: 'right',
-              widths: ['auto', 'auto', 'auto'],
+              widths: ['auto', 'auto', '*'],
               body: [
                 [`Total${isTVA ? ' HT' : ''}`, ':', { text: priceFormatter(totalHT), alignment: 'right' }],
                 ...(isTVA

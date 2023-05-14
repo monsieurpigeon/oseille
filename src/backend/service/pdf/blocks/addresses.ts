@@ -3,25 +3,37 @@ import { Customer } from '../../../entity/customer';
 import { store } from '../../store';
 import { DocumentType } from '../pdf';
 
-export const addresses = (payload: { customer: Customer }, type: DocumentType, hasLogo: boolean) => ({
+export const addresses = (payload: { customer: Customer }, type: DocumentType, hasLogo: boolean, hasBio: boolean) => ({
   columns: [
     ...(hasLogo
       ? [
           {
             image: 'logo',
-            fit: [100, 100],
+            fit: [120, 120],
           },
         ]
       : []),
 
     [
-      { text: store.farm?.title || DEFAULT_FARM.title },
+      { text: store.farm?.title || DEFAULT_FARM.title, bold: true },
       { text: store.farm?.address1 || DEFAULT_FARM.address1 },
       { text: store.farm?.address2 || DEFAULT_FARM.address2 },
       { text: `${store.farm?.zip || DEFAULT_FARM.zip} ${store.farm?.city || DEFAULT_FARM.city}` },
+      { text: `${store.farm?.phone || ''}` },
+      { text: `${store.farm?.email || ''}` },
+      ...(store.farm?.tva ? [{ text: `N° TVA: ${store.farm?.tva || ''}` }] : []),
     ],
     [
-      { text: payload.customer.name, alignment: 'right' },
+      ...(hasBio
+        ? [
+            {
+              image: 'bio',
+              width: 150,
+              alignment: 'right',
+            },
+          ]
+        : []),
+      { text: payload.customer.name, alignment: 'right', bold: true },
       { text: payload.customer.address1, alignment: 'right' },
       { text: payload.customer.address2, alignment: 'right' },
       { text: `${payload.customer.zip} ${payload.customer.city}`, alignment: 'right' },

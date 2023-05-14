@@ -1,24 +1,31 @@
-import { Button, Flex, FormControl, FormLabel, HStack, Input, Select, Text } from '@chakra-ui/react';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect } from 'react';
-import { useForm } from 'react-hook-form';
+import { Button } from '@chakra-ui/react';
 import { useSnapshot } from 'valtio';
 import { z } from 'zod';
-import { FarmInput, db, destroyDatabase, exportData, store, updateFarm } from '../../backend';
+import { FarmInput, db, destroyDatabase, exportData, store } from '../../backend';
 import FileUploadSingle from '../../component/form/FileUploadSingle';
 import { useConfirm } from '../../component/modal/confirm-dialog/ConfirmContext';
-import { MyH1, MyH2 } from '../../component/typography/MyFont';
-import { DEFAULT_FARM, DEFAULT_FOOTER } from '../../utils/defaults';
+import { MyH1 } from '../../component/typography/MyFont';
+import { Configuration } from './Configuration';
+import { Farm } from './Farm';
 import { Logo } from './Logo';
 
-const EMPTY_FARM: FarmInput = {
+export const EMPTY_FARM: FarmInput = {
   title: '',
   address1: '',
   address2: '',
   zip: '',
   city: '',
+  phone: '',
+  email: '',
   footer: '',
+  rib: '',
+  iban: '',
+  bic: '',
+  siret: '',
+  naf: '',
+  tva: '',
   isTVA: 'non',
+  bioLabel: 'non',
 };
 
 export const farmSchema = z.object({
@@ -29,22 +36,12 @@ export const farmSchema = z.object({
   city: z.string().min(1),
   footer: z.string(),
   isTVA: z.string(),
+  bioLabel: z.string(),
 });
 
 export function Settings() {
   const { farm } = useSnapshot(store);
   const { confirm } = useConfirm();
-
-  const { register, handleSubmit, reset } = useForm<FarmInput>({
-    resolver: zodResolver(farmSchema),
-    defaultValues: { ...EMPTY_FARM, ...farm },
-  });
-
-  useEffect(() => {
-    if (farm) reset(farm);
-  }, [farm]);
-
-  const onSubmit = (e: FarmInput) => farm && updateFarm({ ...farm, ...e }).catch(console.error);
 
   const exportDb = async () => {
     if (
@@ -80,74 +77,8 @@ export function Settings() {
         </div>
         <div className="catalog-list">
           <Logo />
-          <form onSubmit={handleSubmit(onSubmit)}>
-            <FormControl>
-              <MyH2>Ma ferme</MyH2>
-              {
-                <Flex
-                  direction="column"
-                  gap="3"
-                  marginBottom="20px"
-                >
-                  <Input
-                    placeholder={DEFAULT_FARM.title}
-                    {...register('title')}
-                  />
-                  <Input
-                    placeholder={DEFAULT_FARM.address1}
-                    {...register('address1')}
-                  />
-                  <Input
-                    placeholder={DEFAULT_FARM.address2}
-                    {...register('address2')}
-                  />
-                  <HStack>
-                    <Input
-                      placeholder={DEFAULT_FARM.zip}
-                      {...register('zip')}
-                    />
-
-                    <Input
-                      placeholder={DEFAULT_FARM.city}
-                      {...register('city')}
-                    />
-                  </HStack>
-
-                  <Button type="submit">Baptiser</Button>
-                </Flex>
-              }
-
-              <MyH2>Ma configuration</MyH2>
-              <Flex
-                direction="column"
-                mt={3}
-                mb={3}
-              >
-                <FormLabel
-                  flexGrow={1}
-                  htmlFor="isTVA"
-                >
-                  Gérer la TVA ?
-                </FormLabel>
-                <Select {...register('isTVA')}>
-                  <option value="non">NON</option>
-                  <option value="oui">OUI</option>
-                </Select>
-              </Flex>
-
-              <Flex
-                direction="column"
-                gap={3}
-              >
-                <Text>Mon pied de page: S'affiche en bas des documents</Text>
-                <Input
-                  placeholder={DEFAULT_FOOTER}
-                  {...register('footer')}
-                />
-                <Button type="submit">Mettre à jour</Button>
-              </Flex>
-            </FormControl>
-          </form>
+          <Farm farm={farm} />
+          <Configuration farm={farm} />
         </div>
       </div>
       <div className="catalog-side">
