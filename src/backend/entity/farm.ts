@@ -48,12 +48,12 @@ export const updateFarm = (farm: Farm) => {
   return relDb.rel.save('farm', farm);
 };
 
-export async function updateDocumentId(type: DocumentType) {
+export async function updateDocumentId(type: DocumentType, value: number = 1) {
   const result = await relDb.rel.find('farm', FARM_KEY);
 
   if (type === DocumentType.delivery) {
-    updateFarm({ ...result.farms[0], deliveryId: result.farms[0].deliveryId + 1 });
+    updateFarm({ ...result.farms[0], deliveryId: result.farms[0].deliveryId + value });
   } else if (type === DocumentType.invoice) {
-    updateFarm({ ...result.farms[0], invoiceId: result.farms[0].invoiceId + 1 });
+    updateFarm({ ...result.farms[0], invoiceId: result.farms[0].invoiceId + value });
   }
 }

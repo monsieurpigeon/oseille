@@ -111,7 +111,7 @@ export const lines = (payload: any, type: DocumentType) => {
 
 const productLine = (el: DeliveryLine, isTVA: boolean) => {
   return [
-    el.product.name,
+    `|   ${el.product.name}`,
 
     {
       text: el.quantity,

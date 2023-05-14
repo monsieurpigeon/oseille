@@ -6,8 +6,19 @@ import {
   AlertDialogBody,
   AlertDialogFooter,
 } from '@chakra-ui/react';
+import { BaseSyntheticEvent, ReactNode } from 'react';
 
-export const CreateModal = ({ title, body, footer, isOpen, cancelRef, onClose, onSubmit }: any) => {
+interface CreateModalProps {
+  isOpen: boolean;
+  cancelRef: React.MutableRefObject<any>;
+  onClose: () => void;
+  onSubmit: (e?: BaseSyntheticEvent<object, any, any> | undefined) => Promise<void>;
+  title: string;
+  body: ReactNode;
+  footer: ReactNode;
+}
+
+export const CreateModal = ({ title, body, footer, isOpen, cancelRef, onClose, onSubmit }: CreateModalProps) => {
   return (
     <AlertDialog
       motionPreset="slideInBottom"

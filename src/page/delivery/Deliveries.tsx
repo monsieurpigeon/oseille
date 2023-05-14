@@ -4,9 +4,10 @@ import { useEffect, useMemo, useRef, useState } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { useSnapshot } from 'valtio';
 import { z } from 'zod';
-import { Delivery, DeliveryInput, addDelivery, addInvoice, store } from '../../backend';
+import { Delivery, DeliveryInput, InvoiceInfoInput, addDelivery, addInvoice, store } from '../../backend';
 import { CreateModal } from '../../component/modal/CreateModal';
 import { MyH1 } from '../../component/typography/MyFont';
+import { InvoiceFields } from '../invoice/InvoiceFields';
 import { DeliveryDetail } from './DeliveryDetail';
 import { DeliveryFields } from './DeliveryFields';
 
@@ -127,13 +128,46 @@ export function Deliveries() {
   );
 }
 
+export const invoiceSchema = z.object({
+  createdAt: z.string(),
+  notes: z.string(),
+});
+
+const defaultValues = { createdAt: new Date().toISOString().split('T')[0], notes: '' };
+
 function DeliveryCustomer({ customer, selected, setSelected }: any) {
   const [toInvoice, setToInvoice] = useState<{ [key: string]: boolean }>({});
   const deliveries = store.deliveries.filter((delivery) => delivery.customerId === customer.id);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const cancelRef = useRef<any>();
+
+  const { control, register, handleSubmit, reset } = useForm<InvoiceInfoInput>({
+    resolver: zodResolver(invoiceSchema),
+    defaultValues,
+  });
 
   const facturable = useMemo(() => {
     return Object.values(toInvoice).filter((val) => val).length;
   }, [toInvoice]);
+
+  const handleClose = () => {
+    reset(defaultValues);
+    onClose();
+  };
+
+  const onSubmit = (e: InvoiceInfoInput) => {
+    console.log(e);
+    addInvoice(
+      Object.entries(toInvoice)
+        .filter(([key, value]) => value)
+        .map(([key]) => store.deliveries.find((delivery) => delivery.id === key))
+        .filter((d) => !!d) as Delivery[],
+      e.createdAt,
+      e.notes,
+    )
+      .then(() => setToInvoice({}))
+      .then(handleClose);
+  };
 
   return (
     <div
@@ -145,16 +179,41 @@ function DeliveryCustomer({ customer, selected, setSelected }: any) {
         <Button
           disabled={!facturable}
           onClick={() => {
-            addInvoice(
-              Object.entries(toInvoice)
-                .filter(([key, value]) => value)
-                .map(([key]) => store.deliveries.find((delivery) => delivery.id === key))
-                .filter((d) => !!d) as Delivery[],
-            ).then(() => setToInvoice({}));
+            onOpen();
           }}
         >
           Facturer{!!facturable && ` ${facturable} BL${facturable > 1 ? 's' : ''}`}
         </Button>
+        <CreateModal
+          isOpen={isOpen}
+          cancelRef={cancelRef}
+          onClose={handleClose}
+          onSubmit={handleSubmit(onSubmit)}
+          title={'Nouvelle Facture'}
+          body={
+            <InvoiceFields
+              control={control}
+              register={register}
+            />
+          }
+          footer={
+            <>
+              <Button
+                ref={cancelRef}
+                onClick={handleClose}
+              >
+                Annuler
+              </Button>
+              <Button
+                colorScheme="twitter"
+                type="submit"
+                ml={3}
+              >
+                Enregistrer
+              </Button>
+            </>
+          }
+        />
       </div>
 
       {deliveries.length === 0 && <div className="faded">Pas de livraison</div>}

@@ -80,6 +80,16 @@ export const addInvoiceId = (invoiceId: string, deliveryId: string) => {
     .catch(console.error);
 };
 
+export const removeInvoiceId = (deliveryId: string) => {
+  relDb.rel
+    .find('delivery', deliveryId)
+    .then((result) => {
+      const delivery = result.deliveries[0];
+      relDb.rel.save('delivery', { ...delivery, invoiceId: undefined }).catch(console.error);
+    })
+    .catch(console.error);
+};
+
 export const updateDelivery = async (delivery: Delivery, input: DeliveryInput) => {
   const customer = await loadCustomer(input.customerId);
   await loadFarm();

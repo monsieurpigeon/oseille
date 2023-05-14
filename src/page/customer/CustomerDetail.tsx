@@ -8,6 +8,7 @@ import { CustomerFields } from './CustomerFields';
 import { customerSchema } from './Customers';
 import { EditDialog } from '../../component/modal/edit-dialog/EditDialog';
 import { CustomerDisplay } from './CustomerDisplay';
+import { EditButton } from '../../component/buttons';
 
 export const CustomerDetail = ({ selected }: { selected: Customer }) => {
   const { control, register, handleSubmit, reset } = useForm<CustomerInput>({
@@ -30,12 +31,7 @@ export const CustomerDetail = ({ selected }: { selected: Customer }) => {
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="catalog-header">
         <MyH1>Détail</MyH1>
-        <Button
-          colorScheme="red"
-          onClick={onOpen}
-        >
-          Modifier
-        </Button>
+        <EditButton onClick={onOpen} />
         <EditDialog
           isOpen={isOpen}
           cancelRef={cancelRef}

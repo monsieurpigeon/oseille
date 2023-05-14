@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSnapshot } from 'valtio';
 import { Invoice, store } from '../../backend';
 import { MyH1 } from '../../component/typography/MyFont';
@@ -7,6 +7,15 @@ import { InvoiceDetail } from './InvoiceDetail';
 export function Invoices() {
   const [selected, setSelected] = useState<Invoice>();
   const snap = useSnapshot(store);
+
+  useEffect(() => {
+    const updated = store.invoices.find((p) => p.id === selected?.id);
+    if (updated) {
+      setSelected(updated);
+    } else {
+      setSelected(undefined);
+    }
+  }, [snap]);
 
   return (
     <div className="catalog">

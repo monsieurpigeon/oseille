@@ -1,9 +1,10 @@
 import { relDb } from '../service/database';
 import { store } from '../service/store';
-import { Customer } from './customer';
+import { Customer, loadCustomer } from './customer';
 import { updateDocumentId } from './farm';
 import { documentIdFormatter } from '../../utils/formatter';
-import { addInvoiceId, Delivery } from './delivery';
+import { addInvoiceId, Delivery, removeInvoiceId } from './delivery';
+import { DocumentType } from '../service/pdf/pdf';
 
 export interface Invoice {
   id: string;
@@ -13,6 +14,7 @@ export interface Invoice {
   deliveryIds: string[];
   deliveries: string[];
   createdAt: string;
+  notes: string;
 }
 
 export interface InvoiceInput {
@@ -23,6 +25,12 @@ export interface InvoiceInput {
   deliveryDocumentIds: string[];
   deliveries: Delivery[];
   createdAt: string;
+  notes: string;
+}
+
+export interface InvoiceInfoInput {
+  createdAt: string;
+  notes: string;
 }
 
 export async function loadInvoices() {
@@ -30,16 +38,17 @@ export async function loadInvoices() {
   store.invoices = result.invoices;
 }
 
-export const addInvoice = (deliveries: Delivery[]) => {
-  const createdAt = new Date().toUTCString();
+export const addInvoice = async (deliveries: Delivery[], createdAt: string, notes: string) => {
+  const customer = await loadCustomer(deliveries[0].customerId);
   const invoice: InvoiceInput = {
     documentId: documentIdFormatter(store.farm?.invoiceId || 0, 'Invoice'),
-    customer: deliveries[0].customer,
-    customerId: deliveries[0].customerId,
+    customer: customer,
+    customerId: customer.id,
     deliveryIds: deliveries.map((d) => d.id),
     deliveryDocumentIds: deliveries.map((d) => d.documentId),
     deliveries,
     createdAt,
+    notes,
   };
 
   return relDb.rel
@@ -49,4 +58,14 @@ export const addInvoice = (deliveries: Delivery[]) => {
       updateDocumentId('Invoice');
     })
     .catch(console.error);
+};
+
+export const updateInvoice = (invoice: Invoice) => {
+  return relDb.rel.save('invoice', invoice);
+};
+
+export const deleteInvoice = (invoice: Invoice) => {
+  invoice.deliveryIds.map((id) => removeInvoiceId(id));
+  updateDocumentId(DocumentType.invoice, -1);
+  return relDb.rel.del('invoice', invoice);
 };

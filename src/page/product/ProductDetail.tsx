@@ -3,11 +3,12 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { Product, ProductInput, updateProduct } from '../../backend';
+import { EditButton } from '../../component/buttons';
+import { EditDialog } from '../../component/modal/edit-dialog/EditDialog';
 import { MyH1 } from '../../component/typography/MyFont';
+import { ProductDisplay } from './ProductDisplay';
 import { ProductFields } from './ProductFields';
 import { productSchema } from './Products';
-import { EditDialog } from '../../component/modal/edit-dialog/EditDialog';
-import { ProductDisplay } from './ProductDisplay';
 
 export const ProductDetail = ({ selected }: { selected: Product }) => {
   const { control, register, handleSubmit, reset } = useForm<ProductInput>({
@@ -30,12 +31,7 @@ export const ProductDetail = ({ selected }: { selected: Product }) => {
     <form onSubmit={handleSubmit(onSubmit)}>
       <div className="catalog-header">
         <MyH1>Détail</MyH1>
-        <Button
-          colorScheme="red"
-          onClick={onOpen}
-        >
-          Modifier
-        </Button>
+        <EditButton onClick={onOpen} />
         <EditDialog
           isOpen={isOpen}
           cancelRef={cancelRef}

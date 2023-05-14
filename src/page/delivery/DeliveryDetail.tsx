@@ -9,10 +9,12 @@ import { deliverySchema } from './Deliveries';
 import { DeliveryFields } from './DeliveryFields';
 import { useEffect, useRef } from 'react';
 import { EditDialog } from '../../component/modal/edit-dialog/EditDialog';
+import { EditButton } from '../../component/buttons';
 
 export const DeliveryDetail = ({ selected }: { selected: Delivery }) => {
   const isEditable = !selected.invoiceId;
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const cancelRef = useRef<any>();
 
   const updatedValues = {
     customerId: selected.customerId,
@@ -41,8 +43,6 @@ export const DeliveryDetail = ({ selected }: { selected: Delivery }) => {
     defaultValues: updatedValues,
   });
 
-  const cancelRef = useRef<any>();
-
   const { fields, append, remove } = useFieldArray({
     control,
     name: 'lines',
@@ -55,13 +55,10 @@ export const DeliveryDetail = ({ selected }: { selected: Delivery }) => {
       <div className="catalog-header">
         <MyH1>Détail</MyH1>
         <Box>
-          <Button
+          <EditButton
             disabled={!isEditable}
-            colorScheme="red"
             onClick={onOpen}
-          >
-            Modifier
-          </Button>
+          />
           <EditDialog
             isOpen={isOpen}
             cancelRef={cancelRef}
