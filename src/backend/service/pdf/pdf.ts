@@ -34,11 +34,14 @@ export const exportDocument = ({ payload, type }: any) => {
     },
     content: [
       { text: `${payload.documentId}`, style: 'header' },
-      addresses(payload, type),
+      addresses(payload, type, !!store.farm?._attachements?.logo),
       lines(payload, type),
       totals(payload, type),
-      { columns: [{ qr: payload.id, fit: '80' }, { text: `Notes: ${payload.notes}` }] },
+      { columns: [{ qr: payload.id, fit: '80' }, { text: `Notes: ${payload.notes ?? ''}` }] },
     ],
+    images: {
+      logo: store.farm?._attachements?.logo?.data || '',
+    },
     styles: {
       header: {
         fontSize: 18,

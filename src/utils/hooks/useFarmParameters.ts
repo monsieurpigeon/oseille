@@ -5,5 +5,7 @@ export function useFarmParameters() {
   const { farm } = useSnapshot(store);
   const isTVA = farm?.isTVA === 'oui';
 
-  return { farm, isTVA };
+  const logo = farm?._attachements?.logo?.data;
+
+  return { farm, logo, isTVA };
 }

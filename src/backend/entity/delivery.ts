@@ -14,6 +14,7 @@ export interface Delivery {
   documentId: string;
   invoiceId?: string;
   lines: Array<DeliveryLine>;
+  notes: string;
 }
 
 export interface DeliveryLine {
@@ -28,6 +29,7 @@ export interface DeliveryInput {
   customerId: string;
   deliveredAt: string;
   lines: Array<DeliveryLineInput>;
+  notes: string;
 }
 
 export interface DeliveryLineInput {

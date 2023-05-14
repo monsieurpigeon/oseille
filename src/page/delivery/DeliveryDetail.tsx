@@ -1,15 +1,15 @@
 import { Box, Button, useDisclosure } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useEffect, useRef } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { Delivery, DeliveryInput, exportDocument, store, updateDelivery } from '../../backend';
+import { EditButton } from '../../component/buttons';
+import { EditDialog } from '../../component/modal/edit-dialog/EditDialog';
 import { DeliveryDescriptionLine } from '../../component/shared/Delivery';
 import { DeliveryDescription } from '../../component/table/DeliveryDescription';
 import { MyH1 } from '../../component/typography/MyFont';
 import { deliverySchema } from './Deliveries';
 import { DeliveryFields } from './DeliveryFields';
-import { useEffect, useRef } from 'react';
-import { EditDialog } from '../../component/modal/edit-dialog/EditDialog';
-import { EditButton } from '../../component/buttons';
 
 export const DeliveryDetail = ({ selected }: { selected: Delivery }) => {
   const isEditable = !selected.invoiceId;
@@ -107,6 +107,7 @@ export const DeliveryDetail = ({ selected }: { selected: Delivery }) => {
 
       <div>
         <DeliveryDescriptionLine delivery={selected} />
+        <div>Notes: {selected.notes}</div>
         {!!selected.invoiceId && (
           <div>{store.invoices.find((invoice) => invoice.id === selected.invoiceId)?.documentId}</div>
         )}

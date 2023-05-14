@@ -14,6 +14,11 @@ export interface Farm {
   invoiceId: number;
   deliveryId: number;
   isTVA?: string;
+  _attachements: {
+    logo: {
+      data: string;
+    };
+  };
 }
 
 export interface FarmInput {
@@ -24,6 +29,10 @@ export interface FarmInput {
   city?: string;
   footer?: string;
   isTVA?: string;
+}
+
+export interface LogoInput {
+  data: string;
 }
 
 export const FARM_KEY = 'myFarm';
@@ -57,3 +66,10 @@ export async function updateDocumentId(type: DocumentType, value: number = 1) {
     updateFarm({ ...result.farms[0], invoiceId: result.farms[0].invoiceId + value });
   }
 }
+
+export const addLogo = async (logo: LogoInput) => {
+  const result = await relDb.rel.find('farm', FARM_KEY);
+  const myFarm = result.farms[0];
+
+  return updateFarm({ ...myFarm, _attachements: { logo: { content_type: 'image/png', data: logo.data } } });
+};

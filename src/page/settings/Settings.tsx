@@ -1,4 +1,4 @@
-import { Button, Flex, FormControl, FormLabel, HStack, Input, Select, Switch, Text } from '@chakra-ui/react';
+import { Button, Flex, FormControl, FormLabel, HStack, Input, Select, Text } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
@@ -6,9 +6,10 @@ import { useSnapshot } from 'valtio';
 import { z } from 'zod';
 import { FarmInput, db, destroyDatabase, exportData, store, updateFarm } from '../../backend';
 import FileUploadSingle from '../../component/form/FileUploadSingle';
+import { useConfirm } from '../../component/modal/confirm-dialog/ConfirmContext';
 import { MyH1, MyH2 } from '../../component/typography/MyFont';
 import { DEFAULT_FARM, DEFAULT_FOOTER } from '../../utils/defaults';
-import { useConfirm } from '../../component/modal/confirm-dialog/ConfirmContext';
+import { Logo } from './Logo';
 
 const EMPTY_FARM: FarmInput = {
   title: '',
@@ -78,6 +79,7 @@ export function Settings() {
           <MyH1>Réglages</MyH1>
         </div>
         <div className="catalog-list">
+          <Logo />
           <form onSubmit={handleSubmit(onSubmit)}>
             <FormControl>
               <MyH2>Ma ferme</MyH2>

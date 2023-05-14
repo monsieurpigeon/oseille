@@ -1,8 +1,8 @@
-import { Box, Button, Flex, Grid, GridItem, Input, Select, Text } from '@chakra-ui/react';
+import { Box, Button, Flex, Grid, GridItem, Input, Select, Text, Textarea } from '@chakra-ui/react';
 import { useMemo } from 'react';
 import { FieldArrayWithId } from 'react-hook-form';
 import { useSnapshot } from 'valtio';
-import { DeliveryInput, getPrice, store } from '../../backend';
+import { DeliveryInput, store } from '../../backend';
 import { MyNumberInput } from '../../component/form/MyNumberInput';
 import { priceFormatter } from '../../utils/formatter';
 import { useFarmParameters } from '../../utils/hooks/useFarmParameters';
@@ -131,6 +131,13 @@ export function DeliveryFields({ watch, control, register, fields, append, remov
         >
           Ajouter produit
         </Button>
+        <Box p={1}>
+          <Text>Notes</Text>
+          <Textarea
+            placeholder="Ristourne sur les aubergines"
+            {...register('notes')}
+          />
+        </Box>
       </Flex>
     </>
   );

@@ -22,6 +22,7 @@ export const deliverySchema = z.object({
     })
     .array()
     .nonempty(),
+  notes: z.string(),
 });
 
 export function Deliveries() {
@@ -39,7 +40,7 @@ export function Deliveries() {
 
   const { control, register, handleSubmit, reset, watch, setValue, getValues } = useForm<DeliveryInput>({
     resolver: zodResolver(deliverySchema),
-    defaultValues: { customerId: '', deliveredAt: new Date().toISOString().split('T')[0] },
+    defaultValues: { customerId: '', deliveredAt: new Date().toISOString().split('T')[0], notes: '' },
   });
 
   const { fields, append, remove } = useFieldArray({
