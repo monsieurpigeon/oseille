@@ -100,7 +100,7 @@ export function Settings() {
     });
   }, [farm]);
 
-  const onSubmit = (e: DocumentIdInput) => updateFarm({ ...farm, ...e });
+  const onSubmit = (e: DocumentIdInput) => farm && updateFarm({ ...farm, ...e });
 
   return (
     <div className="catalog">
