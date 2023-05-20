@@ -18,7 +18,7 @@ const TODO_ITEMS: Array<{ text: string; status: Status }> = [
 ];
 
 const NEXT: Array<{ text: string; status: Status }> = [
-  { text: 'Gérer le status des documents (envoyé, payé)', status: 'todo' },
+  { text: 'Gérer le statut des documents (envoyé, payé)', status: 'todo' },
   { text: 'Suivi des ventes par client et par produit', status: 'todo' },
 ];
 

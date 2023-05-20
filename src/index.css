@@ -24,10 +24,6 @@
   align-items: center;
 }
 
-.catalog-list::-webkit-scrollbar {
-  display: none;
-}
-
 .hide-scroll {
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
@@ -43,9 +39,7 @@
   flex-direction: column;
   gap: 10px;
   height: 0;
-  overflow-y: scroll;
-  -ms-overflow-style: none; /* IE and Edge */
-  scrollbar-width: none; /* Firefox */
+  overflow-y: auto;
   margin-top: 20px;
 }
 
