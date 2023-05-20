@@ -39,6 +39,8 @@ export interface FarmInput {
   phone?: string;
   email?: string;
   footer?: string;
+  invoiceId?: number;
+  deliveryId?: number;
   isTVA?: string;
   bioLabel?: string;
   rib?: string;
