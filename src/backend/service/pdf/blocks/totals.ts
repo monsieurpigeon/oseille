@@ -52,11 +52,9 @@ export const totals = (payload: any, type: DocumentType, farm: Farm | null) => {
                     { text: 'Échéance', bold: true, width: 150 },
                     { text: dateFormatterDelay(payload.createdAt, DEFAULT_INVOICE_DELAY) },
                   ],
-                  margin: [0, 4],
                 },
                 {
                   text: 'Escompte pour paiement anticipé : néant',
-                  margin: [0, 4],
                 },
                 {
                   text: 'En cas de retard de paiement, montant forfaitaire de 40€ pour frais de recouvrement',
@@ -66,7 +64,6 @@ export const totals = (payload: any, type: DocumentType, farm: Farm | null) => {
                       {
                         text: `RIB : ${farm.rib}`,
                         bold: true,
-                        margin: [0, 4],
                       },
                     ]
                   : []),
@@ -75,13 +72,10 @@ export const totals = (payload: any, type: DocumentType, farm: Farm | null) => {
                       {
                         text: `IBAN ${farm.iban} BIC ${farm.bic ?? ''}`,
                         bold: true,
-                        margin: [0, 4],
                       },
                     ]
                   : []),
-                ...(farm?.siret
-                  ? [{ text: `Siret : ${farm.siret} - code naf : ${farm.naf ?? ''}`, margin: [0, 4] }]
-                  : []),
+                ...(farm?.siret ? [{ text: `Siret : ${farm.siret} - code naf : ${farm.naf ?? ''}` }] : []),
               ]
             : [],
           {},
