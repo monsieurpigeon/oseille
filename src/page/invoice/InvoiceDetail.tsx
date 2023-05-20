@@ -3,7 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { Invoice, InvoiceInfoInput, deleteInvoice, exportDocument, store, updateInvoice } from '../../backend';
-import { EditButton } from '../../component/buttons';
+import { DeleteButton, EditButton } from '../../component/buttons';
 import { useConfirm } from '../../component/modal/confirm-dialog/ConfirmContext';
 import { EditDialog } from '../../component/modal/edit-dialog/EditDialog';
 import { DeliveryDescriptionLine } from '../../component/shared/Delivery';
@@ -58,13 +58,10 @@ export const InvoiceDetail = ({ selected }: { selected: Invoice }) => {
       <div className="catalog-header">
         <MyH1>Détail</MyH1>
         <Box>
-          <Button
-            colorScheme="red"
+          <DeleteButton
             onClick={handleDeleteInvoice}
             disabled={!isDeletable}
-          >
-            Supprimer
-          </Button>
+          />
           <EditButton
             onClick={onOpen}
             ml={3}

@@ -16,6 +16,16 @@ export function EditButton({ onClick, ...rest }: MyButtonProps & ButtonProps) {
   );
 }
 
-export function DeleteButton() {}
+export function DeleteButton({ onClick, ...rest }: MyButtonProps & ButtonProps) {
+  return (
+    <Button
+      colorScheme="red"
+      onClick={onClick}
+      {...rest}
+    >
+      Supprimer
+    </Button>
+  );
+}
 
 export function CreateButton() {}

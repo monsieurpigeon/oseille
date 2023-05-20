@@ -2,19 +2,21 @@ import { Box, Button, useDisclosure } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useRef } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
-import { Delivery, DeliveryInput, exportDocument, store, updateDelivery } from '../../backend';
-import { EditButton } from '../../component/buttons';
+import { Delivery, DeliveryInput, deleteDelivery, exportDocument, store, updateDelivery } from '../../backend';
+import { DeleteButton, EditButton } from '../../component/buttons';
 import { EditDialog } from '../../component/modal/edit-dialog/EditDialog';
 import { DeliveryDescriptionLine } from '../../component/shared/Delivery';
 import { DeliveryDescription } from '../../component/table/DeliveryDescription';
 import { MyH1 } from '../../component/typography/MyFont';
 import { deliverySchema } from './Deliveries';
 import { DeliveryFields } from './DeliveryFields';
+import { useConfirm } from '../../component/modal/confirm-dialog/ConfirmContext';
 
 export const DeliveryDetail = ({ selected }: { selected: Delivery }) => {
   const isEditable = !selected.invoiceId;
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef<any>();
+  const { confirm } = useConfirm();
 
   const updatedValues = {
     customerId: selected.customerId,
@@ -50,14 +52,30 @@ export const DeliveryDetail = ({ selected }: { selected: Delivery }) => {
 
   const onSubmit = (e: DeliveryInput) => updateDelivery(selected, e).then(handleClose).catch(console.error);
 
+  const handleDeleteDelivery = async () => {
+    if (
+      await confirm({
+        title: 'Supprimer la livraison',
+        message: 'Vous ne pourrez pas la récupérer',
+      })
+    ) {
+      deleteDelivery(selected);
+    }
+  };
+
   return (
     <>
       <div className="catalog-header">
         <MyH1>Détail</MyH1>
         <Box>
-          <EditButton
+          <DeleteButton
+            onClick={handleDeleteDelivery}
             disabled={!isEditable}
+          />
+          <EditButton
             onClick={onOpen}
+            disabled={!isEditable}
+            ml={3}
           />
           <EditDialog
             isOpen={isOpen}

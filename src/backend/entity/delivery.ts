@@ -116,3 +116,7 @@ export const updateDelivery = async (delivery: Delivery, input: DeliveryInput) =
     })
     .catch(console.error);
 };
+
+export const deleteDelivery = (delivery: Delivery) => {
+  return relDb.rel.del('delivery', delivery);
+};
