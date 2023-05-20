@@ -10,6 +10,7 @@ import { MyH1 } from '../../component/typography/MyFont';
 import { InvoiceFields } from '../invoice/InvoiceFields';
 import { DeliveryDetail } from './DeliveryDetail';
 import { DeliveryFields } from './DeliveryFields';
+import { dateFormatter } from '../../utils/formatter';
 
 export const deliverySchema = z.object({
   customerId: z.string().min(1),
@@ -229,7 +230,7 @@ function DeliveryCustomer({ customer, selected, setSelected }: any) {
             onClick={() => setSelected((e: Delivery) => (e?.id === delivery.id ? undefined : { ...delivery }))}
             onKeyDown={() => {}}
           >
-            {`${delivery.documentId}`}
+            {`${delivery.documentId} - ${dateFormatter(delivery.deliveredAt)}`}
           </div>
           {!delivery.invoiceId ? (
             <input

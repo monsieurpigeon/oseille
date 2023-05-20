@@ -3,6 +3,7 @@ import { useSnapshot } from 'valtio';
 import { Invoice, store } from '../../backend';
 import { MyH1 } from '../../component/typography/MyFont';
 import { InvoiceDetail } from './InvoiceDetail';
+import { dateFormatter } from '../../utils/formatter';
 
 export function Invoices() {
   const [selected, setSelected] = useState<Invoice>();
@@ -63,7 +64,7 @@ function InvoiceCustomer({ customer, selected, setSelected }: any) {
             onClick={() => setSelected((e: Invoice) => (e?.id === invoice.id ? undefined : { ...invoice }))}
             onKeyDown={() => {}}
           >
-            {`${invoice.documentId}`}
+            {`${invoice.documentId} - ${dateFormatter(invoice.createdAt)}`}
           </div>
         </div>
       ))}
