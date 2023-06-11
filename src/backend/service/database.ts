@@ -103,15 +103,18 @@ export function exportData(data: any) {
 }
 
 export function handleImport({ file }: any) {
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = ({ target: { result } }: any) => {
-      db.bulkDocs(
-        JSON.parse(result),
-        { new_edits: false }, // not change revision
-        (...args) => console.log('DONE', args),
-      );
-    };
-    reader.readAsText(file);
-  }
+  return new Promise((resolve, reject) => {
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = ({ target: { result } }: any) => {
+        db.bulkDocs(
+          JSON.parse(result),
+          { new_edits: false }, // not change revision
+          (...args) => console.log('DONE', args),
+        );
+      };
+      reader.onloadend = () => resolve(reader.result);
+      reader.readAsText(file);
+    }
+  });
 }

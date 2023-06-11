@@ -1,18 +1,19 @@
-import { Box, Button, Flex, Text, VStack } from '@chakra-ui/react';
+import { Box, Button, Flex, HStack, Text } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useSnapshot } from 'valtio';
 import { z } from 'zod';
-import { FarmInput, db, destroyDatabase, exportData, store, updateFarm } from '../../backend';
-import FileUploadSingle from '../../component/form/FileUploadSingle';
+import { FarmInput, store, updateFarm } from '../../backend';
 import { MyNumberInput } from '../../component/form/MyNumberInput';
-import { useConfirm } from '../../component/modal/confirm-dialog/ConfirmContext';
 import { MyH1, MyH2 } from '../../component/typography/MyFont';
 import { useFarmParameters } from '../../utils/hooks/useFarmParameters';
 import { Configuration } from './Configuration';
 import { Farm } from './Farm';
 import { Logo } from './Logo';
+import { DestroyAction } from './components/actions/DestoyAction';
+import { ExportAction } from './components/actions/ExportAction';
+import { ImportAction } from './components/actions/ImportAction';
 
 export const EMPTY_FARM: FarmInput = {
   title: '',
@@ -56,34 +57,7 @@ interface DocumentIdInput {
 
 export function Settings() {
   const snap = useSnapshot(store);
-  const { confirm } = useConfirm();
   const { farm } = useFarmParameters();
-
-  const exportDb = async () => {
-    if (
-      await confirm({
-        title: 'Tout récupérer',
-        message:
-          'Vous allez récupérer une copie de toute votre base de donnée dans un fichier, à faire régulièrement et stocker sur un support différent',
-      })
-    ) {
-      db.allDocs({ include_docs: true })
-        .then((data) => data.rows.map(({ doc }) => doc))
-        .then((data) => exportData(data))
-        .catch(console.error);
-    }
-  };
-
-  const destroyDb = async () => {
-    if (
-      await confirm({
-        title: 'Tout effacer',
-        message: `Vous allez supprimer toute la base de donnée, assurez vous d'avoir bien fait un export de vos données`,
-      })
-    ) {
-      destroyDatabase().catch(console.error);
-    }
-  };
 
   const { control, formState, handleSubmit, reset } = useForm<DocumentIdInput>({
     resolver: zodResolver(documentsSchema),
@@ -121,21 +95,13 @@ export function Settings() {
         <div className="catalog-list">
           <Box>
             <MyH2>Import / Export</MyH2>
-            <VStack>
-              <Button
-                colorScheme="twitter"
-                onClick={exportDb}
-              >
-                Export
-              </Button>
-              <Button
-                colorScheme="red"
-                onClick={destroyDb}
-              >
-                Armageddon
-              </Button>
-              <FileUploadSingle />
-            </VStack>
+            <Text>Tout enregistrer, tout supprimer, tout recharger</Text>
+
+            <HStack>
+              <ExportAction />
+              <DestroyAction />
+              <ImportAction />
+            </HStack>
           </Box>
           <Box>
             <MyH2>Numéro de documents</MyH2>
