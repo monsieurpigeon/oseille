@@ -1,70 +1,17 @@
-import { Button, useDisclosure } from '@chakra-ui/react';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect, useRef } from 'react';
-import { useForm } from 'react-hook-form';
-import { Product, ProductInput, updateProduct } from '../../backend';
-import { EditButton } from '../../component/buttons';
-import { EditDialog } from '../../component/modal/edit-dialog/EditDialog';
+import { Product } from '../../backend';
+import { MyHeader } from '../../component/layout/page-layout/MyHeader';
 import { MyH1 } from '../../component/typography/MyFont';
 import { ProductDisplay } from './ProductDisplay';
-import { ProductFields } from './ProductFields';
-import { productSchema } from './Products';
+import { EditProductAction } from './actions/EditProductAction';
 
 export const ProductDetail = ({ selected }: { selected: Product }) => {
-  const { control, register, handleSubmit, reset } = useForm<ProductInput>({
-    resolver: zodResolver(productSchema),
-    defaultValues: selected,
-  });
-
-  useEffect(() => {
-    reset({ ...selected, tva: selected.tva || '5.5' });
-  }, [selected]);
-
-  const onSubmit = (e: ProductInput) => {
-    selected && updateProduct({ ...selected, ...e }).then(onClose);
-  };
-
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const cancelRef = useRef<any>();
-
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <div className="catalog-header">
+    <>
+      <MyHeader>
         <MyH1>Détail</MyH1>
-        <EditButton onClick={onOpen} />
-        <EditDialog
-          isOpen={isOpen}
-          cancelRef={cancelRef}
-          title="Modifier le produit"
-          onClose={onClose}
-          onSubmit={handleSubmit(onSubmit)}
-          fields={
-            <ProductFields
-              control={control}
-              register={register}
-            />
-          }
-          footer={
-            <>
-              <Button
-                ref={cancelRef}
-                onClick={onClose}
-              >
-                Annuler
-              </Button>
-              <Button
-                colorScheme="twitter"
-                type="submit"
-                ml={3}
-              >
-                Enregistrer
-              </Button>
-            </>
-          }
-        />
-      </div>
-
+        <EditProductAction product={selected} />
+      </MyHeader>
       <ProductDisplay product={selected} />
-    </form>
+    </>
   );
 };

@@ -28,6 +28,7 @@
     "react-hook-form": "^7.39.6",
     "react-router-dom": "^6.4.3",
     "relational-pouch": "^4.0.4",
+    "styled-components": "^6.0.0-rc.3",
     "valtio": "^1.7.6",
     "zod": "^3.21.4"
   },

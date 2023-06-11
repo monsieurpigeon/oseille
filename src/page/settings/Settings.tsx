@@ -6,6 +6,10 @@ import { useSnapshot } from 'valtio';
 import { z } from 'zod';
 import { FarmInput, store, updateFarm } from '../../backend';
 import { MyNumberInput } from '../../component/form/MyNumberInput';
+import { MyHeader } from '../../component/layout/page-layout/MyHeader';
+import { MyPage } from '../../component/layout/page-layout/MyPage';
+import { MyScrollList } from '../../component/layout/page-layout/MyScrollList';
+import { MySide } from '../../component/layout/page-layout/MySide';
 import { MyH1, MyH2 } from '../../component/typography/MyFont';
 import { useFarmParameters } from '../../utils/hooks/useFarmParameters';
 import { Configuration } from './Configuration';
@@ -77,22 +81,22 @@ export function Settings() {
   const onSubmit = (e: DocumentIdInput) => farm && updateFarm({ ...farm, ...e });
 
   return (
-    <div className="catalog">
-      <div className="catalog-side">
-        <div className="catalog-header">
+    <MyPage>
+      <MySide>
+        <MyHeader>
           <MyH1>Réglages</MyH1>
-        </div>
-        <div className="catalog-list">
+        </MyHeader>
+        <MyScrollList>
           <Logo />
           <Farm farm={farm} />
           <Configuration farm={farm} />
-        </div>
-      </div>
-      <div className="catalog-side">
-        <div className="catalog-header">
+        </MyScrollList>
+      </MySide>
+      <MySide>
+        <MyHeader>
           <MyH1>Réglages avancés</MyH1>
-        </div>
-        <div className="catalog-list">
+        </MyHeader>
+        <MyScrollList>
           <Box>
             <MyH2>Import / Export</MyH2>
             <Text>Tout enregistrer, tout supprimer, tout recharger</Text>
@@ -136,8 +140,8 @@ export function Settings() {
               </Flex>
             </form>
           </Box>
-        </div>
-      </div>
-    </div>
+        </MyScrollList>
+      </MySide>
+    </MyPage>
   );
 }

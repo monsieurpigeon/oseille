@@ -1,6 +1,10 @@
 import { CheckIcon, RepeatIcon, TimeIcon } from '@chakra-ui/icons';
 import { List, ListIcon, ListItem } from '@chakra-ui/react';
 import { NavLink } from 'react-router-dom';
+import { MyHeader } from '../../component/layout/page-layout/MyHeader';
+import { MyPage } from '../../component/layout/page-layout/MyPage';
+import { MyScrollList } from '../../component/layout/page-layout/MyScrollList';
+import { MySide } from '../../component/layout/page-layout/MySide';
 import { MyH1, MyH2, MySubtitle } from '../../component/typography/MyFont';
 
 type Status = 'todo' | 'doing' | 'done';
@@ -36,12 +40,12 @@ const statusIcon: { [key: string]: { icon: typeof CheckIcon; color: string } } =
 export function Home() {
   return (
     <>
-      <div className="catalog">
-        <div className="catalog-side">
-          <div className="catalog-header">
+      <MyPage>
+        <MySide>
+          <MyHeader>
             <MyH1>Bienvenue sur Oseille</MyH1>
-          </div>
-          <div className="catalog-list">
+          </MyHeader>
+          <MyScrollList>
             <MySubtitle>L'application qui aide les maraîchers à gérer leur argent, entre autres...</MySubtitle>
             <MySubtitle>Application gratuite, en code libre, et qui marche sans internet</MySubtitle>
             <p>
@@ -51,9 +55,9 @@ export function Home() {
             <p className="bold">
               Faites régulièrement des exports depuis la page <NavLink to="settings">Réglages</NavLink>.
             </p>
-          </div>
-        </div>
-        <div className="catalog-side">
+          </MyScrollList>
+        </MySide>
+        <MySide>
           <MyH2>Fonctionnalités :</MyH2>
           <List spacing={3}>
             {TODO_ITEMS.map((item) => (
@@ -78,8 +82,8 @@ export function Home() {
             ))}
             <ListItem listStyleType="none">... Dites moi de quoi vous avez besoin.</ListItem>
           </List>
-        </div>
-      </div>
+        </MySide>
+      </MyPage>
     </>
   );
 }

@@ -1,9 +1,15 @@
 import { useEffect, useState } from 'react';
 import { useSnapshot } from 'valtio';
 import { Invoice, store } from '../../backend';
+import { ListItem } from '../../component/card/ListItem';
+import { ListItemGroup } from '../../component/card/ListItemGroup';
+import { MyHeader } from '../../component/layout/page-layout/MyHeader';
+import { MyPage } from '../../component/layout/page-layout/MyPage';
+import { MyScrollList } from '../../component/layout/page-layout/MyScrollList';
+import { MySide } from '../../component/layout/page-layout/MySide';
 import { MyH1 } from '../../component/typography/MyFont';
-import { InvoiceDetail } from './InvoiceDetail';
 import { dateFormatter } from '../../utils/formatter';
+import { InvoiceDetail } from './InvoiceDetail';
 
 export function Invoices() {
   const [selected, setSelected] = useState<Invoice>();
@@ -19,12 +25,12 @@ export function Invoices() {
   }, [snap]);
 
   return (
-    <div className="catalog">
-      <div className="catalog-side">
-        <div className="catalog-header">
+    <MyPage>
+      <MySide>
+        <MyHeader>
           <MyH1>Mes Factures</MyH1>
-        </div>
-        <div className="catalog-list">
+        </MyHeader>
+        <MyScrollList>
           {store.customers.map((customer) => (
             <InvoiceCustomer
               key={customer.id}
@@ -33,10 +39,10 @@ export function Invoices() {
               setSelected={setSelected}
             />
           ))}
-        </div>
-      </div>
-      <div className="catalog-side">{selected && <InvoiceDetail selected={selected} />}</div>
-    </div>
+        </MyScrollList>
+      </MySide>
+      <MySide>{selected && <InvoiceDetail selected={selected} />}</MySide>
+    </MyPage>
   );
 }
 
@@ -44,30 +50,16 @@ function InvoiceCustomer({ customer, selected, setSelected }: any) {
   const invoices = store.invoices.filter((invoice) => invoice.customerId === customer.id);
 
   return (
-    <div
-      className="catalog-sub-list"
-      key={customer.id}
-    >
-      <div className="catalog-sub-list-customer">
-        <div className="bold">{customer.name}</div>
-      </div>
-
-      {invoices.length === 0 && <div className="faded">Pas de facture</div>}
+    <ListItemGroup title={customer.name}>
       {invoices.map((invoice) => (
-        <div
-          className="catalog-item-select"
+        <ListItem
           key={invoice.id}
+          isSelected={selected?.id === invoice.id}
+          onClick={() => setSelected((e: Invoice) => (e?.id === invoice.id ? undefined : { ...invoice }))}
         >
-          <div
-            className={`catalog-item grow ${selected?.id === invoice.id && 'selected'}`}
-            key={invoice.id}
-            onClick={() => setSelected((e: Invoice) => (e?.id === invoice.id ? undefined : { ...invoice }))}
-            onKeyDown={() => {}}
-          >
-            {`${invoice.documentId} - ${dateFormatter(invoice.createdAt)}`}
-          </div>
-        </div>
+          {`${invoice.documentId} - ${dateFormatter(invoice.createdAt)}`}
+        </ListItem>
       ))}
-    </div>
+    </ListItemGroup>
   );
 }

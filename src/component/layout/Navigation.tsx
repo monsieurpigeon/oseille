@@ -1,4 +1,5 @@
 import { NavLink } from 'react-router-dom';
+import { styled } from 'styled-components';
 
 const navBarItems = [
   { label: 'Produits', emoji: '🍓', path: 'product' },
@@ -10,18 +11,39 @@ const navBarItems = [
   { label: 'Contact', emoji: '🖋️', path: 'contact' },
 ];
 
+const StyledNav = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+`;
+
+const StyledNavItem = styled(NavLink)`
+  padding: 15px;
+  font-size: 20px;
+  font-weight: bold;
+
+  &:hover {
+    background-color: lightcyan;
+  }
+
+  &.active {
+    background-color: lightcyan;
+    border-right: 2px solid cyan;
+  }
+`;
+
 export function Navigation() {
   return (
-    <div className="navigation-list">
+    <StyledNav>
       {navBarItems.map((item) => (
-        <NavLink
+        <StyledNavItem
           key={item.path}
           to={item.path}
           className="navigation-item"
         >
           {item.emoji} {item.label}
-        </NavLink>
+        </StyledNavItem>
       ))}
-    </div>
+    </StyledNav>
   );
 }

@@ -1,14 +1,17 @@
+import { MyHeader } from '../../component/layout/page-layout/MyHeader';
+import { MyPage } from '../../component/layout/page-layout/MyPage';
+import { MySide } from '../../component/layout/page-layout/MySide';
 import { MyH1 } from '../../component/typography/MyFont';
 
 export function BackOffice() {
   return (
-    <div className="catalog">
-      <div className="catalog-side">
-        <div className="catalog-header">
+    <MyPage>
+      <MySide>
+        <MyHeader>
           <MyH1>Back Office</MyH1>
-        </div>
+        </MyHeader>
         <p>Vous ne devriez pas être la</p>
-      </div>
-    </div>
+      </MySide>
+    </MyPage>
   );
 }
