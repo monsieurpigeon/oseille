@@ -61,7 +61,7 @@ function DeliveryCustomer({ customer, selected, setSelected }: any) {
     .filter((delivery) => delivery.customerId === customer.id)
     .filter((delivery) => {
       const date = new Date(delivery.deliveredAt);
-      const today = addDays(new Date(), -14);
+      const today = addDays(new Date(), -2 * 7);
       return !delivery.invoiceId || date > today;
     })
     .sort((a, b) => b.deliveredAt.localeCompare(a.deliveredAt));
