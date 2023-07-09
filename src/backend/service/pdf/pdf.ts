@@ -33,7 +33,7 @@ const getBioLogo = (label: string | undefined) => {
   }
 };
 
-export const exportDocument = ({ payload, type }: any) => {
+export const exportDocument = ({ payload, type, open = false }: any) => {
   const isTVA = type === DocumentType.delivery ? payload.isTVA : getIsTVA(payload);
 
   const docDefinition: any = {
@@ -98,7 +98,9 @@ export const exportDocument = ({ payload, type }: any) => {
       },
     },
   };
-
-  pdfMake.createPdf(docDefinition, undefined, fonts).download(payload.documentId);
-  //pdfMake.createPdf(docDefinition, undefined, fonts).open();
+  if (open) {
+    pdfMake.createPdf(docDefinition, undefined, fonts).open();
+  } else {
+    pdfMake.createPdf(docDefinition, undefined, fonts).download(payload.documentId);
+  }
 };

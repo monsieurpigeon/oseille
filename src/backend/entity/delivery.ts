@@ -41,9 +41,12 @@ export interface DeliveryLineInput {
 
 export async function loadDeliveries() {
   const result = await relDb.rel.find('delivery');
-  store.deliveries = result.deliveries.sort((a: Delivery, b: Delivery) => {
-    return a.documentId.localeCompare(b.documentId);
-  });
+  store.deliveries = result.deliveries
+    .map((delivery: Delivery) => ({
+      ...delivery,
+      deliveredAt: new Date(delivery.deliveredAt).toISOString().split('T')[0],
+    }))
+    .sort((a: Delivery, b: Delivery) => a.documentId.localeCompare(b.documentId));
 }
 
 export const addDelivery = async (delivery: DeliveryInput) => {

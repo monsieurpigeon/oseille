@@ -35,7 +35,10 @@ export interface InvoiceInfoInput {
 
 export async function loadInvoices() {
   const result = await relDb.rel.find('invoice');
-  store.invoices = result.invoices;
+  store.invoices = result.invoices.map((invoice: Invoice) => ({
+    ...invoice,
+    createdAt: new Date(invoice.createdAt).toISOString().split('T')[0],
+  }));
 }
 
 export const addInvoice = async (deliveries: Delivery[], createdAt: string, notes: string) => {

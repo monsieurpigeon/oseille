@@ -1,3 +1,4 @@
+import { addDays } from 'date-fns';
 import { useEffect, useState } from 'react';
 import { useSnapshot } from 'valtio';
 import { Delivery, store } from '../../backend';
@@ -56,7 +57,14 @@ export function Deliveries() {
 
 function DeliveryCustomer({ customer, selected, setSelected }: any) {
   const [toInvoice, setToInvoice] = useState<{ [key: string]: boolean }>({});
-  const deliveries = store.deliveries.filter((delivery) => delivery.customerId === customer.id);
+  const deliveries = store.deliveries
+    .filter((delivery) => delivery.customerId === customer.id)
+    .filter((delivery) => {
+      const date = new Date(delivery.deliveredAt);
+      const today = addDays(new Date(), -14);
+      return !delivery.invoiceId || date > today;
+    })
+    .sort((a, b) => b.deliveredAt.localeCompare(a.deliveredAt));
 
   return (
     <ListItemGroup
