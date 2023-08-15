@@ -1,3 +1,4 @@
+import { differenceInDays } from 'date-fns';
 import { useEffect, useState } from 'react';
 import { useSnapshot } from 'valtio';
 import { Invoice, store } from '../../backend';
@@ -8,6 +9,7 @@ import { MyPage } from '../../component/layout/page-layout/MyPage';
 import { MyScrollList } from '../../component/layout/page-layout/MyScrollList';
 import { MySide } from '../../component/layout/page-layout/MySide';
 import { MyH1 } from '../../component/typography/MyFont';
+import { DEFAULT_INVOICE_DELAY } from '../../utils/defaults';
 import { dateFormatter } from '../../utils/formatter';
 import { InvoiceDetail } from './InvoiceDetail';
 
@@ -51,15 +53,22 @@ function InvoiceCustomer({ customer, selected, setSelected }: any) {
 
   return (
     <ListItemGroup title={customer.name}>
-      {invoices.map((invoice) => (
-        <ListItem
-          key={invoice.id}
-          isSelected={selected?.id === invoice.id}
-          onClick={() => setSelected((e: Invoice) => (e?.id === invoice.id ? undefined : { ...invoice }))}
-        >
-          {`${invoice.documentId} - ${dateFormatter(invoice.createdAt)}`}
-        </ListItem>
-      ))}
+      {invoices.map((invoice) => {
+        const isLate = invoice.isPaid
+          ? false
+          : differenceInDays(new Date(), new Date(invoice.createdAt)) > DEFAULT_INVOICE_DELAY;
+        return (
+          <ListItem
+            key={invoice.id}
+            done={invoice.isPaid}
+            alert={isLate}
+            isSelected={selected?.id === invoice.id}
+            onClick={() => setSelected((e: Invoice) => (e?.id === invoice.id ? undefined : { ...invoice }))}
+          >
+            {isLate && '⚠️'} {`${invoice.documentId} - ${dateFormatter(invoice.createdAt)}`}
+          </ListItem>
+        );
+      })}
     </ListItemGroup>
   );
 }

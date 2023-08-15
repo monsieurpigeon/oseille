@@ -1,3 +1,4 @@
+import clsx from 'clsx';
 import { ReactNode } from 'react';
 import styled from 'styled-components';
 
@@ -8,6 +9,8 @@ interface ListItemProps {
   checkable?: boolean;
   checked?: boolean;
   onCheck?: () => void;
+  done?: boolean;
+  alert?: boolean;
 }
 
 const StyledListItem = styled.div`
@@ -26,6 +29,11 @@ const StyledListItem = styled.div`
     border: 1px dashed black;
   }
 
+  &.done {
+    justify-content: flex-end;
+    opacity: 0.5;
+  }
+
   &.selected {
     background-color: lightcyan;
     border: 1px solid cyan;
@@ -33,6 +41,9 @@ const StyledListItem = styled.div`
       background-color: lightcyan;
       border: 1px dashed cyan;
     }
+  }
+
+  &.alert {
   }
 `;
 
@@ -50,11 +61,11 @@ const StyledBlock = styled.div`
   }
 `;
 
-export function ListItem({ onClick, children, isSelected, checkable, checked, onCheck }: ListItemProps) {
+export function ListItem({ onClick, children, isSelected, checkable, checked, onCheck, done, alert }: ListItemProps) {
   return (
     <StyledBlock>
       <StyledListItem
-        className={isSelected ? 'selected' : ''}
+        className={clsx(isSelected && 'selected', done && 'done', alert && 'alert')}
         onClick={onClick}
       >
         {children}
