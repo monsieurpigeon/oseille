@@ -37,7 +37,7 @@ const statusIcon: { [key: string]: { icon: typeof CheckIcon; color: string } } =
   doing: { icon: RepeatIcon, color: 'blue.500' },
   todo: { icon: TimeIcon, color: 'yellow.500' },
 };
-export function Home() {
+export function About() {
   return (
     <>
       <MyPage>
