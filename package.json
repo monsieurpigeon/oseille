@@ -16,6 +16,7 @@
     "@hookform/resolvers": "^3.0.0",
     "@pdfme/generator": "^1.0.17",
     "@vercel/analytics": "^0.1.11",
+    "clsx": "^2.0.0",
     "date-fns": "^2.30.0",
     "events": "^3.3.0",
     "framer-motion": "^6.5.1",

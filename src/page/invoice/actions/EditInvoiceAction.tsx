@@ -18,7 +18,7 @@ export function EditInvoiceAction({ invoice }: EditInvoiceActionProps) {
 
   const { control, register, handleSubmit, reset } = useForm<InvoiceInfoInput>({
     resolver: zodResolver(invoiceSchema),
-    defaultValues: { notes: invoice.notes || '', createdAt: invoice.createdAt },
+    defaultValues: { notes: invoice.notes || '', createdAt: invoice.createdAt, isPaid: invoice.isPaid || false },
   });
 
   const handleClose = () => {
@@ -27,7 +27,7 @@ export function EditInvoiceAction({ invoice }: EditInvoiceActionProps) {
   };
 
   useEffect(() => {
-    reset({ notes: invoice.notes || '', createdAt: invoice.createdAt });
+    reset({ notes: invoice.notes || '', createdAt: invoice.createdAt, isPaid: invoice.isPaid || false });
   }, [invoice]);
 
   const onSubmit = (e: InvoiceInfoInput) => {

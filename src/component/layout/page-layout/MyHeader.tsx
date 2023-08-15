@@ -9,6 +9,7 @@ const MyStyledHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  background-color: #fff;
 `;
 
 export function MyHeader({ children }: MyHeaderProps) {

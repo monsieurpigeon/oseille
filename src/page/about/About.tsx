@@ -37,7 +37,7 @@ const statusIcon: { [key: string]: { icon: typeof CheckIcon; color: string } } =
   doing: { icon: RepeatIcon, color: 'blue.500' },
   todo: { icon: TimeIcon, color: 'yellow.500' },
 };
-export function Home() {
+export function About() {
   return (
     <>
       <MyPage>
@@ -46,7 +46,7 @@ export function Home() {
             <MyH1>Bienvenue sur Oseille</MyH1>
           </MyHeader>
           <MyScrollList>
-            <MySubtitle>L'application qui aide les maraîchers à gérer leur argent, entre autres...</MySubtitle>
+            <MySubtitle>L'application qui aide les maraîchers à gérer leurs factures</MySubtitle>
             <MySubtitle>Application gratuite, en code libre, et qui marche sans internet</MySubtitle>
             <p>
               <span className="bold">Attention</span> : Cette application est toujours en développement et va connaître

@@ -19,6 +19,7 @@ interface CreateInvoiceActionProps {
 export const invoiceSchema = z.object({
   createdAt: z.string(),
   notes: z.string(),
+  isPaid: z.boolean(),
 });
 
 const defaultValues = { createdAt: new Date().toISOString().split('T')[0], notes: '' };

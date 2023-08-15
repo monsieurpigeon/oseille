@@ -1,14 +1,15 @@
 import { Route, Routes } from 'react-router-dom';
 import { MainLayout } from './component/layout/MainLayout';
+import { About } from './page/about/About';
 import { BackOffice } from './page/back-office/BackOffice';
 import { Contact } from './page/contact/Contact';
 import { Customers } from './page/customer/Customers';
+import { Dashboard } from './page/dashboard/Dashboard';
 import { Deliveries } from './page/delivery/Deliveries';
-import { Home } from './page/home/Home';
 import { Invoices } from './page/invoice/Invoices';
-import { Settings } from './page/settings/Settings';
-import { Products } from './page/product/Products';
 import { Prices } from './page/prices/Prices';
+import { Products } from './page/product/Products';
+import { Settings } from './page/settings/Settings';
 
 function App() {
   return (
@@ -16,7 +17,7 @@ function App() {
       <Routes>
         <Route
           path="/"
-          element={<Home />}
+          element={<Dashboard />}
         />
         <Route
           path="product"
@@ -45,6 +46,10 @@ function App() {
         <Route
           path="settings"
           element={<Settings />}
+        />
+        <Route
+          path="about"
+          element={<About />}
         />
         <Route
           path="admin"

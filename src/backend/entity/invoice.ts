@@ -1,10 +1,10 @@
+import { documentIdFormatter } from '../../utils/formatter';
 import { relDb } from '../service/database';
+import { DocumentType } from '../service/pdf/pdf';
 import { store } from '../service/store';
 import { Customer, loadCustomer } from './customer';
+import { Delivery, addInvoiceId, removeInvoiceId } from './delivery';
 import { updateDocumentId } from './farm';
-import { documentIdFormatter } from '../../utils/formatter';
-import { addInvoiceId, Delivery, removeInvoiceId } from './delivery';
-import { DocumentType } from '../service/pdf/pdf';
 
 export interface Invoice {
   id: string;
@@ -15,6 +15,7 @@ export interface Invoice {
   deliveries: string[];
   createdAt: string;
   notes: string;
+  isPaid?: boolean;
 }
 
 export interface InvoiceInput {
@@ -31,6 +32,7 @@ export interface InvoiceInput {
 export interface InvoiceInfoInput {
   createdAt: string;
   notes: string;
+  isPaid: boolean;
 }
 
 export async function loadInvoices() {

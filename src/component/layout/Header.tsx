@@ -1,7 +1,7 @@
 import { Center, Flex, Spacer, Text } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
-import { SideKick } from '../modules/sidekick/SideKick';
 import { useFarmParameters } from '../../utils/hooks/useFarmParameters';
+import { SideKick } from '../modules/sidekick/SideKick';
 
 export function Header() {
   const { farm } = useFarmParameters();
@@ -10,6 +10,7 @@ export function Header() {
       borderBottom="4px solid lightcyan"
       h="50"
       marginBottom="20px"
+      bg="white"
     >
       <Center marginLeft="20px">
         <Link to="/">
