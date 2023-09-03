@@ -6,11 +6,11 @@ import {
   AlertDialogHeader,
   AlertDialogOverlay,
 } from '@chakra-ui/react';
-import { ReactNode, useRef } from 'react';
+import { ReactNode } from 'react';
 
 interface BasicModalProps {
   title: string;
-  children: ReactNode;
+  children?: ReactNode;
   footer: ReactNode;
   isOpen: boolean;
   onClose: () => void;

@@ -1,6 +1,6 @@
 import { Button, useDisclosure } from '@chakra-ui/react';
 import { format } from 'date-fns';
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import { useSnapshot } from 'valtio';
 import { store } from '../../../backend';
 import { BasicModal } from '../../../component/modal/BasicModal';
@@ -12,8 +12,6 @@ export function ExportCsvAction() {
   const snap = useSnapshot(store);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef<any>();
-
-  const [message, setMessage] = useState('');
 
   const handleExport = () => {
     const data = store.invoices
@@ -64,9 +62,6 @@ export function ExportCsvAction() {
     document.body.appendChild(link); // Required for FF
 
     link.click();
-    setTimeout(() => {
-      setMessage('Export terminé');
-    }, 1000);
   };
 
   return (
@@ -95,9 +90,7 @@ export function ExportCsvAction() {
         isOpen={isOpen}
         onClose={onClose}
         cancelRef={cancelRef}
-      >
-        {message}
-      </BasicModal>
+      ></BasicModal>
     </>
   );
 }
