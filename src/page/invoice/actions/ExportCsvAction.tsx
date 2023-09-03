@@ -27,11 +27,13 @@ export function ExportCsvAction() {
               unit: product?.unit,
               quantity: translate(clean(line.quantity)),
               price: translate(clean(line.price)),
-              date: format(new Date(invoice.createdAt), 'dd/MM/yyyy'),
+              deliveryDate: format(new Date(delivery?.deliveredAt), 'dd/MM/yyyy'),
+              invoiceDate: format(new Date(invoice.createdAt), 'dd/MM/yyyy'),
               customer: customerName,
               invoice: invoice.documentId,
               delivery: delivery?.documentId,
               totalPrice: translate(clean(line.quantity * line.price)),
+              status: invoice.isPaid ? 'Payé' : 'Attente',
             };
           });
         });
@@ -39,9 +41,22 @@ export function ExportCsvAction() {
       });
 
     const rows = [
-      ['Date', 'BL', 'Facture', 'Client', 'Produit', 'Quantité', 'Unité', 'Prix Unitaire', 'Prix Total'],
+      [
+        'Livré le',
+        'Facturé le',
+        'BL',
+        'Facture',
+        'Client',
+        'Produit',
+        'Quantité',
+        'Unité',
+        'Prix Unitaire',
+        'Prix Total',
+        'Statut',
+      ],
       ...data.map((line) => [
-        line?.date,
+        line?.deliveryDate,
+        line?.invoiceDate,
         line?.delivery,
         line?.invoice,
         line?.customer,
@@ -50,6 +65,7 @@ export function ExportCsvAction() {
         line?.unit,
         line?.price,
         line?.totalPrice,
+        line?.status,
       ]),
     ];
 
@@ -58,7 +74,7 @@ export function ExportCsvAction() {
     var encodedUri = encodeURI(csvContent);
     var link = document.createElement('a');
     link.setAttribute('href', encodedUri);
-    link.setAttribute('download', 'factures.csv');
+    link.setAttribute('download', `export-factures-${format(new Date(), 'dd-MM-yyyy')}.csv`);
     document.body.appendChild(link); // Required for FF
 
     link.click();
