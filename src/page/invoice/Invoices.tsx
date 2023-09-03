@@ -12,6 +12,7 @@ import { MyH1 } from '../../component/typography/MyFont';
 import { DEFAULT_INVOICE_DELAY } from '../../utils/defaults';
 import { dateFormatter } from '../../utils/formatter';
 import { InvoiceDetail } from './InvoiceDetail';
+import { ExportCsvAction } from './actions/ExportCsvAction';
 
 export function Invoices() {
   const [selected, setSelected] = useState<Invoice>();
@@ -31,6 +32,7 @@ export function Invoices() {
       <MySide>
         <MyHeader>
           <MyH1>Mes Factures</MyH1>
+          <ExportCsvAction />
         </MyHeader>
         <MyScrollList>
           {store.customers.map((customer) => (
