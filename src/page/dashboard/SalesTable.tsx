@@ -54,8 +54,8 @@ export function SalesTable() {
         return delivery?.lines.map((line) => {
           const product = store.products.find((p) => p.id === line.product.id);
           return {
-            product: product?.name,
-            productId: product?.id,
+            product: product?.name || 'defaultProduct',
+            productId: product?.id || '000',
             customer: invoice.customer.name,
             customerId: invoice.customer.id,
             totalPrice: line.quantity * line.price || 0,
@@ -125,7 +125,7 @@ export function SalesTable() {
             ))}
           </thead>
           <tbody>
-            {products.map((product) => (
+            {products.map((product: any) => (
               <tr>
                 <td className="horizontal">
                   <div>{product.name}</div>
