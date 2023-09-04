@@ -1,12 +1,11 @@
 import { useMemo } from 'react';
 import { useSnapshot } from 'valtio';
 import { Invoice, store } from '../../backend';
-import { MyHeader } from '../../component/layout/page-layout/MyHeader';
 import { MySimpleLayout } from '../../component/layout/page-layout/MySimpleLayout';
-import { MyH1 } from '../../component/typography/MyFont';
 import { getInvoicePrice } from '../../utils/aggregations';
 import { priceFormatter } from '../../utils/formatter';
 import { MetricCard, StyledMetricCards } from './MetricCards';
+import { SalesTable } from './SalesTable';
 
 function getValues(invoices: Invoice[]) {
   return invoices.reduce(
@@ -30,9 +29,6 @@ export function Dashboard() {
 
   return (
     <MySimpleLayout>
-      <MyHeader>
-        <MyH1>Dashboard</MyH1>
-      </MyHeader>
       <StyledMetricCards>
         <MetricCard
           title="Factures en attente"
@@ -45,6 +41,7 @@ export function Dashboard() {
           subValue={`${invoicePaid.quantity}`}
         />
       </StyledMetricCards>
+      <SalesTable />
     </MySimpleLayout>
   );
 }
