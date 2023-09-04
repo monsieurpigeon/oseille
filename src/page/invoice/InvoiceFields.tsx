@@ -12,6 +12,10 @@ const StyledCheckbox = styled.div`
   display: flex;
   align-items: center;
   gap: 20px;
+  .checkbox {
+    border: 2px solid grey;
+    border-radius: 5px;
+  }
 `;
 
 export function InvoiceFields({ register, control }: InvoiceFieldsProps) {
@@ -34,6 +38,7 @@ export function InvoiceFields({ register, control }: InvoiceFieldsProps) {
       <StyledCheckbox>
         <label htmlFor="isPaid">Payée ?</label>
         <Checkbox
+          className="checkbox"
           id="isPaid"
           {...register('isPaid')}
         />
