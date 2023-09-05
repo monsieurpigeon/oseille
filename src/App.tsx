@@ -44,7 +44,7 @@ function App() {
           element={<Contact />}
         />
         <Route
-          path="settings"
+          path="/settings/*"
           element={<Settings />}
         />
         <Route
