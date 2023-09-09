@@ -1,17 +1,18 @@
-import { Box, Text, Button, Input, useDisclosure, Image } from '@chakra-ui/react';
-import { CreateModal } from '../../component/modal/CreateModal';
-import { LogoInput, addLogo } from '../../backend';
+import { Box, Button, Image, Input, Text, useDisclosure } from '@chakra-ui/react';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useRef, useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
+import { LogoInput, addLogo } from '../../backend';
+import { CreateModal } from '../../component/modal/CreateModal';
 import { useFarmParameters } from '../../utils/hooks/useFarmParameters';
+import { SettingCard } from './components/SettingCard';
 
 export const logoSchema = z.object({
   data: z.string(),
 });
 
-export function Logo() {
+export function LogoSetting() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef<any>();
 
@@ -26,22 +27,20 @@ export function Logo() {
     onClose();
     reset();
   };
+
   const onSubmit = (e: LogoInput) => addLogo(e).then(handleClose).catch(console.error);
 
   return (
-    <>
+    <SettingCard
+      title="Mon Logo"
+      onUpdate={onOpen}
+    >
       {logo && (
         <Image
           boxSize="150px"
           src={logo}
         />
       )}
-      <Button
-        size="lg"
-        onClick={onOpen}
-      >
-        {logo ? 'Modifier le logo' : 'Ajouter un logo'}
-      </Button>
       <CreateModal
         isOpen={isOpen}
         cancelRef={cancelRef}
@@ -73,7 +72,7 @@ export function Logo() {
           </>
         }
       />
-    </>
+    </SettingCard>
   );
 }
 

@@ -1,14 +1,12 @@
-import { useFarmParameters } from '../../../utils/hooks/useFarmParameters';
-import { Farm } from '../Farm';
-import { Logo } from '../Logo';
+import { Flex } from '@chakra-ui/react';
+import { FarmSetting } from '../FarmSetting';
+import { LogoSetting } from '../LogoSetting';
 
 export function FarmSection() {
-  const { farm } = useFarmParameters();
-
   return (
-    <div>
-      <Logo />
-      <Farm farm={farm} />
-    </div>
+    <Flex gap={16}>
+      <LogoSetting />
+      <FarmSetting />
+    </Flex>
   );
 }

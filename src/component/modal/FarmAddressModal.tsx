@@ -1,14 +1,15 @@
-import { Button, Flex, FormControl, HStack, Input } from '@chakra-ui/react';
+import { Button, Flex, HStack, Input } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { FarmInput, updateFarm } from '../../backend';
-import { MyH2 } from '../../component/typography/MyFont';
+import { EMPTY_FARM } from '../../page/settings/Settings';
 import { DEFAULT_FARM } from '../../utils/defaults';
-import { EMPTY_FARM } from './Settings';
+import { useFarmParameters } from '../../utils/hooks/useFarmParameters';
+import { CreateModal } from './CreateModal';
 
-export const farmSchema = z.object({
+const farmSchema = z.object({
   title: z.string().min(1),
   address1: z.string().min(1),
   address2: z.string(),
@@ -18,7 +19,15 @@ export const farmSchema = z.object({
   email: z.string(),
 });
 
-export function Farm({ farm }: any) {
+interface FarmAddressModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
+
+export function FarmAddressModal({ isOpen, onClose }: FarmAddressModalProps) {
+  const { farm } = useFarmParameters();
+  const cancelRef = useRef<any>();
+
   const { register, handleSubmit, reset, formState } = useForm<FarmInput>({
     resolver: zodResolver(farmSchema),
     defaultValues: { ...EMPTY_FARM, ...farm },
@@ -28,13 +37,21 @@ export function Farm({ farm }: any) {
     if (farm) reset(farm);
   }, [farm]);
 
-  const onSubmit = (e: FarmInput) => farm && updateFarm({ ...farm, ...e }).catch(console.error);
+  const onSubmit = (e: FarmInput) =>
+    farm &&
+    updateFarm({ ...farm, ...e })
+      .then(onClose)
+      .catch(console.error);
 
   return (
-    <div>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <FormControl>
-          <MyH2>Ma ferme</MyH2>
+    <CreateModal
+      cancelRef={cancelRef}
+      isOpen={isOpen}
+      onClose={onClose}
+      onSubmit={handleSubmit(onSubmit)}
+      title="Mon adresse"
+      body={
+        <>
           {
             <Flex
               direction="column"
@@ -58,7 +75,6 @@ export function Farm({ farm }: any) {
                   placeholder={DEFAULT_FARM.zip}
                   {...register('zip')}
                 />
-
                 <Input
                   placeholder={DEFAULT_FARM.city}
                   {...register('city')}
@@ -72,17 +88,27 @@ export function Farm({ farm }: any) {
                 placeholder={DEFAULT_FARM.email}
                 {...register('email')}
               />
-
-              <Button
-                type="submit"
-                colorScheme={formState.isDirty ? 'blue' : 'gray'}
-              >
-                Enregistrer
-              </Button>
             </Flex>
           }
-        </FormControl>
-      </form>
-    </div>
+        </>
+      }
+      footer={
+        <>
+          <Button
+            ref={cancelRef}
+            onClick={onClose}
+          >
+            Annuler
+          </Button>
+          <Button
+            colorScheme={formState.isDirty ? 'blue' : 'gray'}
+            type="submit"
+            ml={3}
+          >
+            Enregistrer
+          </Button>
+        </>
+      }
+    />
   );
 }

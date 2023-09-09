@@ -1,15 +1,15 @@
 import { Button } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { Customer, Product } from '../../backend';
 import { Price, PriceInput, addPrice, deletePrice } from '../../backend/entity/price';
 import { MyNumberInput } from '../../component/form/MyNumberInput';
+import { useConfirm } from '../../component/modal/confirm-dialog/ConfirmContext';
+import { useSideKick } from '../../component/modules/sidekick/SideKickContext';
 import { priceFormatter } from '../../utils/formatter';
 import { useFarmParameters } from '../../utils/hooks/useFarmParameters';
-import { useSideKick } from '../../component/modules/sidekick/SideKickContext';
-import { useConfirm } from '../../component/modal/confirm-dialog/ConfirmContext';
 
 export const priceSchema = z.object({
   value: z.number().gt(0),
