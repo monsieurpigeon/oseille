@@ -22,7 +22,7 @@ export function ExportAction() {
 
   return (
     <Button
-      colorScheme="green"
+      colorScheme="twitter"
       onClick={exportDb}
     >
       Export

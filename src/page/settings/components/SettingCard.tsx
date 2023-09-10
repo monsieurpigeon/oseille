@@ -6,9 +6,10 @@ interface SettingCardProps {
   children: ReactNode;
   title: string;
   onUpdate?: () => void;
+  isDanger?: boolean;
 }
 
-export function SettingCard({ children, title, onUpdate }: SettingCardProps) {
+export function SettingCard({ children, title, onUpdate, isDanger }: SettingCardProps) {
   return (
     <Flex
       direction="column"
@@ -16,7 +17,7 @@ export function SettingCard({ children, title, onUpdate }: SettingCardProps) {
       alignItems="center"
       grow={1}
       padding={4}
-      border="1px solid grey"
+      border={isDanger ? '2px solid red' : '1px solid grey'}
       borderRadius={5}
       maxWidth={400}
     >
@@ -27,12 +28,14 @@ export function SettingCard({ children, title, onUpdate }: SettingCardProps) {
         width="100%"
       >
         <MyH2>{title}</MyH2>
-        <Button
-          onClick={onUpdate}
-          colorScheme="twitter"
-        >
-          Modifier
-        </Button>
+        {onUpdate && (
+          <Button
+            onClick={onUpdate}
+            colorScheme="twitter"
+          >
+            Modifier
+          </Button>
+        )}
       </Flex>
       {children}
     </Flex>

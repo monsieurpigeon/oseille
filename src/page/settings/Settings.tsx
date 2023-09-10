@@ -5,7 +5,7 @@ import { z } from 'zod';
 import { FarmInput, store } from '../../backend';
 import { MyHeader } from '../../component/layout/page-layout/MyHeader';
 import { MyH1 } from '../../component/typography/MyFont';
-import { AdvancedSection } from './sections/AdvancedSection';
+import { AdvancedSection } from './sections/advanced-section/AdvancedSection';
 import { FarmSection } from './sections/farm-section/FarmSection';
 import { InvoiceSection } from './sections/invoice-section/InvoiceSection';
 

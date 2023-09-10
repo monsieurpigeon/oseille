@@ -1,6 +1,7 @@
 import { Button, Input, Text, useDisclosure } from '@chakra-ui/react';
 import { ChangeEvent, useRef, useState } from 'react';
 import { handleImport } from '../../../../backend';
+import { MyIcon } from '../../../../component/MyIcon';
 import { MyModal } from '../../../../component/modal/MyModal';
 
 export function ImportAction() {
@@ -26,10 +27,10 @@ export function ImportAction() {
   return (
     <>
       <Button
-        colorScheme="yellow"
+        colorScheme="twitter"
         onClick={onOpen}
       >
-        Import
+        <MyIcon name="warning" /> Import
       </Button>
       <MyModal
         title="Importer le fichier"

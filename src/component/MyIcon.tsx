@@ -2,6 +2,7 @@ const icons = {
   email: '📧',
   phone: '📞',
   good: '✅',
+  warning: '❗',
 };
 
 type IconName = keyof typeof icons;
