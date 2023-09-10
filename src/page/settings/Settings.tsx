@@ -6,8 +6,8 @@ import { FarmInput, store } from '../../backend';
 import { MyHeader } from '../../component/layout/page-layout/MyHeader';
 import { MyH1 } from '../../component/typography/MyFont';
 import { AdvancedSection } from './sections/AdvancedSection';
-import { FarmSection } from './sections/FarmSection';
 import { InvoiceSection } from './sections/InvoiceSection';
+import { FarmSection } from './sections/farm-section/FarmSection';
 
 export const EMPTY_FARM: FarmInput = {
   title: '',

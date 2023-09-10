@@ -12,22 +12,21 @@ export function SettingCard({ children, title, onUpdate }: SettingCardProps) {
   return (
     <Flex
       direction="column"
-      gap={8}
+      gap={4}
       alignItems="center"
+      grow={1}
+      padding={4}
+      border="1px solid grey"
+      borderRadius={5}
     >
       <Flex
-        alignItems="center"
+        alignItems="flex-start"
         justifyContent="space-between"
         gap="8"
         width="100%"
       >
         <MyH2>{title}</MyH2>
-        <Button
-          colorScheme="yellow"
-          onClick={onUpdate}
-        >
-          Modifier
-        </Button>
+        <Button onClick={onUpdate}>Modifier</Button>
       </Flex>
       {children}
     </Flex>

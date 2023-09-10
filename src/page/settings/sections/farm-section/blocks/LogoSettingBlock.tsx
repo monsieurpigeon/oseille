@@ -3,16 +3,16 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useRef, useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { z } from 'zod';
-import { LogoInput, addLogo } from '../../backend';
-import { CreateModal } from '../../component/modal/CreateModal';
-import { useFarmParameters } from '../../utils/hooks/useFarmParameters';
-import { SettingCard } from './components/SettingCard';
+import { LogoInput, addLogo } from '../../../../../backend';
+import { CreateModal } from '../../../../../component/modal/CreateModal';
+import { useFarmParameters } from '../../../../../utils/hooks/useFarmParameters';
+import { SettingCard } from '../../../components/SettingCard';
 
 export const logoSchema = z.object({
   data: z.string(),
 });
 
-export function LogoSetting() {
+export function LogoSettingBlock() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef<any>();
 

@@ -12,7 +12,6 @@ import { EMPTY_FARM } from '../Settings';
 export const configSchema = z.object({
   footer: z.string(),
   isTVA: z.string(),
-  bioLabel: z.string(),
   rib: z.string(),
   iban: z.string(),
   bic: z.string(),
@@ -55,22 +54,6 @@ export function InvoiceSection() {
             <Select {...register('isTVA')}>
               <option value="non">NON</option>
               <option value="oui">OUI</option>
-            </Select>
-          </Flex>
-          <Flex
-            direction="column"
-            mt={3}
-            mb={3}
-          >
-            <FormLabel
-              flexGrow={1}
-              htmlFor="isTVA"
-            >
-              Agriculture biologique ?
-            </FormLabel>
-            <Select {...register('bioLabel')}>
-              <option value="non">NON</option>
-              <option value="fr-bio-01">FR-BIO-01</option>
             </Select>
           </Flex>
           <Flex

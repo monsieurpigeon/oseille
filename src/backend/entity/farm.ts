@@ -55,6 +55,10 @@ export interface LogoInput {
   data: string;
 }
 
+export interface PracticesInput {
+  bioLabel: string;
+}
+
 export const FARM_KEY = 'myFarm';
 
 export async function loadFarm() {
