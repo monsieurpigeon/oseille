@@ -16,9 +16,9 @@ export function BankSettingBlock() {
         isOpen={isOpen}
         onClose={onClose}
       />
-      {farm?.rib && <Text>RIB: {farm.siret}</Text>}
-      {farm?.iban && <Text>IBAN: {farm.naf}</Text>}
-      {farm?.bic && <Text>BIC: {farm.tva}</Text>}
+      {farm?.rib && <Text>RIB: {farm.rib}</Text>}
+      {farm?.iban && <Text>IBAN: {farm.iban}</Text>}
+      {farm?.bic && <Text>BIC: {farm.bic}</Text>}
     </SettingCard>
   );
 }

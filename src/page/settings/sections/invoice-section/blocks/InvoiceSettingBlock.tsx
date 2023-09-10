@@ -1,12 +1,15 @@
 import { useDisclosure } from '@chakra-ui/react';
 import { MyIcon } from '../../../../../component/MyIcon';
 import { FarmInvoicingModal } from '../../../../../component/modal/FarmInvoicingModal';
+import { DEFAULT_INVOICE_DELAY } from '../../../../../utils/defaults';
 import { useFarmParameters } from '../../../../../utils/hooks/useFarmParameters';
 import { SettingCard } from '../../../components/SettingCard';
 
 export function InvoiceSettingBlock() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { farm } = useFarmParameters();
+
+  const delay = farm?.invoiceDelay ?? DEFAULT_INVOICE_DELAY;
 
   return (
     <SettingCard
@@ -32,6 +35,7 @@ export function InvoiceSettingBlock() {
           <div>{farm.footer}</div>
         </div>
       )}
+      <div>{`Échéance : ${delay} jour${delay > 1 ? 's' : ''}`}</div>
     </SettingCard>
   );
 }

@@ -46,3 +46,4 @@ export const TVA_RATES = [
 ];
 
 export const DEFAULT_FOOTER = 'Tous nos produits sont certifies par FR-BIO-IT';
+export const DEFAULT_THREAT = 'En cas de retard de paiement, montant forfaitaire de 40€ pour frais de recouvrement';

@@ -38,7 +38,12 @@ export const MyModal = ({
       leastDestructiveRef={cancelRef}
       onClose={onClose}
     >
-      <form onSubmit={onSubmit}>
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          onSubmit();
+        }}
+      >
         <AlertDialogOverlay>
           <AlertDialogContent>
             <AlertDialogHeader

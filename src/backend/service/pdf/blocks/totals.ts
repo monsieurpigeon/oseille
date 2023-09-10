@@ -5,7 +5,7 @@ import {
   getInvoiceTaxes,
   getIsTVA,
 } from '../../../../utils/aggregations';
-import { DEFAULT_INVOICE_DELAY } from '../../../../utils/defaults';
+import { DEFAULT_INVOICE_DELAY, DEFAULT_THREAT } from '../../../../utils/defaults';
 import { dateFormatterDelay, priceFormatter } from '../../../../utils/formatter';
 import { Farm } from '../../../entity/farm';
 import { DocumentType } from '../pdf';
@@ -50,14 +50,14 @@ export const totals = (payload: any, type: DocumentType, farm: Farm | null) => {
                 {
                   columns: [
                     { text: 'Échéance', bold: true, width: 150 },
-                    { text: dateFormatterDelay(payload.createdAt, DEFAULT_INVOICE_DELAY) },
+                    { text: dateFormatterDelay(payload.createdAt, farm?.invoiceDelay ?? DEFAULT_INVOICE_DELAY) },
                   ],
                 },
                 {
                   text: 'Escompte pour paiement anticipé : néant',
                 },
                 {
-                  text: 'En cas de retard de paiement, montant forfaitaire de 40€ pour frais de recouvrement',
+                  text: farm?.threat ?? DEFAULT_THREAT,
                 },
                 ...(farm?.rib
                   ? [

@@ -26,6 +26,7 @@ export function EditDeliveryAction({ delivery }: EditDeliveryActionProps) {
       price: line.price || line.product.price,
       quantity: line.quantity,
     })),
+    notes: delivery.notes,
   };
 
   const { control, register, handleSubmit, reset, watch, setValue, getValues, formState } = useForm<DeliveryInput>({

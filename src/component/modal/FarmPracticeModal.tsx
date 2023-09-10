@@ -3,7 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
-import { FarmInput, PracticesInput, updateFarm } from '../../backend';
+import { FarmInput, updateFarm } from '../../backend';
 import { EMPTY_FARM } from '../../page/settings/Settings';
 import { useFarmParameters } from '../../utils/hooks/useFarmParameters';
 import { MyModal } from './MyModal';
@@ -21,7 +21,7 @@ export function FarmPracticeModal({ isOpen, onClose }: FarmPracticeModalProps) {
   const { farm } = useFarmParameters();
   const cancelRef = useRef<any>();
 
-  const { register, handleSubmit, reset, formState } = useForm<PracticesInput>({
+  const { register, handleSubmit, reset, formState } = useForm<FarmInput>({
     resolver: zodResolver(practiceSchema),
     defaultValues: { ...EMPTY_FARM, ...farm },
   });

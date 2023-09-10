@@ -1,12 +1,12 @@
 import PouchDb from 'pouchdb';
 import find from 'pouchdb-find';
 import rel from 'relational-pouch';
-import { addCustomer, loadCustomers } from '../entity/customer';
-import { addDelivery, loadDeliveries } from '../entity/delivery';
+import { loadCustomers } from '../entity/customer';
+import { loadDeliveries } from '../entity/delivery';
 import { addFarm, loadFarm } from '../entity/farm';
 import { loadInvoices } from '../entity/invoice';
-import { addProduct, loadProducts } from '../entity/product';
 import { loadPrices } from '../entity/price';
+import { loadProducts } from '../entity/product';
 
 PouchDb.plugin(find).plugin(rel);
 

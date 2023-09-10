@@ -1,10 +1,10 @@
 import { NavLink, Navigate, Route, Routes } from 'react-router-dom';
 import styled from 'styled-components';
 import { useSnapshot } from 'valtio';
-import { z } from 'zod';
 import { FarmInput, store } from '../../backend';
 import { MyHeader } from '../../component/layout/page-layout/MyHeader';
 import { MyH1 } from '../../component/typography/MyFont';
+import { DEFAULT_INVOICE_DELAY, DEFAULT_THREAT } from '../../utils/defaults';
 import { AdvancedSection } from './sections/advanced-section/AdvancedSection';
 import { FarmSection } from './sections/farm-section/FarmSection';
 import { InvoiceSection } from './sections/invoice-section/InvoiceSection';
@@ -26,23 +26,9 @@ export const EMPTY_FARM: FarmInput = {
   tva: '',
   isTVA: 'non',
   bioLabel: 'non',
+  invoiceDelay: DEFAULT_INVOICE_DELAY,
+  threat: DEFAULT_THREAT,
 };
-
-export const farmSchema = z.object({
-  title: z.string().min(1),
-  address1: z.string().min(1),
-  address2: z.string(),
-  zip: z.string().min(1),
-  city: z.string().min(1),
-  footer: z.string(),
-  isTVA: z.string(),
-  bioLabel: z.string(),
-});
-
-export const documentsSchema = z.object({
-  invoiceId: z.number().gte(0),
-  deliveryId: z.number().gte(0),
-});
 
 const StyledNavigation = styled.nav`
   display: flex;
