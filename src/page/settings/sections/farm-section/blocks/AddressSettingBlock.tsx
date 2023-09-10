@@ -1,5 +1,5 @@
-import { Flex, useDisclosure } from '@chakra-ui/react';
-import { Icon } from '../../../../../component/Icon';
+import { Flex, Text, useDisclosure } from '@chakra-ui/react';
+import { MyIcon } from '../../../../../component/MyIcon';
 import { FarmAddressModal } from '../../../../../component/modal/FarmAddressModal';
 import { useFarmParameters } from '../../../../../utils/hooks/useFarmParameters';
 import { SettingCard } from '../../../components/SettingCard';
@@ -17,6 +17,7 @@ export function AddressSettingBlock() {
         isOpen={isOpen}
         onClose={onClose}
       />
+      {!farm?.title && <Text>Aucune adresse</Text>}
       {farm && (
         <Flex direction="column">
           <div>{farm?.title}</div>
@@ -27,12 +28,12 @@ export function AddressSettingBlock() {
           </div>
           {farm.phone && (
             <div>
-              <Icon name="phone" /> {farm?.phone}
+              <MyIcon name="phone" /> {farm?.phone}
             </div>
           )}
           {farm.email && (
             <div>
-              <Icon name="email" /> {farm?.email}
+              <MyIcon name="email" /> {farm?.email}
             </div>
           )}
         </Flex>

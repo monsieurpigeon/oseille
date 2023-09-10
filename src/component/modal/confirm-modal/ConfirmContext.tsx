@@ -1,7 +1,7 @@
 import { ComponentProps, PropsWithChildren, createContext, useCallback, useContext, useRef, useState } from 'react';
-import { ConfirmDialog } from './ConfirmDialog';
+import { ConfirmModal } from './ConfirmModal';
 
-type Params = Partial<Omit<ComponentProps<typeof ConfirmDialog>, 'open' | 'onConfirm' | 'onCancel'>>;
+type Params = Partial<Omit<ComponentProps<typeof ConfirmModal>, 'open' | 'onConfirm' | 'onCancel'>>;
 
 const defaultFunction = (p?: Params) => Promise.resolve(true);
 
@@ -19,12 +19,12 @@ export function ConfirmContextProvider({ children }: PropsWithChildren) {
   return (
     <ConfirmContext.Provider value={{ confirmRef }}>
       {children}
-      <ConfirmDialogWithContext />
+      <ConfirmModalWithContext />
     </ConfirmContext.Provider>
   );
 }
 
-function ConfirmDialogWithContext() {
+function ConfirmModalWithContext() {
   const [open, setOpen] = useState(false);
   const [props, setProps] = useState<undefined | Params>({});
   const { confirmRef } = useContext(ConfirmContext);
@@ -38,7 +38,7 @@ function ConfirmDialogWithContext() {
     });
 
   return (
-    <ConfirmDialog
+    <ConfirmModal
       onConfirm={() => {
         resolveRef.current(true);
         setOpen(false);

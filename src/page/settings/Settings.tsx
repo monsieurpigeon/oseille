@@ -6,8 +6,8 @@ import { FarmInput, store } from '../../backend';
 import { MyHeader } from '../../component/layout/page-layout/MyHeader';
 import { MyH1 } from '../../component/typography/MyFont';
 import { AdvancedSection } from './sections/AdvancedSection';
-import { InvoiceSection } from './sections/InvoiceSection';
 import { FarmSection } from './sections/farm-section/FarmSection';
+import { InvoiceSection } from './sections/invoice-section/InvoiceSection';
 
 export const EMPTY_FARM: FarmInput = {
   title: '',
@@ -72,7 +72,7 @@ export function Settings() {
       </MyHeader>
       <StyledNavigation>
         <NavLink to="farm">Ferme</NavLink>
-        <NavLink to="invoices">Factures</NavLink>
+        <NavLink to="invoices">Facturation</NavLink>
         <NavLink to="advanced">Avancé</NavLink>
       </StyledNavigation>
       <Routes>

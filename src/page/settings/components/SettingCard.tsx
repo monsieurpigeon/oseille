@@ -18,6 +18,7 @@ export function SettingCard({ children, title, onUpdate }: SettingCardProps) {
       padding={4}
       border="1px solid grey"
       borderRadius={5}
+      maxWidth={400}
     >
       <Flex
         alignItems="flex-start"
@@ -26,7 +27,12 @@ export function SettingCard({ children, title, onUpdate }: SettingCardProps) {
         width="100%"
       >
         <MyH2>{title}</MyH2>
-        <Button onClick={onUpdate}>Modifier</Button>
+        <Button
+          onClick={onUpdate}
+          colorScheme="twitter"
+        >
+          Modifier
+        </Button>
       </Flex>
       {children}
     </Flex>

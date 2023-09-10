@@ -1,4 +1,4 @@
-import { Button, Flex, HStack, Input } from '@chakra-ui/react';
+import { Flex, HStack, Input } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
@@ -7,7 +7,7 @@ import { FarmInput, updateFarm } from '../../backend';
 import { EMPTY_FARM } from '../../page/settings/Settings';
 import { DEFAULT_FARM } from '../../utils/defaults';
 import { useFarmParameters } from '../../utils/hooks/useFarmParameters';
-import { CreateModal } from './CreateModal';
+import { MyModal } from './MyModal';
 
 const farmSchema = z.object({
   title: z.string().min(1),
@@ -44,71 +44,50 @@ export function FarmAddressModal({ isOpen, onClose }: FarmAddressModalProps) {
       .catch(console.error);
 
   return (
-    <CreateModal
+    <MyModal
       cancelRef={cancelRef}
       isOpen={isOpen}
       onClose={onClose}
       onSubmit={handleSubmit(onSubmit)}
       title="Mon adresse"
-      body={
-        <>
-          {
-            <Flex
-              direction="column"
-              gap="3"
-              marginBottom="20px"
-            >
-              <Input
-                placeholder={DEFAULT_FARM.title}
-                {...register('title')}
-              />
-              <Input
-                placeholder={DEFAULT_FARM.address1}
-                {...register('address1')}
-              />
-              <Input
-                placeholder={DEFAULT_FARM.address2}
-                {...register('address2')}
-              />
-              <HStack>
-                <Input
-                  placeholder={DEFAULT_FARM.zip}
-                  {...register('zip')}
-                />
-                <Input
-                  placeholder={DEFAULT_FARM.city}
-                  {...register('city')}
-                />
-              </HStack>
-              <Input
-                placeholder={DEFAULT_FARM.phone}
-                {...register('phone')}
-              />
-              <Input
-                placeholder={DEFAULT_FARM.email}
-                {...register('email')}
-              />
-            </Flex>
-          }
-        </>
-      }
-      footer={
-        <>
-          <Button
-            ref={cancelRef}
-            onClick={onClose}
-          >
-            Annuler
-          </Button>
-          <Button
-            colorScheme={formState.isDirty ? 'blue' : 'gray'}
-            type="submit"
-            ml={3}
-          >
-            Enregistrer
-          </Button>
-        </>
-      }
-    />
+      disabled={!formState.isDirty}
+    >
+      <Flex
+        direction="column"
+        gap="3"
+        marginBottom="20px"
+      >
+        <Input
+          placeholder={DEFAULT_FARM.title}
+          {...register('title')}
+        />
+        <Input
+          placeholder={DEFAULT_FARM.address1}
+          {...register('address1')}
+        />
+        <Input
+          placeholder={DEFAULT_FARM.address2}
+          {...register('address2')}
+        />
+        <HStack>
+          <Input
+            placeholder={DEFAULT_FARM.zip}
+            {...register('zip')}
+          />
+          <Input
+            placeholder={DEFAULT_FARM.city}
+            {...register('city')}
+          />
+        </HStack>
+        <Input
+          placeholder={DEFAULT_FARM.phone}
+          {...register('phone')}
+        />
+        <Input
+          placeholder={DEFAULT_FARM.email}
+          {...register('email')}
+        />
+      </Flex>
+    </MyModal>
   );
 }

@@ -6,7 +6,7 @@ import { z } from 'zod';
 import { Customer, Product } from '../../backend';
 import { Price, PriceInput, addPrice, deletePrice } from '../../backend/entity/price';
 import { MyNumberInput } from '../../component/form/MyNumberInput';
-import { useConfirm } from '../../component/modal/confirm-dialog/ConfirmContext';
+import { useConfirm } from '../../component/modal/confirm-modal/ConfirmContext';
 import { useSideKick } from '../../component/modules/sidekick/SideKickContext';
 import { priceFormatter } from '../../utils/formatter';
 import { useFarmParameters } from '../../utils/hooks/useFarmParameters';

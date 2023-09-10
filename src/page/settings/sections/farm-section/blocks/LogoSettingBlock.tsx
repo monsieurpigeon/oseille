@@ -1,10 +1,10 @@
-import { Box, Button, Image, Input, Text, useDisclosure } from '@chakra-ui/react';
+import { Box, Image, Input, Text, useDisclosure } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useRef, useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { z } from 'zod';
 import { LogoInput, addLogo } from '../../../../../backend';
-import { CreateModal } from '../../../../../component/modal/CreateModal';
+import { MyModal } from '../../../../../component/modal/MyModal';
 import { useFarmParameters } from '../../../../../utils/hooks/useFarmParameters';
 import { SettingCard } from '../../../components/SettingCard';
 
@@ -41,37 +41,20 @@ export function LogoSettingBlock() {
           src={logo}
         />
       )}
-      <CreateModal
+      {!logo && <Text>Aucun logo</Text>}
+      <MyModal
         isOpen={isOpen}
         cancelRef={cancelRef}
         onClose={handleClose}
         onSubmit={handleSubmit(onSubmit)}
         title="Ajouter un logo"
-        body={
-          <LogoFields
-            control={control}
-            register={register}
-            setValue={setValue}
-          />
-        }
-        footer={
-          <>
-            <Button
-              ref={cancelRef}
-              onClick={handleClose}
-            >
-              Annuler
-            </Button>
-            <Button
-              colorScheme="twitter"
-              type="submit"
-              ml={3}
-            >
-              Enregistrer
-            </Button>
-          </>
-        }
-      />
+      >
+        <LogoFields
+          control={control}
+          register={register}
+          setValue={setValue}
+        />
+      </MyModal>
     </SettingCard>
   );
 }

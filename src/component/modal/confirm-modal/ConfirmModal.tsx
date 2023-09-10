@@ -9,7 +9,7 @@ import {
 } from '@chakra-ui/react';
 import { useRef } from 'react';
 
-export function ConfirmDialog({ title, message, isOpen, onConfirm, onCancel }: any) {
+export function ConfirmModal({ title, message, isOpen, onConfirm, onCancel }: any) {
   const cancelRef = useRef<any>();
 
   return (
@@ -38,7 +38,7 @@ export function ConfirmDialog({ title, message, isOpen, onConfirm, onCancel }: a
               Annuler
             </Button>
             <Button
-              colorScheme="blue"
+              colorScheme="twitter"
               onClick={onConfirm}
               ml={3}
             >

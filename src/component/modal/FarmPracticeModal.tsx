@@ -1,4 +1,4 @@
-import { Button, Flex, FormLabel, Select } from '@chakra-ui/react';
+import { Flex, FormLabel, Select } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
@@ -6,7 +6,7 @@ import { z } from 'zod';
 import { FarmInput, PracticesInput, updateFarm } from '../../backend';
 import { EMPTY_FARM } from '../../page/settings/Settings';
 import { useFarmParameters } from '../../utils/hooks/useFarmParameters';
-import { CreateModal } from './CreateModal';
+import { MyModal } from './MyModal';
 
 const practiceSchema = z.object({
   bioLabel: z.string(),
@@ -37,51 +37,30 @@ export function FarmPracticeModal({ isOpen, onClose }: FarmPracticeModalProps) {
       .catch(console.error);
 
   return (
-    <CreateModal
+    <MyModal
       cancelRef={cancelRef}
       isOpen={isOpen}
       onClose={onClose}
       onSubmit={handleSubmit(onSubmit)}
       title="Mes Pratiques"
-      body={
-        <>
-          {
-            <Flex
-              direction="column"
-              gap="3"
-              marginBottom="20px"
-            >
-              <FormLabel
-                flexGrow={1}
-                htmlFor="bioLabel"
-              >
-                Agriculture biologique ?
-              </FormLabel>
-              <Select {...register('bioLabel')}>
-                <option value="non">NON</option>
-                <option value="fr-bio-01">FR-BIO-01</option>
-              </Select>
-            </Flex>
-          }
-        </>
-      }
-      footer={
-        <>
-          <Button
-            ref={cancelRef}
-            onClick={onClose}
-          >
-            Annuler
-          </Button>
-          <Button
-            colorScheme={formState.isDirty ? 'blue' : 'gray'}
-            type="submit"
-            ml={3}
-          >
-            Enregistrer
-          </Button>
-        </>
-      }
-    />
+      disabled={!formState.isDirty}
+    >
+      <Flex
+        direction="column"
+        gap="3"
+        marginBottom="20px"
+      >
+        <FormLabel
+          flexGrow={1}
+          htmlFor="bioLabel"
+        >
+          Agriculture biologique ?
+        </FormLabel>
+        <Select {...register('bioLabel')}>
+          <option value="non">NON</option>
+          <option value="fr-bio-01">FR-BIO-01</option>
+        </Select>
+      </Flex>
+    </MyModal>
   );
 }

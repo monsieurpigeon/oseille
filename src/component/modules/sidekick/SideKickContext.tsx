@@ -1,8 +1,8 @@
 import { PropsWithChildren, createContext, useContext, useState } from 'react';
 
-const defaultValue: { sentence: string; say: (sentence: string) => void; shutUp: () => void } = {
+const defaultValue: { sentence: string; say: (sentence: string, autoShutUp?: boolean) => void; shutUp: () => void } = {
   sentence: '',
-  say: (sentence: string) => undefined,
+  say: (sentence: string, autoShutUp?: boolean) => undefined,
   shutUp: () => undefined,
 };
 
@@ -15,8 +15,13 @@ export function SideKickContextProvider({ children }: PropsWithChildren) {
     <SideKickContext.Provider
       value={{
         sentence,
-        say: (sentence: string) => {
+        say: (sentence: string, autoShutUp?: boolean) => {
           setSentence(sentence);
+          if (autoShutUp) {
+            setTimeout(() => {
+              setSentence('');
+            }, 3000);
+          }
         },
         shutUp: () => {
           setSentence('');

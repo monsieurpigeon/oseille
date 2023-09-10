@@ -4,7 +4,7 @@ import { useMemo, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { Delivery, InvoiceInfoInput, addInvoice, store } from '../../../backend';
-import { CreateModal } from '../../../component/modal/CreateModal';
+import { MyModal } from '../../../component/modal/MyModal';
 import { InvoiceFields } from '../../invoice/InvoiceFields';
 
 interface CreateInvoiceActionProps {
@@ -65,36 +65,18 @@ export function CreateInvoiceAction({ toInvoice, setToInvoice }: CreateInvoiceAc
       >
         Facturer{!!facturable && ` ${facturable} BL${facturable > 1 ? 's' : ''}`}
       </Button>
-      <CreateModal
+      <MyModal
         isOpen={isOpen}
         cancelRef={cancelRef}
         onClose={handleClose}
         onSubmit={handleSubmit(onSubmit)}
         title="Nouvelle Facture"
-        body={
-          <InvoiceFields
-            control={control}
-            register={register}
-          />
-        }
-        footer={
-          <>
-            <Button
-              ref={cancelRef}
-              onClick={handleClose}
-            >
-              Annuler
-            </Button>
-            <Button
-              colorScheme="twitter"
-              type="submit"
-              ml={3}
-            >
-              Enregistrer
-            </Button>
-          </>
-        }
-      />
+      >
+        <InvoiceFields
+          control={control}
+          register={register}
+        />
+      </MyModal>
     </>
   );
 }

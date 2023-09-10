@@ -10,6 +10,6 @@ interface IconProps {
   name: IconName;
 }
 
-export function Icon({ name }: IconProps) {
+export function MyIcon({ name }: IconProps) {
   return <>{icons[name]}</>;
 }

@@ -3,7 +3,7 @@ import { format } from 'date-fns';
 import { useRef } from 'react';
 import { useSnapshot } from 'valtio';
 import { store } from '../../../backend';
-import { BasicModal } from '../../../component/modal/BasicModal';
+import { MyModal } from '../../../component/modal/MyModal';
 
 const clean = (num: number) => Number(num.toFixed(5));
 const translate = (num: number) => num.toLocaleString('fr-FR', { minimumFractionDigits: 2 });
@@ -83,30 +83,14 @@ export function ExportCsvAction() {
   return (
     <>
       <Button onClick={onOpen}>Exporter tout</Button>
-      <BasicModal
-        title={'Export CSV de toutes les factures'}
-        footer={
-          <>
-            <Button
-              ref={cancelRef}
-              onClick={onClose}
-            >
-              Fermer
-            </Button>
-
-            <Button
-              colorScheme="twitter"
-              onClick={handleExport}
-              ml={3}
-            >
-              Exporter
-            </Button>
-          </>
-        }
+      <MyModal
+        title="Export CSV de toutes les factures"
+        confirmLabel="Exporter"
+        onSubmit={handleExport}
         isOpen={isOpen}
         onClose={onClose}
         cancelRef={cancelRef}
-      ></BasicModal>
+      />
     </>
   );
 }

@@ -1,6 +1,6 @@
 import { useDisclosure } from '@chakra-ui/react';
 import { z } from 'zod';
-import { Icon } from '../../../../../component/Icon';
+import { MyIcon } from '../../../../../component/MyIcon';
 import { FarmPracticeModal } from '../../../../../component/modal/FarmPracticeModal';
 import { useFarmParameters } from '../../../../../utils/hooks/useFarmParameters';
 import { SettingCard } from '../../../components/SettingCard';
@@ -22,9 +22,9 @@ export function PracticesSettingBlock() {
         isOpen={isOpen}
         onClose={onClose}
       />
-      {farm?.bioLabel !== 'non' ? (
+      {farm?.bioLabel && farm.bioLabel !== 'non' ? (
         <div>
-          <Icon name="good" /> BIO : {farm?.bioLabel.toUpperCase()}
+          <MyIcon name="good" /> BIO : {farm?.bioLabel?.toUpperCase()}
         </div>
       ) : (
         <div>Agriculture conventionnelle</div>

@@ -1,6 +1,6 @@
 import { Button } from '@chakra-ui/react';
 import { destroyDatabase } from '../../../../backend';
-import { useConfirm } from '../../../../component/modal/confirm-dialog/ConfirmContext';
+import { useConfirm } from '../../../../component/modal/confirm-modal/ConfirmContext';
 
 export function DestroyAction() {
   const { confirm } = useConfirm();

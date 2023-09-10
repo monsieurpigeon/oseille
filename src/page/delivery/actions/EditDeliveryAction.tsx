@@ -1,10 +1,10 @@
-import { Button, useDisclosure } from '@chakra-ui/react';
+import { useDisclosure } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useRef } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { Delivery, DeliveryInput, updateDelivery } from '../../../backend';
 import { EditButton } from '../../../component/buttons';
-import { EditDialog } from '../../../component/modal/edit-dialog/EditDialog';
+import { MyModal } from '../../../component/modal/MyModal';
 import { DeliveryFields } from '../DeliveryFields';
 import { deliverySchema } from './CreateDeliveryAction';
 
@@ -28,7 +28,7 @@ export function EditDeliveryAction({ delivery }: EditDeliveryActionProps) {
     })),
   };
 
-  const { control, register, handleSubmit, reset, watch, setValue, getValues } = useForm<DeliveryInput>({
+  const { control, register, handleSubmit, reset, watch, setValue, getValues, formState } = useForm<DeliveryInput>({
     resolver: zodResolver(deliverySchema),
     defaultValues: updatedValues,
   });
@@ -58,42 +58,25 @@ export function EditDeliveryAction({ delivery }: EditDeliveryActionProps) {
         disabled={!isEditable}
         ml={3}
       />
-      <EditDialog
+      <MyModal
         isOpen={isOpen}
         cancelRef={cancelRef}
         title="Modifier la livraison"
         onClose={handleClose}
         onSubmit={handleSubmit(onSubmit)}
-        fields={
-          <DeliveryFields
-            control={control}
-            register={register}
-            fields={fields}
-            append={append}
-            remove={remove}
-            watch={watch}
-            setValue={setValue}
-            getValues={getValues}
-          />
-        }
-        footer={
-          <>
-            <Button
-              ref={cancelRef}
-              onClick={handleClose}
-            >
-              Annuler
-            </Button>
-            <Button
-              colorScheme="twitter"
-              type="submit"
-              ml={3}
-            >
-              Enregistrer
-            </Button>
-          </>
-        }
-      />
+        disabled={!formState.isDirty}
+      >
+        <DeliveryFields
+          control={control}
+          register={register}
+          fields={fields}
+          append={append}
+          remove={remove}
+          watch={watch}
+          setValue={setValue}
+          getValues={getValues}
+        />
+      </MyModal>
     </>
   );
 }

@@ -2,11 +2,11 @@ import { Button, useDisclosure } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRef } from 'react';
 import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 import { CustomerInput, addCustomer } from '../../../backend';
-import { CreateModal } from '../../../component/modal/CreateModal';
+import { MyModal } from '../../../component/modal/MyModal';
 import { EMPTY_CUSTOMER } from '../../../utils/defaults';
 import { CustomerFields } from '../CustomerFields';
-import { z } from 'zod';
 
 export const customerSchema = z.object({
   name: z.string().min(1),
@@ -44,36 +44,18 @@ export function CreateCustomerAction() {
       >
         Nouveau
       </Button>
-      <CreateModal
+      <MyModal
         isOpen={isOpen}
         cancelRef={cancelRef}
         title="Nouveau client"
         onClose={handleClose}
         onSubmit={handleSubmit(onSubmit)}
-        body={
-          <CustomerFields
-            register={register}
-            control={control}
-          />
-        }
-        footer={
-          <>
-            <Button
-              ref={cancelRef}
-              onClick={handleClose}
-            >
-              Annuler
-            </Button>
-            <Button
-              colorScheme="twitter"
-              type="submit"
-              ml={3}
-            >
-              Enregistrer
-            </Button>
-          </>
-        }
-      />
+      >
+        <CustomerFields
+          register={register}
+          control={control}
+        />
+      </MyModal>
     </>
   );
 }
