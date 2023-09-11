@@ -15,7 +15,7 @@ export function DestroyAction() {
       })
     ) {
       destroyDatabase()
-        .then(() => navigate('/'))
+        //.then(() => navigate('/'))
         .then(() => window.location.reload())
         .catch(console.error);
     }
