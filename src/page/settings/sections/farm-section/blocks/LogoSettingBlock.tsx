@@ -26,6 +26,7 @@ export function LogoSettingBlock() {
   const handleClose = () => {
     onClose();
     reset();
+    window.location.reload();
   };
 
   const onSubmit = (e: LogoInput) => addLogo(e).then(handleClose).catch(console.error);

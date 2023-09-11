@@ -89,8 +89,7 @@ export function FarmInvoicingModal({ isOpen, onClose }: FarmInvoicingModalProps)
           />
         </Flex>
         <Flex direction="column">
-          <FormLabel>Ma menace</FormLabel>
-          <Text>En cas de retard de paiement</Text>
+          <FormLabel>En cas de retard de paiement</FormLabel>
           <Textarea
             placeholder={`${DEFAULT_THREAT.slice(0, 56)}...`}
             {...register('threat')}

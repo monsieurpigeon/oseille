@@ -1,7 +1,7 @@
 import { useDisclosure } from '@chakra-ui/react';
 import { MyIcon } from '../../../../../component/MyIcon';
 import { FarmInvoicingModal } from '../../../../../component/modal/FarmInvoicingModal';
-import { DEFAULT_INVOICE_DELAY } from '../../../../../utils/defaults';
+import { DEFAULT_INVOICE_DELAY, DEFAULT_THREAT } from '../../../../../utils/defaults';
 import { useFarmParameters } from '../../../../../utils/hooks/useFarmParameters';
 import { SettingCard } from '../../../components/SettingCard';
 
@@ -36,6 +36,7 @@ export function InvoiceSettingBlock() {
         </div>
       )}
       <div>{`Échéance : ${delay} jour${delay > 1 ? 's' : ''}`}</div>
+      <div>Conditions de retard de paiement: {farm?.threat || DEFAULT_THREAT}</div>
     </SettingCard>
   );
 }

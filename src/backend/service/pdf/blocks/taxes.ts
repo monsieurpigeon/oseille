@@ -1,4 +1,4 @@
-import { TVA_RATES } from '../../../../utils/defaults';
+import { DEFAULT_TAX, TVA_RATES } from '../../../../utils/defaults';
 import { priceFormatter } from '../../../../utils/formatter';
 import { store } from '../../store';
 
@@ -7,7 +7,7 @@ export function taxes(payload: any) {
     const delivery = store.deliveries.find((d) => d.id === id);
     return delivery?.lines.map((line) => ({
       value: line.price * line.quantity,
-      tvaRate: line.product.tva,
+      tvaRate: line.product.tva || DEFAULT_TAX,
       tvaCode: TVA_RATES.find((rate) => rate.value === line.product.tva)?.code || 1,
     }));
   });
