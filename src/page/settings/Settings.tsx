@@ -1,23 +1,13 @@
-import { Box, Button, Flex, HStack, Text } from '@chakra-ui/react';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect } from 'react';
-import { useForm } from 'react-hook-form';
+import { NavLink, Navigate, Route, Routes } from 'react-router-dom';
+import styled from 'styled-components';
 import { useSnapshot } from 'valtio';
-import { z } from 'zod';
-import { FarmInput, store, updateFarm } from '../../backend';
-import { MyNumberInput } from '../../component/form/MyNumberInput';
+import { FarmInput, store } from '../../backend';
 import { MyHeader } from '../../component/layout/page-layout/MyHeader';
-import { MyPage } from '../../component/layout/page-layout/MyPage';
-import { MyScrollList } from '../../component/layout/page-layout/MyScrollList';
-import { MySide } from '../../component/layout/page-layout/MySide';
-import { MyH1, MyH2 } from '../../component/typography/MyFont';
-import { useFarmParameters } from '../../utils/hooks/useFarmParameters';
-import { Configuration } from './Configuration';
-import { Farm } from './Farm';
-import { Logo } from './Logo';
-import { DestroyAction } from './components/actions/DestoyAction';
-import { ExportAction } from './components/actions/ExportAction';
-import { ImportAction } from './components/actions/ImportAction';
+import { MyH1 } from '../../component/typography/MyFont';
+import { DEFAULT_INVOICE_DELAY, DEFAULT_THREAT } from '../../utils/defaults';
+import { AdvancedSection } from './sections/advanced-section/AdvancedSection';
+import { FarmSection } from './sections/farm-section/FarmSection';
+import { InvoiceSection } from './sections/invoice-section/InvoiceSection';
 
 export const EMPTY_FARM: FarmInput = {
   title: '',
@@ -36,112 +26,64 @@ export const EMPTY_FARM: FarmInput = {
   tva: '',
   isTVA: 'non',
   bioLabel: 'non',
+  invoiceDelay: DEFAULT_INVOICE_DELAY,
+  threat: DEFAULT_THREAT,
 };
 
-export const farmSchema = z.object({
-  title: z.string().min(1),
-  address1: z.string().min(1),
-  address2: z.string(),
-  zip: z.string().min(1),
-  city: z.string().min(1),
-  footer: z.string(),
-  isTVA: z.string(),
-  bioLabel: z.string(),
-});
+const StyledNavigation = styled.nav`
+  display: flex;
+  gap: 20px;
+  font-size: 1.2rem;
 
-export const documentsSchema = z.object({
-  invoiceId: z.number().gte(0),
-  deliveryId: z.number().gte(0),
-});
+  .active {
+    border-bottom: 2px solid var(--chakra-colors-blue-500);
+  }
+`;
 
-interface DocumentIdInput {
-  invoiceId: number;
-  deliveryId: number;
-}
+const StyledSettingPages = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  padding-top: 0px;
+  gap: 20px;
+`;
 
 export function Settings() {
   const snap = useSnapshot(store);
-  const { farm } = useFarmParameters();
-
-  const { control, formState, handleSubmit, reset } = useForm<DocumentIdInput>({
-    resolver: zodResolver(documentsSchema),
-    defaultValues: {
-      invoiceId: farm?.invoiceId,
-      deliveryId: farm?.deliveryId,
-    },
-  });
-
-  useEffect(() => {
-    reset({
-      invoiceId: farm?.invoiceId,
-      deliveryId: farm?.deliveryId,
-    });
-  }, [farm]);
-
-  const onSubmit = (e: DocumentIdInput) => farm && updateFarm({ ...farm, ...e });
 
   return (
-    <MyPage>
-      <MySide>
-        <MyHeader>
-          <MyH1>Réglages</MyH1>
-        </MyHeader>
-        <MyScrollList>
-          <Logo />
-          <Farm farm={farm} />
-          <Configuration farm={farm} />
-        </MyScrollList>
-      </MySide>
-      <MySide>
-        <MyHeader>
-          <MyH1>Réglages avancés</MyH1>
-        </MyHeader>
-        <MyScrollList>
-          <Box>
-            <MyH2>Import / Export</MyH2>
-            <Text>Tout enregistrer, tout supprimer, tout recharger</Text>
-
-            <HStack>
-              <ExportAction />
-              <DestroyAction />
-              <ImportAction />
-            </HStack>
-          </Box>
-          <Box>
-            <MyH2>Numéro de documents</MyH2>
-            <Text>À utiliser à vos risques et périls. Le mieux étant de ne pas y toucher.</Text>
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <Flex
-                gap={3}
-                alignItems="flex-end"
-              >
-                <Box flexGrow={1}>
-                  <Text>Prochaine livraison:</Text>
-                  <MyNumberInput
-                    min={1}
-                    control={control}
-                    name="deliveryId"
-                  />
-                </Box>
-                <Box flexGrow={1}>
-                  <Text>Prochaine facture:</Text>
-                  <MyNumberInput
-                    min={1}
-                    control={control}
-                    name="invoiceId"
-                  />
-                </Box>
-                <Button
-                  type="submit"
-                  colorScheme={formState.isDirty ? 'blue' : 'gray'}
-                >
-                  Enregistrer
-                </Button>
-              </Flex>
-            </form>
-          </Box>
-        </MyScrollList>
-      </MySide>
-    </MyPage>
+    <StyledSettingPages>
+      <MyHeader>
+        <MyH1>Réglages</MyH1>
+      </MyHeader>
+      <StyledNavigation>
+        <NavLink to="farm">Ferme</NavLink>
+        <NavLink to="invoices">Facturation</NavLink>
+        <NavLink to="advanced">Avancé</NavLink>
+      </StyledNavigation>
+      <Routes>
+        <Route
+          path="farm"
+          element={<FarmSection />}
+        />
+        <Route
+          path="invoices"
+          element={<InvoiceSection />}
+        />
+        <Route
+          path="advanced"
+          element={<AdvancedSection />}
+        />
+        <Route
+          path="*"
+          element={
+            <Navigate
+              to="farm"
+              replace
+            />
+          }
+        />
+      </Routes>
+    </StyledSettingPages>
   );
 }

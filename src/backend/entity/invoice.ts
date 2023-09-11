@@ -37,10 +37,14 @@ export interface InvoiceInfoInput {
 
 export async function loadInvoices() {
   const result = await relDb.rel.find('invoice');
-  store.invoices = result.invoices.map((invoice: Invoice) => ({
-    ...invoice,
-    createdAt: new Date(invoice.createdAt).toISOString().split('T')[0],
-  }));
+  store.invoices = result.invoices
+    .map((invoice: Invoice) => ({
+      ...invoice,
+      createdAt: new Date(invoice.createdAt).toISOString().split('T')[0],
+    }))
+    .sort((a: Invoice, b: Invoice) => {
+      return b.documentId.localeCompare(a.documentId);
+    });
 }
 
 export const addInvoice = async (deliveries: Delivery[], createdAt: string, notes: string) => {

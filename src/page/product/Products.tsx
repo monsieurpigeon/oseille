@@ -8,6 +8,7 @@ import { MyPage } from '../../component/layout/page-layout/MyPage';
 import { MyScrollList } from '../../component/layout/page-layout/MyScrollList';
 import { MySide } from '../../component/layout/page-layout/MySide';
 import { MyH1 } from '../../component/typography/MyFont';
+import { DEFAULT_TAX } from '../../utils/defaults';
 import { TVAFormatter } from '../../utils/formatter';
 import { useFarmParameters } from '../../utils/hooks/useFarmParameters';
 import { ProductDetail } from './ProductDetail';
@@ -43,7 +44,7 @@ export function Products() {
               <Flex width="100%">
                 <div>{`${entity.name} /${entity.unit}`}</div>
                 <Spacer />
-                <Text whiteSpace="nowrap">{isTVA && <div>TVA: {TVAFormatter(entity.tva)}</div>}</Text>
+                <Text whiteSpace="nowrap">{isTVA && <div>TVA: {TVAFormatter(entity.tva || DEFAULT_TAX)}</div>}</Text>
               </Flex>
             </ListItem>
           ))}

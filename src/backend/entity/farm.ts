@@ -23,6 +23,8 @@ export interface Farm {
   siret: string;
   naf: string;
   tva: string;
+  invoiceDelay: number;
+  threat: string;
   _attachements: {
     logo: {
       data: string;
@@ -49,6 +51,8 @@ export interface FarmInput {
   siret?: string;
   naf?: string;
   tva?: string;
+  invoiceDelay?: number;
+  threat?: string;
 }
 
 export interface LogoInput {

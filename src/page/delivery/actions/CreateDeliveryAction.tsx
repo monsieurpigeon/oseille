@@ -4,7 +4,7 @@ import { useRef } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { DeliveryInput, addDelivery } from '../../../backend';
-import { CreateModal } from '../../../component/modal/CreateModal';
+import { MyModal } from '../../../component/modal/MyModal';
 import { DeliveryFields } from '../DeliveryFields';
 
 export const deliverySchema = z.object({
@@ -50,42 +50,24 @@ export function CreateDeliveryAction() {
       >
         Nouveau
       </Button>
-      <CreateModal
+      <MyModal
         isOpen={isOpen}
         cancelRef={cancelRef}
         title="Nouveau produit"
         onClose={handleClose}
         onSubmit={handleSubmit(onSubmit)}
-        body={
-          <DeliveryFields
-            control={control}
-            register={register}
-            fields={fields}
-            append={append}
-            remove={remove}
-            watch={watch}
-            setValue={setValue}
-            getValues={getValues}
-          />
-        }
-        footer={
-          <>
-            <Button
-              ref={cancelRef}
-              onClick={handleClose}
-            >
-              Annuler
-            </Button>
-            <Button
-              colorScheme="twitter"
-              type="submit"
-              ml={3}
-            >
-              Enregistrer
-            </Button>
-          </>
-        }
-      />
+      >
+        <DeliveryFields
+          control={control}
+          register={register}
+          fields={fields}
+          append={append}
+          remove={remove}
+          watch={watch}
+          setValue={setValue}
+          getValues={getValues}
+        />
+      </MyModal>
     </>
   );
 }

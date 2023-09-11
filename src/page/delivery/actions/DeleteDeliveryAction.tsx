@@ -1,6 +1,6 @@
 import { Delivery, deleteDelivery } from '../../../backend';
 import { DeleteButton } from '../../../component/buttons';
-import { useConfirm } from '../../../component/modal/confirm-dialog/ConfirmContext';
+import { useConfirm } from '../../../component/modal/confirm-modal/ConfirmContext';
 
 interface DeleteDeliveryActionProps {
   delivery: Delivery;

@@ -1,6 +1,6 @@
 import { Button } from '@chakra-ui/react';
 import { db, exportData } from '../../../../backend';
-import { useConfirm } from '../../../../component/modal/confirm-dialog/ConfirmContext';
+import { useConfirm } from '../../../../component/modal/confirm-modal/ConfirmContext';
 
 export function ExportAction() {
   const { confirm } = useConfirm();
@@ -22,7 +22,7 @@ export function ExportAction() {
 
   return (
     <Button
-      colorScheme="green"
+      colorScheme="twitter"
       onClick={exportDb}
     >
       Export

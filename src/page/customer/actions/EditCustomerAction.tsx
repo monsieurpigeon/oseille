@@ -1,10 +1,11 @@
-import { Button, useDisclosure } from '@chakra-ui/react';
+import { Text, useDisclosure } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { Customer, CustomerInput, updateCustomer } from '../../../backend';
+import { MyIcon } from '../../../component/MyIcon';
 import { EditButton } from '../../../component/buttons';
-import { EditDialog } from '../../../component/modal/edit-dialog/EditDialog';
+import { MyModal } from '../../../component/modal/MyModal';
 import { CustomerFields } from '../CustomerFields';
 import { customerSchema } from './CreateCustomerAction';
 
@@ -16,7 +17,7 @@ export function EditCustomerAction({ customer }: EditCustomerActionProps) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef<any>();
 
-  const { control, register, handleSubmit, reset } = useForm<CustomerInput>({
+  const { control, register, handleSubmit, reset, formState } = useForm<CustomerInput>({
     resolver: zodResolver(customerSchema),
     defaultValues: customer,
   });
@@ -32,36 +33,27 @@ export function EditCustomerAction({ customer }: EditCustomerActionProps) {
   return (
     <>
       <EditButton onClick={onOpen} />
-      <EditDialog
+      <MyModal
         isOpen={isOpen}
         cancelRef={cancelRef}
         title="Modifier le client"
         onClose={onClose}
         onSubmit={handleSubmit(onSubmit)}
-        fields={
-          <CustomerFields
-            control={control}
-            register={register}
-          />
-        }
-        footer={
-          <>
-            <Button
-              ref={cancelRef}
-              onClick={onClose}
-            >
-              Annuler
-            </Button>
-            <Button
-              colorScheme="twitter"
-              type="submit"
-              ml={3}
-            >
-              Enregistrer
-            </Button>
-          </>
-        }
-      />
+        disabled={!formState.isDirty}
+      >
+        <Text
+          border="1px solid grey"
+          padding="2"
+          borderRadius="6"
+        >
+          <MyIcon name="warning" /> Si vous changez les coordonnées de ce client, les modifications apparaîtront dans
+          tous les documents.
+        </Text>
+        <CustomerFields
+          control={control}
+          register={register}
+        />
+      </MyModal>
     </>
   );
 }

@@ -1,10 +1,10 @@
-import { Button, useDisclosure } from '@chakra-ui/react';
+import { useDisclosure } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { Product, ProductInput, updateProduct } from '../../../backend';
 import { EditButton } from '../../../component/buttons';
-import { EditDialog } from '../../../component/modal/edit-dialog/EditDialog';
+import { MyModal } from '../../../component/modal/MyModal';
 import { ProductFields } from '../ProductFields';
 import { productSchema } from './CreateProductAction';
 
@@ -20,7 +20,7 @@ export function EditProductAction({ product }: EditProductActionProps) {
     product && updateProduct({ ...product, ...e }).then(onClose);
   };
 
-  const { control, register, handleSubmit, reset } = useForm<ProductInput>({
+  const { control, register, handleSubmit, reset, formState } = useForm<ProductInput>({
     resolver: zodResolver(productSchema),
     defaultValues: product,
   });
@@ -32,36 +32,19 @@ export function EditProductAction({ product }: EditProductActionProps) {
   return (
     <>
       <EditButton onClick={onOpen} />
-      <EditDialog
+      <MyModal
         isOpen={isOpen}
         cancelRef={cancelRef}
         title="Modifier le produit"
         onClose={onClose}
         onSubmit={handleSubmit(onSubmit)}
-        fields={
-          <ProductFields
-            control={control}
-            register={register}
-          />
-        }
-        footer={
-          <>
-            <Button
-              ref={cancelRef}
-              onClick={onClose}
-            >
-              Annuler
-            </Button>
-            <Button
-              colorScheme="twitter"
-              type="submit"
-              ml={3}
-            >
-              Enregistrer
-            </Button>
-          </>
-        }
-      />
+        disabled={!formState.isDirty}
+      >
+        <ProductFields
+          control={control}
+          register={register}
+        />
+      </MyModal>
     </>
   );
 }

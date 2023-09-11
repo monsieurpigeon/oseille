@@ -1,6 +1,6 @@
 import { Invoice, deleteInvoice } from '../../../backend';
 import { DeleteButton } from '../../../component/buttons';
-import { useConfirm } from '../../../component/modal/confirm-dialog/ConfirmContext';
+import { useConfirm } from '../../../component/modal/confirm-modal/ConfirmContext';
 import { useFarmParameters } from '../../../utils/hooks/useFarmParameters';
 
 interface DeleteInvoiceActionProps {

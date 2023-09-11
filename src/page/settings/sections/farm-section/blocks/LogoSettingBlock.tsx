@@ -1,17 +1,18 @@
-import { Box, Text, Button, Input, useDisclosure, Image } from '@chakra-ui/react';
-import { CreateModal } from '../../component/modal/CreateModal';
-import { LogoInput, addLogo } from '../../backend';
+import { Box, Image, Input, Text, useDisclosure } from '@chakra-ui/react';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useRef, useState } from 'react';
 import { useForm, useWatch } from 'react-hook-form';
 import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useFarmParameters } from '../../utils/hooks/useFarmParameters';
+import { LogoInput, addLogo } from '../../../../../backend';
+import { MyModal } from '../../../../../component/modal/MyModal';
+import { useFarmParameters } from '../../../../../utils/hooks/useFarmParameters';
+import { SettingCard } from '../../../components/SettingCard';
 
 export const logoSchema = z.object({
   data: z.string(),
 });
 
-export function Logo() {
+export function LogoSettingBlock() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef<any>();
 
@@ -25,55 +26,37 @@ export function Logo() {
   const handleClose = () => {
     onClose();
     reset();
+    window.location.reload();
   };
+
   const onSubmit = (e: LogoInput) => addLogo(e).then(handleClose).catch(console.error);
 
   return (
-    <>
+    <SettingCard
+      title="Mon Logo"
+      onUpdate={onOpen}
+    >
       {logo && (
         <Image
           boxSize="150px"
           src={logo}
         />
       )}
-      <Button
-        size="lg"
-        onClick={onOpen}
-      >
-        {logo ? 'Modifier le logo' : 'Ajouter un logo'}
-      </Button>
-      <CreateModal
+      {!logo && <Text>Aucun logo</Text>}
+      <MyModal
         isOpen={isOpen}
         cancelRef={cancelRef}
         onClose={handleClose}
         onSubmit={handleSubmit(onSubmit)}
         title="Ajouter un logo"
-        body={
-          <LogoFields
-            control={control}
-            register={register}
-            setValue={setValue}
-          />
-        }
-        footer={
-          <>
-            <Button
-              ref={cancelRef}
-              onClick={handleClose}
-            >
-              Annuler
-            </Button>
-            <Button
-              colorScheme="twitter"
-              type="submit"
-              ml={3}
-            >
-              Enregistrer
-            </Button>
-          </>
-        }
-      />
-    </>
+      >
+        <LogoFields
+          control={control}
+          register={register}
+          setValue={setValue}
+        />
+      </MyModal>
+    </SettingCard>
   );
 }
 

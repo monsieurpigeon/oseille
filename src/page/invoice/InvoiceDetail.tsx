@@ -18,6 +18,8 @@ export const InvoiceDetail = ({ selected }: { selected: Invoice }) => {
     [store],
   );
 
+  if (!currentCustomer) return null;
+
   return (
     <>
       <MyHeader>
@@ -34,7 +36,7 @@ export const InvoiceDetail = ({ selected }: { selected: Invoice }) => {
         fontWeight="bold"
       >
         <div>
-          {selected.isPaid && '✅'} {selected.customer.name}
+          {selected.isPaid && '✅'} {currentCustomer.name}
         </div>
         <div>{dateFormatter(selected.createdAt)}</div>
         <div>{selected.documentId}</div>
@@ -57,7 +59,7 @@ export const InvoiceDetail = ({ selected }: { selected: Invoice }) => {
               style={{ marginTop: '15px' }}
               key={id}
             >
-              <DeliveryDescriptionLine delivery={delivery} />
+              <DeliveryDescriptionLine delivery={{ ...delivery, customer: currentCustomer }} />
               <DeliveryDescription delivery={delivery} />
             </div>
           );

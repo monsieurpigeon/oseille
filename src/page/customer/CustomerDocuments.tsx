@@ -38,6 +38,7 @@ export function CustomerDocuments({ customer }: CustomerDocumentsProps) {
         {tab === 0 && (
           <StyledTab>
             <DocumentWrapper>
+              {deliveries.length === 0 && <div>Aucun bon de livraison</div>}
               {deliveries.map((delivery) => (
                 <DeliveryCard delivery={delivery} />
               ))}
@@ -47,6 +48,7 @@ export function CustomerDocuments({ customer }: CustomerDocumentsProps) {
         {tab === 1 && (
           <StyledTab>
             <DocumentWrapper>
+              {invoices.length === 0 && <div>Aucune facture</div>}
               {invoices.map((invoice) => (
                 <InvoiceCard invoice={invoice} />
               ))}

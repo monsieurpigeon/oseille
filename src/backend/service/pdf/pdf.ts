@@ -1,12 +1,12 @@
 import * as pdfMake from 'pdfmake/build/pdfmake';
+import { getIsTVA } from '../../../utils/aggregations';
+import { dateFormatter } from '../../../utils/formatter';
+import { FrBio01 } from '../../../utils/labels';
 import { store } from '../store';
 import { addresses } from './blocks/addresses';
 import { lines } from './blocks/lines';
-import { totals } from './blocks/totals';
-import { FrBio01 } from '../../../utils/labels';
-import { dateFormatter } from '../../../utils/formatter';
-import { getIsTVA } from '../../../utils/aggregations';
 import { taxes } from './blocks/taxes';
+import { totals } from './blocks/totals';
 
 const fonts = {
   Roboto: {
@@ -35,6 +35,7 @@ const getBioLogo = (label: string | undefined) => {
 
 export const exportDocument = ({ payload, type, open = false }: any) => {
   const isTVA = type === DocumentType.delivery ? payload.isTVA : getIsTVA(payload);
+  const currentCustomer = store.customers.find((customer) => customer.id === payload.customerId);
 
   const docDefinition: any = {
     defaultStyle: {
@@ -58,7 +59,7 @@ export const exportDocument = ({ payload, type, open = false }: any) => {
     ],
     content: [
       addresses(
-        payload,
+        { ...payload, customer: currentCustomer },
         type,
         !!store.farm?._attachements?.logo,
         !!store.farm?.bioLabel && store.farm?.bioLabel !== 'non',

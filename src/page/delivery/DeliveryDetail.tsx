@@ -9,6 +9,10 @@ import { EditDeliveryAction } from './actions/EditDeliveryAction';
 import { ExportDeliveryAction } from './actions/ExportDeliveryAction';
 
 export const DeliveryDetail = ({ selected }: { selected: Delivery }) => {
+  const currentCustomer = store.customers.find((customer) => customer.id === selected.customerId);
+
+  if (!currentCustomer) return null;
+
   return (
     <>
       <MyHeader>
@@ -21,7 +25,7 @@ export const DeliveryDetail = ({ selected }: { selected: Delivery }) => {
       </MyHeader>
 
       <div>
-        <DeliveryDescriptionLine delivery={selected} />
+        <DeliveryDescriptionLine delivery={{ ...selected, customer: currentCustomer }} />
         <div>Notes: {selected.notes}</div>
         {!!selected.invoiceId && (
           <div>{store.invoices.find((invoice) => invoice.id === selected.invoiceId)?.documentId}</div>
