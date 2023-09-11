@@ -85,11 +85,10 @@ export const loadDatabase = () => {
   loadPrices();
 };
 
-export const destroyDatabase = () => {
-  return db.destroy().then(() => {
-    db = new PouchDb(DB_NAME);
-    loadDatabase();
-  });
+export const destroyDatabase = async () => {
+  await db.destroy();
+  db = new PouchDb(DB_NAME);
+  loadDatabase();
 };
 
 export function exportData(data: any) {
