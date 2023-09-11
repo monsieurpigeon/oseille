@@ -11,12 +11,13 @@ export function DestroyAction() {
     if (
       await confirm({
         title: 'Tout effacer',
-        message: `Vous allez supprimer toute la base de donnée, assurez vous d'avoir bien fait un export de vos données`,
+        message:
+          "Vous allez supprimer toute la base de donnée, assurez vous d'avoir bien fait un export de vos données",
       })
     ) {
       destroyDatabase()
-        //.then(() => navigate('/'))
-        .then(() => window.location.reload())
+        .then(() => navigate('/'))
+        //.then(() => window.location.reload())
         .catch(console.error);
     }
   };
