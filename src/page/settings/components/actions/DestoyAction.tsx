@@ -1,9 +1,11 @@
 import { Button } from '@chakra-ui/react';
+import { useNavigate } from 'react-router-dom';
 import { destroyDatabase } from '../../../../backend';
 import { useConfirm } from '../../../../component/modal/confirm-modal/ConfirmContext';
 
 export function DestroyAction() {
   const { confirm } = useConfirm();
+  const navigate = useNavigate();
 
   const destroyDb = async () => {
     if (
@@ -13,6 +15,7 @@ export function DestroyAction() {
       })
     ) {
       destroyDatabase()
+        .then(() => navigate('/'))
         .then(() => window.location.reload())
         .catch(console.error);
     }
