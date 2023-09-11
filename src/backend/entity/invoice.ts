@@ -43,7 +43,7 @@ export async function loadInvoices() {
       createdAt: new Date(invoice.createdAt).toISOString().split('T')[0],
     }))
     .sort((a: Invoice, b: Invoice) => {
-      return b.createdAt.localeCompare(a.createdAt);
+      return b.documentId.localeCompare(a.documentId);
     });
 }
 
