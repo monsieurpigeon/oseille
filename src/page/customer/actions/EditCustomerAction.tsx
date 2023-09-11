@@ -1,8 +1,9 @@
-import { useDisclosure } from '@chakra-ui/react';
+import { Text, useDisclosure } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { Customer, CustomerInput, updateCustomer } from '../../../backend';
+import { MyIcon } from '../../../component/MyIcon';
 import { EditButton } from '../../../component/buttons';
 import { MyModal } from '../../../component/modal/MyModal';
 import { CustomerFields } from '../CustomerFields';
@@ -40,6 +41,14 @@ export function EditCustomerAction({ customer }: EditCustomerActionProps) {
         onSubmit={handleSubmit(onSubmit)}
         disabled={!formState.isDirty}
       >
+        <Text
+          border="1px solid grey"
+          padding="2"
+          borderRadius="6"
+        >
+          <MyIcon name="warning" /> Si vous changez les coordonnées de ce client, les modifications apparaîtront dans
+          tous les documents.
+        </Text>
         <CustomerFields
           control={control}
           register={register}
