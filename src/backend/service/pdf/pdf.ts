@@ -1,5 +1,4 @@
 import * as pdfMake from 'pdfmake/build/pdfmake';
-import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 import { getIsTVA } from '../../../utils/aggregations';
 import { dateFormatter } from '../../../utils/formatter';
 import { FrBio01 } from '../../../utils/labels';
@@ -9,7 +8,14 @@ import { lines } from './blocks/lines';
 import { taxes } from './blocks/taxes';
 import { totals } from './blocks/totals';
 
-(<any>pdfMake).vfs = pdfFonts.pdfMake.vfs;
+const fonts = {
+  Roboto: {
+    normal: 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-Regular.ttf',
+    bold: 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-Medium.ttf',
+    italics: 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-Italic.ttf',
+    bolditalics: 'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.66/fonts/Roboto/Roboto-MediumItalic.ttf',
+  },
+};
 
 export const DocumentType = {
   delivery: 'Delivery',
@@ -94,8 +100,8 @@ export const exportDocument = ({ payload, type, open = false }: any) => {
     },
   };
   if (open) {
-    pdfMake.createPdf(docDefinition).open();
+    pdfMake.createPdf(docDefinition, undefined, fonts).open();
   } else {
-    pdfMake.createPdf(docDefinition).download(payload.documentId);
+    pdfMake.createPdf(docDefinition, undefined, fonts).download(payload.documentId);
   }
 };
