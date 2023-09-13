@@ -42,7 +42,7 @@ export const totals = (payload: any, type: DocumentType, farm: Farm | null) => {
     layout: 'noBorders',
     style: 'tableExample',
     table: {
-      widths: ['*', 10, 130],
+      widths: ['*', 10, 150],
       body: [
         [
           type === DocumentType.invoice
@@ -83,7 +83,7 @@ export const totals = (payload: any, type: DocumentType, farm: Farm | null) => {
             layout: 'noBorders',
             table: {
               alignment: 'right',
-              widths: ['auto', 'auto', '*'],
+              widths: [65, 'auto', '*'],
               body: [
                 [`Total${isTVA ? ' HT' : ''}`, ':', { text: priceFormatter(totalHT), alignment: 'right' }],
                 ...(isTVA
