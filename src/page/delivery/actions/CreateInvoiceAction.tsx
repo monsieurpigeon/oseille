@@ -5,6 +5,8 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { Delivery, InvoiceInfoInput, addInvoice, store } from '../../../backend';
 import { MyModal } from '../../../component/modal/MyModal';
+import { useSideKick } from '../../../component/modules/sidekick/SideKickContext';
+import { SideKickFeeling } from '../../../component/modules/sidekick/enums';
 import { InvoiceFields } from '../../invoice/InvoiceFields';
 
 interface CreateInvoiceActionProps {
@@ -27,6 +29,7 @@ const defaultValues = { createdAt: new Date().toISOString().split('T')[0], notes
 export function CreateInvoiceAction({ toInvoice, setToInvoice }: CreateInvoiceActionProps) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef<any>();
+  const { say } = useSideKick();
 
   const { control, register, handleSubmit, reset } = useForm<InvoiceInfoInput>({
     resolver: zodResolver(invoiceSchema),
@@ -42,6 +45,13 @@ export function CreateInvoiceAction({ toInvoice, setToInvoice }: CreateInvoiceAc
       e.createdAt,
       e.notes,
     )
+      .then(() =>
+        say({
+          sentence: `La facture a bien été enregistrée`,
+          autoShutUp: true,
+          feeling: SideKickFeeling.GOOD,
+        }),
+      )
       .then(() => setToInvoice({}))
       .then(handleClose);
   };

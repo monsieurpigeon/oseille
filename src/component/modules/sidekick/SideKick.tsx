@@ -14,10 +14,9 @@ const sideKickColors: { [key in SideKickFeeling]: string } = {
 };
 
 const StyledSentence = styled.div<{ feeling?: SideKickFeeling }>`
-  font-size: 1.5rem;
   background-color: #f3fff0;
   position: absolute;
-  line-height: 30px;
+  line-height: 24px;
   border: 3px solid ${({ feeling }) => sideKickColors[feeling || SideKickFeeling.NEUTRAL]};
   border-radius: 20px;
   border-bottom-right-radius: 0;

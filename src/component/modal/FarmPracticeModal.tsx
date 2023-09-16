@@ -6,6 +6,8 @@ import { z } from 'zod';
 import { FarmInput, updateFarm } from '../../backend';
 import { EMPTY_FARM } from '../../page/settings/Settings';
 import { useFarmParameters } from '../../utils/hooks/useFarmParameters';
+import { useSideKick } from '../modules/sidekick/SideKickContext';
+import { SideKickFeeling } from '../modules/sidekick/enums';
 import { MyModal } from './MyModal';
 
 const practiceSchema = z.object({
@@ -20,6 +22,7 @@ interface FarmPracticeModalProps {
 export function FarmPracticeModal({ isOpen, onClose }: FarmPracticeModalProps) {
   const { farm } = useFarmParameters();
   const cancelRef = useRef<any>();
+  const { say } = useSideKick();
 
   const { register, handleSubmit, reset, formState } = useForm<FarmInput>({
     resolver: zodResolver(practiceSchema),
@@ -33,6 +36,13 @@ export function FarmPracticeModal({ isOpen, onClose }: FarmPracticeModalProps) {
   const onSubmit = (e: FarmInput) =>
     farm &&
     updateFarm({ ...farm, ...e })
+      .then(() =>
+        say({
+          sentence: `Les pratiques ont bien été enregistrées`,
+          autoShutUp: true,
+          feeling: SideKickFeeling.GOOD,
+        }),
+      )
       .then(onClose)
       .catch(console.error);
 

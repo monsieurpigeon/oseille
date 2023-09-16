@@ -6,6 +6,8 @@ import { Customer, CustomerInput, updateCustomer } from '../../../backend';
 import { MyIcon } from '../../../component/MyIcon';
 import { EditButton } from '../../../component/buttons';
 import { MyModal } from '../../../component/modal/MyModal';
+import { useSideKick } from '../../../component/modules/sidekick/SideKickContext';
+import { SideKickFeeling } from '../../../component/modules/sidekick/enums';
 import { CustomerFields } from '../CustomerFields';
 import { customerSchema } from './CreateCustomerAction';
 
@@ -16,6 +18,7 @@ interface EditCustomerActionProps {
 export function EditCustomerAction({ customer }: EditCustomerActionProps) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef<any>();
+  const { say } = useSideKick();
 
   const { control, register, handleSubmit, reset, formState } = useForm<CustomerInput>({
     resolver: zodResolver(customerSchema),
@@ -27,7 +30,16 @@ export function EditCustomerAction({ customer }: EditCustomerActionProps) {
   }, [customer]);
 
   const onSubmit = (e: CustomerInput) => {
-    customer && updateCustomer({ ...customer, ...e }).then(onClose);
+    customer &&
+      updateCustomer({ ...customer, ...e })
+        .then(() =>
+          say({
+            sentence: `Le client ${e.name} a bien été enregistré`,
+            autoShutUp: true,
+            feeling: SideKickFeeling.GOOD,
+          }),
+        )
+        .then(onClose);
   };
 
   return (

@@ -7,6 +7,8 @@ import { FarmInput, updateFarm } from '../../backend';
 import { EMPTY_FARM } from '../../page/settings/Settings';
 import { DEFAULT_FARM } from '../../utils/defaults';
 import { useFarmParameters } from '../../utils/hooks/useFarmParameters';
+import { useSideKick } from '../modules/sidekick/SideKickContext';
+import { SideKickFeeling } from '../modules/sidekick/enums';
 import { MyModal } from './MyModal';
 
 const farmSchema = z.object({
@@ -27,6 +29,7 @@ interface FarmAddressModalProps {
 export function FarmAddressModal({ isOpen, onClose }: FarmAddressModalProps) {
   const { farm } = useFarmParameters();
   const cancelRef = useRef<any>();
+  const { say } = useSideKick();
 
   const { register, handleSubmit, reset, formState } = useForm<FarmInput>({
     resolver: zodResolver(farmSchema),
@@ -40,6 +43,13 @@ export function FarmAddressModal({ isOpen, onClose }: FarmAddressModalProps) {
   const onSubmit = (e: FarmInput) =>
     farm &&
     updateFarm({ ...farm, ...e })
+      .then(() =>
+        say({
+          sentence: `L'adresse a bien été enregistrée`,
+          autoShutUp: true,
+          feeling: SideKickFeeling.GOOD,
+        }),
+      )
       .then(onClose)
       .catch(console.error);
 

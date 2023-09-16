@@ -8,6 +8,8 @@ import { EMPTY_FARM } from '../../page/settings/Settings';
 import { DEFAULT_FOOTER, DEFAULT_THREAT } from '../../utils/defaults';
 import { useFarmParameters } from '../../utils/hooks/useFarmParameters';
 import { MyNumberInput } from '../form/MyNumberInput';
+import { useSideKick } from '../modules/sidekick/SideKickContext';
+import { SideKickFeeling } from '../modules/sidekick/enums';
 import { MyModal } from './MyModal';
 
 interface FarmInvoicingModalProps {
@@ -24,6 +26,7 @@ export const configSchema = z.object({
 
 export function FarmInvoicingModal({ isOpen, onClose }: FarmInvoicingModalProps) {
   const { farm } = useFarmParameters();
+  const { say } = useSideKick();
   const cancelRef = useRef<any>();
 
   const { control, register, handleSubmit, formState, setValue } = useForm<FarmInput>({
@@ -34,6 +37,13 @@ export function FarmInvoicingModal({ isOpen, onClose }: FarmInvoicingModalProps)
   const onSubmit = (e: FarmInput) => {
     farm &&
       updateFarm({ ...farm, ...e })
+        .then(() =>
+          say({
+            sentence: `Les informations de facturation ont bien été enregistrées`,
+            autoShutUp: true,
+            feeling: SideKickFeeling.GOOD,
+          }),
+        )
         .then(onClose)
         .catch(console.error);
   };

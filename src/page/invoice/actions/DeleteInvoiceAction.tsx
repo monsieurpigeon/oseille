@@ -1,6 +1,8 @@
 import { Invoice, deleteInvoice } from '../../../backend';
 import { DeleteButton } from '../../../component/buttons';
 import { useConfirm } from '../../../component/modal/confirm-modal/ConfirmContext';
+import { useSideKick } from '../../../component/modules/sidekick/SideKickContext';
+import { SideKickFeeling } from '../../../component/modules/sidekick/enums';
 import { useFarmParameters } from '../../../utils/hooks/useFarmParameters';
 
 interface DeleteInvoiceActionProps {
@@ -9,6 +11,7 @@ interface DeleteInvoiceActionProps {
 
 export function DeleteInvoiceAction({ invoice }: DeleteInvoiceActionProps) {
   const { confirm } = useConfirm();
+  const { say } = useSideKick();
   const { farm } = useFarmParameters();
 
   const isDeletable = farm && Number(invoice.documentId.split('-')[2]) === farm.invoiceId - 1;
@@ -20,7 +23,13 @@ export function DeleteInvoiceAction({ invoice }: DeleteInvoiceActionProps) {
         message: 'Vous ne pourrez pas la récupérer',
       })
     ) {
-      deleteInvoice(invoice);
+      deleteInvoice(invoice).then(() =>
+        say({
+          sentence: `La facture ${invoice.documentId} a bien été supprimée`,
+          autoShutUp: true,
+          feeling: SideKickFeeling.GOOD,
+        }),
+      );
     }
   };
 

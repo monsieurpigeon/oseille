@@ -85,7 +85,7 @@ export function PriceNumberInput({
     isTVA &&
       say({
         feeling: SideKickFeeling.COMPUTE,
-        sentence: `Ce qui fait : ${priceFormatter((watchValue || value) * (1 + tva / 100))}TTC`,
+        sentence: `Ce qui fait: ${priceFormatter((watchValue || value) * (1 + tva / 100))}TTC`,
       });
   }, [watchValue]);
 

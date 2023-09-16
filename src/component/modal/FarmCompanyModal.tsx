@@ -6,6 +6,8 @@ import { z } from 'zod';
 import { FarmInput, updateFarm } from '../../backend';
 import { EMPTY_FARM } from '../../page/settings/Settings';
 import { useFarmParameters } from '../../utils/hooks/useFarmParameters';
+import { useSideKick } from '../modules/sidekick/SideKickContext';
+import { SideKickFeeling } from '../modules/sidekick/enums';
 import { MyModal } from './MyModal';
 
 interface FarmCompanyModalProps {
@@ -21,6 +23,7 @@ export const configSchema = z.object({
 
 export function FarmCompanyModal({ isOpen, onClose }: FarmCompanyModalProps) {
   const { farm } = useFarmParameters();
+  const { say } = useSideKick();
   const cancelRef = useRef<any>();
 
   const { register, handleSubmit, reset, formState } = useForm<FarmInput>({
@@ -31,6 +34,13 @@ export function FarmCompanyModal({ isOpen, onClose }: FarmCompanyModalProps) {
   const onSubmit = (e: FarmInput) => {
     farm &&
       updateFarm({ ...farm, ...e })
+        .then(() =>
+          say({
+            sentence: `Les informations professionnelles ont bien été enregistrées`,
+            autoShutUp: true,
+            feeling: SideKickFeeling.GOOD,
+          }),
+        )
         .then(onClose)
         .catch(console.error);
   };
