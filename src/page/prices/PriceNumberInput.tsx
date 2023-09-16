@@ -8,6 +8,7 @@ import { Price, PriceInput, addPrice, deletePrice } from '../../backend/entity/p
 import { MyNumberInput } from '../../component/form/MyNumberInput';
 import { useConfirm } from '../../component/modal/confirm-modal/ConfirmContext';
 import { useSideKick } from '../../component/modules/sidekick/SideKickContext';
+import { SideKickFeeling } from '../../component/modules/sidekick/enums';
 import { priceFormatter } from '../../utils/formatter';
 import { useFarmParameters } from '../../utils/hooks/useFarmParameters';
 
@@ -50,7 +51,15 @@ export function PriceNumberInput({
         }`,
       })
     ) {
-      deletePrice(price).then(onClose);
+      deletePrice(price)
+        .then(() =>
+          say({
+            sentence: `Le tarif a bien été supprimé`,
+            autoShutUp: true,
+            feeling: SideKickFeeling.GOOD,
+          }),
+        )
+        .then(onClose);
     }
   };
 
@@ -60,14 +69,24 @@ export function PriceNumberInput({
 
   const onSubmit = (e: PriceInput) =>
     addPrice({ ...price, ...e, customer, product })
-      .then(shutUp)
+      .then(() =>
+        say({
+          sentence: `Le tarif a bien été enregistré`,
+          autoShutUp: true,
+          feeling: SideKickFeeling.GOOD,
+        }),
+      )
       .then(onClose)
       .catch(console.error);
 
   const tva = +product.tva || 5.5;
 
   useEffect(() => {
-    isTVA && say(`Ce qui fait : ${priceFormatter((watchValue || value) * (1 + tva / 100))}TTC`);
+    isTVA &&
+      say({
+        feeling: SideKickFeeling.COMPUTE,
+        sentence: `Ce qui fait : ${priceFormatter((watchValue || value) * (1 + tva / 100))}TTC`,
+      });
   }, [watchValue]);
 
   return (

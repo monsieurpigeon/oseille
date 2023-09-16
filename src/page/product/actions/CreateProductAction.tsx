@@ -6,6 +6,7 @@ import { z } from 'zod';
 import { ProductInput, addProduct } from '../../../backend';
 import { MyModal } from '../../../component/modal/MyModal';
 import { useSideKick } from '../../../component/modules/sidekick/SideKickContext';
+import { SideKickFeeling } from '../../../component/modules/sidekick/enums';
 import { ProductFields } from '../ProductFields';
 
 export const productSchema = z.object({
@@ -37,7 +38,13 @@ export function CreateProductAction() {
 
   const onSubmit = (e: ProductInput) =>
     addProduct(e)
-      .then(() => say(`Le produit ${e.name} a bien été enregistré`, true))
+      .then(() =>
+        say({
+          sentence: `Le produit ${e.name} a bien été enregistré`,
+          autoShutUp: true,
+          feeling: SideKickFeeling.GOOD,
+        }),
+      )
       .then(handleClose)
       .catch(console.error);
 
