@@ -1,5 +1,6 @@
 import { Center, Flex, Link, Text } from '@chakra-ui/react';
 import { NavLink } from 'react-router-dom';
+import { SideKick } from '../modules/sidekick/SideKick';
 
 export function Footer() {
   return (
@@ -13,6 +14,7 @@ export function Footer() {
           <Link href="https://github.com/monsieurpigeon/oseille">Github</Link>
         </Text>
       </Flex>
+      <SideKick />
     </Center>
   );
 }

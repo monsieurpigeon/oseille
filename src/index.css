@@ -16,3 +16,12 @@
   font-style: italic;
   margin-left: 30px;
 }
+
+.clickable {
+  cursor: pointer;
+  user-select: none;
+}
+
+.no-select {
+  user-select: none;
+}

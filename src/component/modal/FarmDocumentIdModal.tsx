@@ -6,6 +6,8 @@ import { z } from 'zod';
 import { updateFarm } from '../../backend';
 import { useFarmParameters } from '../../utils/hooks/useFarmParameters';
 import { MyNumberInput } from '../form/MyNumberInput';
+import { useSideKick } from '../modules/sidekick/SideKickContext';
+import { SideKickFeeling } from '../modules/sidekick/enums';
 import { MyModal } from './MyModal';
 
 export const documentsSchema = z.object({
@@ -21,6 +23,7 @@ interface DocumentIdInput {
 export function FarmDocumentIdModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const { farm } = useFarmParameters();
   const cancelRef = useRef<any>();
+  const { say } = useSideKick();
 
   const { control, formState, handleSubmit, reset } = useForm<DocumentIdInput>({
     resolver: zodResolver(documentsSchema),
@@ -37,7 +40,17 @@ export function FarmDocumentIdModal({ isOpen, onClose }: { isOpen: boolean; onCl
     });
   }, [farm]);
 
-  const onSubmit = (e: DocumentIdInput) => farm && updateFarm({ ...farm, ...e }).then(onClose);
+  const onSubmit = (e: DocumentIdInput) =>
+    farm &&
+    updateFarm({ ...farm, ...e })
+      .then(() =>
+        say({
+          sentence: `Les compteurs de documents ont bien été enregistrés`,
+          autoShutUp: true,
+          feeling: SideKickFeeling.GOOD,
+        }),
+      )
+      .then(onClose);
 
   return (
     <MyModal

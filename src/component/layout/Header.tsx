@@ -1,7 +1,6 @@
 import { Center, Flex, Spacer, Text } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
 import { useFarmParameters } from '../../utils/hooks/useFarmParameters';
-import { SideKick } from '../modules/sidekick/SideKick';
 
 export function Header() {
   const { farm } = useFarmParameters();
@@ -20,11 +19,6 @@ export function Header() {
       <Spacer />
       <Center marginRight="20px">
         <Text as="b">{farm?.title?.toUpperCase()}</Text>
-      </Center>
-
-      <Spacer />
-      <Center marginRight="20px">
-        <SideKick />
       </Center>
     </Flex>
   );

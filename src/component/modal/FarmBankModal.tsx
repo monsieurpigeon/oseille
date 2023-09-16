@@ -6,6 +6,8 @@ import { z } from 'zod';
 import { FarmInput, updateFarm } from '../../backend';
 import { EMPTY_FARM } from '../../page/settings/Settings';
 import { useFarmParameters } from '../../utils/hooks/useFarmParameters';
+import { useSideKick } from '../modules/sidekick/SideKickContext';
+import { SideKickFeeling } from '../modules/sidekick/enums';
 import { MyModal } from './MyModal';
 
 interface FarmBankModalProps {
@@ -22,6 +24,7 @@ export const configSchema = z.object({
 export function FarmBankModal({ isOpen, onClose }: FarmBankModalProps) {
   const { farm } = useFarmParameters();
   const cancelRef = useRef<any>();
+  const { say } = useSideKick();
 
   const { register, handleSubmit, reset, formState } = useForm<FarmInput>({
     resolver: zodResolver(configSchema),
@@ -31,6 +34,13 @@ export function FarmBankModal({ isOpen, onClose }: FarmBankModalProps) {
   const onSubmit = (e: FarmInput) => {
     farm &&
       updateFarm({ ...farm, ...e })
+        .then(() =>
+          say({
+            sentence: `Les coordonnées bancaires ont bien été enregistrées`,
+            autoShutUp: true,
+            feeling: SideKickFeeling.GOOD,
+          }),
+        )
         .then(onClose)
         .catch(console.error);
   };

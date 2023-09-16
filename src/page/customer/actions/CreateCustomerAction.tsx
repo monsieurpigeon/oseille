@@ -5,6 +5,8 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { CustomerInput, addCustomer } from '../../../backend';
 import { MyModal } from '../../../component/modal/MyModal';
+import { useSideKick } from '../../../component/modules/sidekick/SideKickContext';
+import { SideKickFeeling } from '../../../component/modules/sidekick/enums';
 import { EMPTY_CUSTOMER } from '../../../utils/defaults';
 import { CustomerFields } from '../CustomerFields';
 
@@ -34,7 +36,19 @@ export function CreateCustomerAction() {
     }, 100);
   };
 
-  const onSubmit = (e: CustomerInput) => addCustomer(e).then(handleClose).catch(console.error);
+  const { say } = useSideKick();
+
+  const onSubmit = (e: CustomerInput) =>
+    addCustomer(e)
+      .then(() =>
+        say({
+          sentence: `Le client ${e.name} a bien été enregistré`,
+          autoShutUp: true,
+          feeling: SideKickFeeling.GOOD,
+        }),
+      )
+      .then(handleClose)
+      .catch(console.error);
 
   return (
     <>

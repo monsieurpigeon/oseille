@@ -5,6 +5,8 @@ import { useFieldArray, useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { DeliveryInput, addDelivery } from '../../../backend';
 import { MyModal } from '../../../component/modal/MyModal';
+import { useSideKick } from '../../../component/modules/sidekick/SideKickContext';
+import { SideKickFeeling } from '../../../component/modules/sidekick/enums';
 import { DeliveryFields } from '../DeliveryFields';
 
 export const deliverySchema = z.object({
@@ -23,6 +25,7 @@ export const deliverySchema = z.object({
 
 export function CreateDeliveryAction() {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { say } = useSideKick();
   const cancelRef = useRef<any>();
   const { control, register, handleSubmit, reset, watch, setValue, getValues } = useForm<DeliveryInput>({
     resolver: zodResolver(deliverySchema),
@@ -34,7 +37,17 @@ export function CreateDeliveryAction() {
     name: 'lines',
   });
 
-  const onSubmit = (e: DeliveryInput) => addDelivery(e).then(handleClose).catch(console.error);
+  const onSubmit = (e: DeliveryInput) =>
+    addDelivery(e)
+      .then(() =>
+        say({
+          sentence: 'La livraison a bien été enregistrée',
+          autoShutUp: true,
+          feeling: SideKickFeeling.GOOD,
+        }),
+      )
+      .then(handleClose)
+      .catch(console.error);
   const handleClose = () => {
     onClose();
     setTimeout(() => {

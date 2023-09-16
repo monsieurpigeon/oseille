@@ -5,6 +5,8 @@ import { useFieldArray, useForm } from 'react-hook-form';
 import { Delivery, DeliveryInput, updateDelivery } from '../../../backend';
 import { EditButton } from '../../../component/buttons';
 import { MyModal } from '../../../component/modal/MyModal';
+import { useSideKick } from '../../../component/modules/sidekick/SideKickContext';
+import { SideKickFeeling } from '../../../component/modules/sidekick/enums';
 import { DeliveryFields } from '../DeliveryFields';
 import { deliverySchema } from './CreateDeliveryAction';
 
@@ -14,6 +16,7 @@ interface EditDeliveryActionProps {
 
 export function EditDeliveryAction({ delivery }: EditDeliveryActionProps) {
   const isEditable = !delivery.invoiceId;
+  const { say } = useSideKick();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef<any>();
@@ -39,7 +42,17 @@ export function EditDeliveryAction({ delivery }: EditDeliveryActionProps) {
     name: 'lines',
   });
 
-  const onSubmit = (e: DeliveryInput) => updateDelivery(delivery, e).then(handleClose).catch(console.error);
+  const onSubmit = (e: DeliveryInput) =>
+    updateDelivery(delivery, e)
+      .then(() =>
+        say({
+          sentence: `La livraison ${delivery.documentId} a bien été enregistrée`,
+          autoShutUp: true,
+          feeling: SideKickFeeling.GOOD,
+        }),
+      )
+      .then(handleClose)
+      .catch(console.error);
   const handleClose = () => {
     onClose();
     setTimeout(() => {

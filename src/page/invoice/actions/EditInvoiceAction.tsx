@@ -5,6 +5,8 @@ import { useForm } from 'react-hook-form';
 import { Invoice, InvoiceInfoInput, updateInvoice } from '../../../backend';
 import { EditButton } from '../../../component/buttons';
 import { MyModal } from '../../../component/modal/MyModal';
+import { useSideKick } from '../../../component/modules/sidekick/SideKickContext';
+import { SideKickFeeling } from '../../../component/modules/sidekick/enums';
 import { invoiceSchema } from '../../delivery/actions/CreateInvoiceAction';
 import { InvoiceFields } from '../InvoiceFields';
 
@@ -14,6 +16,7 @@ interface EditInvoiceActionProps {
 
 export function EditInvoiceAction({ invoice }: EditInvoiceActionProps) {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { say } = useSideKick();
   const cancelRef = useRef<any>();
 
   const { control, register, handleSubmit, reset, formState } = useForm<InvoiceInfoInput>({
@@ -31,7 +34,15 @@ export function EditInvoiceAction({ invoice }: EditInvoiceActionProps) {
   }, [invoice]);
 
   const onSubmit = (e: InvoiceInfoInput) => {
-    updateInvoice({ ...invoice, ...e }).then(handleClose);
+    updateInvoice({ ...invoice, ...e })
+      .then(() =>
+        say({
+          sentence: `La facture ${invoice.documentId} a bien été enregistrée`,
+          autoShutUp: true,
+          feeling: SideKickFeeling.GOOD,
+        }),
+      )
+      .then(handleClose);
   };
 
   return (

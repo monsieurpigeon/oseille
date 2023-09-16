@@ -5,6 +5,8 @@ import { useForm, useWatch } from 'react-hook-form';
 import { z } from 'zod';
 import { LogoInput, addLogo } from '../../../../../backend';
 import { MyModal } from '../../../../../component/modal/MyModal';
+import { useSideKick } from '../../../../../component/modules/sidekick/SideKickContext';
+import { SideKickFeeling } from '../../../../../component/modules/sidekick/enums';
 import { useFarmParameters } from '../../../../../utils/hooks/useFarmParameters';
 import { SettingCard } from '../../../components/SettingCard';
 
@@ -15,6 +17,7 @@ export const logoSchema = z.object({
 export function LogoSettingBlock() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef<any>();
+  const { say } = useSideKick();
 
   const { logo } = useFarmParameters();
 
@@ -29,7 +32,17 @@ export function LogoSettingBlock() {
     window.location.reload();
   };
 
-  const onSubmit = (e: LogoInput) => addLogo(e).then(handleClose).catch(console.error);
+  const onSubmit = (e: LogoInput) =>
+    addLogo(e)
+      .then(() =>
+        say({
+          sentence: `Le logo a bien été enregistré`,
+          autoShutUp: true,
+          feeling: SideKickFeeling.GOOD,
+        }),
+      )
+      .then(handleClose)
+      .catch(console.error);
 
   return (
     <SettingCard
