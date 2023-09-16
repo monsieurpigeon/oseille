@@ -1,0 +1,18 @@
+version: "2.1"
+
+services:
+  couchdb:
+    image: couchdb:3.3.1
+    ports:
+      - "5984:5984"
+
+  node:
+    image: node:10
+    command: npm start
+    working_dir: "/app"
+    volumes:
+      - ".:/app"
+    ports:
+      - "4242:3000"
+    depends_on:
+      - couchdb
