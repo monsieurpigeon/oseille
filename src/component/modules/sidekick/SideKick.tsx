@@ -18,12 +18,15 @@ const StyledSentence = styled.div<{ feeling?: SideKickFeeling }>`
   position: absolute;
   line-height: 24px;
   border: 3px solid ${({ feeling }) => sideKickColors[feeling || SideKickFeeling.NEUTRAL]};
+  border-top-width: 1px;
+  border-left-width: 2px;
   border-radius: 20px;
   border-bottom-right-radius: 0;
   padding: 12px;
-  bottom: 30px;
+  bottom: 33px;
   right: 30px;
   width: 300px;
+  box-shadow: 0px 5px 5px 0 #00000040;
 `;
 
 const emojis = ['😃', '😘', '😁', '😅', '😂', '🤣', '😇', '🙃', '🤨', '🥸', '🫣', '😉'];
