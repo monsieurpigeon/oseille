@@ -8,7 +8,7 @@ import { useFarmParameters } from '../../utils/hooks/useFarmParameters';
 import { MyNumberInput } from '../form/MyNumberInput';
 import { useSideKick } from '../modules/sidekick/SideKickContext';
 import { SideKickFeeling } from '../modules/sidekick/enums';
-import { MyModal } from './MyModal';
+import { BasicModalProps, MyModal } from './MyModal';
 
 export const documentsSchema = z.object({
   invoiceId: z.number().gte(0),
@@ -20,7 +20,7 @@ interface DocumentIdInput {
   deliveryId: number;
 }
 
-export function FarmDocumentIdModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
+export function FarmDocumentIdModal({ isOpen, onClose }: BasicModalProps) {
   const { farm } = useFarmParameters();
   const cancelRef = useRef<any>();
   const { say } = useSideKick();

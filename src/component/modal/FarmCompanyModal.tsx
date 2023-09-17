@@ -8,12 +8,7 @@ import { EMPTY_FARM } from '../../page/settings/Settings';
 import { useFarmParameters } from '../../utils/hooks/useFarmParameters';
 import { useSideKick } from '../modules/sidekick/SideKickContext';
 import { SideKickFeeling } from '../modules/sidekick/enums';
-import { MyModal } from './MyModal';
-
-interface FarmCompanyModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
+import { BasicModalProps, MyModal } from './MyModal';
 
 export const configSchema = z.object({
   siret: z.string(),
@@ -21,7 +16,7 @@ export const configSchema = z.object({
   tva: z.string(),
 });
 
-export function FarmCompanyModal({ isOpen, onClose }: FarmCompanyModalProps) {
+export function FarmCompanyModal({ isOpen, onClose }: BasicModalProps) {
   const { farm } = useFarmParameters();
   const { say } = useSideKick();
   const cancelRef = useRef<any>();

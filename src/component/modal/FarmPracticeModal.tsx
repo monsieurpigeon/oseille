@@ -9,18 +9,13 @@ import { EMPTY_FARM } from '../../page/settings/Settings';
 import { useFarmParameters } from '../../utils/hooks/useFarmParameters';
 import { useSideKick } from '../modules/sidekick/SideKickContext';
 import { SideKickFeeling } from '../modules/sidekick/enums';
-import { MyModal } from './MyModal';
+import { BasicModalProps, MyModal } from './MyModal';
 
 const practiceSchema = z.object({
   bioLabel: z.string(),
 });
 
-interface FarmPracticeModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
-
-export function FarmPracticeModal({ isOpen, onClose }: FarmPracticeModalProps) {
+export function FarmPracticeModal({ isOpen, onClose }: BasicModalProps) {
   const { farm } = useFarmParameters();
   const cancelRef = useRef<any>();
   const { say } = useSideKick();

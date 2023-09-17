@@ -9,6 +9,10 @@ import {
 } from '@chakra-ui/react';
 import { ReactNode } from 'react';
 
+export interface BasicModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+}
 interface CreateModalProps {
   isOpen: boolean;
   cancelRef: React.MutableRefObject<any>;

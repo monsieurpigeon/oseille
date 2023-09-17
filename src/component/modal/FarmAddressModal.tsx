@@ -9,7 +9,7 @@ import { DEFAULT_FARM } from '../../utils/defaults';
 import { useFarmParameters } from '../../utils/hooks/useFarmParameters';
 import { useSideKick } from '../modules/sidekick/SideKickContext';
 import { SideKickFeeling } from '../modules/sidekick/enums';
-import { MyModal } from './MyModal';
+import { BasicModalProps, MyModal } from './MyModal';
 
 const farmSchema = z.object({
   title: z.string().min(1),
@@ -21,12 +21,7 @@ const farmSchema = z.object({
   email: z.string(),
 });
 
-interface FarmAddressModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
-
-export function FarmAddressModal({ isOpen, onClose }: FarmAddressModalProps) {
+export function FarmAddressModal({ isOpen, onClose }: BasicModalProps) {
   const { farm } = useFarmParameters();
   const cancelRef = useRef<any>();
   const { say } = useSideKick();

@@ -9,6 +9,7 @@ import { Deliveries } from './page/delivery/Deliveries';
 import { Invoices } from './page/invoice/Invoices';
 import { Prices } from './page/prices/Prices';
 import { Products } from './page/product/Products';
+import { SecretPage } from './page/secret/SecretPage';
 import { Settings } from './page/settings/Settings';
 
 const VERSION = '24/09/2023';
@@ -52,6 +53,10 @@ function App() {
         <Route
           path="about"
           element={<About />}
+        />
+        <Route
+          path="secret"
+          element={<SecretPage />}
         />
         <Route
           path="admin"

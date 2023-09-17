@@ -14,7 +14,7 @@ export function Footer({ version }: FooterProps) {
     >
       <Flex>
         <Text>
-          Fabriqué avec ❤️ & 🍅<NavLink to={'admin'}>🍆</NavLink>🧄🥦🥬🌽🥕🧅🥔 à Bordeaux. Retrouvez le code source sur{' '}
+          Fabriqué avec ❤️ & 🍅<NavLink to="secret">🍆</NavLink>🧄🥦🥬🌽🥕🧅🥔 à Bordeaux. Retrouvez le code source sur{' '}
           <Link href="https://github.com/monsieurpigeon/oseille">Github</Link>
           ...version {version}
         </Text>

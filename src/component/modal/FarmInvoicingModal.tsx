@@ -10,12 +10,7 @@ import { useFarmParameters } from '../../utils/hooks/useFarmParameters';
 import { MyNumberInput } from '../form/MyNumberInput';
 import { useSideKick } from '../modules/sidekick/SideKickContext';
 import { SideKickFeeling } from '../modules/sidekick/enums';
-import { MyModal } from './MyModal';
-
-interface FarmInvoicingModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
+import { BasicModalProps, MyModal } from './MyModal';
 
 export const configSchema = z.object({
   footer: z.string(),
@@ -24,7 +19,7 @@ export const configSchema = z.object({
   threat: z.string(),
 });
 
-export function FarmInvoicingModal({ isOpen, onClose }: FarmInvoicingModalProps) {
+export function FarmInvoicingModal({ isOpen, onClose }: BasicModalProps) {
   const { farm } = useFarmParameters();
   const { say } = useSideKick();
   const cancelRef = useRef<any>();
