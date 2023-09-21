@@ -44,7 +44,7 @@ export function Products() {
               <Flex width="100%">
                 <div>{`${entity.name} /${entity.unit}`}</div>
                 <Spacer />
-                <Text whiteSpace="nowrap">{isTVA && <div>TVA: {TVAFormatter(entity.tva || DEFAULT_TAX)}</div>}</Text>
+                <Text whiteSpace="nowrap">{isTVA && `TVA: ${TVAFormatter(entity.tva || DEFAULT_TAX)}`}</Text>
               </Flex>
             </ListItem>
           ))}

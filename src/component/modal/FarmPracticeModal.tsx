@@ -2,6 +2,7 @@ import { Flex, FormLabel, Select } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
+import { Link } from 'react-router-dom';
 import { z } from 'zod';
 import { FarmInput, updateFarm } from '../../backend';
 import { EMPTY_FARM } from '../../page/settings/Settings';
@@ -69,8 +70,12 @@ export function FarmPracticeModal({ isOpen, onClose }: FarmPracticeModalProps) {
         <Select {...register('bioLabel')}>
           <option value="non">NON</option>
           <option value="fr-bio-01">FR-BIO-01</option>
+          <option value="fr-bio-15">FR-BIO-15</option>
         </Select>
       </Flex>
+      <div>
+        <Link to="/contact">Contactez moi</Link> pour ajouter des labels
+      </div>
     </MyModal>
   );
 }
