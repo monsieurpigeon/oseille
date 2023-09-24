@@ -67,33 +67,37 @@ function DeliveryCustomer({ customer, selected, setSelected }: any) {
     .sort((a, b) => b.deliveredAt.localeCompare(a.deliveredAt));
 
   return (
-    <ListItemGroup
-      title={customer.name}
-      key={customer.id}
-      action={
-        <CreateInvoiceAction
-          toInvoice={toInvoice}
-          setToInvoice={setToInvoice}
-        />
-      }
-    >
-      {deliveries.map((delivery) => (
-        <ListItem
-          isSelected={selected?.id === delivery.id}
-          key={delivery.id}
-          onClick={() => setSelected((e: Delivery) => (e?.id === delivery.id ? undefined : { ...delivery }))}
-          checkable={!delivery.invoiceId}
-          checked={toInvoice[delivery.id] || false}
-          onCheck={() =>
-            setToInvoice((i) => ({
-              ...i,
-              [delivery.id]: !i[delivery.id],
-            }))
+    <>
+      {deliveries.length > 0 && (
+        <ListItemGroup
+          title={customer.name}
+          key={customer.id}
+          action={
+            <CreateInvoiceAction
+              toInvoice={toInvoice}
+              setToInvoice={setToInvoice}
+            />
           }
         >
-          {`${delivery.documentId} - ${dateFormatter(delivery.deliveredAt)}`}
-        </ListItem>
-      ))}
-    </ListItemGroup>
+          {deliveries.map((delivery) => (
+            <ListItem
+              isSelected={selected?.id === delivery.id}
+              key={delivery.id}
+              onClick={() => setSelected((e: Delivery) => (e?.id === delivery.id ? undefined : { ...delivery }))}
+              checkable={!delivery.invoiceId}
+              checked={toInvoice[delivery.id] || false}
+              onCheck={() =>
+                setToInvoice((i) => ({
+                  ...i,
+                  [delivery.id]: !i[delivery.id],
+                }))
+              }
+            >
+              {`${delivery.documentId} - ${dateFormatter(delivery.deliveredAt)}`}
+            </ListItem>
+          ))}
+        </ListItemGroup>
+      )}
+    </>
   );
 }

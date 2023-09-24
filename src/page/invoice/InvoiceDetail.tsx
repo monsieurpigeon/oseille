@@ -15,7 +15,7 @@ import { ExportInvoiceAction } from './actions/ExportInvoiceAction';
 export const InvoiceDetail = ({ selected }: { selected: Invoice }) => {
   const currentCustomer = useMemo(
     () => store.customers.find((customer) => customer.id === selected.customerId),
-    [store],
+    [store, selected.customerId],
   );
 
   if (!currentCustomer) return null;

@@ -11,9 +11,11 @@ import { Prices } from './page/prices/Prices';
 import { Products } from './page/product/Products';
 import { Settings } from './page/settings/Settings';
 
+const VERSION = '24/09/2023';
+
 function App() {
   return (
-    <MainLayout>
+    <MainLayout version={VERSION}>
       <Routes>
         <Route
           path="/"

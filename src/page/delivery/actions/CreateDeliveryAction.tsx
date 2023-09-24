@@ -66,7 +66,7 @@ export function CreateDeliveryAction() {
       <MyModal
         isOpen={isOpen}
         cancelRef={cancelRef}
-        title="Nouveau produit"
+        title="Nouveau bon de livraison"
         onClose={handleClose}
         onSubmit={handleSubmit(onSubmit)}
       >
