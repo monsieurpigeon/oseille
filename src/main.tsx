@@ -1,5 +1,5 @@
 import { ChakraProvider } from '@chakra-ui/react';
-import { inject } from '@vercel/analytics';
+import { PostHogProvider } from 'posthog-js/react';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
@@ -9,17 +9,25 @@ import { ConfirmContextProvider } from './component/modal/confirm-modal/ConfirmC
 import { SideKickContextProvider } from './component/modules/sidekick/SideKickContext';
 import './index.css';
 
-inject();
+const options = {
+  api_host: import.meta.env.VITE_POSTHOG_HOST,
+};
+
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <ChakraProvider>
-      <ConfirmContextProvider>
-        <SideKickContextProvider>
-          <BrowserRouter>
-            <App />
-          </BrowserRouter>
-        </SideKickContextProvider>
-      </ConfirmContextProvider>
-    </ChakraProvider>
+    <PostHogProvider
+      apiKey={import.meta.env.VITE_POSTHOG_KEY}
+      options={options}
+    >
+      <ChakraProvider>
+        <ConfirmContextProvider>
+          <SideKickContextProvider>
+            <BrowserRouter>
+              <App />
+            </BrowserRouter>
+          </SideKickContextProvider>
+        </ConfirmContextProvider>
+      </ChakraProvider>
+    </PostHogProvider>
   </React.StrictMode>,
 );
