@@ -23,9 +23,9 @@ export function Dashboard() {
   const { invoicePaid, invoiceWaiting } = useMemo(() => {
     const invoicePaid = store.invoices.filter((i) => i.isPaid);
     const invoiceWaiting = store.invoices.filter((i) => !i.isPaid);
-
     return { invoicePaid: getValues(invoicePaid), invoiceWaiting: getValues(invoiceWaiting) };
   }, [snap]);
+  
 
   return (
     <MySimpleLayout>
