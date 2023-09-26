@@ -1,5 +1,6 @@
 import { useRef, useEffect } from 'react'
 import { Chart, ChartItem, registerables } from "chart.js"
+import {store} from "../../backend/service/store"
 import 'chartjs-adapter-moment';
 
 Chart.register(...registerables)
@@ -7,17 +8,18 @@ Chart.register(...registerables)
 export function SalesChart() {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
     const sales = [
-        { date: '2023-09-25', quantity: 10 },
-        { date: '2023-10-02', quantity: 20 },
-        { date: '2023-10-09', quantity: 30 },
-        { date: '2023-10-16', quantity: 10 },
-        { date: '2023-10-23', quantity: 50 },
-        { date: '2023-10-30', quantity: 40 },
-        { date: '2023-11-06', quantity: 20 },
-        { date: '2023-11-13', quantity: 30 },
-        { date: '2023-11-20', quantity: 10 },
-        { date: '2023-11-27', quantity: 40 }
+        { date: '2023-01-25', quantity: 10 },
+        { date: '2023-02-02', quantity: 20 },
+        { date: '2023-03-09', quantity: 30 },
+        { date: '2023-04-16', quantity: 10 },
+        { date: '2023-05-23', quantity: 50 },
+        { date: '2023-06-30', quantity: 40 },
+        { date: '2023-07-13', quantity: 30 },
+        { date: '2023-08-20', quantity: 10 },
+        { date: '2023-09-27', quantity: 40 }
       ];
+
+      store.customers
       useEffect(() => {
         if (canvasRef.current) { // Check if canvasRef.current is not null
             const labels = sales.map(sale => sale.date);
@@ -28,7 +30,7 @@ export function SalesChart() {
               data: {
                   labels,
                   datasets: [{
-                      label: 'Sales Quantity Over Time',
+                      label: 'Historique des ventes',
                       data,
                       borderColor: 'rgb(75, 192, 192)',
                       tension: 0.1,

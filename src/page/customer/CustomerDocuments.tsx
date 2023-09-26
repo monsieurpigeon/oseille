@@ -3,6 +3,7 @@ import { useState } from 'react';
 import styled from 'styled-components';
 import { Customer, store } from '../../backend';
 import { DeliveryCard, InvoiceCard } from './DocumentCard';
+import { SalesGraph } from '../../component/modules/graph/SalesGraph';
 
 interface CustomerDocumentsProps {
   customer: Customer;
@@ -17,7 +18,7 @@ export function CustomerDocuments({ customer }: CustomerDocumentsProps) {
     .sort((a, b) => b.deliveredAt.localeCompare(a.deliveredAt));
 
   const [tab, setTab] = useState(0);
-
+  
   return (
     <StyledContainer>
       <StyledButtons>
@@ -33,15 +34,22 @@ export function CustomerDocuments({ customer }: CustomerDocumentsProps) {
         >
           Factures
         </Button>
+        <Button
+          variant={tab === 2 ? 'solid' : 'outlined'}
+          onClick={() => setTab(2)}
+        >
+          Ventes
+        </Button>
       </StyledButtons>
       <StyledWrapper>
         {tab === 0 && (
           <StyledTab>
             <DocumentWrapper>
               {deliveries.length === 0 && <div>Aucun bon de livraison</div>}
-              {deliveries.map((delivery) => (
-                <DeliveryCard delivery={delivery} />
-              ))}
+              {deliveries.map((delivery) => {
+  console.log("Delivery Object: ", delivery); 
+  return <DeliveryCard delivery={delivery} />;
+})}
             </DocumentWrapper>
           </StyledTab>
         )}
@@ -55,8 +63,14 @@ export function CustomerDocuments({ customer }: CustomerDocumentsProps) {
             </DocumentWrapper>
           </StyledTab>
         )}
+        {tab === 2 && (
+          <StyledTab>
+            <SalesGraph customer={customer}/>
+          </StyledTab>
+        )}
       </StyledWrapper>
     </StyledContainer>
+
   );
 }
 
