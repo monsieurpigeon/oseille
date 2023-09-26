@@ -6,6 +6,7 @@ import { getInvoicePrice } from '../../utils/aggregations';
 import { priceFormatter } from '../../utils/formatter';
 import { MetricCard, StyledMetricCards } from './MetricCards';
 import { SalesTable } from './SalesTable';
+import { SalesChart } from './SalesChart';
 
 function getValues(invoices: Invoice[]) {
   return invoices.reduce(
@@ -42,6 +43,7 @@ export function Dashboard() {
         />
       </StyledMetricCards>
       <SalesTable />
+      <SalesChart/>
     </MySimpleLayout>
   );
 }
