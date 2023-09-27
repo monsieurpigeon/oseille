@@ -16,6 +16,7 @@
     "@hookform/resolvers": "^3.0.0",
     "@pdfme/generator": "^1.0.17",
     "chart.js": "^4.4.0",
+    "chartjs-adapter-date-fns": "^3.0.0",
     "chartjs-adapter-moment": "^1.0.1",
     "clsx": "^2.0.0",
     "date-fns": "^2.30.0",

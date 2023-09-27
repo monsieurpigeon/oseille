@@ -2,8 +2,8 @@ import { Button } from '@chakra-ui/react';
 import { useState } from 'react';
 import styled from 'styled-components';
 import { Customer, store } from '../../backend';
-import { DeliveryCard, InvoiceCard } from './DocumentCard';
 import { SalesGraph } from '../../component/modules/graph/SalesGraph';
+import { DeliveryCard, InvoiceCard } from './DocumentCard';
 
 interface CustomerDocumentsProps {
   customer: Customer;
@@ -18,7 +18,7 @@ export function CustomerDocuments({ customer }: CustomerDocumentsProps) {
     .sort((a, b) => b.deliveredAt.localeCompare(a.deliveredAt));
 
   const [tab, setTab] = useState(0);
-  
+
   return (
     <StyledContainer>
       <StyledButtons>
@@ -46,10 +46,14 @@ export function CustomerDocuments({ customer }: CustomerDocumentsProps) {
           <StyledTab>
             <DocumentWrapper>
               {deliveries.length === 0 && <div>Aucun bon de livraison</div>}
-              {deliveries.map((delivery) => {
-  console.log("Delivery Object: ", delivery); 
-  return <DeliveryCard delivery={delivery} />;
-})}
+              {deliveries.map((delivery, index) => {
+                return (
+                  <DeliveryCard
+                    key={index}
+                    delivery={delivery}
+                  />
+                );
+              })}
             </DocumentWrapper>
           </StyledTab>
         )}
@@ -65,12 +69,11 @@ export function CustomerDocuments({ customer }: CustomerDocumentsProps) {
         )}
         {tab === 2 && (
           <StyledTab>
-            <SalesGraph customer={customer}/>
+            <SalesGraph customer={customer} />
           </StyledTab>
         )}
       </StyledWrapper>
     </StyledContainer>
-
   );
 }
 

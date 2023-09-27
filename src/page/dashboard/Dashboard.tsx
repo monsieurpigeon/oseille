@@ -6,7 +6,6 @@ import { getInvoicePrice } from '../../utils/aggregations';
 import { priceFormatter } from '../../utils/formatter';
 import { MetricCard, StyledMetricCards } from './MetricCards';
 import { SalesTable } from './SalesTable';
-import { SalesChart } from './SalesChart';
 
 function getValues(invoices: Invoice[]) {
   return invoices.reduce(
@@ -26,7 +25,6 @@ export function Dashboard() {
     const invoiceWaiting = store.invoices.filter((i) => !i.isPaid);
     return { invoicePaid: getValues(invoicePaid), invoiceWaiting: getValues(invoiceWaiting) };
   }, [snap]);
-  
 
   return (
     <MySimpleLayout>
@@ -43,7 +41,6 @@ export function Dashboard() {
         />
       </StyledMetricCards>
       <SalesTable />
-      <SalesChart/>
     </MySimpleLayout>
   );
 }
