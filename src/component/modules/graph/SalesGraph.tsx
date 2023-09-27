@@ -2,7 +2,7 @@ import { Chart, registerables } from 'chart.js';
 import 'chartjs-adapter-moment';
 import moment from 'moment';
 import 'moment/locale/fr';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useSnapshot } from 'valtio';
 import { Customer, store } from '../../../backend';
 import { getInvoicePrice } from '../../../utils/aggregations';
@@ -16,6 +16,7 @@ interface SalesGraphProps {
 Chart.register(...registerables);
 
 export function SalesGraph({ customer }: SalesGraphProps) {
+  const [mode, setMode] = useState('month');
   const snap = useSnapshot(store);
   const chartRef = useRef(null);
 
@@ -24,24 +25,32 @@ export function SalesGraph({ customer }: SalesGraphProps) {
   const total = customerInvoice.reduce((acc, invoice) => acc + getInvoicePrice(invoice), 0);
 
   useEffect(() => {
+    let formatString: string;
+    if (mode === 'month') {
+      formatString = 'MMM YYYY';
+    } else {
+      formatString = 'DD MMM';
+    }
+
     if (chartRef.current && customerInvoice.length > 0) {
       const aggregatedData = customerInvoice.reduce<{ [key: string]: number }>((acc, invoice) => {
-        const month = moment(invoice.createdAt).locale('fr').format('MMM YYYY');
-        acc[month] = (acc[month] || 0) + getInvoicePrice(invoice);
+        const period = moment(invoice.createdAt).locale('fr').format(formatString);
+        acc[period] = (acc[period] || 0) + getInvoicePrice(invoice);
         return acc;
       }, {});
 
-      const labels = Object.keys(aggregatedData);
-      const data = Object.values(aggregatedData);
-
+      const sortedLabels = Object.keys(aggregatedData).sort(
+        (a, b) => moment(a, 'MMM YYYY').valueOf() - moment(b, 'MMM YYYY').valueOf(),
+      );
+      const sortedData = sortedLabels.map((label) => aggregatedData[label]);
       const chart = new Chart(chartRef.current, {
         type: 'bar',
         data: {
-          labels: labels,
+          labels: sortedLabels,
           datasets: [
             {
-              label: 'Montant de la Facture par Mois',
-              data,
+              label: 'Graphique de vos factures',
+              data: sortedData,
               backgroundColor: 'rgba(75, 192, 192, 0.6)',
               borderColor: 'rgba(75, 192, 192, 1)',
               borderWidth: 1,
@@ -67,7 +76,7 @@ export function SalesGraph({ customer }: SalesGraphProps) {
 
       return () => chart.destroy();
     }
-  }, [customerInvoice]);
+  }, [customerInvoice, mode]);
 
   return (
     <div>
@@ -76,9 +85,13 @@ export function SalesGraph({ customer }: SalesGraphProps) {
       </div>
       <canvas
         ref={chartRef}
-        height="400"
-        width="600"
+        height="300"
+        width="500"
+        style={{ display: 'block', maxWidth: '100%', height: 'auto' }}
       ></canvas>
+      <button onClick={() => setMode(mode === 'month' ? 'week' : 'month')}>
+        Switch to {mode === 'month' ? 'Week' : 'Month'}
+      </button>
     </div>
   );
 }
