@@ -25,32 +25,56 @@ export function SalesGraph({ customer }: SalesGraphProps) {
   const total = customerInvoice.reduce((acc, invoice) => acc + getInvoicePrice(invoice), 0);
 
   useEffect(() => {
-    let formatString: string;
-    if (mode === 'month') {
-      formatString = 'MMM YYYY';
-    } else {
-      formatString = 'DD MMM';
-    }
-
     if (chartRef.current && customerInvoice.length > 0) {
-      const aggregatedData = customerInvoice.reduce<{ [key: string]: number }>((acc, invoice) => {
-        const period = moment(invoice.createdAt).locale('fr').format(formatString);
+      let formatString: string;
+      if (mode === 'month') {
+        formatString = 'MMM YYYY';
+      } else {
+        formatString = 'DD MMM';
+      }
+
+      let minMonth = moment(customerInvoice[0].createdAt);
+      let maxMonth = moment(customerInvoice[0].createdAt);
+
+      customerInvoice.forEach((invoice) => {
+        const date = moment(invoice.createdAt);
+        if (date.isBefore(minMonth)) minMonth = date;
+        if (date.isAfter(maxMonth)) maxMonth = date;
+      });
+
+      const labels: string[] = [];
+      let aggregatedData: { [key: string]: number } = {};
+
+      let currentMonth = minMonth.startOf('month');
+      while (currentMonth.isBefore(maxMonth) || currentMonth.isSame(maxMonth, 'month')) {
+        const label = currentMonth.format(formatString);
+        labels.push(label);
+        aggregatedData[label] = 0;
+        currentMonth.add(1, 'month');
+      }
+
+      aggregatedData = customerInvoice.reduce((acc, invoice) => {
+        const period = moment(invoice.createdAt).format(formatString);
         acc[period] = (acc[period] || 0) + getInvoicePrice(invoice);
         return acc;
-      }, {});
+      }, aggregatedData);
 
-      const sortedLabels = Object.keys(aggregatedData).sort(
-        (a, b) => moment(a, 'MMM YYYY').valueOf() - moment(b, 'MMM YYYY').valueOf(),
-      );
-      const sortedData = sortedLabels.map((label) => aggregatedData[label]);
       const chart = new Chart(chartRef.current, {
         type: 'bar',
         data: {
-          labels: sortedLabels,
+          labels: labels.map((label) => {
+            if (mode === 'month') {
+              const month = label.split(' ')[0];
+              const year = label.split(' ')[1];
+              return translate_month(month) + ' ' + year;
+            }
+
+            return translate_month(label);
+          }),
           datasets: [
             {
               label: 'Graphique de vos factures',
-              data: sortedData,
+              data: labels.map((label) => aggregatedData[label]),
               backgroundColor: 'rgba(75, 192, 192, 0.6)',
               borderColor: 'rgba(75, 192, 192, 1)',
               borderWidth: 1,
@@ -77,6 +101,24 @@ export function SalesGraph({ customer }: SalesGraphProps) {
       return () => chart.destroy();
     }
   }, [customerInvoice, mode]);
+
+  function translate_month(month: string) {
+    const months: { [key: string]: string } = {
+      Jan: 'Janv',
+      Feb: 'Févr',
+      Mar: 'Mars',
+      Apr: 'Avr',
+      May: 'Mai',
+      Jun: 'Juin',
+      Jul: 'Juil',
+      Aug: 'Août',
+      Sep: 'Sept',
+      Oct: 'Oct',
+      Nov: 'Nov',
+      Dec: 'Déc',
+    };
+    return months[month] || month;
+  }
 
   return (
     <div>
