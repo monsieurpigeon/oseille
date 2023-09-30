@@ -4,9 +4,10 @@ import { VitePWA, VitePWAOptions } from 'vite-plugin-pwa';
 
 const manifestForPlugin: Partial<VitePWAOptions> = {
   registerType: 'autoUpdate',
-  includeAssets: ['favicon.ico'],
+  includeAssets: ['**/*'],
   workbox: {
     maximumFileSizeToCacheInBytes: 3000000,
+    globPatterns: ['**/*'],
   },
   manifest: {
     name: 'Oseille',

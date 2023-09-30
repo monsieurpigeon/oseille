@@ -1,7 +1,7 @@
 import { documentIdFormatter } from '../../utils/formatter';
 import { relDb } from '../service/database';
 import { store } from '../service/store';
-import { Customer, loadCustomer } from './customer';
+import { Customer, getCustomer } from './customer';
 import { loadFarm, updateDocumentId } from './farm';
 import { ProductWithPrice, loadProduct } from './product';
 
@@ -50,7 +50,7 @@ export async function loadDeliveries() {
 }
 
 export const addDelivery = async (delivery: DeliveryInput) => {
-  const customer = await loadCustomer(delivery.customerId);
+  const customer = await getCustomer(delivery.customerId);
   await loadFarm();
   const promise = async () => {
     const lines = await Promise.all(
@@ -96,7 +96,7 @@ export const removeInvoiceId = (deliveryId: string) => {
 };
 
 export const updateDelivery = async (delivery: Delivery, input: DeliveryInput) => {
-  const customer = await loadCustomer(input.customerId);
+  const customer = await getCustomer(input.customerId);
   await loadFarm();
   const promise = async () => {
     const lines = await Promise.all(

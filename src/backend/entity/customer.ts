@@ -33,7 +33,7 @@ export async function loadCustomers() {
     });
 }
 
-export async function loadCustomer(id: string) {
+export async function getCustomer(id: string) {
   const result = await relDb.rel.find('customer', id);
   return result.customers[0];
 }
