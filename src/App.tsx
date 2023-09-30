@@ -2,7 +2,6 @@ import { Route, Routes } from 'react-router-dom';
 import { MainLayout } from './component/layout/MainLayout';
 import { About } from './page/about/About';
 import { BackOffice } from './page/back-office/BackOffice';
-import { Contact } from './page/contact/Contact';
 import { Customers } from './page/customer/Customers';
 import { Dashboard } from './page/dashboard/Dashboard';
 import { Deliveries } from './page/delivery/Deliveries';
@@ -11,11 +10,9 @@ import { Prices } from './page/prices/Prices';
 import { Products } from './page/product/Products';
 import { Settings } from './page/settings/Settings';
 
-const VERSION = '24/09/2023';
-
 function App() {
   return (
-    <MainLayout version={VERSION}>
+    <MainLayout>
       <Routes>
         <Route
           path="/"
@@ -42,15 +39,11 @@ function App() {
           element={<Invoices />}
         />
         <Route
-          path="contact"
-          element={<Contact />}
-        />
-        <Route
           path="settings/*"
           element={<Settings />}
         />
         <Route
-          path="about"
+          path="about/*"
           element={<About />}
         />
         <Route
