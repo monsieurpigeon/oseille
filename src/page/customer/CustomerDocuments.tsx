@@ -2,6 +2,7 @@ import { Button } from '@chakra-ui/react';
 import { useState } from 'react';
 import styled from 'styled-components';
 import { Customer, store } from '../../backend';
+import { SalesGraph } from '../../component/modules/graph/SalesGraph';
 import { DeliveryCard, InvoiceCard } from './DocumentCard';
 
 interface CustomerDocumentsProps {
@@ -33,15 +34,26 @@ export function CustomerDocuments({ customer }: CustomerDocumentsProps) {
         >
           Factures
         </Button>
+        <Button
+          variant={tab === 2 ? 'solid' : 'outlined'}
+          onClick={() => setTab(2)}
+        >
+          Ventes
+        </Button>
       </StyledButtons>
       <StyledWrapper>
         {tab === 0 && (
           <StyledTab>
             <DocumentWrapper>
               {deliveries.length === 0 && <div>Aucun bon de livraison</div>}
-              {deliveries.map((delivery) => (
-                <DeliveryCard delivery={delivery} />
-              ))}
+              {deliveries.map((delivery, index) => {
+                return (
+                  <DeliveryCard
+                    key={index}
+                    delivery={delivery}
+                  />
+                );
+              })}
             </DocumentWrapper>
           </StyledTab>
         )}
@@ -53,6 +65,11 @@ export function CustomerDocuments({ customer }: CustomerDocumentsProps) {
                 <InvoiceCard invoice={invoice} />
               ))}
             </DocumentWrapper>
+          </StyledTab>
+        )}
+        {tab === 2 && (
+          <StyledTab>
+            <SalesGraph customer={customer} />
           </StyledTab>
         )}
       </StyledWrapper>
