@@ -3,6 +3,7 @@ const icons = {
   phone: '📞',
   good: '✅',
   warning: '❗',
+  vegetable: '🥕',
 };
 
 type IconName = keyof typeof icons;

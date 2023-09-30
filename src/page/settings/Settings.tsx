@@ -1,7 +1,8 @@
-import { NavLink, Navigate, Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 import styled from 'styled-components';
 import { useSnapshot } from 'valtio';
 import { FarmInput, store } from '../../backend';
+import { Tabs } from '../../component/Tabs';
 import { MyHeader } from '../../component/layout/page-layout/MyHeader';
 import { MyH1 } from '../../component/typography/MyFont';
 import { DEFAULT_INVOICE_DELAY, DEFAULT_THREAT } from '../../utils/defaults';
@@ -30,16 +31,6 @@ export const EMPTY_FARM: FarmInput = {
   threat: DEFAULT_THREAT,
 };
 
-const StyledNavigation = styled.nav`
-  display: flex;
-  gap: 20px;
-  font-size: 1.2rem;
-
-  .active {
-    border-bottom: 2px solid var(--chakra-colors-blue-500);
-  }
-`;
-
 const StyledSettingPages = styled.div`
   display: flex;
   flex-direction: column;
@@ -47,6 +38,12 @@ const StyledSettingPages = styled.div`
   padding-top: 0px;
   gap: 20px;
 `;
+
+const ITEMS = [
+  { to: 'farm', label: 'Ferme', component: <FarmSection /> },
+  { to: 'invoices', label: 'Facturation', component: <InvoiceSection /> },
+  { to: 'advanced', label: 'Avancé', component: <AdvancedSection /> },
+];
 
 export function Settings() {
   const snap = useSnapshot(store);
@@ -56,29 +53,20 @@ export function Settings() {
       <MyHeader>
         <MyH1>Réglages</MyH1>
       </MyHeader>
-      <StyledNavigation>
-        <NavLink to="farm">Ferme</NavLink>
-        <NavLink to="invoices">Facturation</NavLink>
-        <NavLink to="advanced">Avancé</NavLink>
-      </StyledNavigation>
+      <Tabs items={ITEMS} />
       <Routes>
-        <Route
-          path="farm"
-          element={<FarmSection />}
-        />
-        <Route
-          path="invoices"
-          element={<InvoiceSection />}
-        />
-        <Route
-          path="advanced"
-          element={<AdvancedSection />}
-        />
+        {ITEMS.map((item) => (
+          <Route
+            path={item.to}
+            element={item.component}
+            key={item.label}
+          />
+        ))}
         <Route
           path="*"
           element={
             <Navigate
-              to="farm"
+              to={ITEMS[0].to}
               replace
             />
           }

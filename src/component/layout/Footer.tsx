@@ -1,12 +1,9 @@
 import { Center, Flex, Link, Text } from '@chakra-ui/react';
 import { NavLink } from 'react-router-dom';
+import { VERSION } from '../../updateMe';
 import { SideKick } from '../modules/sidekick/SideKick';
 
-interface FooterProps {
-  version: string;
-}
-
-export function Footer({ version }: FooterProps) {
+export function Footer() {
   return (
     <Center
       h="50px"
@@ -16,7 +13,7 @@ export function Footer({ version }: FooterProps) {
         <Text>
           Fabriqué avec ❤️ & 🍅<NavLink to={'admin'}>🍆</NavLink>🧄🥦🥬🌽🥕🧅🥔 à Bordeaux. Retrouvez le code source sur{' '}
           <Link href="https://github.com/monsieurpigeon/oseille">Github</Link>
-          ...version {version}
+          ...version {VERSION}
         </Text>
       </Flex>
       <SideKick />

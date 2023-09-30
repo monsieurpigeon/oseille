@@ -9,8 +9,8 @@ const navBarItems = [
   { label: 'Livraisons', emoji: '🧺', path: 'delivery' },
   { label: 'Factures', emoji: '🧲', path: 'invoice' },
   { label: 'Réglages', emoji: '🔧', path: 'settings' },
-  { label: 'Contact', emoji: '🖋️', path: 'contact' },
   { label: 'À propos', emoji: '🙋‍♂️', path: 'about' },
+  { label: 'Contact', emoji: '🖋️', path: 'contact' },
 ];
 
 const StyledNav = styled.div`

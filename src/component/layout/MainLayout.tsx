@@ -4,7 +4,11 @@ import { Footer } from './Footer';
 import { Header } from './Header';
 import { Navigation } from './Navigation';
 
-export function MainLayout({ children, version }: { children: ReactNode; version: string }) {
+interface MainLayoutProps {
+  children: ReactNode;
+}
+
+export function MainLayout({ children }: MainLayoutProps) {
   return (
     <Grid
       templateAreas={`"header header"
@@ -26,7 +30,7 @@ export function MainLayout({ children, version }: { children: ReactNode; version
       </GridItem>
       <GridItem area={'main'}>{children}</GridItem>
       <GridItem area={'footer'}>
-        <Footer version={version} />
+        <Footer />
       </GridItem>
     </Grid>
   );
