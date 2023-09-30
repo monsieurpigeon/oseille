@@ -2,12 +2,30 @@ import { Chart, registerables } from 'chart.js';
 import 'chartjs-adapter-moment';
 import moment from 'moment';
 import 'moment/locale/fr';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { useSnapshot } from 'valtio';
 import { Customer, store } from '../../../backend';
 import { getInvoicePrice } from '../../../utils/aggregations';
 import { priceFormatter } from '../../../utils/formatter';
-moment.locale('fr');
+
+const months: { [key: string]: string } = {
+  Jan: 'Janv',
+  Feb: 'Févr',
+  Mar: 'Mars',
+  Apr: 'Avr',
+  May: 'Mai',
+  Jun: 'Juin',
+  Jul: 'Juil',
+  Aug: 'Août',
+  Sep: 'Sept',
+  Oct: 'Oct',
+  Nov: 'Nov',
+  Dec: 'Déc',
+};
+
+function translate_month(month: string) {
+  return months[month] || month;
+}
 
 interface SalesGraphProps {
   customer: Customer;
@@ -16,22 +34,15 @@ interface SalesGraphProps {
 Chart.register(...registerables);
 
 export function SalesGraph({ customer }: SalesGraphProps) {
-  const [mode, setMode] = useState('month');
   const snap = useSnapshot(store);
   const chartRef = useRef(null);
 
   const customerInvoice = store.invoices.filter((invoice) => invoice.customerId === customer.id);
-
   const total = customerInvoice.reduce((acc, invoice) => acc + getInvoicePrice(invoice), 0);
 
   useEffect(() => {
     if (chartRef.current && customerInvoice.length > 0) {
-      let formatString: string;
-      if (mode === 'month') {
-        formatString = 'MMM YYYY';
-      } else {
-        formatString = 'DD MMM';
-      }
+      const formatString = 'MMM YYYY';
 
       let minMonth = moment(customerInvoice[0].createdAt);
       let maxMonth = moment(customerInvoice[0].createdAt);
@@ -55,7 +66,8 @@ export function SalesGraph({ customer }: SalesGraphProps) {
 
       aggregatedData = customerInvoice.reduce((acc, invoice) => {
         const period = moment(invoice.createdAt).format(formatString);
-        acc[period] = (acc[period] || 0) + getInvoicePrice(invoice);
+        if (!acc[period]) acc[period] = 0;
+        acc[period] += getInvoicePrice(invoice);
         return acc;
       }, aggregatedData);
 
@@ -63,17 +75,12 @@ export function SalesGraph({ customer }: SalesGraphProps) {
         type: 'bar',
         data: {
           labels: labels.map((label) => {
-            if (mode === 'month') {
-              const month = label.split(' ')[0];
-              const year = label.split(' ')[1];
-              return translate_month(month) + ' ' + year;
-            }
-
-            return translate_month(label);
+            const month = label.split(' ')[0];
+            const year = label.split(' ')[1];
+            return translate_month(month) + ' ' + year;
           }),
           datasets: [
             {
-              label: 'Graphique de vos factures',
               data: labels.map((label) => aggregatedData[label]),
               backgroundColor: 'rgba(75, 192, 192, 0.6)',
               borderColor: 'rgba(75, 192, 192, 1)',
@@ -82,6 +89,16 @@ export function SalesGraph({ customer }: SalesGraphProps) {
           ],
         },
         options: {
+          plugins: {
+            legend: {
+              display: false,
+            },
+            tooltip: {
+              callbacks: {
+                label: (value) => priceFormatter(value.raw as number),
+              },
+            },
+          },
           scales: {
             x: {
               type: 'category',
@@ -89,9 +106,7 @@ export function SalesGraph({ customer }: SalesGraphProps) {
             y: {
               beginAtZero: true,
               ticks: {
-                callback: function (value) {
-                  return value + ' €';
-                },
+                callback: (value) => priceFormatter(value as number),
               },
             },
           },
@@ -100,25 +115,7 @@ export function SalesGraph({ customer }: SalesGraphProps) {
 
       return () => chart.destroy();
     }
-  }, [customerInvoice, mode]);
-
-  function translate_month(month: string) {
-    const months: { [key: string]: string } = {
-      Jan: 'Janv',
-      Feb: 'Févr',
-      Mar: 'Mars',
-      Apr: 'Avr',
-      May: 'Mai',
-      Jun: 'Juin',
-      Jul: 'Juil',
-      Aug: 'Août',
-      Sep: 'Sept',
-      Oct: 'Oct',
-      Nov: 'Nov',
-      Dec: 'Déc',
-    };
-    return months[month] || month;
-  }
+  }, [customerInvoice]);
 
   return (
     <div>
@@ -130,10 +127,7 @@ export function SalesGraph({ customer }: SalesGraphProps) {
         height="300"
         width="500"
         style={{ display: 'block', maxWidth: '100%', height: 'auto' }}
-      ></canvas>
-      <button onClick={() => setMode(mode === 'month' ? 'week' : 'month')}>
-        Switch to {mode === 'month' ? 'Week' : 'Month'}
-      </button>
+      />
     </div>
   );
 }
