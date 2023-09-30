@@ -25,7 +25,10 @@ export function FeatureCard({ feature }: FeatureCardProps) {
           alignItems="center"
           flexWrap="wrap"
         >
-          <a href={feature.user.link}>
+          <a
+            href={feature.user.link}
+            target="_blank"
+          >
             <Avatar
               onClick={() => console.log('click')}
               name={feature.user.name}

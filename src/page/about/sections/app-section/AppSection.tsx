@@ -8,6 +8,8 @@ export function AppSection() {
     <Flex
       direction="column"
       flexGrow={1}
+      height="0"
+      overflowY="scroll"
     >
       <div>
         <span className="bold">Oseille</span> est une application web qui permet de gérer ses{' '}
@@ -21,7 +23,7 @@ export function AppSection() {
         <span className="bold">Oseille</span> est une application{' '}
         <span className="bold">gratuite, en code libre, et qui fonctionne sans internet.</span>
       </div>
-      <div>Toutes les fonctionnalités de l'application sont issues de demandes directes des maraîchers.</div>
+      <div>Toutes les fonctionnalités sont issues de demandes directes des maraîchers qui utilisent l'app.</div>
       <div>Contactez-moi pour que l'application réponde à vos besoins.</div>
 
       <SimpleGrid
@@ -30,8 +32,6 @@ export function AppSection() {
         flexGrow={1}
         spacing={4}
         templateColumns="repeat(auto-fill, minmax(300px, 1fr))"
-        height="0"
-        overflowY="scroll"
       >
         {FEATURES.map((feat, index) => (
           <FeatureCard

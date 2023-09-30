@@ -19,7 +19,7 @@ const StyledAboutPage = styled.div`
 const ITEMS = [
   { to: 'app', label: 'Application', component: <AppSection /> },
   { to: 'team', label: 'Équipe', component: <TeamSection /> },
-  { to: 'business', label: 'Finances', component: <BusinessSection /> },
+  { to: 'business', label: 'Financement', component: <BusinessSection /> },
 ];
 
 export function About() {

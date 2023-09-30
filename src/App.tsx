@@ -2,7 +2,6 @@ import { Route, Routes } from 'react-router-dom';
 import { MainLayout } from './component/layout/MainLayout';
 import { About } from './page/about/About';
 import { BackOffice } from './page/back-office/BackOffice';
-import { Contact } from './page/contact/Contact';
 import { Customers } from './page/customer/Customers';
 import { Dashboard } from './page/dashboard/Dashboard';
 import { Deliveries } from './page/delivery/Deliveries';
@@ -38,10 +37,6 @@ function App() {
         <Route
           path="invoice"
           element={<Invoices />}
-        />
-        <Route
-          path="contact"
-          element={<Contact />}
         />
         <Route
           path="settings/*"
