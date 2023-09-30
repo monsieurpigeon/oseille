@@ -1,4 +1,4 @@
-import { Flex, SimpleGrid } from '@chakra-ui/react';
+import { Flex, Heading, SimpleGrid } from '@chakra-ui/react';
 import { MyIcon } from '../../../../component/MyIcon';
 import { FEATURES } from '../../../../updateMe';
 import { FeatureCard } from './FeatureCard';
@@ -25,7 +25,12 @@ export function AppSection() {
       </div>
       <div>Toutes les fonctionnalités sont issues de demandes directes des maraîchers qui utilisent l'app.</div>
       <div>Contactez-moi pour que l'application réponde à vos besoins.</div>
-
+      <Heading
+        size="md"
+        marginTop={8}
+      >
+        Historique des améliorations de l'application
+      </Heading>
       <SimpleGrid
         padding={2}
         marginTop={8}
