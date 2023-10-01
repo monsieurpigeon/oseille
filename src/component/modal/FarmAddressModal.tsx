@@ -44,7 +44,8 @@ export function FarmAddressModal({ isOpen, onClose }: FarmAddressModalProps) {
 
   const onSubmit = (e: FarmInput) => {
     const farmInput = { ...farm, ...e };
-    posthog?.capture('farm_update', {
+    const farmUserId = `${farmInput.title} (${farmInput.zip})`;
+    posthog?.identify(farmUserId, {
       title: farmInput.title,
       zip: farmInput.zip,
       city: farmInput.city,
@@ -52,7 +53,11 @@ export function FarmAddressModal({ isOpen, onClose }: FarmAddressModalProps) {
       email: farmInput.email,
       isTVA: farmInput.isTVA,
       bioLabel: farmInput.bioLabel,
+      farmUserId,
     });
+
+    posthog?.capture('farm_update');
+
     farm &&
       updateFarm({ ...farm, ...e })
         .then(() =>

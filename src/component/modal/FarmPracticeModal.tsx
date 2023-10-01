@@ -1,5 +1,6 @@
 import { Flex, FormLabel, Select } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { usePostHog } from 'posthog-js/react';
 import { useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link } from 'react-router-dom';
@@ -21,6 +22,8 @@ interface FarmPracticeModalProps {
 }
 
 export function FarmPracticeModal({ isOpen, onClose }: FarmPracticeModalProps) {
+  const posthog = usePostHog();
+
   const { farm } = useFarmParameters();
   const cancelRef = useRef<any>();
   const { say } = useSideKick();
@@ -34,18 +37,32 @@ export function FarmPracticeModal({ isOpen, onClose }: FarmPracticeModalProps) {
     if (farm) reset(farm);
   }, [farm]);
 
-  const onSubmit = (e: FarmInput) =>
+  const onSubmit = (e: FarmInput) => {
+    const farmInput = { ...farm, ...e };
+    const farmUserId = `${farmInput.title} (${farmInput.zip})`;
+    posthog?.identify(farmUserId, {
+      title: farmInput.title,
+      zip: farmInput.zip,
+      city: farmInput.city,
+      phone: farmInput.phone,
+      email: farmInput.email,
+      isTVA: farmInput.isTVA,
+      bioLabel: farmInput.bioLabel,
+      farmUserId,
+    });
+
     farm &&
-    updateFarm({ ...farm, ...e })
-      .then(() =>
-        say({
-          sentence: `Les pratiques ont bien été enregistrées`,
-          autoShutUp: true,
-          feeling: SideKickFeeling.GOOD,
-        }),
-      )
-      .then(onClose)
-      .catch(console.error);
+      updateFarm({ ...farm, ...e })
+        .then(() =>
+          say({
+            sentence: `Les pratiques ont bien été enregistrées`,
+            autoShutUp: true,
+            feeling: SideKickFeeling.GOOD,
+          }),
+        )
+        .then(onClose)
+        .catch(console.error);
+  };
 
   return (
     <MyModal
