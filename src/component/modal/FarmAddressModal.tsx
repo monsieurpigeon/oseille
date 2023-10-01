@@ -1,5 +1,6 @@
 import { Flex, HStack, Input } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { usePostHog } from 'posthog-js/react';
 import { useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -27,6 +28,7 @@ interface FarmAddressModalProps {
 }
 
 export function FarmAddressModal({ isOpen, onClose }: FarmAddressModalProps) {
+  const posthog = usePostHog();
   const { farm } = useFarmParameters();
   const cancelRef = useRef<any>();
   const { say } = useSideKick();
@@ -40,18 +42,20 @@ export function FarmAddressModal({ isOpen, onClose }: FarmAddressModalProps) {
     if (farm) reset(farm);
   }, [farm]);
 
-  const onSubmit = (e: FarmInput) =>
+  const onSubmit = (e: FarmInput) => {
+    posthog?.capture('farm_update', { ...farm, ...e });
     farm &&
-    updateFarm({ ...farm, ...e })
-      .then(() =>
-        say({
-          sentence: `L'adresse a bien été enregistrée`,
-          autoShutUp: true,
-          feeling: SideKickFeeling.GOOD,
-        }),
-      )
-      .then(onClose)
-      .catch(console.error);
+      updateFarm({ ...farm, ...e })
+        .then(() =>
+          say({
+            sentence: `L'adresse a bien été enregistrée`,
+            autoShutUp: true,
+            feeling: SideKickFeeling.GOOD,
+          }),
+        )
+        .then(onClose)
+        .catch(console.error);
+  };
 
   return (
     <MyModal

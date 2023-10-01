@@ -1,5 +1,5 @@
 import { SettingCard } from '../../../components/SettingCard';
-import { DestroyAction } from '../../../components/actions/DestoyAction';
+import { DestroyAction } from '../actions/DestoyAction';
 
 export function DangerSettingBlock() {
   return (

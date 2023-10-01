@@ -6,7 +6,7 @@ const manifestForPlugin: Partial<VitePWAOptions> = {
   registerType: 'autoUpdate',
   includeAssets: ['**/*'],
   workbox: {
-    maximumFileSizeToCacheInBytes: 6000000,
+    maximumFileSizeToCacheInBytes: 6000000, // TODO reduce to 3M
     globPatterns: ['**/*'],
   },
   manifest: {

@@ -1,9 +1,11 @@
 import { Button } from '@chakra-ui/react';
+import { usePostHog } from 'posthog-js/react';
 import { useNavigate } from 'react-router-dom';
-import { destroyDatabase } from '../../../../backend';
-import { useConfirm } from '../../../../component/modal/confirm-modal/ConfirmContext';
+import { destroyDatabase } from '../../../../../backend';
+import { useConfirm } from '../../../../../component/modal/confirm-modal/ConfirmContext';
 
 export function DestroyAction() {
+  const posthog = usePostHog();
   const { confirm } = useConfirm();
   const navigate = useNavigate();
 
@@ -15,9 +17,9 @@ export function DestroyAction() {
           "Vous allez supprimer toute la base de donnée, assurez vous d'avoir bien fait un export de vos données",
       })
     ) {
+      posthog?.capture('armageddon');
       destroyDatabase()
-        .then(() => navigate('/'))
-        //.then(() => window.location.reload())
+        .then(() => window.location.reload())
         .catch(console.error);
     }
   };

@@ -1,5 +1,6 @@
 import { Center, Flex, Spacer, Text } from '@chakra-ui/react';
 import { Link } from 'react-router-dom';
+import { DEFAULT_FARM } from '../../utils/defaults';
 import { useFarmParameters } from '../../utils/hooks/useFarmParameters';
 
 export function Header() {
@@ -18,7 +19,10 @@ export function Header() {
       </Center>
       <Spacer />
       <Center marginRight="20px">
-        <Text as="b">{farm?.title?.toUpperCase()}</Text>
+        <Link to="/settings/farm">
+          {farm?.title && <Text as="b">{farm?.title?.toUpperCase()}</Text>}
+          {farm && !farm?.title && <Text as="b">{DEFAULT_FARM.title.toUpperCase()}</Text>}
+        </Link>
       </Center>
     </Flex>
   );

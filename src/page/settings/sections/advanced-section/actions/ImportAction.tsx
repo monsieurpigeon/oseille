@@ -1,10 +1,12 @@
 import { Button, Input, Text, useDisclosure } from '@chakra-ui/react';
+import { usePostHog } from 'posthog-js/react';
 import { ChangeEvent, useRef, useState } from 'react';
-import { handleImport } from '../../../../backend';
-import { MyIcon } from '../../../../component/MyIcon';
-import { MyModal } from '../../../../component/modal/MyModal';
+import { handleImport } from '../../../../../backend';
+import { MyIcon } from '../../../../../component/MyIcon';
+import { MyModal } from '../../../../../component/modal/MyModal';
 
 export function ImportAction() {
+  const posthog = usePostHog();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [file, setFile] = useState<File>();
   const cancelRef = useRef<any>();
@@ -17,6 +19,7 @@ export function ImportAction() {
     if (!file) {
       return;
     }
+    posthog?.capture('db_import');
     handleImport({ file })
       .then((data) => {
         onClose();

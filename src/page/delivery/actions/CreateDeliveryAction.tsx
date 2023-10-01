@@ -1,5 +1,6 @@
 import { Button, useDisclosure } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { usePostHog } from 'posthog-js/react';
 import { useRef } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -24,6 +25,7 @@ export const deliverySchema = z.object({
 });
 
 export function CreateDeliveryAction() {
+  const posthog = usePostHog();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { say } = useSideKick();
   const cancelRef = useRef<any>();
@@ -37,8 +39,9 @@ export function CreateDeliveryAction() {
     name: 'lines',
   });
 
-  const onSubmit = (e: DeliveryInput) =>
-    addDelivery(e)
+  const onSubmit = (e: DeliveryInput) => {
+    posthog?.capture('delivery_add');
+    return addDelivery(e)
       .then(() =>
         say({
           sentence: 'La livraison a bien été enregistrée',
@@ -48,6 +51,8 @@ export function CreateDeliveryAction() {
       )
       .then(handleClose)
       .catch(console.error);
+  };
+
   const handleClose = () => {
     onClose();
     setTimeout(() => {

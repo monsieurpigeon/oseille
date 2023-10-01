@@ -1,5 +1,6 @@
 import { Button, useDisclosure } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { usePostHog } from 'posthog-js/react';
 import { useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -21,6 +22,7 @@ export const customerSchema = z.object({
 });
 
 export function CreateCustomerAction() {
+  const posthog = usePostHog();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef<any>();
 
@@ -38,8 +40,9 @@ export function CreateCustomerAction() {
 
   const { say } = useSideKick();
 
-  const onSubmit = (e: CustomerInput) =>
-    addCustomer(e)
+  const onSubmit = (e: CustomerInput) => {
+    posthog?.capture('customer_add');
+    return addCustomer(e)
       .then(() =>
         say({
           sentence: `Le client ${e.name} a bien été enregistré`,
@@ -49,6 +52,7 @@ export function CreateCustomerAction() {
       )
       .then(handleClose)
       .catch(console.error);
+  };
 
   return (
     <>

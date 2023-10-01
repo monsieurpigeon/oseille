@@ -1,5 +1,6 @@
 import { Button, useDisclosure } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { usePostHog } from 'posthog-js/react';
 import { useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -16,6 +17,7 @@ export const productSchema = z.object({
 });
 
 export function CreateProductAction() {
+  const posthog = usePostHog();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef<any>();
 
@@ -36,8 +38,9 @@ export function CreateProductAction() {
     }, 100);
   };
 
-  const onSubmit = (e: ProductInput) =>
-    addProduct(e)
+  const onSubmit = (e: ProductInput) => {
+    posthog?.capture('product_add');
+    return addProduct(e)
       .then(() =>
         say({
           sentence: `Le produit ${e.name} a bien été enregistré`,
@@ -47,6 +50,7 @@ export function CreateProductAction() {
       )
       .then(handleClose)
       .catch(console.error);
+  };
 
   return (
     <>

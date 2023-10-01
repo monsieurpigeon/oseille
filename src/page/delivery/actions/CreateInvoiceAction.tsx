@@ -1,5 +1,6 @@
 import { Button, useDisclosure } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { usePostHog } from 'posthog-js/react';
 import { useMemo, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -27,6 +28,7 @@ export const invoiceSchema = z.object({
 const defaultValues = { createdAt: new Date().toISOString().split('T')[0], notes: '' };
 
 export function CreateInvoiceAction({ toInvoice, setToInvoice }: CreateInvoiceActionProps) {
+  const posthog = usePostHog();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef<any>();
   const { say } = useSideKick();
@@ -36,7 +38,7 @@ export function CreateInvoiceAction({ toInvoice, setToInvoice }: CreateInvoiceAc
     defaultValues,
   });
   const onSubmit = (e: InvoiceInfoInput) => {
-    console.log(e);
+    posthog?.capture('invoice_add');
     addInvoice(
       Object.entries(toInvoice)
         .filter(([_, value]) => value)

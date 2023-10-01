@@ -11,6 +11,7 @@ import './index.css';
 
 const options = {
   api_host: import.meta.env.VITE_POSTHOG_HOST,
+  autocapture: false,
 };
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(

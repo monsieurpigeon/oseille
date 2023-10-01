@@ -1,6 +1,6 @@
 import { SettingCard } from '../../../components/SettingCard';
-import { ExportAction } from '../../../components/actions/ExportAction';
-import { ImportAction } from '../../../components/actions/ImportAction';
+import { ExportAction } from '../actions/ExportAction';
+import { ImportAction } from '../actions/ImportAction';
 
 export function ImportExportSettingBlock() {
   return (
