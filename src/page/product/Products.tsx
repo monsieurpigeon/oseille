@@ -1,7 +1,8 @@
-import { Flex, Spacer, Text } from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
+import { Button, Flex, Spacer, Text } from '@chakra-ui/react';
+import { useMemo } from 'react';
+import { Outlet, useNavigate, useParams } from 'react-router-dom';
 import { useSnapshot } from 'valtio';
-import { Product, store } from '../../backend';
+import { store } from '../../backend';
 import { ListItem } from '../../component/card/ListItem';
 import { MyHeader } from '../../component/layout/page-layout/MyHeader';
 import { MyPage } from '../../component/layout/page-layout/MyPage';
@@ -11,35 +12,35 @@ import { MyH1 } from '../../component/typography/MyFont';
 import { DEFAULT_TAX } from '../../utils/defaults';
 import { TVAFormatter } from '../../utils/formatter';
 import { useFarmParameters } from '../../utils/hooks/useFarmParameters';
-import { ProductDetail } from './ProductDetail';
-import { CreateProductAction } from './actions/CreateProductAction';
 
 export function Products() {
-  const [selected, setSelected] = useState<Product>();
   const snap = useSnapshot(store);
+  const { id } = useParams();
+
+  const navigate = useNavigate();
+
+  const selected = useMemo(() => (id ? store.products.find((p) => p.id === id) : undefined), [id, snap]);
 
   const { isTVA } = useFarmParameters();
-
-  useEffect(() => {
-    const updated = store.products.find((p) => p.id === selected?.id);
-    if (updated) {
-      setSelected({ ...updated });
-    }
-  }, [snap]);
 
   return (
     <MyPage>
       <MySide>
         <MyHeader>
           <MyH1>Mes Produits</MyH1>
-          <CreateProductAction />
+          <Button
+            colorScheme="twitter"
+            onClick={() => navigate('/product/create')}
+          >
+            Nouveau
+          </Button>
         </MyHeader>
         <MyScrollList>
           {store.products.map((entity) => (
             <ListItem
               key={entity.id}
               isSelected={selected?.id === entity.id}
-              onClick={() => setSelected((e) => (e?.id === entity.id ? undefined : { ...entity }))}
+              onClick={() => navigate(entity.id === id ? `/product` : `/product/${entity.id}`)}
             >
               <Flex width="100%">
                 <div>{`${entity.name} /${entity.unit}`}</div>
@@ -50,7 +51,9 @@ export function Products() {
           ))}
         </MyScrollList>
       </MySide>
-      <MySide>{selected && <ProductDetail selected={selected} />}</MySide>
+      <MySide>
+        <Outlet />
+      </MySide>
     </MyPage>
   );
 }

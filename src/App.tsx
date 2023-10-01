@@ -7,7 +7,11 @@ import { Dashboard } from './page/dashboard/Dashboard';
 import { Deliveries } from './page/delivery/Deliveries';
 import { Invoices } from './page/invoice/Invoices';
 import { Prices } from './page/prices/Prices';
+import { ProductAll } from './page/product/ProductAll';
+import { ProductDetail } from './page/product/ProductDetail';
 import { Products } from './page/product/Products';
+import { CreateProductModal } from './page/product/modal/ProductCreateModal';
+import { EditProductModal } from './page/product/modal/ProductEditModal';
 import { Settings } from './page/settings/Settings';
 
 function App() {
@@ -21,7 +25,26 @@ function App() {
         <Route
           path="product"
           element={<Products />}
-        />
+        >
+          <Route
+            index
+            element={<ProductAll />}
+          />
+          <Route
+            path="create"
+            element={<CreateProductModal />}
+          />
+          <Route
+            path=":id"
+            element={<ProductDetail />}
+          >
+            <Route
+              path="edit"
+              element={<EditProductModal />}
+            />
+          </Route>
+        </Route>
+
         <Route
           path="customer"
           element={<Customers />}
