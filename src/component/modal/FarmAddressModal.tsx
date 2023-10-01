@@ -43,7 +43,16 @@ export function FarmAddressModal({ isOpen, onClose }: FarmAddressModalProps) {
   }, [farm]);
 
   const onSubmit = (e: FarmInput) => {
-    posthog?.capture('farm_update', { ...farm, ...e });
+    const farmInput = { ...farm, ...e };
+    posthog?.capture('farm_update', {
+      title: farmInput.title,
+      zip: farmInput.zip,
+      city: farmInput.city,
+      phone: farmInput.phone,
+      email: farmInput.email,
+      isTVA: farmInput.isTVA,
+      bioLabel: farmInput.bioLabel,
+    });
     farm &&
       updateFarm({ ...farm, ...e })
         .then(() =>
