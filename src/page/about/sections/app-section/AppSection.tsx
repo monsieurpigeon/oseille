@@ -17,7 +17,7 @@ export function AppSection() {
       </div>
       <div>
         adaptée à l'usage des <span className="bold">maraîchers</span>
-        <MyIcon name={'vegetable'} />, notamment pour la gestion des produits, clients et tarifs.
+        <MyIcon name="vegetable" />, notamment pour la gestion des produits, clients et tarifs.
       </div>
       <div>
         <span className="bold">Oseille</span> est une application{' '}

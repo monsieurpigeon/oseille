@@ -33,7 +33,7 @@ export function BusinessSection() {
           ligne, app mobile, etc.
         </Text>
         <Text>
-          Si j'avais un gros paquet d'argent qui me tombait du ciel, je réunirais les compétences nécessaires pour que
+          Si j'avais un gros paquet d'oseille qui me tombait du ciel, je réunirais les compétences nécessaires pour que
           l'utilisation d'<span className="bold">Oseille</span> par des maraîchers soit financée par les impôts qu'ils
           payent déjà.
         </Text>
