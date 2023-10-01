@@ -1,5 +1,5 @@
-import pdfMake from 'pdfmake/build/pdfmake';
-import pdfFonts from 'pdfmake/build/vfs_fonts';
+import * as pdfMake from 'pdfmake/build/pdfmake';
+import * as pdfFonts from 'pdfmake/build/vfs_fonts';
 import { getIsTVA } from '../../../utils/aggregations';
 import { dateFormatter } from '../../../utils/formatter';
 import { FrBio01, FrBio15 } from '../../../utils/labels';
@@ -9,7 +9,7 @@ import { lines } from './blocks/lines';
 import { taxes } from './blocks/taxes';
 import { totals } from './blocks/totals';
 
-pdfMake.vfs = pdfFonts.pdfMake.vfs;
+(<any>pdfMake).vfs = pdfFonts.pdfMake.vfs;
 
 const fonts = {
   Roboto: {
