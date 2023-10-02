@@ -79,7 +79,7 @@ export function BusinessSection() {
                 <Heading size="sm">Recettes</Heading>
                 <Flex justifyContent="space-between">
                   <Text>Dons</Text>
-                  <Text>{priceFormatter(0)}</Text>
+                  <Text>{priceFormatter(1)}</Text>
                 </Flex>
                 <Flex justifyContent="space-between">
                   <Text>Levée de fonds</Text>
