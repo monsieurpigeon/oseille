@@ -42,8 +42,8 @@ export function BusinessSection() {
       <Flex
         direction="column"
         gap="4"
-        width="100%"
         flexGrow={1}
+        maxWidth="800px"
       >
         <Heading size="md">Bilan financier</Heading>
         <Card>
