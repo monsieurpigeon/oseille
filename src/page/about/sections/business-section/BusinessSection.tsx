@@ -92,7 +92,10 @@ export function BusinessSection() {
         <LinkBox>
           <Card border="1px solid yellow">
             <CardBody>
-              <Flex alignSelf="center">
+              <Flex
+                alignSelf="center"
+                gap={8}
+              >
                 <Box>
                   <Text>
                     Si vous souhaitez soutenir mon travail, vous pouvez m'encourager financièrement sur{' '}
