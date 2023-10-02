@@ -46,13 +46,6 @@ export function FarmAddressModal({ isOpen, onClose }: FarmAddressModalProps) {
     const farmInput = { ...farm, ...e };
     const farmUserId = `${farmInput.title} (${farmInput.zip})`;
     posthog?.identify(farmUserId, {
-      title: farmInput.title,
-      zip: farmInput.zip,
-      city: farmInput.city,
-      phone: farmInput.phone,
-      email: farmInput.email,
-      isTVA: farmInput.isTVA,
-      bioLabel: farmInput.bioLabel,
       farmUserId,
     });
 
