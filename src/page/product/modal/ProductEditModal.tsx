@@ -10,13 +10,12 @@ import { productSchema } from './ProductCreateModal';
 import { ProductFields } from './ProductFields';
 
 export function ProductEditModal() {
+  const { id } = useParams();
   const product = useMemo(() => (id ? store.products.find((el) => el.id === id) : undefined), [id, store.products]);
   if (!product) return null;
 
   const cancelRef = useRef<any>();
   const navigate = useNavigate();
-
-  const { id } = useParams();
 
   const { say } = useSideKick();
 
