@@ -1,8 +1,8 @@
 import { ViewIcon } from '@chakra-ui/icons';
 import { IconButton } from '@chakra-ui/react';
 import styled from 'styled-components';
-import { Delivery, DocumentType, Invoice, exportDocument } from '../../backend';
-import { dateFormatter } from '../../utils/formatter';
+import { Delivery, DocumentType, Invoice, exportDocument } from '../../../backend';
+import { dateFormatter } from '../../../utils/formatter';
 
 export const DocumentCard = styled.div`
   border: 1px solid #aaaaaa;

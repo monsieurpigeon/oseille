@@ -1,13 +1,16 @@
 import { Button } from '@chakra-ui/react';
-import { useState } from 'react';
+import { useAtom } from 'jotai';
+import { atomWithHash } from 'jotai-location';
 import styled from 'styled-components';
-import { Customer, store } from '../../backend';
-import { SalesGraph } from '../../component/modules/graph/SalesGraph';
+import { Customer, store } from '../../../backend';
+import { SalesGraph } from '../../../component/modules/graph/SalesGraph';
 import { DeliveryCard, InvoiceCard } from './DocumentCard';
 
 interface CustomerDocumentsProps {
   customer: Customer;
 }
+
+const tabAtom = atomWithHash('tab', 0);
 
 export function CustomerDocuments({ customer }: CustomerDocumentsProps) {
   const invoices = store.invoices
@@ -17,7 +20,7 @@ export function CustomerDocuments({ customer }: CustomerDocumentsProps) {
     .filter((delivery) => delivery.customerId === customer.id)
     .sort((a, b) => b.deliveredAt.localeCompare(a.deliveredAt));
 
-  const [tab, setTab] = useState(0);
+  const [tab, setTab] = useAtom(tabAtom);
 
   return (
     <StyledContainer>

@@ -1,4 +1,5 @@
-import { Box, Input, Select, Text } from '@chakra-ui/react';
+import { Input, Select } from '@chakra-ui/react';
+import { MyField } from '../../../component/MyField';
 import { PRODUCT_UNITS } from '../../../utils/defaults';
 import { useFarmParameters } from '../../../utils/hooks/useFarmParameters';
 
@@ -6,16 +7,13 @@ export const ProductFields = ({ control, register }: any) => {
   const { isTVA } = useFarmParameters();
   return (
     <>
-      <Box p={1}>
-        <Text>Nom</Text>
+      <MyField title="Nom">
         <Input
           placeholder="Tomates cerises"
           {...register('name')}
         />
-      </Box>
-
-      <Box p={1}>
-        <Text>Unité</Text>
+      </MyField>
+      <MyField title="Unité">
         <Select {...register('unit')}>
           {PRODUCT_UNITS.map(({ value, label }) => (
             <option
@@ -26,17 +24,17 @@ export const ProductFields = ({ control, register }: any) => {
             </option>
           ))}
         </Select>
-      </Box>
+      </MyField>
+
       {isTVA && (
-        <Box p={1}>
-          <Text>Taux de TVA</Text>
+        <MyField title="Taux de TVA">
           <Select {...register('tva')}>
             <option value="0">0%</option>
             <option value="5.5">5.5%</option>
             <option value="10">10%</option>
             <option value="20">20%</option>
           </Select>
-        </Box>
+        </MyField>
       )}
     </>
   );

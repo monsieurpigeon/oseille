@@ -17,23 +17,20 @@ export const ProductDetail = () => {
 
   const selected = useMemo(() => (id ? store.products.find((p) => p.id === id) : undefined), [id, snap]);
 
+  if (!selected) return <></>;
   return (
-    <>
-      {selected && (
+    <Box>
+      <MyHeader>
+        <MyH1>Détail</MyH1>
+        <EditButton onClick={() => navigate(`/product/${selected.id}/edit`)} />
+        <Outlet />
+      </MyHeader>
+      <Box>
         <Box>
-          <MyHeader>
-            <MyH1>Détail</MyH1>
-            <EditButton onClick={() => navigate(`/product/${selected.id}/edit`)} />
-            <Outlet />
-          </MyHeader>
-          <Box>
-            <Box>
-              {selected.name} /{selected.unit}
-            </Box>
-            {isTVA && <Box>TVA: {TVAFormatter(selected.tva)}</Box>}
-          </Box>
+          {selected.name} /{selected.unit}
         </Box>
-      )}
-    </>
+        {isTVA && <Box>TVA: {TVAFormatter(selected.tva)}</Box>}
+      </Box>
+    </Box>
   );
 };

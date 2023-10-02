@@ -16,7 +16,7 @@ export const productSchema = z.object({
   tva: z.string().optional(),
 });
 
-export function CreateProductModal() {
+export function ProductCreateModal() {
   const posthog = usePostHog();
   const cancelRef = useRef<any>();
   const navigate = useNavigate();

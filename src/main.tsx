@@ -2,12 +2,12 @@ import { ChakraProvider } from '@chakra-ui/react';
 import { PostHogProvider } from 'posthog-js/react';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter } from 'react-router-dom';
-import App from './App';
+import { RouterProvider } from 'react-router-dom';
 import './backend';
 import { ConfirmContextProvider } from './component/modal/confirm-modal/ConfirmContext';
 import { SideKickContextProvider } from './component/modules/sidekick/SideKickContext';
 import './index.css';
+import { router } from './router';
 
 const options = {
   api_host: import.meta.env.VITE_POSTHOG_HOST,
@@ -24,9 +24,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
       <ChakraProvider>
         <ConfirmContextProvider>
           <SideKickContextProvider>
-            <BrowserRouter>
-              <App />
-            </BrowserRouter>
+            <RouterProvider router={router} />
           </SideKickContextProvider>
         </ConfirmContextProvider>
       </ChakraProvider>

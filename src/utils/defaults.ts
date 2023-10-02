@@ -24,8 +24,8 @@ export const DEFAULT_CUSTOMER = {
   address2: '',
   zip: '33000',
   city: 'Bordeaux',
-  notes: '',
-  phone: '',
+  notes: 'Livraison le Jeudi',
+  phone: '06 45 66 56 55',
 };
 
 export const PRODUCT_UNITS = [

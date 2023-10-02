@@ -1,46 +1,50 @@
-import { useEffect, useState } from 'react';
+import { Button } from '@chakra-ui/react';
+import { useMemo } from 'react';
+import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useSnapshot } from 'valtio';
-import { Customer, store } from '../../backend';
+import { store } from '../../backend';
 import { ListItem } from '../../component/card/ListItem';
 import { MyHeader } from '../../component/layout/page-layout/MyHeader';
 import { MyPage } from '../../component/layout/page-layout/MyPage';
 import { MyScrollList } from '../../component/layout/page-layout/MyScrollList';
 import { MySide } from '../../component/layout/page-layout/MySide';
 import { MyH1 } from '../../component/typography/MyFont';
-import { CustomerDetail } from './CustomerDetail';
-import { CreateCustomerAction } from './actions/CreateCustomerAction';
 
 export function Customers() {
-  const [selected, setSelected] = useState<Customer>();
   const snap = useSnapshot(store);
+  const { id } = useParams();
+  const location = useLocation();
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    const updated = store.customers.find((p) => p.id === selected?.id);
-    if (updated) {
-      setSelected(updated);
-    }
-  }, [snap]);
-
+  const selected = useMemo(() => (id ? store.customers.find((el) => el.id === id) : undefined), [id, snap]);
+  console.log(location);
   return (
     <MyPage>
       <MySide>
         <MyHeader>
           <MyH1>Mes Clients</MyH1>
-          <CreateCustomerAction />
+          <Button
+            colorScheme="twitter"
+            onClick={() => navigate('/customer/create')}
+          >
+            Nouveau
+          </Button>
         </MyHeader>
         <MyScrollList>
           {store.customers.map((entity) => (
             <ListItem
               key={entity.id}
               isSelected={selected?.id === entity.id}
-              onClick={() => setSelected((e) => (e?.id === entity.id ? undefined : { ...entity }))}
+              onClick={() => navigate(entity.id === id ? `/customer` : `/customer/${entity.id}${location.hash}`)}
             >
               {entity.name}
             </ListItem>
           ))}
         </MyScrollList>
       </MySide>
-      <MySide>{selected && <CustomerDetail selected={selected} />}</MySide>
+      <MySide>
+        <Outlet />
+      </MySide>
     </MyPage>
   );
 }
