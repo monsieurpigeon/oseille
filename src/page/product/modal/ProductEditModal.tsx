@@ -10,11 +10,13 @@ import { productSchema } from './ProductCreateModal';
 import { ProductFields } from './ProductFields';
 
 export function ProductEditModal() {
+  const product = useMemo(() => (id ? store.products.find((el) => el.id === id) : undefined), [id, store.products]);
+  if (!product) return null;
+
   const cancelRef = useRef<any>();
   const navigate = useNavigate();
 
   const { id } = useParams();
-  const product = useMemo(() => (id ? store.products.find((el) => el.id === id) : undefined), [id, store.products]);
 
   const { say } = useSideKick();
 
@@ -30,10 +32,11 @@ export function ProductEditModal() {
             autoShutUp: true,
             feeling: SideKickFeeling.GOOD,
           }),
-        );
+        )
+        .catch(console.error);
   };
 
-  const { control, register, handleSubmit, reset, formState } = useForm<ProductInput>({
+  const { control, register, handleSubmit, formState } = useForm<ProductInput>({
     resolver: zodResolver(productSchema),
     defaultValues: { ...product, tva: product?.tva || '5.5' },
   });

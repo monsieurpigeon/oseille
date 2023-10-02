@@ -7,7 +7,7 @@ import { EditButton } from '../../../component/buttons';
 import { MyModal } from '../../../component/modal/MyModal';
 import { useSideKick } from '../../../component/modules/sidekick/SideKickContext';
 import { SideKickFeeling } from '../../../component/modules/sidekick/enums';
-import { invoiceSchema } from '../../delivery/actions/CreateInvoiceAction';
+import { invoiceSchema } from '../../delivery/modal/InvoiceCreateModal';
 import { InvoiceFields } from '../InvoiceFields';
 
 interface EditInvoiceActionProps {

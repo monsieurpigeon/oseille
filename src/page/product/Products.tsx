@@ -19,7 +19,7 @@ export function Products() {
 
   const navigate = useNavigate();
 
-  const selected = useMemo(() => (id ? store.products.find((p) => p.id === id) : undefined), [id, snap]);
+  const selected = useMemo(() => (id ? store.products.find((el) => el.id === id) : undefined), [id, snap]);
 
   const { isTVA } = useFarmParameters();
 

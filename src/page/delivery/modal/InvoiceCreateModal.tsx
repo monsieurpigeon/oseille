@@ -10,7 +10,7 @@ import { useSideKick } from '../../../component/modules/sidekick/SideKickContext
 import { SideKickFeeling } from '../../../component/modules/sidekick/enums';
 import { InvoiceFields } from '../../invoice/InvoiceFields';
 
-interface CreateInvoiceActionProps {
+interface InvoiceCreateModalProps {
   toInvoice: { [key: string]: boolean };
   setToInvoice: React.Dispatch<
     React.SetStateAction<{
@@ -27,7 +27,7 @@ export const invoiceSchema = z.object({
 
 const defaultValues = { createdAt: new Date().toISOString().split('T')[0], notes: '' };
 
-export function CreateInvoiceAction({ toInvoice, setToInvoice }: CreateInvoiceActionProps) {
+export function InvoiceCreateModal({ toInvoice, setToInvoice }: InvoiceCreateModalProps) {
   const posthog = usePostHog();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef<any>();

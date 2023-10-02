@@ -66,13 +66,19 @@ export const addDelivery = async (delivery: DeliveryInput) => {
       lines: lines.filter((p) => !!p).map((l) => ({ ...l, quantity: +l.quantity })),
     };
   };
+  try {
+    const deliveryFull = await promise();
 
-  promise().then((deliveryFull) => {
-    relDb.rel
-      .save('delivery', { ...deliveryFull, documentId: documentIdFormatter(store.farm?.deliveryId || 0, 'Delivery') })
-      .then(() => updateDocumentId('Delivery'))
-      .catch(console.error);
-  });
+    const result = await relDb.rel.save('delivery', {
+      ...deliveryFull,
+      documentId: documentIdFormatter(store.farm?.deliveryId || 0, 'Delivery'),
+    });
+    updateDocumentId('Delivery');
+    return result;
+  } catch (message) {
+    console.error(message);
+    return undefined;
+  }
 };
 
 export const addInvoiceId = (invoiceId: string, deliveryId: string) => {

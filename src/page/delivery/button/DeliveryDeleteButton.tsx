@@ -1,4 +1,5 @@
 import { usePostHog } from 'posthog-js/react';
+import { useNavigate } from 'react-router-dom';
 import { Delivery, deleteDelivery } from '../../../backend';
 import { DeleteButton } from '../../../component/buttons';
 import { useConfirm } from '../../../component/modal/confirm-modal/ConfirmContext';
@@ -9,7 +10,8 @@ interface DeleteDeliveryActionProps {
   delivery: Delivery;
 }
 
-export function DeleteDeliveryAction({ delivery }: DeleteDeliveryActionProps) {
+export function DeliveryDeleteButton({ delivery }: DeleteDeliveryActionProps) {
+  const navigate = useNavigate();
   const posthog = usePostHog();
   const isEditable = !delivery.invoiceId;
   const { say } = useSideKick();
@@ -23,13 +25,13 @@ export function DeleteDeliveryAction({ delivery }: DeleteDeliveryActionProps) {
       })
     ) {
       posthog?.capture('delivery_delete');
-      deleteDelivery(delivery).then(() =>
-        say({
-          sentence: `La livraison ${delivery.documentId} a bien été supprimée`,
-          autoShutUp: true,
-          feeling: SideKickFeeling.GOOD,
-        }),
-      );
+      await deleteDelivery(delivery);
+      say({
+        sentence: `La livraison ${delivery.documentId} a bien été supprimée`,
+        autoShutUp: true,
+        feeling: SideKickFeeling.GOOD,
+      });
+      navigate('/delivery');
     }
   };
 

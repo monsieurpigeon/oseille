@@ -1,7 +1,9 @@
+import { Button } from '@chakra-ui/react';
 import { addDays } from 'date-fns';
-import { useEffect, useState } from 'react';
+import { useMemo, useState } from 'react';
+import { Outlet, useNavigate, useParams } from 'react-router-dom';
 import { useSnapshot } from 'valtio';
-import { Delivery, store } from '../../backend';
+import { store } from '../../backend';
 import { ListItem } from '../../component/card/ListItem';
 import { ListItemGroup } from '../../component/card/ListItemGroup';
 import { MyHeader } from '../../component/layout/page-layout/MyHeader';
@@ -10,34 +12,27 @@ import { MyScrollList } from '../../component/layout/page-layout/MyScrollList';
 import { MySide } from '../../component/layout/page-layout/MySide';
 import { MyH1 } from '../../component/typography/MyFont';
 import { dateFormatter } from '../../utils/formatter';
-import { DeliveryDetail } from './DeliveryDetail';
-import { CreateDeliveryAction } from './actions/CreateDeliveryAction';
-import { CreateInvoiceAction } from './actions/CreateInvoiceAction';
+import { InvoiceCreateModal } from './modal/InvoiceCreateModal';
 
 export function Deliveries() {
-  const [selected, setSelected] = useState<Delivery>();
   const snap = useSnapshot(store);
+  const { id } = useParams();
 
-  useEffect(() => {
-    const updated = store.deliveries.find((p) => p.id === selected?.id);
-    if (updated) {
-      setSelected(updated);
-    }
-  }, [snap]);
+  const navigate = useNavigate();
 
-  useEffect(() => {
-    const updated = store.deliveries.find((p) => p.id === selected?.id);
-    if (updated) {
-      setSelected(updated);
-    }
-  }, [snap]);
+  const selected = useMemo(() => (id ? store.deliveries.find((el) => el.id === id) : undefined), [id, snap]);
 
   return (
     <MyPage>
       <MySide>
         <MyHeader>
           <MyH1>Mes Livraisons</MyH1>
-          <CreateDeliveryAction />
+          <Button
+            colorScheme="twitter"
+            onClick={() => navigate('/delivery/create')}
+          >
+            Nouveau
+          </Button>
         </MyHeader>
         <MyScrollList>
           {store.customers.map((customer) => (
@@ -45,17 +40,22 @@ export function Deliveries() {
               key={customer.id}
               selected={selected}
               customer={customer}
-              setSelected={setSelected}
             />
           ))}
         </MyScrollList>
       </MySide>
-      <MySide>{selected && <DeliveryDetail selected={selected} />}</MySide>
+
+      <MySide>
+        <Outlet />
+      </MySide>
     </MyPage>
   );
 }
 
-function DeliveryCustomer({ customer, selected, setSelected }: any) {
+function DeliveryCustomer({ customer, selected }: any) {
+  const { id } = useParams();
+  const navigate = useNavigate();
+
   const [toInvoice, setToInvoice] = useState<{ [key: string]: boolean }>({});
   const deliveries = store.deliveries
     .filter((delivery) => delivery.customerId === customer.id)
@@ -73,7 +73,7 @@ function DeliveryCustomer({ customer, selected, setSelected }: any) {
           title={customer.name}
           key={customer.id}
           action={
-            <CreateInvoiceAction
+            <InvoiceCreateModal
               toInvoice={toInvoice}
               setToInvoice={setToInvoice}
             />
@@ -83,7 +83,7 @@ function DeliveryCustomer({ customer, selected, setSelected }: any) {
             <ListItem
               isSelected={selected?.id === delivery.id}
               key={delivery.id}
-              onClick={() => setSelected((e: Delivery) => (e?.id === delivery.id ? undefined : { ...delivery }))}
+              onClick={() => navigate(delivery.id === id ? `/delivery` : `/delivery/${delivery.id}`)}
               checkable={!delivery.invoiceId}
               checked={toInvoice[delivery.id] || false}
               onCheck={() =>

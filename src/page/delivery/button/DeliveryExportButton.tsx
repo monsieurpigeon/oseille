@@ -6,7 +6,7 @@ interface ExportDeliveryActionProps {
   delivery: Delivery;
 }
 
-export function ExportDeliveryAction({ delivery }: ExportDeliveryActionProps) {
+export function DeliveryExportButton({ delivery }: ExportDeliveryActionProps) {
   const posthog = usePostHog();
   return (
     <Button
