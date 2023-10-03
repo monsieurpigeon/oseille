@@ -3,9 +3,8 @@ import { useMemo } from 'react';
 import { Outlet, useNavigate, useParams } from 'react-router-dom';
 import { useSnapshot } from 'valtio';
 import { store } from '../../backend';
-import { EditButton } from '../../component/buttons';
+import { DetailButton, EditButton } from '../../component/buttons';
 import { MyHeader } from '../../component/layout/page-layout/MyHeader';
-import { MyH1 } from '../../component/typography/MyFont';
 import { TVAFormatter } from '../../utils/formatter';
 import { useFarmParameters } from '../../utils/hooks/useFarmParameters';
 
@@ -21,7 +20,7 @@ export const ProductDetail = () => {
   return (
     <Box>
       <MyHeader>
-        <MyH1>Détail</MyH1>
+        <DetailButton />
         <EditButton onClick={() => navigate(`/product/${selected.id}/edit`)} />
         <Outlet />
       </MyHeader>

@@ -51,6 +51,7 @@ export function ProductCreateModal() {
       .catch(console.error);
   };
 
+  console.log('I AM ALIVE Product Create Modal');
   return (
     <MyModal
       isOpen={true}

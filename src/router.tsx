@@ -16,7 +16,10 @@ import { DeliveryAll } from './page/delivery/DeliveryAll';
 import { DeliveryDetail } from './page/delivery/DeliveryDetail';
 import { DeliveryCreateModal } from './page/delivery/modal/DeliveryCreateModal';
 import { DeliveryEditModal } from './page/delivery/modal/DeliveryEditModal';
+import { InvoiceAll } from './page/invoice/InvoiceAll';
+import { InvoiceDetail } from './page/invoice/InvoiceDetail';
 import { Invoices } from './page/invoice/Invoices';
+import { InvoiceEditModal } from './page/invoice/modal/InvoiceEditModal';
 import { Prices } from './page/prices/Prices';
 import { ProductAll } from './page/product/ProductAll';
 import { ProductDetail } from './page/product/ProductDetail';
@@ -74,7 +77,14 @@ export const router = createBrowserRouter([
           { path: ':id', element: <DeliveryDetail />, children: [{ path: 'edit', element: <DeliveryEditModal /> }] },
         ],
       },
-      { path: 'invoice', element: <Invoices /> },
+      {
+        path: 'invoice',
+        element: <Invoices />,
+        children: [
+          { index: true, element: <InvoiceAll /> },
+          { path: ':id', element: <InvoiceDetail />, children: [{ path: 'edit', element: <InvoiceEditModal /> }] },
+        ],
+      },
       {
         path: 'settings',
         element: <Settings />,

@@ -1,7 +1,8 @@
 import { differenceInDays } from 'date-fns';
-import { useEffect, useState } from 'react';
+import { useMemo } from 'react';
+import { Outlet, useNavigate, useParams } from 'react-router-dom';
 import { useSnapshot } from 'valtio';
-import { Invoice, store } from '../../backend';
+import { store } from '../../backend';
 import { ListItem } from '../../component/card/ListItem';
 import { ListItemGroup } from '../../component/card/ListItemGroup';
 import { MyHeader } from '../../component/layout/page-layout/MyHeader';
@@ -9,30 +10,22 @@ import { MyPage } from '../../component/layout/page-layout/MyPage';
 import { MyScrollList } from '../../component/layout/page-layout/MyScrollList';
 import { MySide } from '../../component/layout/page-layout/MySide';
 import { MyH1 } from '../../component/typography/MyFont';
-import { DEFAULT_INVOICE_DELAY } from '../../utils/defaults';
 import { dateFormatter } from '../../utils/formatter';
-import { InvoiceDetail } from './InvoiceDetail';
-import { ExportCsvAction } from './actions/ExportCsvAction';
+import { useFarmParameters } from '../../utils/hooks/useFarmParameters';
+import { InvoiceExportCsvButton } from './button/InvoiceExportCsvButton';
 
 export function Invoices() {
-  const [selected, setSelected] = useState<Invoice>();
   const snap = useSnapshot(store);
+  const { id } = useParams();
 
-  useEffect(() => {
-    const updated = store.invoices.find((p) => p.id === selected?.id);
-    if (updated) {
-      setSelected(updated);
-    } else {
-      setSelected(undefined);
-    }
-  }, [snap]);
+  const selected = useMemo(() => (id ? store.invoices.find((el) => el.id === id) : undefined), [id, snap]);
 
   return (
     <MyPage>
       <MySide>
         <MyHeader>
           <MyH1>Mes Factures</MyH1>
-          <ExportCsvAction />
+          <InvoiceExportCsvButton />
         </MyHeader>
         <MyScrollList>
           {store.customers.map((customer) => (
@@ -40,32 +33,37 @@ export function Invoices() {
               key={customer.id}
               selected={selected}
               customer={customer}
-              setSelected={setSelected}
             />
           ))}
         </MyScrollList>
       </MySide>
-      <MySide>{selected && <InvoiceDetail selected={selected} />}</MySide>
+      <MySide>
+        <Outlet />
+      </MySide>
     </MyPage>
   );
 }
 
-function InvoiceCustomer({ customer, selected, setSelected }: any) {
+function InvoiceCustomer({ customer, selected }: any) {
+  const { id } = useParams();
+  const { invoiceDelay } = useFarmParameters();
+
   const invoices = store.invoices.filter((invoice) => invoice.customerId === customer.id);
+  const navigate = useNavigate();
 
   return (
     <ListItemGroup title={customer.name}>
       {invoices.map((invoice) => {
         const isLate = invoice.isPaid
           ? false
-          : differenceInDays(new Date(), new Date(invoice.createdAt)) > DEFAULT_INVOICE_DELAY;
+          : differenceInDays(new Date(), new Date(invoice.createdAt)) > invoiceDelay;
         return (
           <ListItem
             key={invoice.id}
             done={invoice.isPaid}
             alert={isLate}
             isSelected={selected?.id === invoice.id}
-            onClick={() => setSelected((e: Invoice) => (e?.id === invoice.id ? undefined : { ...invoice }))}
+            onClick={() => navigate(invoice.id === id ? `/invoice` : `/invoice/${invoice.id}`)}
           >
             {isLate && '⚠️'} {`${invoice.documentId} - ${dateFormatter(invoice.createdAt)}`}
           </ListItem>

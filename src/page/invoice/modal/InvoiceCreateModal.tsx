@@ -8,7 +8,7 @@ import { Delivery, InvoiceInfoInput, addInvoice, store } from '../../../backend'
 import { MyModal } from '../../../component/modal/MyModal';
 import { useSideKick } from '../../../component/modules/sidekick/SideKickContext';
 import { SideKickFeeling } from '../../../component/modules/sidekick/enums';
-import { InvoiceFields } from '../../invoice/InvoiceFields';
+import { InvoiceFields } from './InvoiceFields';
 
 interface InvoiceCreateModalProps {
   toInvoice: { [key: string]: boolean };

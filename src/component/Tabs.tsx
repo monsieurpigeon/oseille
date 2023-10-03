@@ -22,8 +22,8 @@ const StyledNavigation = styled.div`
 
   .active {
     box-shadow: 0 10px 5px 1px var(--chakra-colors-gray-200);
-    border-bottom: 2px solid var(--chakra-colors-blue-500);
-    background: linear-gradient(to bottom, var(--chakra-colors-blue-500), var(--chakra-colors-blue-100) 10%, white 40%);
+    border-bottom: 2px solid var(--chakra-colors-blue-200);
+    background: linear-gradient(to bottom, var(--chakra-colors-blue-200), var(--chakra-colors-blue-100) 10%, white 40%);
   }
 `;
 

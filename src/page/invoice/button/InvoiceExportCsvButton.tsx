@@ -8,7 +8,7 @@ import { MyModal } from '../../../component/modal/MyModal';
 const clean = (num: number) => Number(num.toFixed(5));
 const translate = (num: number) => num.toLocaleString('fr-FR', { minimumFractionDigits: 2 });
 
-export function ExportCsvAction() {
+export function InvoiceExportCsvButton() {
   const snap = useSnapshot(store);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef<any>();

@@ -1,18 +1,24 @@
 import { Box, Flex } from '@chakra-ui/react';
 import { useMemo } from 'react';
-import { Invoice, store } from '../../backend';
+import { Outlet, useNavigate, useParams } from 'react-router-dom';
+import { store } from '../../backend';
+import { DetailButton, EditButton } from '../../component/buttons';
 import { MyHeader } from '../../component/layout/page-layout/MyHeader';
 import { MyScrollList } from '../../component/layout/page-layout/MyScrollList';
 import { DeliveryDescriptionLine } from '../../component/shared/Delivery';
 import { DeliveryDescription } from '../../component/table/DeliveryDescription';
 import { InvoiceTotals } from '../../component/table/InvoiceTotals';
-import { MyH1 } from '../../component/typography/MyFont';
 import { dateFormatter } from '../../utils/formatter';
-import { DeleteInvoiceAction } from './actions/DeleteInvoiceAction';
-import { EditInvoiceAction } from './actions/EditInvoiceAction';
-import { ExportInvoiceAction } from './actions/ExportInvoiceAction';
+import { InvoiceDeleteButton } from './button/InvoiceDeleteButton';
+import { InvoiceExportPdfButton } from './button/InvoiceExportPdfButton';
 
-export const InvoiceDetail = ({ selected }: { selected: Invoice }) => {
+export const InvoiceDetail = () => {
+  const { id } = useParams();
+  const selected = useMemo(() => (id ? store.invoices.find((el) => el.id === id) : undefined), [id, store]);
+  if (!selected) return null;
+
+  const navigate = useNavigate();
+
   const currentCustomer = useMemo(
     () => store.customers.find((customer) => customer.id === selected.customerId),
     [store, selected.customerId],
@@ -23,11 +29,15 @@ export const InvoiceDetail = ({ selected }: { selected: Invoice }) => {
   return (
     <>
       <MyHeader>
-        <MyH1>Détail</MyH1>
+        <DetailButton />
         <Box>
-          <DeleteInvoiceAction invoice={selected} />
-          <EditInvoiceAction invoice={selected} />
-          <ExportInvoiceAction invoice={selected} />
+          <InvoiceDeleteButton invoice={selected} />
+          <InvoiceExportPdfButton invoice={selected} />
+          <EditButton
+            onClick={() => navigate(`/invoice/${selected.id}/edit`)}
+            ml={3}
+          />
+          <Outlet />
         </Box>
       </MyHeader>
 

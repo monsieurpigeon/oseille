@@ -10,7 +10,7 @@ interface DeleteInvoiceActionProps {
   invoice: Invoice;
 }
 
-export function DeleteInvoiceAction({ invoice }: DeleteInvoiceActionProps) {
+export function InvoiceDeleteButton({ invoice }: DeleteInvoiceActionProps) {
   const { confirm } = useConfirm();
   const { say } = useSideKick();
   const { farm } = useFarmParameters();

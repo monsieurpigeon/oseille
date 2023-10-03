@@ -3,9 +3,8 @@ import { Outlet, useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { useSnapshot } from 'valtio';
 import { store } from '../../../backend';
-import { EditButton } from '../../../component/buttons';
+import { DetailButton, EditButton } from '../../../component/buttons';
 import { MyHeader } from '../../../component/layout/page-layout/MyHeader';
-import { MyH1 } from '../../../component/typography/MyFont';
 import { CustomerDisplay } from './CustomerDisplay';
 import { CustomerDocuments } from './CustomerDocuments';
 
@@ -20,7 +19,7 @@ export const CustomerDetail = () => {
   return (
     <StyledContainer>
       <MyHeader>
-        <MyH1>Détail</MyH1>
+        <DetailButton />
         <EditButton onClick={() => navigate(`/customer/${selected.id}/edit`)} />
         <Outlet />
       </MyHeader>

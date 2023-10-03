@@ -12,7 +12,7 @@ import { MyScrollList } from '../../component/layout/page-layout/MyScrollList';
 import { MySide } from '../../component/layout/page-layout/MySide';
 import { MyH1 } from '../../component/typography/MyFont';
 import { dateFormatter } from '../../utils/formatter';
-import { InvoiceCreateModal } from './modal/InvoiceCreateModal';
+import { InvoiceCreateModal } from '../invoice/modal/InvoiceCreateModal';
 
 export function Deliveries() {
   const snap = useSnapshot(store);

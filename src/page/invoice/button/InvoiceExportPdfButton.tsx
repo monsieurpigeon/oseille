@@ -6,7 +6,7 @@ interface ExportInvoiceActionProps {
   invoice: Invoice;
 }
 
-export function ExportInvoiceAction({ invoice }: ExportInvoiceActionProps) {
+export function InvoiceExportPdfButton({ invoice }: ExportInvoiceActionProps) {
   const posthog = usePostHog();
   return (
     <Button
