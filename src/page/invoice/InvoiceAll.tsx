@@ -37,9 +37,9 @@ export function InvoiceAll() {
       <Flex direction="column">
         <Box>{`${paidLength} facture${plural(paidLength)} payée${plural(paidLength)}`}</Box>
         <Box>{`${notPaidLength} facture${plural(notPaidLength)} non-payée${plural(notPaidLength)}`}</Box>
-        <Box>{`Dont ${lateLength} facture${plural(lateLength)} en retard`}</Box>
+        <Box>{lateLength > 0 && `Dont ${lateLength} facture${plural(lateLength)} en retard`}</Box>
       </Flex>
-      {lateInvoices.length > 0 && (
+      {lateLength > 0 && (
         <TableContainer>
           <Table>
             <Thead>

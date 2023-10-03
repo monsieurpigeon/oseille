@@ -38,7 +38,7 @@ export function FarmDocumentIdModal({ isOpen, onClose }: { isOpen: boolean; onCl
       invoiceId: farm?.invoiceId,
       deliveryId: farm?.deliveryId,
     });
-  }, [farm]);
+  }, [farm, isOpen]);
 
   const onSubmit = (e: DocumentIdInput) =>
     farm &&

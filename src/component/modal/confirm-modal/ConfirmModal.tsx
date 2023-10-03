@@ -1,6 +1,7 @@
 import {
   AlertDialog,
   AlertDialogBody,
+  AlertDialogCloseButton,
   AlertDialogContent,
   AlertDialogFooter,
   AlertDialogHeader,
@@ -28,6 +29,7 @@ export function ConfirmModal({ title, message, isOpen, onConfirm, onCancel }: an
           >
             {title}
           </AlertDialogHeader>
+          <AlertDialogCloseButton />
           <AlertDialogBody>{message}</AlertDialogBody>
 
           <AlertDialogFooter>

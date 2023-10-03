@@ -1,5 +1,4 @@
-import { ArrowBackIcon } from '@chakra-ui/icons';
-import { Button, ButtonProps, Flex, IconButton } from '@chakra-ui/react';
+import { Button, ButtonProps, CloseButton, Flex } from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 import { MyH1 } from './typography/MyFont';
 
@@ -41,11 +40,7 @@ export function DetailButton() {
       gap={2}
       alignItems="center"
     >
-      <IconButton
-        aria-label="return"
-        icon={<ArrowBackIcon />}
-        onClick={() => navigate('..')}
-      />
+      <CloseButton onClick={() => navigate('..')} />
       <MyH1>Détail</MyH1>
     </Flex>
   );

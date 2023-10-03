@@ -1,6 +1,6 @@
 import { Box, Flex } from '@chakra-ui/react';
 import { useMemo } from 'react';
-import { Outlet, useNavigate, useParams } from 'react-router-dom';
+import { Link, Outlet, useNavigate, useParams } from 'react-router-dom';
 import { store } from '../../backend';
 import { DetailButton, EditButton } from '../../component/buttons';
 import { MyHeader } from '../../component/layout/page-layout/MyHeader';
@@ -46,7 +46,7 @@ export const InvoiceDetail = () => {
         fontWeight="bold"
       >
         <div>
-          {selected.isPaid && '✅'} {currentCustomer.name}
+          {selected.isPaid && '✅'} <Link to={`/customer/${currentCustomer.id}`}>{currentCustomer.name}</Link>
         </div>
         <div>{dateFormatter(selected.createdAt)}</div>
         <div>{selected.documentId}</div>

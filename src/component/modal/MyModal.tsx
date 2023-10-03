@@ -1,6 +1,7 @@
 import {
   AlertDialog,
   AlertDialogBody,
+  AlertDialogCloseButton,
   AlertDialogContent,
   AlertDialogFooter,
   AlertDialogHeader,
@@ -52,6 +53,7 @@ export const MyModal = ({
             >
               {title}
             </AlertDialogHeader>
+            <AlertDialogCloseButton />
             <AlertDialogBody>{children}</AlertDialogBody>
 
             <AlertDialogFooter>
