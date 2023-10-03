@@ -19,28 +19,28 @@ export function FeatureCard({ feature }: FeatureCardProps) {
   return (
     <Card>
       <CardHeader>
-        <Flex
-          flex="1"
-          gap="4"
-          alignItems="center"
-          flexWrap="wrap"
+        <a
+          href={feature.user.link}
+          target="_blank"
         >
-          <a
-            href={feature.user.link}
-            target="_blank"
+          <Flex
+            flex="1"
+            gap="4"
+            alignItems="center"
+            flexWrap="wrap"
           >
             <Avatar
               onClick={() => console.log('click')}
               name={feature.user.name}
               src={feature.user?.avatar || 'https://bit.ly/sage-adebayo'}
             />
-          </a>
 
-          <Box>
-            <Heading size="sm">{feature.user?.name}</Heading>
-            <Text>{feature.user?.farm}</Text>
-          </Box>
-        </Flex>
+            <Box>
+              <Heading size="sm">{feature.user?.name}</Heading>
+              <Text>{feature.user?.farm}</Text>
+            </Box>
+          </Flex>
+        </a>
       </CardHeader>
       <CardBody>
         <Box>

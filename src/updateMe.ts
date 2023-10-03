@@ -1,4 +1,4 @@
-export const VERSION = '01/10/2023';
+export const VERSION = '03/10/2023';
 
 const users = {
   myriam: {
@@ -71,5 +71,11 @@ export const FEATURES = [
     user: users.thomas,
     description:
       "Thomas a l'habitude d'avoir une vue très claire de ses ventes pendant la saison et j'ai fait une première version de dashboard pour avoir un aperçu des ventes dans un tableau",
+  },
+  {
+    title: 'Rappel des factures en retard',
+    user: users.thomas,
+    description:
+      "Pour plus facilement rappeler aux clients les plus distraits de régler leurs facture, Thomas souhaitait une meilleure visibilité sur les retards de paiement et j'ai ajouté un tableau bilan dans le menu des factures",
   },
 ];
