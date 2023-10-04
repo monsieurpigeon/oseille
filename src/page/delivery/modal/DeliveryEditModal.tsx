@@ -18,6 +18,8 @@ export function DeliveryEditModal() {
   const delivery = useMemo(() => (id ? store.deliveries.find((el) => el.id === id) : undefined), [id]);
   if (!delivery) return null;
 
+  const isOrder = location.pathname.includes('order');
+
   const cancelRef = useRef<any>();
   const navigate = useNavigate();
   const { say } = useSideKick();
@@ -50,7 +52,7 @@ export function DeliveryEditModal() {
       .then(handleClose)
       .then(() =>
         say({
-          sentence: `La livraison ${delivery.documentId} a bien été enregistrée`,
+          sentence: `La ${isOrder ? 'commande' : 'livraison'} ${delivery.documentId} a bien été enregistrée`,
           autoShutUp: true,
           feeling: SideKickFeeling.GOOD,
         }),
@@ -61,7 +63,7 @@ export function DeliveryEditModal() {
     <MyModal
       isOpen={true}
       cancelRef={cancelRef}
-      title="Modifier la livraison"
+      title={`Modifier la ${isOrder ? 'commande' : 'livraison'}`}
       onClose={handleClose}
       onSubmit={handleSubmit(onSubmit)}
       disabled={!formState.isDirty}

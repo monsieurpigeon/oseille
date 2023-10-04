@@ -1,6 +1,7 @@
 import { Box, Flex } from '@chakra-ui/react';
 import { useMemo } from 'react';
 import { Link, Outlet, useNavigate, useParams } from 'react-router-dom';
+import { useSnapshot } from 'valtio';
 import { store } from '../../backend';
 import { DetailButton, EditButton } from '../../component/buttons';
 import { MyHeader } from '../../component/layout/page-layout/MyHeader';
@@ -14,7 +15,8 @@ import { InvoiceExportPdfButton } from './button/InvoiceExportPdfButton';
 
 export const InvoiceDetail = () => {
   const { id } = useParams();
-  const selected = useMemo(() => (id ? store.invoices.find((el) => el.id === id) : undefined), [id, store]);
+  const snap = useSnapshot(store);
+  const selected = useMemo(() => (id ? store.invoices.find((el) => el.id === id) : undefined), [id, snap]);
   if (!selected) return null;
 
   const navigate = useNavigate();

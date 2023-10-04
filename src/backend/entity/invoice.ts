@@ -60,15 +60,17 @@ export const addInvoice = async (deliveries: Delivery[], createdAt: string, note
     notes,
   };
 
-  deliveries.forEach(confirmOrder);
+  try {
+    const result = await relDb.rel.save('invoice', invoice);
+    deliveries.forEach(confirmOrder);
 
-  return relDb.rel
-    .save('invoice', invoice)
-    .then((result) => {
-      invoice.deliveryIds.map((id) => addInvoiceId(result.id, id));
-      updateDocumentId('Invoice');
-    })
-    .catch(console.error);
+    invoice.deliveryIds.map((id) => addInvoiceId(result.id, id));
+    updateDocumentId('Invoice');
+    return result;
+  } catch (message) {
+    console.error(message);
+    return undefined;
+  }
 };
 
 export const updateInvoice = (invoice: Invoice) => {

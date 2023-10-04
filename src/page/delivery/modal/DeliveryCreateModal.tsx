@@ -55,7 +55,7 @@ export function DeliveryCreateModal() {
       const result = await addDelivery({ ...e, isOrder });
       handleClose(result);
       say({
-        sentence: 'La livraison a bien été enregistrée',
+        sentence: `La ${isOrder ? 'commande' : 'livraison'} a bien été enregistrée`,
         autoShutUp: true,
         feeling: SideKickFeeling.GOOD,
       });

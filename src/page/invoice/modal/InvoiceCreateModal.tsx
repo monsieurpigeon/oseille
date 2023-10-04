@@ -3,6 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { usePostHog } from 'posthog-js/react';
 import { useMemo, useRef } from 'react';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 import { Delivery, InvoiceInfoInput, addInvoice, store } from '../../../backend';
 import { MyModal } from '../../../component/modal/MyModal';
@@ -32,8 +33,17 @@ export function InvoiceCreateModal({ toInvoice, setToInvoice }: InvoiceCreateMod
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef<any>();
   const { say } = useSideKick();
+  const navigate = useNavigate();
 
-  const { control, register, handleSubmit, reset } = useForm<InvoiceInfoInput>({
+  const handleClose = (val: { id: string } | undefined) => {
+    if (!val) {
+      navigate('/invoice');
+    } else {
+      navigate(`/invoice/${val.id}`);
+    }
+  };
+
+  const { control, register, handleSubmit } = useForm<InvoiceInfoInput>({
     resolver: zodResolver(invoiceSchema),
     defaultValues,
   });
@@ -46,6 +56,11 @@ export function InvoiceCreateModal({ toInvoice, setToInvoice }: InvoiceCreateMod
       .filter((d) => !!d) as Delivery[];
 
     addInvoice(deliveries, e.createdAt, e.notes)
+      .then((val) => {
+        setTimeout(() => {
+          handleClose(val);
+        }, 500);
+      })
       .then(() =>
         say({
           sentence: `La facture a bien été enregistrée`,
@@ -53,18 +68,12 @@ export function InvoiceCreateModal({ toInvoice, setToInvoice }: InvoiceCreateMod
           feeling: SideKickFeeling.GOOD,
         }),
       )
-      .then(() => setToInvoice({}))
-      .then(handleClose);
+      .then(() => setToInvoice({}));
   };
 
   const facturable = useMemo(() => {
     return Object.values(toInvoice).filter((val) => val).length;
   }, [toInvoice]);
-
-  const handleClose = () => {
-    reset(defaultValues);
-    onClose();
-  };
 
   return (
     <>

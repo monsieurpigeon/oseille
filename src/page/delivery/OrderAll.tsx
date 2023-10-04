@@ -45,7 +45,11 @@ export function OrderAll() {
       await Promise.all(selectedOrders.map((order) => confirmOrder(order)));
 
       say({
-        sentence: `Les ${selectedLength} commandes ont bien été validées`,
+        sentence: `${
+          selectedLength > 1
+            ? `Les ${selectedLength} commandes ont bien été validées en BL`
+            : 'La commande a bien été validée en BL'
+        }`,
         autoShutUp: true,
         feeling: SideKickFeeling.GOOD,
       });
