@@ -54,7 +54,7 @@ export function SideKick() {
       onMouseLeave={onClose}
       z-index={100}
     >
-      {isOpen && <StyledSentence>Bonjour, je suis votre cyber-bénévole, je suis là pour vous aider</StyledSentence>}
+      {isOpen && <StyledSentence>Bonjour, je suis Max votre e‑bénévole, je suis là pour vous aider</StyledSentence>}
       {sentence && <StyledSentence feeling={feeling}>{sentence}</StyledSentence>}
       <MyH3 className="no-select">{emoji || emojis[index]}</MyH3>
     </Flex>
