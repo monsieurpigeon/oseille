@@ -30,7 +30,7 @@ const defaultValues = { createdAt: new Date().toISOString().split('T')[0], notes
 
 export function InvoiceCreateModal({ toInvoice, setToInvoice }: InvoiceCreateModalProps) {
   const posthog = usePostHog();
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen, onOpen } = useDisclosure();
   const cancelRef = useRef<any>();
   const { say } = useSideKick();
   const navigate = useNavigate();
@@ -88,7 +88,7 @@ export function InvoiceCreateModal({ toInvoice, setToInvoice }: InvoiceCreateMod
       <MyModal
         isOpen={isOpen}
         cancelRef={cancelRef}
-        onClose={handleClose}
+        onClose={() => handleClose(undefined)}
         onSubmit={handleSubmit(onSubmit)}
         title="Nouvelle Facture"
       >

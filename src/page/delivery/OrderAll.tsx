@@ -20,7 +20,7 @@ export function OrderAll() {
   const posthog = usePostHog();
   const { say } = useSideKick();
 
-  const [toInvoice, setToInvoice] = useAtom<{ [key: string]: boolean }>(selectedOrdersAtom);
+  const [toInvoice, setToInvoice] = useAtom(selectedOrdersAtom);
   const selectedOrders = Object.entries(toInvoice)
     .map(([key, value]) => {
       if (!value) return undefined;
