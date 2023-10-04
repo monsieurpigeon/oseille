@@ -33,7 +33,7 @@ export function DeliveryEditModal() {
     notes: delivery.notes,
   };
 
-  const { control, register, handleSubmit, reset, watch, setValue, getValues, formState } = useForm<DeliveryInput>({
+  const { control, register, handleSubmit, watch, setValue, getValues, formState } = useForm<DeliveryInput>({
     resolver: zodResolver(deliverySchema),
     defaultValues: updatedValues,
   });
@@ -43,7 +43,7 @@ export function DeliveryEditModal() {
     name: 'lines',
   });
 
-  const handleClose = () => navigate(`/delivery/${id}`);
+  const handleClose = () => navigate('..');
 
   const onSubmit = (e: DeliveryInput) =>
     updateDelivery(delivery, e)

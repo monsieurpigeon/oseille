@@ -29,7 +29,7 @@ export const DeliveryDetail = () => {
         <Box>
           <DeliveryDeleteButton delivery={selected} />
           <EditButton
-            onClick={() => navigate(`/delivery/${selected.id}/edit`)}
+            onClick={() => navigate(`edit`)}
             disabled={!isEditable}
             ml={3}
           />

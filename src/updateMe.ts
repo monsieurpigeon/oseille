@@ -1,4 +1,4 @@
-export const VERSION = '03/10/2023';
+export const VERSION = '04/10/2023';
 
 const users = {
   myriam: {
@@ -77,5 +77,11 @@ export const FEATURES = [
     user: users.thomas,
     description:
       "Pour plus facilement rappeler aux clients les plus distraits de régler leurs facture, Thomas souhaitait une meilleure visibilité sur les retards de paiement et j'ai ajouté un tableau bilan dans le menu des factures",
+  },
+  {
+    title: 'Gestion des commandes, récolte totale',
+    user: users.thomas,
+    description:
+      "Le matin, Thomas a besoin de connaître la quantité totale de chaque produit à récolter sans se soucier du client. Au lieu de faire des calculs savants il est possible de créer des commandes et d'additionner les produits des commandes sélectionnées. Ces commandes sont ensuite passées en BL",
   },
 ];

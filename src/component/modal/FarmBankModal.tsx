@@ -4,7 +4,7 @@ import { useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
 import { FarmInput, updateFarm } from '../../backend';
-import { EMPTY_FARM } from '../../page/settings/Settings';
+import { EMPTY_FARM } from '../../utils/defaults';
 import { useFarmParameters } from '../../utils/hooks/useFarmParameters';
 import { useSideKick } from '../modules/sidekick/SideKickContext';
 import { SideKickFeeling } from '../modules/sidekick/enums';

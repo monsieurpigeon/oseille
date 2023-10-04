@@ -10,10 +10,10 @@ const StyledPricePage = styled.div`
   grid-template-rows: auto 600px;
 `;
 
-export function Prices() {
+export function PricePage() {
   return (
     <StyledPricePage>
-      <MyH1>Mes Tarifs</MyH1>
+      <MyH1>Tarifs</MyH1>
       <PriceTable />
     </StyledPricePage>
   );

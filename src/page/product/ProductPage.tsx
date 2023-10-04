@@ -13,7 +13,7 @@ import { DEFAULT_TAX } from '../../utils/defaults';
 import { TVAFormatter } from '../../utils/formatter';
 import { useFarmParameters } from '../../utils/hooks/useFarmParameters';
 
-export function Products() {
+export function ProductPage() {
   const snap = useSnapshot(store);
   const { id } = useParams();
 
@@ -27,7 +27,7 @@ export function Products() {
     <MyPage>
       <MySide>
         <MyHeader>
-          <MyH1>Mes Produits</MyH1>
+          <MyH1>Produits</MyH1>
           <Button
             colorScheme="twitter"
             onClick={() => navigate('/product/create')}

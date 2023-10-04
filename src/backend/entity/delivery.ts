@@ -7,6 +7,7 @@ import { ProductWithPrice, loadProduct } from './product';
 
 export interface Delivery {
   id: string;
+  isOrder?: boolean;
   isTVA: boolean;
   deliveredAt: string;
   customer: Customer;
@@ -26,6 +27,7 @@ export interface DeliveryLine {
 
 export interface DeliveryInput {
   isTVA: boolean;
+  isOrder?: boolean;
   customerId: string;
   deliveredAt: string;
   lines: Array<DeliveryLineInput>;
@@ -128,4 +130,8 @@ export const updateDelivery = async (delivery: Delivery, input: DeliveryInput) =
 
 export const deleteDelivery = (delivery: Delivery) => {
   return relDb.rel.del('delivery', delivery);
+};
+
+export const confirmOrder = (delivery: Delivery) => {
+  return relDb.rel.save('delivery', { ...delivery, isOrder: false });
 };

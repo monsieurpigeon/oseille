@@ -19,7 +19,7 @@ const ITEMS = [
   { to: 'business', label: 'Financement' },
 ];
 
-export function About() {
+export function AboutPage() {
   return (
     <StyledAboutPage>
       <MyHeader>

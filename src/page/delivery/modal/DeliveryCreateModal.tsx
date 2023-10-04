@@ -2,7 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { usePostHog } from 'posthog-js/react';
 import { useRef } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 import { DeliveryInput, addDelivery } from '../../../backend';
 import { MyModal } from '../../../component/modal/MyModal';
@@ -28,6 +28,9 @@ export function DeliveryCreateModal() {
   const posthog = usePostHog();
   const cancelRef = useRef<any>();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const isOrder = location.pathname.includes('order');
 
   const { say } = useSideKick();
 
@@ -49,7 +52,7 @@ export function DeliveryCreateModal() {
   const onSubmit = async (e: DeliveryInput) => {
     posthog?.capture('delivery_add');
     try {
-      const result = await addDelivery(e);
+      const result = await addDelivery({ ...e, isOrder });
       handleClose(result);
       say({
         sentence: 'La livraison a bien été enregistrée',
@@ -65,7 +68,7 @@ export function DeliveryCreateModal() {
     <MyModal
       isOpen={true}
       cancelRef={cancelRef}
-      title="Nouveau bon de livraison"
+      title={isOrder ? 'Nouvelle commande' : 'Nouveau bon de livraison'}
       onClose={handleClose}
       onSubmit={handleSubmit(onSubmit)}
     >

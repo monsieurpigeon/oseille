@@ -10,19 +10,18 @@ import { MyScrollList } from '../../component/layout/page-layout/MyScrollList';
 import { MySide } from '../../component/layout/page-layout/MySide';
 import { MyH1 } from '../../component/typography/MyFont';
 
-export function Customers() {
+export function CustomerPage() {
   const snap = useSnapshot(store);
   const { id } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
 
   const selected = useMemo(() => (id ? store.customers.find((el) => el.id === id) : undefined), [id, snap]);
-  console.log(location);
   return (
     <MyPage>
       <MySide>
         <MyHeader>
-          <MyH1>Mes Clients</MyH1>
+          <MyH1>Clients</MyH1>
           <Button
             colorScheme="twitter"
             onClick={() => navigate('/customer/create')}

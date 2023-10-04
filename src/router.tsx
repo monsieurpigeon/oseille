@@ -1,32 +1,34 @@
 import { Navigate, createBrowserRouter } from 'react-router-dom';
 import App from './App';
-import { About } from './page/about/About';
+import { AboutPage } from './page/about/AboutPage';
 import { AppSection } from './page/about/sections/app-section/AppSection';
 import { BusinessSection } from './page/about/sections/business-section/BusinessSection';
 import { TeamSection } from './page/about/sections/team-section/TeamSection';
-import { BackOffice } from './page/back-office/BackOffice';
+import { BackOfficePage } from './page/back-office/BackOfficePage';
 import { CustomerAll } from './page/customer/CustomerAll';
-import { Customers } from './page/customer/Customers';
+import { CustomerPage } from './page/customer/CustomerPage';
 import { CustomerDetail } from './page/customer/detail/CustomerDetail';
 import { CustomerCreateModal } from './page/customer/modal/CustomerCreateModal';
 import { CustomerEditModal } from './page/customer/modal/CustomerEditModal';
-import { Dashboard } from './page/dashboard/Dashboard';
-import { Deliveries } from './page/delivery/Deliveries';
+import { DashboardPage } from './page/dashboard/DashboardPage';
 import { DeliveryAll } from './page/delivery/DeliveryAll';
 import { DeliveryDetail } from './page/delivery/DeliveryDetail';
+import { DeliveryPage } from './page/delivery/DeliveryPage';
+import { OrderAll } from './page/delivery/OrderAll';
+import { OrderPage } from './page/delivery/OrderPage';
 import { DeliveryCreateModal } from './page/delivery/modal/DeliveryCreateModal';
 import { DeliveryEditModal } from './page/delivery/modal/DeliveryEditModal';
 import { InvoiceAll } from './page/invoice/InvoiceAll';
 import { InvoiceDetail } from './page/invoice/InvoiceDetail';
-import { Invoices } from './page/invoice/Invoices';
+import { InvoicePage } from './page/invoice/InvoicePage';
 import { InvoiceEditModal } from './page/invoice/modal/InvoiceEditModal';
-import { Prices } from './page/prices/Prices';
+import { PricePage } from './page/prices/PricePage';
 import { ProductAll } from './page/product/ProductAll';
 import { ProductDetail } from './page/product/ProductDetail';
-import { Products } from './page/product/Products';
+import { ProductPage } from './page/product/ProductPage';
 import { ProductCreateModal } from './page/product/modal/ProductCreateModal';
 import { ProductEditModal } from './page/product/modal/ProductEditModal';
-import { Settings } from './page/settings/Settings';
+import { SettingPage } from './page/settings/SettingPage';
 import { AdvancedSection } from './page/settings/sections/advanced-section/AdvancedSection';
 import { FarmSection } from './page/settings/sections/farm-section/FarmSection';
 import { InvoiceSection } from './page/settings/sections/invoice-section/InvoiceSection';
@@ -48,10 +50,10 @@ export const router = createBrowserRouter([
     path: '/',
     element: <App />,
     children: [
-      { path: '', element: <Dashboard /> },
+      { path: '', element: <DashboardPage /> },
       {
         path: 'product',
-        element: <Products />,
+        element: <ProductPage />,
         children: [
           { index: true, element: <ProductAll /> },
           { path: 'create', element: <ProductCreateModal /> },
@@ -60,17 +62,26 @@ export const router = createBrowserRouter([
       },
       {
         path: 'customer',
-        element: <Customers />,
+        element: <CustomerPage />,
         children: [
           { index: true, element: <CustomerAll /> },
           { path: 'create', element: <CustomerCreateModal /> },
           { path: ':id', element: <CustomerDetail />, children: [{ path: 'edit', element: <CustomerEditModal /> }] },
         ],
       },
-      { path: 'prices', element: <Prices /> },
+      { path: 'prices', element: <PricePage /> },
+      {
+        path: 'order',
+        element: <OrderPage />,
+        children: [
+          { index: true, element: <OrderAll /> },
+          { path: 'create', element: <DeliveryCreateModal /> },
+          { path: ':id', element: <DeliveryDetail />, children: [{ path: 'edit', element: <DeliveryEditModal /> }] },
+        ],
+      },
       {
         path: 'delivery',
-        element: <Deliveries />,
+        element: <DeliveryPage />,
         children: [
           { index: true, element: <DeliveryAll /> },
           { path: 'create', element: <DeliveryCreateModal /> },
@@ -79,7 +90,7 @@ export const router = createBrowserRouter([
       },
       {
         path: 'invoice',
-        element: <Invoices />,
+        element: <InvoicePage />,
         children: [
           { index: true, element: <InvoiceAll /> },
           { path: ':id', element: <InvoiceDetail />, children: [{ path: 'edit', element: <InvoiceEditModal /> }] },
@@ -87,7 +98,7 @@ export const router = createBrowserRouter([
       },
       {
         path: 'settings',
-        element: <Settings />,
+        element: <SettingPage />,
         children: [
           visitDefault('farm'),
           { path: 'farm', element: <FarmSection /> },
@@ -97,7 +108,7 @@ export const router = createBrowserRouter([
       },
       {
         path: 'about',
-        element: <About />,
+        element: <AboutPage />,
         children: [
           visitDefault('app'),
           { path: 'app', element: <AppSection /> },
@@ -105,7 +116,7 @@ export const router = createBrowserRouter([
           { path: 'business', element: <BusinessSection /> },
         ],
       },
-      { path: 'admin', element: <BackOffice /> },
+      { path: 'admin', element: <BackOfficePage /> },
     ],
   },
 ]);

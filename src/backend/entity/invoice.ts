@@ -3,7 +3,7 @@ import { relDb } from '../service/database';
 import { DocumentType } from '../service/pdf/pdf';
 import { store } from '../service/store';
 import { Customer, getCustomer } from './customer';
-import { Delivery, addInvoiceId, removeInvoiceId } from './delivery';
+import { Delivery, addInvoiceId, confirmOrder, removeInvoiceId } from './delivery';
 import { updateDocumentId } from './farm';
 
 export interface Invoice {
@@ -59,6 +59,8 @@ export const addInvoice = async (deliveries: Delivery[], createdAt: string, note
     createdAt,
     notes,
   };
+
+  deliveries.forEach(confirmOrder);
 
   return relDb.rel
     .save('invoice', invoice)

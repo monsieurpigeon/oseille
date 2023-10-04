@@ -17,7 +17,7 @@ function getValues(invoices: Invoice[]) {
   );
 }
 
-export function Dashboard() {
+export function DashboardPage() {
   const snap = useSnapshot(store);
 
   const { invoicePaid, invoiceWaiting } = useMemo(() => {

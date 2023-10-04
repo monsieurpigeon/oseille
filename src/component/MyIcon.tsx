@@ -4,6 +4,7 @@ const icons = {
   good: '✅',
   warning: '❗',
   vegetable: '🥕',
+  order: '🗒️',
 };
 
 type IconName = keyof typeof icons;

@@ -39,14 +39,13 @@ export function InvoiceCreateModal({ toInvoice, setToInvoice }: InvoiceCreateMod
   });
   const onSubmit = (e: InvoiceInfoInput) => {
     posthog?.capture('invoice_add');
-    addInvoice(
-      Object.entries(toInvoice)
-        .filter(([_, value]) => value)
-        .map(([key]) => store.deliveries.find((delivery) => delivery.id === key))
-        .filter((d) => !!d) as Delivery[],
-      e.createdAt,
-      e.notes,
-    )
+
+    const deliveries = Object.entries(toInvoice)
+      .filter(([_, value]) => value)
+      .map(([key]) => store.deliveries.find((delivery) => delivery.id === key))
+      .filter((d) => !!d) as Delivery[];
+
+    addInvoice(deliveries, e.createdAt, e.notes)
       .then(() =>
         say({
           sentence: `La facture a bien été enregistrée`,

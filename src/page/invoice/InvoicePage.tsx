@@ -14,7 +14,7 @@ import { dateFormatter } from '../../utils/formatter';
 import { useFarmParameters } from '../../utils/hooks/useFarmParameters';
 import { InvoiceExportCsvButton } from './button/InvoiceExportCsvButton';
 
-export function Invoices() {
+export function InvoicePage() {
   const snap = useSnapshot(store);
   const { id } = useParams();
 
@@ -24,7 +24,7 @@ export function Invoices() {
     <MyPage>
       <MySide>
         <MyHeader>
-          <MyH1>Mes Factures</MyH1>
+          <MyH1>Factures</MyH1>
           <InvoiceExportCsvButton />
         </MyHeader>
         <MyScrollList>

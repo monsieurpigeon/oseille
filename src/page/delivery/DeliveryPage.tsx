@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react';
 import { Outlet, useNavigate, useParams } from 'react-router-dom';
 import { useSnapshot } from 'valtio';
 import { store } from '../../backend';
+import { MyIcon } from '../../component/MyIcon';
 import { ListItem } from '../../component/card/ListItem';
 import { ListItemGroup } from '../../component/card/ListItemGroup';
 import { MyHeader } from '../../component/layout/page-layout/MyHeader';
@@ -14,7 +15,7 @@ import { MyH1 } from '../../component/typography/MyFont';
 import { dateFormatter } from '../../utils/formatter';
 import { InvoiceCreateModal } from '../invoice/modal/InvoiceCreateModal';
 
-export function Deliveries() {
+export function DeliveryPage() {
   const snap = useSnapshot(store);
   const { id } = useParams();
 
@@ -26,7 +27,7 @@ export function Deliveries() {
     <MyPage>
       <MySide>
         <MyHeader>
-          <MyH1>Mes Livraisons</MyH1>
+          <MyH1>Livraisons</MyH1>
           <Button
             colorScheme="twitter"
             onClick={() => navigate('/delivery/create')}
@@ -93,7 +94,8 @@ function DeliveryCustomer({ customer, selected }: any) {
                 }))
               }
             >
-              {`${delivery.documentId} - ${dateFormatter(delivery.deliveredAt)}`}
+              {delivery.isOrder && <MyIcon name="order" />}
+              {` ${delivery.documentId} - ${dateFormatter(delivery.deliveredAt)}`}
             </ListItem>
           ))}
         </ListItemGroup>
