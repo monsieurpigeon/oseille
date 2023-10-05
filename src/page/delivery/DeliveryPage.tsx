@@ -1,6 +1,7 @@
 import { Button } from '@chakra-ui/react';
 import { addDays } from 'date-fns';
-import { useMemo, useState } from 'react';
+import { usePostHog } from 'posthog-js/react';
+import { useEffect, useMemo, useState } from 'react';
 import { Outlet, useNavigate, useParams } from 'react-router-dom';
 import { useSnapshot } from 'valtio';
 import { store } from '../../backend';
@@ -16,6 +17,10 @@ import { dateFormatter } from '../../utils/formatter';
 import { InvoiceCreateModal } from '../invoice/modal/InvoiceCreateModal';
 
 export function DeliveryPage() {
+  const posthog = usePostHog();
+  useEffect(() => {
+    posthog?.capture('delivery_page_viewed');
+  }, []);
   const snap = useSnapshot(store);
   const { id } = useParams();
 

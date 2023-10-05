@@ -1,5 +1,6 @@
 import { Button } from '@chakra-ui/react';
-import { useMemo } from 'react';
+import { usePostHog } from 'posthog-js/react';
+import { useEffect, useMemo } from 'react';
 import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { useSnapshot } from 'valtio';
 import { store } from '../../backend';
@@ -11,6 +12,10 @@ import { MySide } from '../../component/layout/page-layout/MySide';
 import { MyH1 } from '../../component/typography/MyFont';
 
 export function CustomerPage() {
+  const posthog = usePostHog();
+  useEffect(() => {
+    posthog?.capture('customer_page_viewed');
+  }, []);
   const snap = useSnapshot(store);
   const { id } = useParams();
   const location = useLocation();

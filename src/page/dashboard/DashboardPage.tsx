@@ -1,4 +1,5 @@
-import { useMemo } from 'react';
+import { usePostHog } from 'posthog-js/react';
+import { useEffect, useMemo } from 'react';
 import { useSnapshot } from 'valtio';
 import { Invoice, store } from '../../backend';
 import { MySimpleLayout } from '../../component/layout/page-layout/MySimpleLayout';
@@ -18,6 +19,10 @@ function getValues(invoices: Invoice[]) {
 }
 
 export function DashboardPage() {
+  const posthog = usePostHog();
+  useEffect(() => {
+    posthog?.capture('home_page_viewed');
+  }, []);
   const snap = useSnapshot(store);
 
   const { invoicePaid, invoiceWaiting } = useMemo(() => {

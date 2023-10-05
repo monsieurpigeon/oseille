@@ -1,5 +1,6 @@
 import { Button, Flex, Spacer, Text } from '@chakra-ui/react';
-import { useMemo } from 'react';
+import { usePostHog } from 'posthog-js/react';
+import { useEffect, useMemo } from 'react';
 import { Outlet, useNavigate, useParams } from 'react-router-dom';
 import { useSnapshot } from 'valtio';
 import { store } from '../../backend';
@@ -14,6 +15,11 @@ import { TVAFormatter } from '../../utils/formatter';
 import { useFarmParameters } from '../../utils/hooks/useFarmParameters';
 
 export function ProductPage() {
+  const posthog = usePostHog();
+  useEffect(() => {
+    posthog?.capture('product_page_viewed');
+  }, []);
+
   const snap = useSnapshot(store);
   const { id } = useParams();
 

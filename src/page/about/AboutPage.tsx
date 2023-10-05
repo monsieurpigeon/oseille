@@ -1,3 +1,5 @@
+import { usePostHog } from 'posthog-js/react';
+import { useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import styled from 'styled-components';
 import { Tabs } from '../../component/Tabs';
@@ -20,6 +22,11 @@ const ITEMS = [
 ];
 
 export function AboutPage() {
+  const posthog = usePostHog();
+  useEffect(() => {
+    posthog?.capture('about_page_viewed');
+  }, []);
+
   return (
     <StyledAboutPage>
       <MyHeader>

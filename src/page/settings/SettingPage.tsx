@@ -1,3 +1,5 @@
+import { usePostHog } from 'posthog-js/react';
+import { useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import styled from 'styled-components';
 import { useSnapshot } from 'valtio';
@@ -21,6 +23,10 @@ const ITEMS = [
 ];
 
 export function SettingPage() {
+  const posthog = usePostHog();
+  useEffect(() => {
+    posthog?.capture('setting_page_viewed');
+  }, []);
   const snap = useSnapshot(store);
 
   return (

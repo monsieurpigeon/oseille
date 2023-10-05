@@ -1,5 +1,6 @@
 import { differenceInDays } from 'date-fns';
-import { useMemo } from 'react';
+import { usePostHog } from 'posthog-js/react';
+import { useEffect, useMemo } from 'react';
 import { Outlet, useNavigate, useParams } from 'react-router-dom';
 import { useSnapshot } from 'valtio';
 import { store } from '../../backend';
@@ -15,6 +16,11 @@ import { useFarmParameters } from '../../utils/hooks/useFarmParameters';
 import { InvoiceExportCsvButton } from './button/InvoiceExportCsvButton';
 
 export function InvoicePage() {
+  const posthog = usePostHog();
+  useEffect(() => {
+    posthog?.capture('invoice_page_viewed');
+  }, []);
+
   const snap = useSnapshot(store);
   const { id } = useParams();
 
