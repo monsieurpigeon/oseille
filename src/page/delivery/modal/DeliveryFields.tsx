@@ -1,6 +1,7 @@
 import { Box, Button, Flex, Grid, GridItem, Input, Select, Text, Textarea } from '@chakra-ui/react';
 import { useMemo } from 'react';
 import { FieldArrayWithId } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
 import { useSnapshot } from 'valtio';
 import { DeliveryInput, store } from '../../../backend';
 import { MyNumberInput } from '../../../component/form/MyNumberInput';
@@ -9,6 +10,7 @@ import { useFarmParameters } from '../../../utils/hooks/useFarmParameters';
 
 export function DeliveryFields({ watch, control, register, fields, append, remove, setValue }: any) {
   const snap = useSnapshot(store);
+  const navigate = useNavigate();
 
   const watchCustomer = watch('customerId');
   const { isTVA } = useFarmParameters();
@@ -34,22 +36,38 @@ export function DeliveryFields({ watch, control, register, fields, append, remov
 
   return (
     <>
-      <Box p={1}>
-        <Text>Client</Text>
-        <Select {...register('customerId')}>
-          <option value="">Choisir un client</option>
-          {store.customers.map((customer) => {
-            return (
-              <option
-                key={customer.id}
-                value={customer.id}
-              >
-                {customer.name}
-              </option>
-            );
-          })}
-        </Select>
-      </Box>
+      {store.customers.length === 0 ? (
+        <Flex
+          direction="column"
+          bg="blue.50"
+          border="2px solid"
+          borderColor="blue.200"
+          padding={2}
+          onClick={() => navigate('/customer/create')}
+          className="clickable"
+          borderRadius={10}
+        >
+          <Text>Ajoutez un premier client en cliquant ici</Text>
+        </Flex>
+      ) : (
+        <Box p={1}>
+          <Text>Client</Text>
+          <Select {...register('customerId')}>
+            <option value="">Choisir un client</option>
+            {store.customers.map((customer) => {
+              return (
+                <option
+                  key={customer.id}
+                  value={customer.id}
+                >
+                  {customer.name}
+                </option>
+              );
+            })}
+          </Select>
+        </Box>
+      )}
+
       <Box p={1}>
         <Text>Date de livraison</Text>
         <Input
@@ -124,13 +142,29 @@ export function DeliveryFields({ watch, control, register, fields, append, remov
             </>
           ))}
         </Grid>
+        {watchCustomer &&
+          (products.length === 0 ? (
+            <Flex
+              direction="column"
+              bg="blue.50"
+              border="2px solid"
+              borderColor="blue.200"
+              padding={2}
+              onClick={() => navigate('/prices')}
+              className="clickable"
+              borderRadius={10}
+            >
+              <Text>Pour ajouter un premier tarif à ce client cliquez ici</Text>
+            </Flex>
+          ) : (
+            <Button
+              colorScheme="yellow"
+              onClick={() => append({ productId: '', quantity: 0 })}
+            >
+              Ajouter produit
+            </Button>
+          ))}
 
-        <Button
-          colorScheme="yellow"
-          onClick={() => append({ productId: '', quantity: 0 })}
-        >
-          Ajouter produit
-        </Button>
         <Box p={1}>
           <Text>Notes</Text>
           <Textarea

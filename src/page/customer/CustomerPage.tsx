@@ -34,7 +34,7 @@ export function CustomerPage() {
             Nouveau
           </Button>
         </MyHeader>
-        <MyScrollList>
+        <MyScrollList empty={{ title: 'Ajouter mon premier client', onClick: () => navigate('create') }}>
           {store.customers.map((entity) => (
             <ListItem
               key={entity.id}

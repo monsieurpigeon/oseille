@@ -41,7 +41,7 @@ export function ProductPage() {
             Nouveau
           </Button>
         </MyHeader>
-        <MyScrollList>
+        <MyScrollList empty={{ title: 'Ajouter mon premier produit', onClick: () => navigate('create') }}>
           {store.products.map((entity) => (
             <ListItem
               key={entity.id}

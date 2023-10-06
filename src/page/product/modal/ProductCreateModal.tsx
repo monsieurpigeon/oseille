@@ -33,8 +33,11 @@ export function ProductCreateModal() {
   });
 
   const handleClose = (value?: { id: string }) => {
-    if (value?.id) navigate(`../${value?.id}`);
-    else navigate(-1);
+    if (value?.id) {
+      navigate(`../${value?.id}`);
+    } else {
+      navigate(-1);
+    }
   };
 
   const onSubmit = (e: ProductInput) => {
@@ -51,7 +54,6 @@ export function ProductCreateModal() {
       .catch(console.error);
   };
 
-  console.log('I AM ALIVE Product Create Modal');
   return (
     <MyModal
       isOpen={true}

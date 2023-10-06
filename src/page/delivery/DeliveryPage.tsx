@@ -35,12 +35,15 @@ export function DeliveryPage() {
           <MyH1>Livraisons</MyH1>
           <Button
             colorScheme="twitter"
-            onClick={() => navigate('/delivery/create')}
+            onClick={() => navigate('create')}
           >
             Nouveau
           </Button>
         </MyHeader>
         <MyScrollList>
+          {store.deliveries.length === 0 && (
+            <MyScrollList.Empty onClick={() => navigate('create')}>Ajouter ma première livraison</MyScrollList.Empty>
+          )}
           {store.customers.map((customer) => (
             <DeliveryCustomer
               key={customer.id}
@@ -72,39 +75,38 @@ function DeliveryCustomer({ customer, selected }: any) {
     })
     .sort((a, b) => b.deliveredAt.localeCompare(a.deliveredAt));
 
+  if (deliveries.length === 0) {
+    return null;
+  }
   return (
-    <>
-      {deliveries.length > 0 && (
-        <ListItemGroup
-          title={customer.name}
-          key={customer.id}
-          action={
-            <InvoiceCreateModal
-              toInvoice={toInvoice}
-              setToInvoice={setToInvoice}
-            />
+    <ListItemGroup
+      title={customer.name}
+      key={customer.id}
+      action={
+        <InvoiceCreateModal
+          toInvoice={toInvoice}
+          setToInvoice={setToInvoice}
+        />
+      }
+    >
+      {deliveries.map((delivery) => (
+        <ListItem
+          isSelected={selected?.id === delivery.id}
+          key={delivery.id}
+          onClick={() => navigate(delivery.id === id ? `/delivery` : `/delivery/${delivery.id}`)}
+          checkable={!delivery.invoiceId}
+          checked={toInvoice[delivery.id] || false}
+          onCheck={() =>
+            setToInvoice((i) => ({
+              ...i,
+              [delivery.id]: !i[delivery.id],
+            }))
           }
         >
-          {deliveries.map((delivery) => (
-            <ListItem
-              isSelected={selected?.id === delivery.id}
-              key={delivery.id}
-              onClick={() => navigate(delivery.id === id ? `/delivery` : `/delivery/${delivery.id}`)}
-              checkable={!delivery.invoiceId}
-              checked={toInvoice[delivery.id] || false}
-              onCheck={() =>
-                setToInvoice((i) => ({
-                  ...i,
-                  [delivery.id]: !i[delivery.id],
-                }))
-              }
-            >
-              {delivery.isOrder && <MyIcon name="order" />}
-              {` ${delivery.documentId} - ${dateFormatter(delivery.deliveredAt)}`}
-            </ListItem>
-          ))}
-        </ListItemGroup>
-      )}
-    </>
+          {delivery.isOrder && <MyIcon name="order" />}
+          {` ${delivery.documentId} - ${dateFormatter(delivery.deliveredAt)}`}
+        </ListItem>
+      ))}
+    </ListItemGroup>
   );
 }

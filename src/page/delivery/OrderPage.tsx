@@ -44,6 +44,9 @@ export function OrderPage() {
           </Button>
         </MyHeader>
         <MyScrollList>
+          {orders.length === 0 && (
+            <MyScrollList.Empty onClick={() => navigate('create')}>Ajouter une nouvelle commande</MyScrollList.Empty>
+          )}
           {Array.from(dateSet).map((date) => (
             <OrderDate
               key={date}

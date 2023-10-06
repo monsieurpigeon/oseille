@@ -16,6 +16,7 @@ import { useFarmParameters } from '../../utils/hooks/useFarmParameters';
 import { InvoiceExportCsvButton } from './button/InvoiceExportCsvButton';
 
 export function InvoicePage() {
+  const navigate = useNavigate();
   const posthog = usePostHog();
   useEffect(() => {
     posthog?.capture('invoice_page_viewed');
@@ -34,6 +35,11 @@ export function InvoicePage() {
           <InvoiceExportCsvButton />
         </MyHeader>
         <MyScrollList>
+          {store.invoices.length === 0 && (
+            <MyScrollList.Empty onClick={() => navigate('/delivery')}>
+              Facturer mon premier bon de livraison
+            </MyScrollList.Empty>
+          )}
           {store.customers.map((customer) => (
             <InvoiceCustomer
               key={customer.id}
@@ -57,6 +63,7 @@ function InvoiceCustomer({ customer, selected }: any) {
   const invoices = store.invoices.filter((invoice) => invoice.customerId === customer.id);
   const navigate = useNavigate();
 
+  if (invoices.length === 0) return null;
   return (
     <ListItemGroup title={customer.name}>
       {invoices.map((invoice) => {
