@@ -3,9 +3,6 @@ import { usePostHog } from 'posthog-js/react';
 import { useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import styled from 'styled-components';
-import { Tabs } from '../../component/Tabs';
-import { MyHeader } from '../../component/layout/page-layout/MyHeader';
-import { MyH1 } from '../../component/typography/MyFont';
 
 const StyledAboutPage = styled.div`
   display: flex;
@@ -34,10 +31,6 @@ export function AboutPage() {
       height="100%"
     >
       <StyledAboutPage>
-        <MyHeader>
-          <MyH1>À propos</MyH1>
-        </MyHeader>
-        <Tabs items={ITEMS} />
         <Outlet />
       </StyledAboutPage>
     </Container>

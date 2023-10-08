@@ -2,16 +2,6 @@ import { Flex } from '@chakra-ui/react';
 import { NavLink } from 'react-router-dom';
 import { styled } from 'styled-components';
 
-const navBarItems = [
-  { label: 'Dashboard', emoji: '👍', path: '' },
-  { label: 'Produits', emoji: '🍓', path: 'product' },
-  { label: 'Clients', emoji: '🤴', path: 'customer' },
-  { label: 'Tarifs', emoji: '🤠', path: 'prices' },
-  { label: 'Commandes', emoji: '🗒️', path: 'order' },
-  { label: 'Livraisons', emoji: '🧺', path: 'delivery' },
-  { label: 'Factures', emoji: '🧲', path: 'invoice' },
-];
-
 const StyledNav = styled.div`
   display: flex;
   flex-direction: column;
@@ -66,10 +56,14 @@ export function HeaderNavigation() {
   );
 }
 
-export function InvoicingNavigation() {
+interface InvoicingNavigationProps {
+  items: { label: string; emoji: string; path: string }[];
+}
+
+export function InvoicingNavigation({ items }: InvoicingNavigationProps) {
   return (
     <StyledNav>
-      {navBarItems.map((item) => (
+      {items.map((item) => (
         <StyledNavItem
           key={item.path}
           to={item.path}

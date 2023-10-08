@@ -1,10 +1,16 @@
 import { Outlet } from 'react-router-dom';
-import { ToolingLayout } from '../component/layout/MainLayout';
+import { InvoicingLayout } from '../component/layout/MainLayout';
+
+const items = [
+  { label: 'Application', emoji: '💡', path: 'app' },
+  { label: 'Équipe', emoji: '🤓', path: 'team' },
+  { label: 'Financement', emoji: '💸', path: 'business' },
+];
 
 export function AboutPageGroup() {
   return (
-    <ToolingLayout>
+    <InvoicingLayout navItems={items}>
       <Outlet />
-    </ToolingLayout>
+    </InvoicingLayout>
   );
 }

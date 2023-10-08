@@ -1,4 +1,4 @@
-import { Avatar, Box, Card, CardBody, CardHeader, Flex, Heading, Text } from '@chakra-ui/react';
+import { Box, Card, CardBody, CardHeader, Flex, Heading, Text } from '@chakra-ui/react';
 
 interface Feature {
   title: string;
@@ -29,16 +29,19 @@ export function FeatureCard({ feature }: FeatureCardProps) {
             alignItems="center"
             flexWrap="wrap"
           >
-            <Avatar
+            {/* <Avatar
               onClick={() => console.log('click')}
               name={feature.user.name}
-              src={feature.user?.avatar || 'https://bit.ly/sage-adebayo'}
-            />
+              src={feature.user?.avatar || 'fdhsjf'}
+            /> */}
 
-            <Box>
+            <Flex
+              alignItems="center"
+              gap={2}
+            >
               <Heading size="sm">{feature.user?.name}</Heading>
               <Text>{feature.user?.farm}</Text>
-            </Box>
+            </Flex>
           </Flex>
         </a>
       </CardHeader>

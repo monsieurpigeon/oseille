@@ -6,9 +6,10 @@ import { InvoicingNavigation } from './Navigation';
 
 interface MainLayoutProps {
   children: ReactNode;
+  navItems?: { label: string; emoji: string; path: string }[];
 }
 
-export function InvoicingLayout({ children }: MainLayoutProps) {
+export function InvoicingLayout({ children, navItems }: MainLayoutProps) {
   return (
     <Grid
       templateAreas={`"header header"
@@ -26,7 +27,7 @@ export function InvoicingLayout({ children }: MainLayoutProps) {
         <Header />
       </GridItem>
       <GridItem area="nav">
-        <InvoicingNavigation />
+        <InvoicingNavigation items={navItems} />
       </GridItem>
       <GridItem area="main">{children}</GridItem>
       <GridItem area="footer">

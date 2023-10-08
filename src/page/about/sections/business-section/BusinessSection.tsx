@@ -110,6 +110,7 @@ export function BusinessSection() {
                   alignSelf="center"
                 >
                   <Button
+                    size="lg"
                     colorScheme="twitter"
                     width="200px"
                     height="80px"

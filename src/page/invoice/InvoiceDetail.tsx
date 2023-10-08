@@ -34,11 +34,11 @@ export const InvoiceDetail = () => {
         <DetailButton />
         <Box>
           <InvoiceDeleteButton invoice={selected} />
-          <InvoiceExportPdfButton invoice={selected} />
           <EditButton
             onClick={() => navigate(`edit`)}
             ml={3}
           />
+          <InvoiceExportPdfButton invoice={selected} />
           <Outlet />
         </Box>
       </MyHeader>

@@ -1,25 +1,22 @@
-export const VERSION = '04/10/2023';
+export const VERSION = '08/10/2023';
 
 const users = {
   myriam: {
     name: 'Myriam',
     farm: "Les P'tits Poids",
-    avatar:
-      'https://scontent-cdg4-2.xx.fbcdn.net/v/t39.30808-6/309897777_214357800946585_1132889211349622487_n.jpg?_nc_cat=109&ccb=1-7&_nc_sid=a2f6c7&_nc_ohc=MIYKjstjCQwAX8TuliD&_nc_ht=scontent-cdg4-2.xx&oh=00_AfDpFOjMlNHsQivvcH25h7Y_Y7OrummoQGDQkJjz4Y_-bw&oe=651DCDAC',
+    avatar: '',
     link: 'https://www.facebook.com/lesptitspoids',
   },
   jeremy: {
     name: 'Jeremy',
     farm: "Le Pota'djé",
-    avatar:
-      'https://scontent-cdg4-2.xx.fbcdn.net/v/t39.30808-6/331790648_946698469838728_3261562363491866199_n.jpg?_nc_cat=103&ccb=1-7&_nc_sid=a2f6c7&_nc_ohc=K2egGXmEBJ0AX9pC2b6&_nc_ht=scontent-cdg4-2.xx&oh=00_AfCo5nazcKpL4asT5OKGH8cAZhCB4EsjTMLLl1cusltM-w&oe=651DEED5',
+    avatar: '',
     link: 'https://www.facebook.com/potadje',
   },
   thomas: {
     name: 'Thomas',
     farm: 'Ferme du Méridien',
-    avatar:
-      'https://scontent-cdg4-3.xx.fbcdn.net/v/t39.30808-6/309436309_462210849268313_1111800250944277904_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=a2f6c7&_nc_ohc=2iMmeypPxJgAX-3ff8J&_nc_ht=scontent-cdg4-3.xx&oh=00_AfB4oLxyEp-9s93VFfAKic9R3mmQIotaPOeGCZHfHyVA3Q&oe=651DF0D3',
+    avatar: '',
     link: 'https://www.facebook.com/fermedumeridien',
   },
 };

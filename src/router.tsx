@@ -64,7 +64,8 @@ export const router = createBrowserRouter([
     path: '/invoicing',
     element: <InvoicingPageGroup />,
     children: [
-      { path: '', element: <DashboardPage /> },
+      visitDefault('dashboard'),
+      { path: 'dashboard', element: <DashboardPage /> },
       {
         path: 'product',
         element: <ProductPage />,
