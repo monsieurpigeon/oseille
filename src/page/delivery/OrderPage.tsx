@@ -38,7 +38,7 @@ export function OrderPage() {
           <MyH1>Commandes</MyH1>
           <Button
             colorScheme="twitter"
-            onClick={() => navigate('/order/create')}
+            onClick={() => navigate('create')}
           >
             Nouveau
           </Button>
@@ -84,15 +84,16 @@ function OrderDate({ date, selected, orders }: { date: string; selected: Deliver
               <ListItem
                 isSelected={selected?.id === delivery.id}
                 key={delivery.id}
-                onClick={() => navigate(delivery.id === id ? `/order` : `/order/${delivery.id}`)}
+                onClick={() => (delivery.id === id ? navigate('') : navigate(delivery.id))}
                 checkable={!delivery.invoiceId}
                 checked={toInvoice[delivery.id] || false}
-                onCheck={() =>
+                onCheck={() => {
                   setToInvoice((i: { [key: string]: boolean }) => ({
                     ...i,
                     [delivery.id]: !i[delivery.id],
-                  }))
-                }
+                  }));
+                  navigate('');
+                }}
               >
                 {`${delivery.documentId} - ${customer?.name}`}
               </ListItem>

@@ -36,7 +36,7 @@ export function InvoicePage() {
         </MyHeader>
         <MyScrollList>
           {store.invoices.length === 0 && (
-            <MyScrollList.Empty onClick={() => navigate('/delivery')}>
+            <MyScrollList.Empty onClick={() => navigate('../delivery')}>
               Facturer mon premier bon de livraison
             </MyScrollList.Empty>
           )}
@@ -76,7 +76,7 @@ function InvoiceCustomer({ customer, selected }: any) {
             done={invoice.isPaid}
             alert={isLate}
             isSelected={selected?.id === invoice.id}
-            onClick={() => navigate(invoice.id === id ? `/invoice` : `/invoice/${invoice.id}`)}
+            onClick={() => navigate(invoice.id === id ? '' : invoice.id)}
           >
             {isLate && '⚠️'} {`${invoice.documentId} - ${dateFormatter(invoice.createdAt)}`}
           </ListItem>

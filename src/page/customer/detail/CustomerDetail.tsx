@@ -20,7 +20,7 @@ export const CustomerDetail = () => {
     <StyledContainer>
       <MyHeader>
         <DetailButton />
-        <EditButton onClick={() => navigate(`/customer/${selected.id}/edit`)} />
+        <EditButton onClick={() => navigate('edit')} />
         <Outlet />
       </MyHeader>
 

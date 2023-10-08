@@ -1,3 +1,4 @@
+import { Container } from '@chakra-ui/react';
 import { usePostHog } from 'posthog-js/react';
 import { useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
@@ -28,12 +29,17 @@ export function AboutPage() {
   }, []);
 
   return (
-    <StyledAboutPage>
-      <MyHeader>
-        <MyH1>À propos</MyH1>
-      </MyHeader>
-      <Tabs items={ITEMS} />
-      <Outlet />
-    </StyledAboutPage>
+    <Container
+      maxW="container.xl"
+      height="100%"
+    >
+      <StyledAboutPage>
+        <MyHeader>
+          <MyH1>À propos</MyH1>
+        </MyHeader>
+        <Tabs items={ITEMS} />
+        <Outlet />
+      </StyledAboutPage>
+    </Container>
   );
 }

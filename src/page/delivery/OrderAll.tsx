@@ -54,7 +54,7 @@ export function OrderAll() {
         feeling: SideKickFeeling.GOOD,
       });
       setToInvoice({});
-      navigate('/order');
+      navigate('');
     }
   };
 

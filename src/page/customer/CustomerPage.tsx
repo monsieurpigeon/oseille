@@ -29,7 +29,7 @@ export function CustomerPage() {
           <MyH1>Clients</MyH1>
           <Button
             colorScheme="twitter"
-            onClick={() => navigate('/customer/create')}
+            onClick={() => navigate('create')}
           >
             Nouveau
           </Button>
@@ -39,7 +39,7 @@ export function CustomerPage() {
             <ListItem
               key={entity.id}
               isSelected={selected?.id === entity.id}
-              onClick={() => navigate(entity.id === id ? `/customer` : `/customer/${entity.id}${location.hash}`)}
+              onClick={() => navigate(entity.id === id ? '' : `${entity.id}${location.hash}`)}
             >
               {entity.name}
             </ListItem>

@@ -27,7 +27,7 @@ export function InvoiceEditModal() {
     defaultValues: { notes: invoice.notes || '', createdAt: invoice.createdAt, isPaid: invoice.isPaid || false },
   });
 
-  const handleClose = () => navigate(`/invoice/${id}`);
+  const handleClose = () => navigate('..');
 
   useEffect(() => {
     reset({ notes: invoice.notes || '', createdAt: invoice.createdAt, isPaid: invoice.isPaid || false });

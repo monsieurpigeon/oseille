@@ -30,16 +30,16 @@ const defaultValues = { createdAt: new Date().toISOString().split('T')[0], notes
 
 export function InvoiceCreateModal({ toInvoice, setToInvoice }: InvoiceCreateModalProps) {
   const posthog = usePostHog();
-  const { isOpen, onOpen } = useDisclosure();
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef<any>();
   const { say } = useSideKick();
   const navigate = useNavigate();
 
   const handleClose = (val: { id: string } | undefined) => {
     if (!val) {
-      navigate('/invoice');
+      onClose();
     } else {
-      navigate(`/invoice/${val.id}`);
+      navigate(`../invoice/${val.id}`);
     }
   };
 

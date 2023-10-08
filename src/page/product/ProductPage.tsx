@@ -36,7 +36,7 @@ export function ProductPage() {
           <MyH1>Produits</MyH1>
           <Button
             colorScheme="twitter"
-            onClick={() => navigate('/product/create')}
+            onClick={() => navigate('create')}
           >
             Nouveau
           </Button>
@@ -46,7 +46,7 @@ export function ProductPage() {
             <ListItem
               key={entity.id}
               isSelected={selected?.id === entity.id}
-              onClick={() => navigate(entity.id === id ? `/product` : `/product/${entity.id}`)}
+              onClick={() => navigate(entity.id === id ? '' : entity.id)}
             >
               <Flex width="100%">
                 <div>{`${entity.name} /${entity.unit}`}</div>

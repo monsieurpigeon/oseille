@@ -21,7 +21,7 @@ export const ProductDetail = () => {
     <Box>
       <MyHeader>
         <DetailButton />
-        <EditButton onClick={() => navigate(`/product/${selected.id}/edit`)} />
+        <EditButton onClick={() => navigate('edit')} />
         <Outlet />
       </MyHeader>
       <Box>

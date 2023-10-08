@@ -43,7 +43,7 @@ export function DeliveryFields({ watch, control, register, fields, append, remov
           border="2px solid"
           borderColor="blue.200"
           padding={2}
-          onClick={() => navigate('/customer/create')}
+          onClick={() => navigate('../../customer/create')}
           className="clickable"
           borderRadius={10}
         >
@@ -150,7 +150,7 @@ export function DeliveryFields({ watch, control, register, fields, append, remov
               border="2px solid"
               borderColor="blue.200"
               padding={2}
-              onClick={() => navigate('/prices')}
+              onClick={() => navigate('../../prices')}
               className="clickable"
               borderRadius={10}
             >

@@ -34,7 +34,7 @@ export function DeliveryCreateModal() {
 
   const { say } = useSideKick();
 
-  const { control, register, handleSubmit, reset, watch, setValue, getValues } = useForm<DeliveryInput>({
+  const { control, register, handleSubmit, watch, setValue, getValues } = useForm<DeliveryInput>({
     resolver: zodResolver(deliverySchema),
     defaultValues: { customerId: '', deliveredAt: new Date().toISOString().split('T')[0], notes: '' },
   });

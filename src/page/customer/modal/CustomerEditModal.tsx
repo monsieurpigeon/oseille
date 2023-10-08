@@ -19,7 +19,7 @@ export function CustomerEditModal() {
 
   const { say } = useSideKick();
 
-  const handleClose = () => navigate(`/customer/${id}`);
+  const handleClose = () => navigate('..');
 
   const onSubmit = (e: CustomerInput) => {
     customer &&

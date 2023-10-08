@@ -25,7 +25,7 @@ export function PriceTable() {
             border="2px solid"
             borderColor="blue.200"
             padding={2}
-            onClick={() => navigate('/customer/create')}
+            onClick={() => navigate('../customer/create')}
             className="clickable"
             borderRadius={10}
           >
@@ -38,7 +38,7 @@ export function PriceTable() {
             border="2px solid"
             borderColor="blue.200"
             padding={2}
-            onClick={() => navigate('/product/create')}
+            onClick={() => navigate('../product/create')}
             className="clickable"
             borderRadius={10}
           >

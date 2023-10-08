@@ -1,3 +1,4 @@
+import { Flex } from '@chakra-ui/react';
 import { NavLink } from 'react-router-dom';
 import { styled } from 'styled-components';
 
@@ -9,8 +10,6 @@ const navBarItems = [
   { label: 'Commandes', emoji: '🗒️', path: 'order' },
   { label: 'Livraisons', emoji: '🧺', path: 'delivery' },
   { label: 'Factures', emoji: '🧲', path: 'invoice' },
-  { label: 'Réglages', emoji: '🔧', path: 'settings' },
-  { label: 'À propos', emoji: '🙋‍♂️', path: 'about' },
 ];
 
 const StyledNav = styled.div`
@@ -34,7 +33,40 @@ const StyledNavItem = styled(NavLink)`
   }
 `;
 
-export function Navigation() {
+const StyledHeaderNavigationItem = styled(NavLink)`
+  background-color: lightcyan;
+  border-width: 4px 0px;
+  border-color: transparent;
+  border-radius: 8px;
+  padding: 2px 8px;
+  &.active {
+    border-color: cyan;
+  }
+`;
+
+const HEADER_ITEMS = [
+  { label: 'Facturation', path: '/invoicing' },
+  //{ label: 'Outils', path: '/tools' },
+  { label: 'Réglages', path: '/settings' },
+  { label: 'À propos', path: '/about' },
+];
+
+export function HeaderNavigation() {
+  return (
+    <Flex gap={4}>
+      {HEADER_ITEMS.map((item) => (
+        <StyledHeaderNavigationItem
+          key={item.path}
+          to={item.path}
+        >
+          {item.label}
+        </StyledHeaderNavigationItem>
+      ))}
+    </Flex>
+  );
+}
+
+export function InvoicingNavigation() {
   return (
     <StyledNav>
       {navBarItems.map((item) => (

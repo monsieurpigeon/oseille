@@ -7,5 +7,5 @@ export function DeliveryAll() {
   const snap = useSnapshot(store);
   const length = useMemo(() => store.deliveries.filter((delivery) => !delivery.invoiceId).length, [snap]);
 
-  return <Center>{`${length} bon${length > 1 ? 's' : ''} de livraison`}</Center>;
+  return <Center>{`${length} bon${length > 1 ? 's' : ''} de livraison à facturer`}</Center>;
 }

@@ -93,7 +93,7 @@ function DeliveryCustomer({ customer, selected }: any) {
         <ListItem
           isSelected={selected?.id === delivery.id}
           key={delivery.id}
-          onClick={() => navigate(delivery.id === id ? `/delivery` : `/delivery/${delivery.id}`)}
+          onClick={() => navigate(delivery.id === id ? '' : delivery.id)}
           checkable={!delivery.invoiceId}
           checked={toInvoice[delivery.id] || false}
           onCheck={() =>

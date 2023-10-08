@@ -1,5 +1,8 @@
 import { Navigate, createBrowserRouter } from 'react-router-dom';
-import App from './App';
+import { AboutPageGroup } from './page-group/AboutPageGroup';
+import { InvoicingPageGroup } from './page-group/InvoicingPageGroup';
+import { SettingPageGroup } from './page-group/SettingPageGroup';
+import { ToolPageGroup } from './page-group/ToolPageGroup';
 import { AboutPage } from './page/about/AboutPage';
 import { AppSection } from './page/about/sections/app-section/AppSection';
 import { BusinessSection } from './page/about/sections/business-section/BusinessSection';
@@ -32,6 +35,8 @@ import { SettingPage } from './page/settings/SettingPage';
 import { AdvancedSection } from './page/settings/sections/advanced-section/AdvancedSection';
 import { FarmSection } from './page/settings/sections/farm-section/FarmSection';
 import { InvoiceSection } from './page/settings/sections/invoice-section/InvoiceSection';
+import { ToolPage } from './page/tools/ToolPage';
+import { ScaleToolPage } from './page/tools/scale/ScaleToolPage';
 
 const visitDefault = (route: string) => {
   return {
@@ -48,7 +53,16 @@ const visitDefault = (route: string) => {
 export const router = createBrowserRouter([
   {
     path: '/',
-    element: <App />,
+    element: (
+      <Navigate
+        to="/invoicing"
+        replace
+      />
+    ),
+  },
+  {
+    path: '/invoicing',
+    element: <InvoicingPageGroup />,
     children: [
       { path: '', element: <DashboardPage /> },
       {
@@ -96,8 +110,23 @@ export const router = createBrowserRouter([
           { path: ':id', element: <InvoiceDetail />, children: [{ path: 'edit', element: <InvoiceEditModal /> }] },
         ],
       },
+      { path: 'admin', element: <BackOfficePage /> },
+    ],
+  },
+  {
+    path: 'tools',
+    element: <ToolPageGroup />,
+    children: [
+      { path: '', element: <ToolPage /> },
+      { path: 'scale', element: <ScaleToolPage /> },
+    ],
+  },
+  {
+    path: 'settings',
+    element: <SettingPageGroup />,
+    children: [
       {
-        path: 'settings',
+        path: '',
         element: <SettingPage />,
         children: [
           visitDefault('farm'),
@@ -106,8 +135,14 @@ export const router = createBrowserRouter([
           { path: 'advanced', element: <AdvancedSection /> },
         ],
       },
+    ],
+  },
+  {
+    path: 'about',
+    element: <AboutPageGroup />,
+    children: [
       {
-        path: 'about',
+        path: '',
         element: <AboutPage />,
         children: [
           visitDefault('app'),
@@ -116,7 +151,6 @@ export const router = createBrowserRouter([
           { path: 'business', element: <BusinessSection /> },
         ],
       },
-      { path: 'admin', element: <BackOfficePage /> },
     ],
   },
 ]);

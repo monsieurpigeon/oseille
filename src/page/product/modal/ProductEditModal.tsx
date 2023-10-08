@@ -19,7 +19,7 @@ export function ProductEditModal() {
 
   const { say } = useSideKick();
 
-  const handleClose = () => navigate(`/product/${id}`);
+  const handleClose = () => navigate('..');
 
   const onSubmit = (e: ProductInput) => {
     product &&

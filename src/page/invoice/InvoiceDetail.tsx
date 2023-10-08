@@ -36,7 +36,7 @@ export const InvoiceDetail = () => {
           <InvoiceDeleteButton invoice={selected} />
           <InvoiceExportPdfButton invoice={selected} />
           <EditButton
-            onClick={() => navigate(`/invoice/${selected.id}/edit`)}
+            onClick={() => navigate(`edit`)}
             ml={3}
           />
           <Outlet />
@@ -48,7 +48,7 @@ export const InvoiceDetail = () => {
         fontWeight="bold"
       >
         <div>
-          {selected.isPaid && '✅'} <Link to={`/customer/${currentCustomer.id}`}>{currentCustomer.name}</Link>
+          {selected.isPaid && '✅'} <Link to={`../../customer/${currentCustomer.id}`}>{currentCustomer.name}</Link>
         </div>
         <div>{dateFormatter(selected.createdAt)}</div>
         <div>{selected.documentId}</div>
