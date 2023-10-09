@@ -2,6 +2,7 @@ import { Box, Flex, Table, TableContainer, Tbody, Th, Thead, Tr } from '@chakra-
 import { differenceInDays } from 'date-fns';
 import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
 import { useSnapshot } from 'valtio';
 import { store } from '../../backend';
 import { getInvoicePrice } from '../../utils/aggregations';
@@ -9,6 +10,12 @@ import { priceFormatter } from '../../utils/formatter';
 import { useFarmParameters } from '../../utils/hooks/useFarmParameters';
 
 const plural = (val: number) => (val > 1 ? 's' : '');
+
+const StyledTr = styled(Tr)`
+  &:hover {
+    background-color: #f5f5f5;
+  }
+`;
 
 export function InvoiceAll() {
   const snap = useSnapshot(store);
@@ -51,9 +58,10 @@ export function InvoiceAll() {
             </Thead>
             <Tbody>
               {lateInvoices.map((invoice) => (
-                <Tr
+                <StyledTr
                   key={invoice.id}
-                  onClick={() => navigate(`/invoice/${invoice.id}`)}
+                  onClick={() => navigate(invoice.id)}
+                  className="clickable"
                 >
                   <Th>J+{differenceInDays(new Date(), new Date(invoice.createdAt))}</Th>
                   <Th>
@@ -63,7 +71,7 @@ export function InvoiceAll() {
                     </Flex>
                   </Th>
                   <Th isNumeric>{priceFormatter(getInvoicePrice(invoice))}</Th>
-                </Tr>
+                </StyledTr>
               ))}
             </Tbody>
           </Table>
