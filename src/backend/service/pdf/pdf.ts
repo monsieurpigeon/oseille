@@ -1,7 +1,7 @@
 import * as pdfMake from 'pdfmake/build/pdfmake';
 import { getIsTVA } from '../../../utils/aggregations';
 import { dateFormatter } from '../../../utils/formatter';
-import { FrBio01, FrBio15 } from '../../../utils/labels';
+import { FrBio01, FrBio09, FrBio15 } from '../../../utils/labels';
 import { store } from '../store';
 import { addresses } from './blocks/addresses';
 import { lines } from './blocks/lines';
@@ -30,6 +30,9 @@ const getBioLogo = (label: string | undefined) => {
       return FrBio01;
     case 'fr-bio-15':
       return FrBio15;
+    case 'fr-bio-09':
+      return FrBio09;
+
     default:
       return '';
   }

@@ -80,6 +80,7 @@ export function FarmPracticeModal({ isOpen, onClose }: FarmPracticeModalProps) {
         <Select {...register('bioLabel')}>
           <option value="non">NON</option>
           <option value="fr-bio-01">FR-BIO-01</option>
+          <option value="fr-bio-09">FR-BIO-09</option>
           <option value="fr-bio-15">FR-BIO-15</option>
         </Select>
       </Flex>
