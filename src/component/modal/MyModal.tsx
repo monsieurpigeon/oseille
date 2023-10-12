@@ -14,11 +14,12 @@ interface CreateModalProps {
   isOpen: boolean;
   cancelRef: React.MutableRefObject<any>;
   onClose: () => void;
-  onSubmit: () => void;
+  onSubmit?: () => void;
   title: string;
   children?: ReactNode;
   disabled?: boolean;
   confirmLabel?: string;
+  cancelLabel?: string;
 }
 
 export const MyModal = ({
@@ -30,6 +31,7 @@ export const MyModal = ({
   onSubmit,
   disabled,
   confirmLabel,
+  cancelLabel,
 }: CreateModalProps) => {
   return (
     <AlertDialog
@@ -42,7 +44,7 @@ export const MyModal = ({
       <form
         onSubmit={(e) => {
           e.preventDefault();
-          onSubmit();
+          onSubmit && onSubmit();
         }}
       >
         <AlertDialogOverlay>
@@ -61,16 +63,18 @@ export const MyModal = ({
                 ref={cancelRef}
                 onClick={onClose}
               >
-                Annuler
+                {cancelLabel ?? 'Annuler'}
               </Button>
-              <Button
-                colorScheme="twitter"
-                type="submit"
-                ml={3}
-                disabled={disabled}
-              >
-                {confirmLabel ?? 'Enregistrer'}
-              </Button>
+              {onSubmit && (
+                <Button
+                  colorScheme="twitter"
+                  type="submit"
+                  ml={3}
+                  disabled={disabled}
+                >
+                  {confirmLabel ?? 'Enregistrer'}
+                </Button>
+              )}
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialogOverlay>

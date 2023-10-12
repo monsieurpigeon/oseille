@@ -25,7 +25,7 @@ const StyledSentence = styled.div<{ feeling?: SideKickFeeling }>`
   padding: 12px;
   bottom: 33px;
   right: 30px;
-  width: 300px;
+  width: 350px;
   box-shadow: 0px 5px 5px 0 #00000040;
 `;
 
@@ -54,7 +54,9 @@ export function SideKick() {
       onMouseLeave={onClose}
       z-index={100}
     >
-      {isOpen && <StyledSentence>Bonjour, je suis Max votre e‑bénévole, je suis là pour vous aider</StyledSentence>}
+      {isOpen && (
+        <StyledSentence>Bonjour, je suis Max, votre cyber‑bénévole, je suis là pour vous aider.</StyledSentence>
+      )}
       {sentence && <StyledSentence feeling={feeling}>{sentence}</StyledSentence>}
       <MyH3 className="no-select">{emoji || emojis[index]}</MyH3>
     </Flex>

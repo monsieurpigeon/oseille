@@ -17,7 +17,7 @@ export function DeliveryDescriptionLine({ delivery }: { delivery: Delivery }) {
       <Box>
         {delivery.isOrder && (
           <>
-            <MyIcon name="order" /> Commande à récolter
+            <MyIcon name="order" /> Commande à préparer
           </>
         )}
       </Box>

@@ -2,11 +2,11 @@ import { Button } from '@chakra-ui/react';
 import { usePostHog } from 'posthog-js/react';
 import { Delivery, exportDocument } from '../../../backend';
 
-interface ExportDeliveryActionProps {
+interface DeliveryPrintButtonProps {
   delivery: Delivery;
 }
 
-export function DeliveryExportButton({ delivery }: ExportDeliveryActionProps) {
+export function DeliveryPrintButton({ delivery }: DeliveryPrintButtonProps) {
   const posthog = usePostHog();
   return (
     <Button
@@ -17,7 +17,7 @@ export function DeliveryExportButton({ delivery }: ExportDeliveryActionProps) {
       }}
       ml={3}
     >
-      Exporter
+      Imprimer
     </Button>
   );
 }

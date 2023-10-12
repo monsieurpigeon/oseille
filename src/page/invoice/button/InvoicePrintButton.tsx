@@ -2,11 +2,11 @@ import { Button } from '@chakra-ui/react';
 import { usePostHog } from 'posthog-js/react';
 import { Invoice, exportDocument } from '../../../backend';
 
-interface ExportInvoiceActionProps {
+interface InvoicePrintButtonProps {
   invoice: Invoice;
 }
 
-export function InvoiceExportPdfButton({ invoice }: ExportInvoiceActionProps) {
+export function InvoicePrintButton({ invoice }: InvoicePrintButtonProps) {
   const posthog = usePostHog();
   return (
     <Button
@@ -17,7 +17,7 @@ export function InvoiceExportPdfButton({ invoice }: ExportInvoiceActionProps) {
       }}
       ml={3}
     >
-      Exporter
+      Imprimer
     </Button>
   );
 }

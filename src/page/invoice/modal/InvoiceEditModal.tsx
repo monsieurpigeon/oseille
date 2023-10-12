@@ -9,10 +9,6 @@ import { SideKickFeeling } from '../../../component/modules/sidekick/enums';
 import { invoiceSchema } from './InvoiceCreateModal';
 import { InvoiceFields } from './InvoiceFields';
 
-interface InvoiceEditModalProps {
-  invoice: Invoice;
-}
-
 export function InvoiceEditModal() {
   const { id } = useParams();
   const invoice = id ? (store.invoices.find((el) => el.id === id) as Invoice) : undefined;

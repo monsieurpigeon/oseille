@@ -1,3 +1,4 @@
+import { Box, Flex } from '@chakra-ui/react';
 import { differenceInDays } from 'date-fns';
 import { usePostHog } from 'posthog-js/react';
 import { useEffect, useMemo } from 'react';
@@ -10,6 +11,7 @@ import { MyHeader } from '../../component/layout/page-layout/MyHeader';
 import { MyPage } from '../../component/layout/page-layout/MyPage';
 import { MyScrollList } from '../../component/layout/page-layout/MyScrollList';
 import { MySide } from '../../component/layout/page-layout/MySide';
+import { InfoModal } from '../../component/modal/InfoModal';
 import { MyH1 } from '../../component/typography/MyFont';
 import { dateFormatter } from '../../utils/formatter';
 import { useFarmParameters } from '../../utils/hooks/useFarmParameters';
@@ -31,7 +33,30 @@ export function InvoicePage() {
     <MyPage>
       <MySide>
         <MyHeader>
-          <MyH1>Factures</MyH1>
+          <Flex
+            alignItems="center"
+            gap={2}
+          >
+            <MyH1>Factures</MyH1>
+            <InfoModal>
+              <Flex
+                direction="column"
+                gap={2}
+              >
+                <Box>
+                  Une facture est définie par un client, une date de facturation, une liste de livraisons, un paiement
+                  et une note.
+                </Box>
+                <Box>Les factures sont classées par client.</Box>
+                <Box>Cliquez sur une facture pour ouvrir le détail.</Box>
+                <Box>Cliquez sur IMPRIMER pour enregistrer la facture en pdf.</Box>
+                <Box>Quand aucune facture n'est sélectionnée, vous retrouverez une liste des factures en retard.</Box>
+                <Box>Pour noter une facture comme payée : cliquez sur MODIFIER et cochez la case PAYÉE.</Box>
+                <Box>Les factures en retard ont un panneau danger dans la liste.</Box>
+                <Box>Les factures payées sont plus claires dans la liste.</Box>
+              </Flex>
+            </InfoModal>
+          </Flex>
           <InvoiceExportCsvButton />
         </MyHeader>
         <MyScrollList>

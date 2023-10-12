@@ -8,7 +8,7 @@ import { MyHeader } from '../../component/layout/page-layout/MyHeader';
 import { DeliveryDescriptionLine } from '../../component/shared/Delivery';
 import { DeliveryDescription } from '../../component/table/DeliveryDescription';
 import { DeliveryDeleteButton } from './button/DeliveryDeleteButton';
-import { DeliveryExportButton } from './button/DeliveryExportButton';
+import { DeliveryPrintButton } from './button/DeliveryPrintButton';
 
 export const DeliveryDetail = () => {
   const navigate = useNavigate();
@@ -34,7 +34,7 @@ export const DeliveryDetail = () => {
             ml={3}
           />
           <Outlet />
-          <DeliveryExportButton delivery={selected} />
+          <DeliveryPrintButton delivery={selected} />
         </Box>
       </MyHeader>
 

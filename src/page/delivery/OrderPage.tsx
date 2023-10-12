@@ -1,4 +1,4 @@
-import { Button } from '@chakra-ui/react';
+import { Box, Button, Flex } from '@chakra-ui/react';
 import { useAtom } from 'jotai';
 import { usePostHog } from 'posthog-js/react';
 import { useEffect, useMemo } from 'react';
@@ -11,6 +11,7 @@ import { MyHeader } from '../../component/layout/page-layout/MyHeader';
 import { MyPage } from '../../component/layout/page-layout/MyPage';
 import { MyScrollList } from '../../component/layout/page-layout/MyScrollList';
 import { MySide } from '../../component/layout/page-layout/MySide';
+import { InfoModal } from '../../component/modal/InfoModal';
 import { MyH1 } from '../../component/typography/MyFont';
 import { dateFormatter } from '../../utils/formatter';
 import { selectedOrdersAtom } from './useSelectOrders';
@@ -35,7 +36,29 @@ export function OrderPage() {
     <MyPage>
       <MySide>
         <MyHeader>
-          <MyH1>Commandes</MyH1>
+          <Flex
+            alignItems="center"
+            gap={2}
+          >
+            <MyH1>Commandes</MyH1>
+            <InfoModal>
+              <Flex
+                direction="column"
+                gap={2}
+              >
+                <Box>
+                  Une commande est définie par un client, une date de livraison, une liste de produits et une note.
+                </Box>
+                <Box>Les commandes sont classées par date de livraison</Box>
+                <Box>Cliquez sur une commande pour ouvrir le détail.</Box>
+                <Box>Cliquez sur IMPRIMER pour enregistrer la commande en pdf.</Box>
+                <Box>
+                  Sélectionnez plusieurs commandes pour connaître le total des produits à préparer pour ces commandes.
+                </Box>
+                <Box>Cliquez sur PASSER EN BL pour transformer les commandes sélectionnées en bons de livraison</Box>
+              </Flex>
+            </InfoModal>
+          </Flex>
           <Button
             colorScheme="twitter"
             onClick={() => navigate('create')}

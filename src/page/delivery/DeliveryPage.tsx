@@ -1,4 +1,4 @@
-import { Button } from '@chakra-ui/react';
+import { Box, Button, Flex } from '@chakra-ui/react';
 import { addDays } from 'date-fns';
 import { usePostHog } from 'posthog-js/react';
 import { useEffect, useMemo, useState } from 'react';
@@ -12,6 +12,7 @@ import { MyHeader } from '../../component/layout/page-layout/MyHeader';
 import { MyPage } from '../../component/layout/page-layout/MyPage';
 import { MyScrollList } from '../../component/layout/page-layout/MyScrollList';
 import { MySide } from '../../component/layout/page-layout/MySide';
+import { InfoModal } from '../../component/modal/InfoModal';
 import { MyH1 } from '../../component/typography/MyFont';
 import { dateFormatter } from '../../utils/formatter';
 import { InvoiceCreateModal } from '../invoice/modal/InvoiceCreateModal';
@@ -32,7 +33,30 @@ export function DeliveryPage() {
     <MyPage>
       <MySide>
         <MyHeader>
-          <MyH1>Livraisons</MyH1>
+          <Flex
+            alignItems="center"
+            gap={2}
+          >
+            <MyH1>Livraisons</MyH1>
+            <InfoModal>
+              <Flex
+                direction="column"
+                gap={2}
+              >
+                <Box>
+                  Une livraison est définie par un client, une date de livraison, une liste de produits et une note.
+                </Box>
+                <Box>Les livraisons sont classées par client.</Box>
+                <Box>Cliquez sur une livraison pour ouvrir le détail.</Box>
+                <Box>Cliquez sur IMPRIMER pour enregistrer la livraison en pdf.</Box>
+                <Box>Sélectionnez plusieurs livraisons d'un client pour pouvoir les facturer en une seule fois.</Box>
+                <Box>
+                  Les livraisons facturées de plus de 15 jours disparaissent de cet écran mais sont toujours présentes
+                  sur le détail client.
+                </Box>
+              </Flex>
+            </InfoModal>
+          </Flex>
           <Button
             colorScheme="twitter"
             onClick={() => navigate('create')}

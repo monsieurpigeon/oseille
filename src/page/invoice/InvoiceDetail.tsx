@@ -11,12 +11,12 @@ import { DeliveryDescription } from '../../component/table/DeliveryDescription';
 import { InvoiceTotals } from '../../component/table/InvoiceTotals';
 import { dateFormatter } from '../../utils/formatter';
 import { InvoiceDeleteButton } from './button/InvoiceDeleteButton';
-import { InvoiceExportPdfButton } from './button/InvoiceExportPdfButton';
+import { InvoicePrintButton } from './button/InvoicePrintButton';
 
 export const InvoiceDetail = () => {
   const { id } = useParams();
   const snap = useSnapshot(store);
-  const selected = useMemo(() => (id ? store.invoices.find((el) => el.id === id) : undefined), [id, snap]);
+  const selected = useMemo(() => (id ? store.invoices.find((el) => el.id === id) : undefined), [id]);
   if (!selected) return null;
 
   const navigate = useNavigate();
@@ -27,7 +27,6 @@ export const InvoiceDetail = () => {
   );
 
   if (!currentCustomer) return null;
-
   return (
     <>
       <MyHeader>
@@ -38,7 +37,7 @@ export const InvoiceDetail = () => {
             onClick={() => navigate(`edit`)}
             ml={3}
           />
-          <InvoiceExportPdfButton invoice={selected} />
+          <InvoicePrintButton invoice={selected} />
           <Outlet />
         </Box>
       </MyHeader>
