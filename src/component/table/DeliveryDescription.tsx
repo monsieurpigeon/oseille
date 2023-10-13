@@ -1,8 +1,8 @@
 import { Table, TableContainer, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react';
 import { Delivery } from '../../backend';
-import { priceFormatter } from '../../utils/formatter';
 import { getDeliveryPrice, getDeliveryTaxes } from '../../utils/aggregations';
 import { computeTaxes } from '../../utils/compute';
+import { priceFormatter } from '../../utils/formatter';
 
 export function DeliveryDescription({ delivery }: { delivery: Delivery }) {
   return (
@@ -23,28 +23,32 @@ export function DeliveryDescription({ delivery }: { delivery: Delivery }) {
           </Tr>
         </Thead>
         <Tbody>
-          {delivery.lines.map((line, index) => (
-            <Tr key={`${index}`}>
-              <Td whiteSpace="pre-wrap">{line.product.name}</Td>
-              <Td>
-                {line.quantity} {line.product.unit}
-                {line.quantity > 1 ? 's' : ''}
-              </Td>
-              <Td isNumeric>{priceFormatter(line.product.price)}</Td>
-              <Td isNumeric>{priceFormatter(line.product.price * line.quantity)}</Td>
-              {delivery.isTVA && (
-                <>
-                  <Td isNumeric>{priceFormatter(computeTaxes(line.product.price, line.quantity, line.product.tva))}</Td>
-                  <Td isNumeric>
-                    {priceFormatter(
-                      line.product.price * line.quantity +
-                        computeTaxes(line.product.price, line.quantity, line.product.tva),
-                    )}
-                  </Td>
-                </>
-              )}
-            </Tr>
-          ))}
+          {delivery.lines
+            .sort((a, b) => a.product.name.localeCompare(b.product.name))
+            .map((line, index) => (
+              <Tr key={`${index}`}>
+                <Td whiteSpace="pre-wrap">{line.product.name}</Td>
+                <Td>
+                  {line.quantity} {line.product.unit}
+                  {line.quantity > 1 ? 's' : ''}
+                </Td>
+                <Td isNumeric>{priceFormatter(line.product.price)}</Td>
+                <Td isNumeric>{priceFormatter(line.product.price * line.quantity)}</Td>
+                {delivery.isTVA && (
+                  <>
+                    <Td isNumeric>
+                      {priceFormatter(computeTaxes(line.product.price, line.quantity, line.product.tva))}
+                    </Td>
+                    <Td isNumeric>
+                      {priceFormatter(
+                        line.product.price * line.quantity +
+                          computeTaxes(line.product.price, line.quantity, line.product.tva),
+                      )}
+                    </Td>
+                  </>
+                )}
+              </Tr>
+            ))}
           <Tr>
             <Td></Td>
             <Td></Td>

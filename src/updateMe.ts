@@ -1,4 +1,4 @@
-export const VERSION = '10/10/2023';
+export const VERSION = '13/10/2023';
 
 const users = {
   myriam: {
@@ -80,5 +80,11 @@ export const FEATURES = [
     user: users.thomas,
     description:
       "Le matin, Thomas a besoin de connaître la quantité totale de chaque produit à récolter sans se soucier du client. Au lieu de faire des calculs savants il est possible de créer des commandes et d'additionner les produits des commandes sélectionnées. Ces commandes sont ensuite passées en BL",
+  },
+  {
+    title: 'Gestion des paiements améliorée',
+    user: users.thomas,
+    description:
+      "A la fin de la saison, pour passer moins de temps à se gratter la tête avec son comptable, Thomas a besoin de pouvoir ressortir tous les paiements reçu pour chaque facture, j'ai donc amélioré l'enregistrement actuel des paiements pour enregistrer les références nécessaires",
   },
 ];

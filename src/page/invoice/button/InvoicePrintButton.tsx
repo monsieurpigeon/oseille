@@ -15,7 +15,6 @@ export function InvoicePrintButton({ invoice }: InvoicePrintButtonProps) {
         exportDocument({ payload: invoice, type: 'Invoice' });
         posthog?.capture('invoice_export');
       }}
-      ml={3}
     >
       Imprimer
     </Button>

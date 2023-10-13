@@ -25,6 +25,7 @@ import { InvoiceAll } from './page/invoice/InvoiceAll';
 import { InvoiceDetail } from './page/invoice/InvoiceDetail';
 import { InvoicePage } from './page/invoice/InvoicePage';
 import { InvoiceEditModal } from './page/invoice/modal/InvoiceEditModal';
+import { PaymentModal } from './page/invoice/modal/PaymentModal';
 import { PricePage } from './page/prices/PricePage';
 import { ProductAll } from './page/product/ProductAll';
 import { ProductDetail } from './page/product/ProductDetail';
@@ -108,7 +109,14 @@ export const router = createBrowserRouter([
         element: <InvoicePage />,
         children: [
           { index: true, element: <InvoiceAll /> },
-          { path: ':id', element: <InvoiceDetail />, children: [{ path: 'edit', element: <InvoiceEditModal /> }] },
+          {
+            path: ':id',
+            element: <InvoiceDetail />,
+            children: [
+              { path: 'pay', element: <PaymentModal /> },
+              { path: 'edit', element: <InvoiceEditModal /> },
+            ],
+          },
         ],
       },
       { path: 'admin', element: <BackOfficePage /> },

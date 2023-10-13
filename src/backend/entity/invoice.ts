@@ -6,6 +6,26 @@ import { Customer, getCustomer } from './customer';
 import { Delivery, addInvoiceId, confirmOrder, removeInvoiceId } from './delivery';
 import { updateDocumentId } from './farm';
 
+export enum PaymentMode {
+  cash = 'cash',
+  cheque = 'cheque',
+  virement = 'virement',
+  cb = 'cb',
+}
+export const PAYMENT_MODES = [
+  { value: PaymentMode.cheque, label: 'Chèque' },
+  { value: PaymentMode.cash, label: 'Espèces' },
+  { value: PaymentMode.virement, label: 'Virement' },
+  { value: PaymentMode.cb, label: 'CB' },
+];
+export interface Payment {
+  paymentMode: PaymentMode;
+  paidAt: string;
+  amount: number;
+  reference: string;
+  notes: string;
+}
+
 export interface Invoice {
   id: string;
   customer: Customer;
@@ -16,6 +36,7 @@ export interface Invoice {
   createdAt: string;
   notes: string;
   isPaid?: boolean;
+  payments?: Payment[];
 }
 
 export interface InvoiceInput {
@@ -32,7 +53,14 @@ export interface InvoiceInput {
 export interface InvoiceInfoInput {
   createdAt: string;
   notes: string;
-  isPaid: boolean;
+}
+
+export interface InvoicePaymentInput {
+  paymentMode: PaymentMode;
+  amount: number;
+  paidAt: string;
+  reference: string;
+  notes: string;
 }
 
 export async function loadInvoices() {
@@ -81,4 +109,8 @@ export const deleteInvoice = (invoice: Invoice) => {
   invoice.deliveryIds.map((id) => removeInvoiceId(id));
   updateDocumentId(DocumentType.invoice, -1);
   return relDb.rel.del('invoice', invoice);
+};
+
+export const isInvoicePaid = (invoice: Invoice): boolean => {
+  return invoice.isPaid || (invoice?.payments && invoice.payments.length > 0) || false;
 };

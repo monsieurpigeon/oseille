@@ -4,7 +4,7 @@ import { usePostHog } from 'posthog-js/react';
 import { useEffect, useMemo } from 'react';
 import { Outlet, useNavigate, useParams } from 'react-router-dom';
 import { useSnapshot } from 'valtio';
-import { store } from '../../backend';
+import { isInvoicePaid, store } from '../../backend';
 import { ListItem } from '../../component/card/ListItem';
 import { ListItemGroup } from '../../component/card/ListItemGroup';
 import { MyHeader } from '../../component/layout/page-layout/MyHeader';
@@ -92,13 +92,13 @@ function InvoiceCustomer({ customer, selected }: any) {
   return (
     <ListItemGroup title={customer.name}>
       {invoices.map((invoice) => {
-        const isLate = invoice.isPaid
+        const isLate = isInvoicePaid(invoice)
           ? false
           : differenceInDays(new Date(), new Date(invoice.createdAt)) > invoiceDelay;
         return (
           <ListItem
             key={invoice.id}
-            done={invoice.isPaid}
+            done={isInvoicePaid(invoice)}
             alert={isLate}
             isSelected={selected?.id === invoice.id}
             onClick={() => navigate(invoice.id === id ? '' : invoice.id)}

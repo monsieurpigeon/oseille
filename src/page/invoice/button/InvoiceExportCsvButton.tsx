@@ -1,8 +1,9 @@
 import { Button, useDisclosure } from '@chakra-ui/react';
 import { format } from 'date-fns';
+import _ from 'lodash';
 import { useRef } from 'react';
 import { useSnapshot } from 'valtio';
-import { store } from '../../../backend';
+import { isInvoicePaid, store } from '../../../backend';
 import { MyModal } from '../../../component/modal/MyModal';
 
 const clean = (num: number) => Number(num.toFixed(5));
@@ -14,7 +15,8 @@ export function InvoiceExportCsvButton() {
   const cancelRef = useRef<any>();
 
   const handleExport = () => {
-    const data = store.invoices
+    const clone = _.cloneDeep(store.invoices);
+    const data = clone
       .sort((a, b) => a.createdAt.localeCompare(b.createdAt))
       .flatMap((invoice) => {
         const customerName = invoice.customer.name;
@@ -33,7 +35,7 @@ export function InvoiceExportCsvButton() {
               invoice: invoice.documentId,
               delivery: delivery?.documentId,
               totalPrice: translate(clean(line.quantity * line.price)),
-              status: invoice.isPaid ? 'Payé' : 'Attente',
+              status: isInvoicePaid(invoice) ? 'Payé' : 'Attente',
             };
           });
         });

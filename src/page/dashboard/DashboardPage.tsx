@@ -1,7 +1,7 @@
 import { usePostHog } from 'posthog-js/react';
 import { useEffect, useMemo } from 'react';
 import { useSnapshot } from 'valtio';
-import { Invoice, store } from '../../backend';
+import { Invoice, isInvoicePaid, store } from '../../backend';
 import { MySimpleLayout } from '../../component/layout/page-layout/MySimpleLayout';
 import { getInvoicePrice } from '../../utils/aggregations';
 import { priceFormatter } from '../../utils/formatter';
@@ -26,8 +26,8 @@ export function DashboardPage() {
   const snap = useSnapshot(store);
 
   const { invoicePaid, invoiceWaiting } = useMemo(() => {
-    const invoicePaid = store.invoices.filter((i) => i.isPaid);
-    const invoiceWaiting = store.invoices.filter((i) => !i.isPaid);
+    const invoicePaid = store.invoices.filter((i) => isInvoicePaid(i));
+    const invoiceWaiting = store.invoices.filter((i) => !isInvoicePaid(i));
     return { invoicePaid: getValues(invoicePaid), invoiceWaiting: getValues(invoiceWaiting) };
   }, [snap]);
 

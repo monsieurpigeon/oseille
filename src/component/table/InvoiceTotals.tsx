@@ -17,10 +17,8 @@ export function InvoiceTotals({ invoice }: { invoice: Invoice }) {
             >
               {priceFormatter(getInvoicePrice(invoice))}
             </Td>
-          </Tr>
-          {isTVA && (
-            <>
-              <Tr>
+            {isTVA && (
+              <>
                 <Td>Total TVA</Td>
                 <Td
                   isNumeric
@@ -28,8 +26,7 @@ export function InvoiceTotals({ invoice }: { invoice: Invoice }) {
                 >
                   {priceFormatter(getInvoiceTaxes(invoice))}
                 </Td>
-              </Tr>
-              <Tr>
+
                 <Td>Total TTC</Td>
                 <Td
                   isNumeric
@@ -37,9 +34,9 @@ export function InvoiceTotals({ invoice }: { invoice: Invoice }) {
                 >
                   {priceFormatter(getInvoicePrice(invoice) + getInvoiceTaxes(invoice))}
                 </Td>
-              </Tr>
-            </>
-          )}
+              </>
+            )}
+          </Tr>
         </Tbody>
       </Table>
     </TableContainer>

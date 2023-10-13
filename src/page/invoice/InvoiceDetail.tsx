@@ -1,8 +1,8 @@
-import { Box, Flex } from '@chakra-ui/react';
+import { Badge, Box, Button, Flex } from '@chakra-ui/react';
 import { useMemo } from 'react';
 import { Link, Outlet, useNavigate, useParams } from 'react-router-dom';
 import { useSnapshot } from 'valtio';
-import { store } from '../../backend';
+import { isInvoicePaid, store } from '../../backend';
 import { DetailButton, EditButton } from '../../component/buttons';
 import { MyHeader } from '../../component/layout/page-layout/MyHeader';
 import { MyScrollList } from '../../component/layout/page-layout/MyScrollList';
@@ -16,7 +16,7 @@ import { InvoicePrintButton } from './button/InvoicePrintButton';
 export const InvoiceDetail = () => {
   const { id } = useParams();
   const snap = useSnapshot(store);
-  const selected = useMemo(() => (id ? store.invoices.find((el) => el.id === id) : undefined), [id]);
+  const selected = useMemo(() => (id ? store.invoices.find((el) => el.id === id) : undefined), [id, snap]);
   if (!selected) return null;
 
   const navigate = useNavigate();
@@ -32,12 +32,18 @@ export const InvoiceDetail = () => {
       <MyHeader>
         <DetailButton />
         <Box>
-          <InvoiceDeleteButton invoice={selected} />
-          <EditButton
-            onClick={() => navigate(`edit`)}
-            ml={3}
-          />
-          <InvoicePrintButton invoice={selected} />
+          <Flex gap={3}>
+            <InvoiceDeleteButton invoice={selected} />
+            <EditButton onClick={() => navigate('edit')} />
+            <Button
+              colorScheme="green"
+              onClick={() => navigate('pay')}
+            >
+              Payer
+            </Button>
+            <InvoicePrintButton invoice={selected} />
+          </Flex>
+
           <Outlet />
         </Box>
       </MyHeader>
@@ -47,7 +53,16 @@ export const InvoiceDetail = () => {
         fontWeight="bold"
       >
         <div>
-          {selected.isPaid && '✅'} <Link to={`../../customer/${currentCustomer.id}`}>{currentCustomer.name}</Link>
+          {isInvoicePaid(selected) && '✅'}{' '}
+          {selected.isPaid && !selected.payments && (
+            <Badge
+              colorScheme="yellow"
+              variant="solid"
+            >
+              Paiement incomplet
+            </Badge>
+          )}{' '}
+          <Link to={`../../customer/${currentCustomer.id}`}>{currentCustomer.name}</Link>
         </div>
         <div>{dateFormatter(selected.createdAt)}</div>
         <div>{selected.documentId}</div>

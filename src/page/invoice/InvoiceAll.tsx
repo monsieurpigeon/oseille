@@ -4,7 +4,7 @@ import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { useSnapshot } from 'valtio';
-import { store } from '../../backend';
+import { isInvoicePaid, store } from '../../backend';
 import { getInvoicePrice } from '../../utils/aggregations';
 import { priceFormatter } from '../../utils/formatter';
 import { useFarmParameters } from '../../utils/hooks/useFarmParameters';
@@ -23,11 +23,11 @@ export function InvoiceAll() {
 
   const navigate = useNavigate();
 
-  const paidLength = useMemo(() => store.invoices.filter((el) => el.isPaid).length, [snap]);
-  const notPaidLength = useMemo(() => store.invoices.filter((el) => !el.isPaid).length, [snap]);
+  const paidLength = useMemo(() => store.invoices.filter((el) => isInvoicePaid(el)).length, [snap]);
+  const notPaidLength = useMemo(() => store.invoices.filter((el) => !isInvoicePaid(el)).length, [snap]);
 
   const lateInvoices = store.invoices
-    .filter((el) => !el.isPaid && differenceInDays(new Date(), new Date(el.createdAt)) > invoiceDelay)
+    .filter((el) => !isInvoicePaid(el) && differenceInDays(new Date(), new Date(el.createdAt)) > invoiceDelay)
     .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
   const lateLength = lateInvoices.length;
 

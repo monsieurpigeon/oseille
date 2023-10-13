@@ -20,13 +20,13 @@ export function InvoiceEditModal() {
 
   const { control, register, handleSubmit, reset, formState } = useForm<InvoiceInfoInput>({
     resolver: zodResolver(invoiceSchema),
-    defaultValues: { notes: invoice.notes || '', createdAt: invoice.createdAt, isPaid: invoice.isPaid || false },
+    defaultValues: { notes: invoice.notes || '', createdAt: invoice.createdAt },
   });
 
   const handleClose = () => navigate('..');
 
   useEffect(() => {
-    reset({ notes: invoice.notes || '', createdAt: invoice.createdAt, isPaid: invoice.isPaid || false });
+    reset({ notes: invoice.notes || '', createdAt: invoice.createdAt });
   }, [invoice]);
 
   const onSubmit = (e: InvoiceInfoInput) => {

@@ -1,5 +1,5 @@
 import { Delivery, Invoice, store } from '../backend';
-import { computeTaxes } from './compute';
+import { computeTaxes, round } from './compute';
 
 export function getDeliveryPrice(delivery: Delivery): number {
   return delivery.lines.reduce((acc, el) => acc + el.product.price * el.quantity, 0);
@@ -33,6 +33,12 @@ export function getInvoiceTaxes(invoice: Invoice): number {
       if (!el) return acc;
       return acc + computeTaxes(el.product.price, el.quantity, el.product.tva);
     }, 0);
+}
+
+export function getInvoiceTotal(invoice: Invoice): number {
+  const isTva = getIsTVA(invoice);
+
+  return round(getInvoicePrice(invoice) + (isTva ? getInvoiceTaxes(invoice) : 0));
 }
 
 export function getIsTVA(invoice: Invoice): boolean {
