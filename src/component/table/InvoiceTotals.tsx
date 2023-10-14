@@ -1,10 +1,12 @@
 import { Table, TableContainer, Tbody, Td, Tr } from '@chakra-ui/react';
 import { Invoice } from '../../backend';
-import { getInvoicePrice, getInvoiceTaxes, getIsTVA } from '../../utils/aggregations';
+import { computeTaxes, getIsTVA } from '../../utils/aggregations';
 import { priceFormatter } from '../../utils/formatter';
 
 export function InvoiceTotals({ invoice }: { invoice: Invoice }) {
   const isTVA = getIsTVA(invoice);
+  const taxes = computeTaxes(invoice);
+
   return (
     <TableContainer>
       <Table size="sm">
@@ -15,7 +17,7 @@ export function InvoiceTotals({ invoice }: { invoice: Invoice }) {
               isNumeric
               fontWeight="bold"
             >
-              {priceFormatter(getInvoicePrice(invoice))}
+              {priceFormatter(taxes.total.ht)}
             </Td>
             {isTVA && (
               <>
@@ -24,7 +26,7 @@ export function InvoiceTotals({ invoice }: { invoice: Invoice }) {
                   isNumeric
                   fontWeight="bold"
                 >
-                  {priceFormatter(getInvoiceTaxes(invoice))}
+                  {priceFormatter(taxes.total.tax)}
                 </Td>
 
                 <Td>Total TTC</Td>
@@ -32,7 +34,7 @@ export function InvoiceTotals({ invoice }: { invoice: Invoice }) {
                   isNumeric
                   fontWeight="bold"
                 >
-                  {priceFormatter(getInvoicePrice(invoice) + getInvoiceTaxes(invoice))}
+                  {priceFormatter(taxes.total.ttc)}
                 </Td>
               </>
             )}

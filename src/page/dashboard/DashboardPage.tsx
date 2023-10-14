@@ -3,7 +3,7 @@ import { useEffect, useMemo } from 'react';
 import { useSnapshot } from 'valtio';
 import { Invoice, isInvoicePaid, store } from '../../backend';
 import { MySimpleLayout } from '../../component/layout/page-layout/MySimpleLayout';
-import { getInvoicePrice } from '../../utils/aggregations';
+import { getInvoiceTotal } from '../../utils/aggregations';
 import { priceFormatter } from '../../utils/formatter';
 import { MetricCard, StyledMetricCards } from './MetricCards';
 import { SalesTable } from './SalesTable';
@@ -12,7 +12,7 @@ function getValues(invoices: Invoice[]) {
   return invoices.reduce(
     (memo, invoice) => ({
       quantity: memo.quantity + 1,
-      money: memo.money + getInvoicePrice(invoice),
+      money: memo.money + getInvoiceTotal(invoice, true),
     }),
     { quantity: 0, money: 0 },
   );

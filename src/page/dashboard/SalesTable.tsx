@@ -48,7 +48,7 @@ export function SalesTable() {
   const [show, setShow] = useState(false);
 
   const sales = useMemo(() => {
-    return snap.invoices.flatMap((invoice) => {
+    return store.invoices.flatMap((invoice) => {
       const deliveries = invoice.deliveryIds.map((id) => store.deliveries.find((d) => d.id === id));
       const products = deliveries.flatMap((delivery) => {
         return delivery?.lines.map((line) => {

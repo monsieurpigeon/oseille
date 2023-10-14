@@ -49,21 +49,26 @@ export const InvoiceDetail = () => {
       </MyHeader>
 
       <Flex
-        gap={5}
         fontWeight="bold"
+        alignItems="center"
+        gap={2}
       >
-        <div>
-          {isInvoicePaid(selected) && '✅'}{' '}
-          {selected.isPaid && !selected.payments && (
-            <Badge
-              colorScheme="yellow"
-              variant="solid"
-            >
-              Paiement incomplet
-            </Badge>
-          )}{' '}
-          <Link to={`../../customer/${currentCustomer.id}`}>{currentCustomer.name}</Link>
-        </div>
+        {isInvoicePaid(selected) && '✅'}
+        {selected.isPaid && !selected.payments && (
+          <Badge
+            colorScheme="yellow"
+            variant="solid"
+          >
+            Paiement incomplet
+          </Badge>
+        )}
+        <Link to={`../../customer/${currentCustomer.id}`}>{currentCustomer.name}</Link>
+      </Flex>
+      <Flex
+        fontWeight="bold"
+        alignItems="center"
+        gap={2}
+      >
         <div>{dateFormatter(selected.createdAt)}</div>
         <div>{selected.documentId}</div>
       </Flex>

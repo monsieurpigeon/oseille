@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { useSnapshot } from 'valtio';
 import { isInvoicePaid, store } from '../../backend';
-import { getInvoicePrice } from '../../utils/aggregations';
+import { getInvoiceTotal } from '../../utils/aggregations';
 import { priceFormatter } from '../../utils/formatter';
 import { useFarmParameters } from '../../utils/hooks/useFarmParameters';
 
@@ -70,7 +70,7 @@ export function InvoiceAll() {
                       <Box>{getCustomer(invoice?.customerId)?.phone}</Box>
                     </Flex>
                   </Th>
-                  <Th isNumeric>{priceFormatter(getInvoicePrice(invoice))}</Th>
+                  <Th isNumeric>{priceFormatter(getInvoiceTotal(invoice))}</Th>
                 </StyledTr>
               ))}
             </Tbody>

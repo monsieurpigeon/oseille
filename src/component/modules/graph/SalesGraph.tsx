@@ -5,7 +5,7 @@ import 'moment/locale/fr';
 import { useEffect, useRef } from 'react';
 import { useSnapshot } from 'valtio';
 import { Customer, store } from '../../../backend';
-import { getInvoicePrice } from '../../../utils/aggregations';
+import { getInvoiceTotal } from '../../../utils/aggregations';
 import { priceFormatter } from '../../../utils/formatter';
 
 const months: { [key: string]: string } = {
@@ -38,7 +38,7 @@ export function SalesGraph({ customer }: SalesGraphProps) {
   const chartRef = useRef(null);
 
   const customerInvoice = store.invoices.filter((invoice) => invoice.customerId === customer.id);
-  const total = customerInvoice.reduce((acc, invoice) => acc + getInvoicePrice(invoice), 0);
+  const total = customerInvoice.reduce((acc, invoice) => acc + getInvoiceTotal(invoice), 0);
 
   useEffect(() => {
     if (chartRef.current && customerInvoice.length > 0) {
@@ -67,7 +67,7 @@ export function SalesGraph({ customer }: SalesGraphProps) {
       aggregatedData = customerInvoice.reduce((acc, invoice) => {
         const period = moment(invoice.createdAt).format(formatString);
         if (!acc[period]) acc[period] = 0;
-        acc[period] += getInvoicePrice(invoice);
+        acc[period] += getInvoiceTotal(invoice);
         return acc;
       }, aggregatedData);
 

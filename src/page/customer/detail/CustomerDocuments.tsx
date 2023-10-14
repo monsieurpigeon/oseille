@@ -15,10 +15,10 @@ const tabAtom = atomWithHash('tab', 0);
 export function CustomerDocuments({ customer }: CustomerDocumentsProps) {
   const invoices = store.invoices
     .filter((invoice) => invoice.customerId === customer.id)
-    .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+    .sort((a, b) => b.documentId.localeCompare(a.documentId));
   const deliveries = store.deliveries
     .filter((delivery) => delivery.customerId === customer.id)
-    .sort((a, b) => b.deliveredAt.localeCompare(a.deliveredAt));
+    .sort((a, b) => b.documentId.localeCompare(a.documentId));
 
   const [tab, setTab] = useAtom(tabAtom);
 

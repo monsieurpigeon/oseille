@@ -122,7 +122,6 @@ export const updateDelivery = async (delivery: Delivery, input: DeliveryInput) =
 
   promise()
     .then((deliveryFull) => {
-      console.log({ deliveryFull, delivery });
       relDb.rel.save('delivery', { ...delivery, ...deliveryFull }).catch(console.error);
     })
     .catch(console.error);

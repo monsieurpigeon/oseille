@@ -1,7 +1,6 @@
 import { Table, TableContainer, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react';
 import { Delivery } from '../../backend';
-import { getDeliveryPrice, getDeliveryTaxes } from '../../utils/aggregations';
-import { computeTaxes } from '../../utils/compute';
+import { getDeliveryTotal } from '../../utils/aggregations';
 import { priceFormatter } from '../../utils/formatter';
 
 export function DeliveryDescription({ delivery }: { delivery: Delivery }) {
@@ -14,12 +13,6 @@ export function DeliveryDescription({ delivery }: { delivery: Delivery }) {
             <Th>Quantité</Th>
             <Th isNumeric>P.U. {delivery.isTVA && 'HT'}</Th>
             <Th isNumeric>Total {delivery.isTVA && 'HT'}</Th>
-            {delivery.isTVA && (
-              <>
-                <Th isNumeric>Total TVA</Th>
-                <Th isNumeric>Total TTC</Th>
-              </>
-            )}
           </Tr>
         </Thead>
         <Tbody>
@@ -34,19 +27,6 @@ export function DeliveryDescription({ delivery }: { delivery: Delivery }) {
                 </Td>
                 <Td isNumeric>{priceFormatter(line.product.price)}</Td>
                 <Td isNumeric>{priceFormatter(line.product.price * line.quantity)}</Td>
-                {delivery.isTVA && (
-                  <>
-                    <Td isNumeric>
-                      {priceFormatter(computeTaxes(line.product.price, line.quantity, line.product.tva))}
-                    </Td>
-                    <Td isNumeric>
-                      {priceFormatter(
-                        line.product.price * line.quantity +
-                          computeTaxes(line.product.price, line.quantity, line.product.tva),
-                      )}
-                    </Td>
-                  </>
-                )}
               </Tr>
             ))}
           <Tr>
@@ -57,24 +37,8 @@ export function DeliveryDescription({ delivery }: { delivery: Delivery }) {
               isNumeric
               fontWeight="bold"
             >
-              {priceFormatter(getDeliveryPrice(delivery))}
+              {priceFormatter(getDeliveryTotal(delivery))}
             </Td>
-            {delivery.isTVA && (
-              <>
-                <Td
-                  isNumeric
-                  fontWeight="bold"
-                >
-                  {priceFormatter(getDeliveryTaxes(delivery))}
-                </Td>
-                <Td
-                  isNumeric
-                  fontWeight="bold"
-                >
-                  {priceFormatter(getDeliveryPrice(delivery) + getDeliveryTaxes(delivery))}
-                </Td>
-              </>
-            )}
           </Tr>
         </Tbody>
       </Table>

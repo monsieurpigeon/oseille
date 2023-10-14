@@ -97,7 +97,7 @@ function DeliveryCustomer({ customer, selected }: any) {
       const today = addDays(new Date(), -2 * 7);
       return !delivery.invoiceId || date > today;
     })
-    .sort((a, b) => b.deliveredAt.localeCompare(a.deliveredAt));
+    .sort((a, b) => b.documentId.localeCompare(a.documentId));
 
   if (deliveries.length === 0) {
     return null;

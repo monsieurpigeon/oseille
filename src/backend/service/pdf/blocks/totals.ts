@@ -1,43 +1,15 @@
-import {
-  getDeliveryPrice,
-  getDeliveryTaxes,
-  getInvoicePrice,
-  getInvoiceTaxes,
-  getIsTVA,
-} from '../../../../utils/aggregations';
+import { computeTaxes, getDeliveryTotal, getIsTVA } from '../../../../utils/aggregations';
 import { DEFAULT_INVOICE_DELAY, DEFAULT_THREAT } from '../../../../utils/defaults';
 import { dateFormatterDelay, priceFormatter } from '../../../../utils/formatter';
 import { Farm } from '../../../entity/farm';
 import { DocumentType } from '../pdf';
 
-const getPrice = (payload: any, type: DocumentType) => {
-  if (type === DocumentType.delivery) {
-    return getDeliveryPrice(payload);
-  }
-
-  if (type === DocumentType.invoice) {
-    return getInvoicePrice(payload);
-  }
-
-  return -1;
-};
-
-const getTaxes = (payload: any, type: DocumentType) => {
-  if (type === DocumentType.delivery) {
-    return getDeliveryTaxes(payload);
-  }
-
-  if (type === DocumentType.invoice) {
-    return getInvoiceTaxes(payload);
-  }
-
-  return -1;
-};
-
 export const totals = (payload: any, type: DocumentType, farm: Farm | null) => {
   const isTVA = type === DocumentType.delivery ? payload.isTVA : getIsTVA(payload);
-  const totalHT = getPrice(payload, type);
-  const totalTaxes = getTaxes(payload, type);
+  const totals =
+    type === DocumentType.invoice
+      ? computeTaxes(payload)
+      : { total: { ht: getDeliveryTotal(payload), tax: 0, ttc: 0 } };
   return {
     layout: 'noBorders',
     style: 'tableExample',
@@ -85,15 +57,19 @@ export const totals = (payload: any, type: DocumentType, farm: Farm | null) => {
               alignment: 'right',
               widths: [65, 'auto', '*'],
               body: [
-                [`Total${isTVA ? ' HT' : ''}`, ':', { text: priceFormatter(totalHT), alignment: 'right' }],
-                ...(isTVA
+                [
+                  `Total${isTVA ? ' HT' : ''}`,
+                  ':',
+                  { text: priceFormatter(totals?.total.ht || 0), alignment: 'right' },
+                ],
+                ...(isTVA && type === DocumentType.invoice
                   ? [
-                      ['Total TVA', ':', { text: priceFormatter(totalTaxes), alignment: 'right' }],
+                      ['Total TVA', ':', { text: priceFormatter(totals?.total.tax || 0), alignment: 'right' }],
                       [
                         'Net à payer',
                         ':',
                         {
-                          text: priceFormatter(totalHT + totalTaxes),
+                          text: priceFormatter(totals?.total.ttc || 0),
                           alignment: 'right',
                           bold: true,
                         },

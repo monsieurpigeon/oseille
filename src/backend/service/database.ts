@@ -57,15 +57,12 @@ db.changes({
   live: true,
 })
   .on('change', function (change) {
-    console.log('CHANGE', change);
     clearTimeout(debounce);
     debounce = setTimeout(() => {
       loadDatabase();
     }, 100);
   })
-  .on('error', function (err) {
-    console.log('ERROR', err);
-  });
+  .on('error', console.error);
 
 let debounce: NodeJS.Timeout;
 

@@ -42,7 +42,6 @@ export function PaymentModal() {
     resolver: zodResolver(paymentSchema),
     defaultValues: { ...emptyPayment, ...invoice?.payments?.[0] },
   });
-  console.log('formState', formState.errors);
 
   const onSubmit = (payment: InvoicePaymentInput) => {
     posthog?.capture('invoice_pay');

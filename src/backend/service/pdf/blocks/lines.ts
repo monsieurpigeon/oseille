@@ -1,11 +1,10 @@
 import { getIsTVA } from '../../../../utils/aggregations';
-import { computeTaxes } from '../../../../utils/compute';
-import { dateFormatter, priceFormatter } from '../../../../utils/formatter';
-import { ProductWithPrice } from '../../../entity/product';
-import { DocumentType } from '../pdf';
-import { store } from '../../store';
-import { Delivery, DeliveryLine } from '../../../entity/delivery';
 import { TVA_RATES } from '../../../../utils/defaults';
+import { dateFormatter, priceFormatter } from '../../../../utils/formatter';
+import { Delivery, DeliveryLine } from '../../../entity/delivery';
+import { ProductWithPrice } from '../../../entity/product';
+import { store } from '../../store';
+import { DocumentType } from '../pdf';
 
 export const lines = (payload: any, type: DocumentType) => {
   if (type === DocumentType.delivery) {
@@ -15,7 +14,7 @@ export const lines = (payload: any, type: DocumentType) => {
       style: 'tableExample',
       table: {
         headerRows: 1,
-        widths: ['*', 'auto', 'auto', 'auto', 'auto', ...(isTVA ? ['auto'] : [])],
+        widths: ['*', 'auto', 'auto', 'auto', 'auto'],
         body: [
           [
             'Designation',
@@ -27,14 +26,6 @@ export const lines = (payload: any, type: DocumentType) => {
               text: `Total ${isTVA ? 'HT' : ''}`,
               alignment: 'right',
             },
-            ...(isTVA
-              ? [
-                  {
-                    text: `Code TVA`,
-                    alignment: 'right',
-                  },
-                ]
-              : []),
           ],
           ...payload.lines
             .sort(
@@ -43,7 +34,7 @@ export const lines = (payload: any, type: DocumentType) => {
                 b: { product: ProductWithPrice; quantity: number },
               ) => a.product.name.localeCompare(b.product.name),
             )
-            .map((el: DeliveryLine) => productLine(el, isTVA)),
+            .map((el: DeliveryLine) => productLine(el, false)),
         ],
       },
     };
