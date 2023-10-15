@@ -5,6 +5,7 @@ import { useSnapshot } from 'valtio';
 import { store } from '../../backend';
 import { DetailButton, EditButton } from '../../component/buttons';
 import { MyHeader } from '../../component/layout/page-layout/MyHeader';
+import { useData } from '../../utils/DataContext';
 import { TVAFormatter } from '../../utils/formatter';
 import { useFarmParameters } from '../../utils/hooks/useFarmParameters';
 
@@ -13,8 +14,8 @@ export const ProductDetail = () => {
   const { id } = useParams();
   const snap = useSnapshot(store);
   const { isTVA } = useFarmParameters();
-
-  const selected = useMemo(() => (id ? store.products.find((p) => p.id === id) : undefined), [id, snap]);
+  const { getProduct } = useData();
+  const selected = useMemo(() => (id ? getProduct(id) : undefined), [id, snap]);
 
   if (!selected) return <></>;
   return (

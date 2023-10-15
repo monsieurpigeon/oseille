@@ -23,7 +23,9 @@ export type Unit = 'kg' | 'piece';
 
 export async function loadProducts() {
   const result = await relDb.rel.find('product');
-  store.products = result.products.sort((a: Product, b: Product) => a.name.localeCompare(b.name));
+  store.products = result.products
+    .map((product) => ({ ...product, name: `PROUT` }))
+    .sort((a: Product, b: Product) => a.name.localeCompare(b.name));
 }
 
 export async function loadProduct(id: string) {
@@ -38,3 +40,11 @@ export const addProduct = (product: ProductInput) => {
 export const updateProduct = (product: Product) => {
   return relDb.rel.save('product', product);
 };
+
+export const getProducts = () =>
+  relDb.rel
+    .find('product', { sort: ['name'] })
+    .then((doc) => doc.products.sort((a: Product, b: Product) => a.name.localeCompare(b.name)));
+
+export const onProductsChange = (listener: (value: PouchDB.Core.ChangesResponseChange<{}>) => any) =>
+  relDb.changes({ since: 'now', live: true }).on('change', listener);

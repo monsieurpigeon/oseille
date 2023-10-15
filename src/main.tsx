@@ -8,6 +8,7 @@ import { ConfirmContextProvider } from './component/modal/confirm-modal/ConfirmC
 import { SideKickContextProvider } from './component/modules/sidekick/SideKickContext';
 import './index.css';
 import { router } from './router';
+import { DataProvider } from './utils/DataContext';
 
 const options = {
   api_host: import.meta.env.VITE_POSTHOG_HOST,
@@ -24,7 +25,9 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
       <ChakraProvider>
         <ConfirmContextProvider>
           <SideKickContextProvider>
-            <RouterProvider router={router} />
+            <DataProvider>
+              <RouterProvider router={router} />
+            </DataProvider>
           </SideKickContextProvider>
         </ConfirmContextProvider>
       </ChakraProvider>

@@ -11,6 +11,7 @@ import { MyScrollList } from '../../component/layout/page-layout/MyScrollList';
 import { MySide } from '../../component/layout/page-layout/MySide';
 import { InfoModal } from '../../component/modal/InfoModal';
 import { MyH1 } from '../../component/typography/MyFont';
+import { useData } from '../../utils/DataContext';
 import { DEFAULT_TAX } from '../../utils/defaults';
 import { TVAFormatter } from '../../utils/formatter';
 import { useFarmParameters } from '../../utils/hooks/useFarmParameters';
@@ -20,6 +21,8 @@ export function ProductPage() {
   useEffect(() => {
     posthog?.capture('product_page_viewed');
   }, []);
+
+  const { products } = useData();
 
   const { farm } = useFarmParameters();
 
@@ -61,7 +64,7 @@ export function ProductPage() {
           </Button>
         </MyHeader>
         <MyScrollList empty={{ title: 'Ajouter mon premier produit', onClick: () => navigate('create') }}>
-          {store.products.map((entity) => (
+          {products.map((entity) => (
             <ListItem
               key={entity.id}
               isSelected={selected?.id === entity.id}
