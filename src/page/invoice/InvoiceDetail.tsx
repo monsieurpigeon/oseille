@@ -17,15 +17,13 @@ export const InvoiceDetail = () => {
   const { id } = useParams();
   const snap = useSnapshot(store);
   const selected = useMemo(() => (id ? store.invoices.find((el) => el.id === id) : undefined), [id, snap]);
-  if (!selected) return null;
-
   const navigate = useNavigate();
-
   const currentCustomer = useMemo(
-    () => store.customers.find((customer) => customer.id === selected.customerId),
-    [store, selected.customerId],
+    () => store.customers.find((customer) => customer.id === selected?.customerId),
+    [store, selected?.customerId],
   );
 
+  if (!selected) return null;
   if (!currentCustomer) return null;
   return (
     <>
