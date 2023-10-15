@@ -5,6 +5,7 @@ import { useRef } from 'react';
 import { useSnapshot } from 'valtio';
 import { isInvoicePaid, store } from '../../../backend';
 import { MyModal } from '../../../component/modal/MyModal';
+import { useData } from '../../../utils/DataContext';
 
 const clean = (num: number) => Number(num.toFixed(5));
 const translate = (num: number) => num.toLocaleString('fr-FR', { minimumFractionDigits: 2 });
@@ -13,6 +14,7 @@ export function InvoiceExportCsvButton() {
   const snap = useSnapshot(store);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef<any>();
+  const { getProduct } = useData();
 
   const handleExport = () => {
     const clone = _.cloneDeep(store.invoices);
@@ -23,7 +25,7 @@ export function InvoiceExportCsvButton() {
         const deliveries = invoice.deliveryIds.map((id) => store.deliveries.find((d) => d.id === id));
         const products = deliveries.flatMap((delivery) => {
           return delivery?.lines.map((line) => {
-            const product = store.products.find((p) => p.id === line.product.id);
+            const product = getProduct(line.product.id);
             return {
               product: product?.name,
               unit: product?.unit,

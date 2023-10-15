@@ -1,19 +1,17 @@
 import { useMemo } from 'react';
 import { Outlet, useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
-import { useSnapshot } from 'valtio';
-import { store } from '../../../backend';
 import { DetailButton, EditButton } from '../../../component/buttons';
 import { MyHeader } from '../../../component/layout/page-layout/MyHeader';
+import { useData } from '../../../utils/DataContext';
 import { CustomerDisplay } from './CustomerDisplay';
 import { CustomerDocuments } from './CustomerDocuments';
 
 export const CustomerDetail = () => {
-  const navigate = useNavigate();
   const { id } = useParams();
-  const snap = useSnapshot(store);
-
-  const selected = useMemo(() => (id ? store.customers.find((p) => p.id === id) : undefined), [id, snap]);
+  const navigate = useNavigate();
+  const { getCustomer, customers } = useData();
+  const selected = useMemo(() => (id ? getCustomer(id) : undefined), [id, customers]);
 
   if (!selected) return <></>;
   return (

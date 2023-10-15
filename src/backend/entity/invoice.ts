@@ -2,7 +2,7 @@ import { documentIdFormatter } from '../../utils/formatter';
 import { relDb } from '../service/database';
 import { DocumentType } from '../service/pdf/pdf';
 import { store } from '../service/store';
-import { Customer, getCustomer } from './customer';
+import { Customer, getCustomerById } from './customer';
 import { Delivery, addInvoiceId, confirmOrder, removeInvoiceId } from './delivery';
 import { updateDocumentId } from './farm';
 
@@ -76,7 +76,7 @@ export async function loadInvoices() {
 }
 
 export const addInvoice = async (deliveries: Delivery[], createdAt: string, notes: string) => {
-  const customer = await getCustomer(deliveries[0].customerId);
+  const customer = await getCustomerById(deliveries[0].customerId);
   const invoice: InvoiceInput = {
     documentId: documentIdFormatter(store.farm?.invoiceId || 0, 'Invoice'),
     customer: customer,

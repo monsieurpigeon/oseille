@@ -13,6 +13,7 @@ import { MyScrollList } from '../../component/layout/page-layout/MyScrollList';
 import { MySide } from '../../component/layout/page-layout/MySide';
 import { InfoModal } from '../../component/modal/InfoModal';
 import { MyH1 } from '../../component/typography/MyFont';
+import { useData } from '../../utils/DataContext';
 import { dateFormatter } from '../../utils/formatter';
 import { useFarmParameters } from '../../utils/hooks/useFarmParameters';
 import { InvoiceExportCsvButton } from './button/InvoiceExportCsvButton';
@@ -26,6 +27,7 @@ export function InvoicePage() {
 
   const snap = useSnapshot(store);
   const { id } = useParams();
+  const { customers } = useData();
 
   const selected = useMemo(() => (id ? store.invoices.find((el) => el.id === id) : undefined), [id, snap]);
 
@@ -65,7 +67,7 @@ export function InvoicePage() {
               Facturer mon premier bon de livraison
             </MyScrollList.Empty>
           )}
-          {store.customers.map((customer) => (
+          {customers.map((customer) => (
             <InvoiceCustomer
               key={customer.id}
               selected={selected}

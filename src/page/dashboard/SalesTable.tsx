@@ -4,6 +4,7 @@ import { useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { useSnapshot } from 'valtio';
 import { store } from '../../backend';
+import { useData } from '../../utils/DataContext';
 import { priceFormatter } from '../../utils/formatter';
 
 const StyledTable = styled.table`
@@ -44,6 +45,7 @@ const StyledTable = styled.table`
 
 export function SalesTable() {
   const snap = useSnapshot(store);
+  const { products, getProduct, customers } = useData();
 
   const [show, setShow] = useState(false);
 
@@ -52,7 +54,7 @@ export function SalesTable() {
       const deliveries = invoice.deliveryIds.map((id) => store.deliveries.find((d) => d.id === id));
       const products = deliveries.flatMap((delivery) => {
         return delivery?.lines.map((line) => {
-          const product = store.products.find((p) => p.id === line.product.id);
+          const product = getProduct(line.product.id);
           return {
             product: product?.name || 'defaultProduct',
             productId: product?.id || '000',
@@ -83,7 +85,7 @@ export function SalesTable() {
 
   const threshold = valuesList[Math.floor(valuesList.length / 4)];
 
-  const products = snap.products
+  const productsPlus = products
     .map((product) => {
       const customerSales = salesByProduct[product.id];
       return {
@@ -95,7 +97,7 @@ export function SalesTable() {
     })
     .sort((a, b) => b.total - a.total);
 
-  const customers = snap.customers
+  const customersPlus = customers
     .map((customer) => ({
       name: customer.name,
       id: customer.id,
@@ -117,7 +119,7 @@ export function SalesTable() {
                 🌞 {priceFormatter(sales.reduce((memo, sale) => memo + (sale?.totalPrice || 0), 0))}
               </div>{' '}
             </td>
-            {customers.map((customer) => (
+            {customersPlus.map((customer) => (
               <td className="vertical">
                 <div>{customer.name}</div>
                 <div className="main-price">{priceFormatter(customer.total)}</div>
@@ -125,13 +127,13 @@ export function SalesTable() {
             ))}
           </thead>
           <tbody>
-            {products.map((product: any) => (
+            {productsPlus.map((product: any) => (
               <tr>
                 <td className="horizontal">
                   <div>{product.name}</div>
                   <div className="main-price">{priceFormatter(product.total)}</div>
                 </td>
-                {customers.map((customer) => (
+                {customersPlus.map((customer) => (
                   <td
                     className={clsx('cell', { top: product[customer.id] > threshold })}
                     title={`${product.name}\n${customer.name}`}

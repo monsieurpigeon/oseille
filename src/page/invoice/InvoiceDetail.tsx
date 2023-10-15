@@ -9,6 +9,7 @@ import { MyScrollList } from '../../component/layout/page-layout/MyScrollList';
 import { DeliveryDescriptionLine } from '../../component/shared/Delivery';
 import { DeliveryDescription } from '../../component/table/DeliveryDescription';
 import { InvoiceTotals } from '../../component/table/InvoiceTotals';
+import { useData } from '../../utils/DataContext';
 import { dateFormatter } from '../../utils/formatter';
 import { InvoiceDeleteButton } from './button/InvoiceDeleteButton';
 import { InvoicePrintButton } from './button/InvoicePrintButton';
@@ -18,10 +19,8 @@ export const InvoiceDetail = () => {
   const snap = useSnapshot(store);
   const selected = useMemo(() => (id ? store.invoices.find((el) => el.id === id) : undefined), [id, snap]);
   const navigate = useNavigate();
-  const currentCustomer = useMemo(
-    () => store.customers.find((customer) => customer.id === selected?.customerId),
-    [store, selected?.customerId],
-  );
+  const { getCustomer } = useData();
+  const currentCustomer = useMemo(() => getCustomer(selected?.customerId || ''), [selected?.customerId]);
 
   if (!selected) return null;
   if (!currentCustomer) return null;

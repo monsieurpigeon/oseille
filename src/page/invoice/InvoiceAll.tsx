@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { useSnapshot } from 'valtio';
 import { isInvoicePaid, store } from '../../backend';
+import { useData } from '../../utils/DataContext';
 import { getInvoiceTotal } from '../../utils/aggregations';
 import { priceFormatter } from '../../utils/formatter';
 import { useFarmParameters } from '../../utils/hooks/useFarmParameters';
@@ -20,6 +21,7 @@ const StyledTr = styled(Tr)`
 export function InvoiceAll() {
   const snap = useSnapshot(store);
   const { invoiceDelay } = useFarmParameters();
+  const { getCustomer } = useData();
 
   const navigate = useNavigate();
 
@@ -30,10 +32,6 @@ export function InvoiceAll() {
     .filter((el) => !isInvoicePaid(el) && differenceInDays(new Date(), new Date(el.createdAt)) > invoiceDelay)
     .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
   const lateLength = lateInvoices.length;
-
-  const getCustomer = (id: string) => {
-    return store.customers.find((el) => el.id === id);
-  };
 
   return (
     <Flex

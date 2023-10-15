@@ -2,8 +2,6 @@ import { Box, Button, Flex, Spacer, Text } from '@chakra-ui/react';
 import { usePostHog } from 'posthog-js/react';
 import { useEffect, useMemo } from 'react';
 import { Outlet, useNavigate, useParams } from 'react-router-dom';
-import { useSnapshot } from 'valtio';
-import { store } from '../../backend';
 import { ListItem } from '../../component/card/ListItem';
 import { MyHeader } from '../../component/layout/page-layout/MyHeader';
 import { MyPage } from '../../component/layout/page-layout/MyPage';
@@ -21,19 +19,13 @@ export function ProductPage() {
   useEffect(() => {
     posthog?.capture('product_page_viewed');
   }, []);
-
-  const { products } = useData();
-
-  const { farm } = useFarmParameters();
-
-  const snap = useSnapshot(store);
-  const { id } = useParams();
-
   const navigate = useNavigate();
 
-  const selected = useMemo(() => (id ? store.products.find((el) => el.id === id) : undefined), [id, snap]);
+  const { id } = useParams();
+  const { farm, isTVA } = useFarmParameters();
+  const { products, getProduct } = useData();
 
-  const { isTVA } = useFarmParameters();
+  const selected = useMemo(() => (id ? getProduct(id) : undefined), [id, products]);
 
   return (
     <MyPage>

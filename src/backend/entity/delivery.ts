@@ -1,9 +1,9 @@
 import { documentIdFormatter } from '../../utils/formatter';
 import { relDb } from '../service/database';
 import { store } from '../service/store';
-import { Customer, getCustomer } from './customer';
+import { Customer, getCustomerById } from './customer';
 import { loadFarm, updateDocumentId } from './farm';
-import { ProductWithPrice, loadProduct } from './product';
+import { ProductWithPrice, getProductById } from './product';
 
 export interface Delivery {
   id: string;
@@ -52,12 +52,12 @@ export async function loadDeliveries() {
 }
 
 export const addDelivery = async (delivery: DeliveryInput) => {
-  const customer = await getCustomer(delivery.customerId);
+  const customer = await getCustomerById(delivery.customerId);
   await loadFarm();
   const promise = async () => {
     const lines = await Promise.all(
       delivery.lines.map(async (el) => {
-        const product = await loadProduct(el.productId);
+        const product = await getProductById(el.productId);
         return { ...el, product: { ...product, price: +el.price || 0 } };
       }),
     );
@@ -104,12 +104,12 @@ export const removeInvoiceId = (deliveryId: string) => {
 };
 
 export const updateDelivery = async (delivery: Delivery, input: DeliveryInput) => {
-  const customer = await getCustomer(input.customerId);
+  const customer = await getCustomerById(input.customerId);
   await loadFarm();
   const promise = async () => {
     const lines = await Promise.all(
       input.lines.map(async (el) => {
-        const product = await loadProduct(el.productId);
+        const product = await getProductById(el.productId);
         return { ...el, product: { ...product, price: +el.price || 0 } };
       }),
     );

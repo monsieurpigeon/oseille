@@ -2,8 +2,6 @@ import { Box, Button, Flex } from '@chakra-ui/react';
 import { usePostHog } from 'posthog-js/react';
 import { useEffect, useMemo } from 'react';
 import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom';
-import { useSnapshot } from 'valtio';
-import { store } from '../../backend';
 import { ListItem } from '../../component/card/ListItem';
 import { MyHeader } from '../../component/layout/page-layout/MyHeader';
 import { MyPage } from '../../component/layout/page-layout/MyPage';
@@ -11,18 +9,20 @@ import { MyScrollList } from '../../component/layout/page-layout/MyScrollList';
 import { MySide } from '../../component/layout/page-layout/MySide';
 import { InfoModal } from '../../component/modal/InfoModal';
 import { MyH1 } from '../../component/typography/MyFont';
+import { useData } from '../../utils/DataContext';
 
 export function CustomerPage() {
   const posthog = usePostHog();
   useEffect(() => {
     posthog?.capture('customer_page_viewed');
   }, []);
-  const snap = useSnapshot(store);
+  const { customers, getCustomer } = useData();
   const { id } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
 
-  const selected = useMemo(() => (id ? store.customers.find((el) => el.id === id) : undefined), [id, snap]);
+  const selected = useMemo(() => (id ? getCustomer(id) : undefined), [id, customers]);
+
   return (
     <MyPage>
       <MySide>
@@ -56,7 +56,7 @@ export function CustomerPage() {
           </Button>
         </MyHeader>
         <MyScrollList empty={{ title: 'Ajouter mon premier client', onClick: () => navigate('create') }}>
-          {store.customers.map((entity) => (
+          {customers.map((entity) => (
             <ListItem
               key={entity.id}
               isSelected={selected?.id === entity.id}

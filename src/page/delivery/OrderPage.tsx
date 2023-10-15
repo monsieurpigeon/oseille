@@ -13,6 +13,7 @@ import { MyScrollList } from '../../component/layout/page-layout/MyScrollList';
 import { MySide } from '../../component/layout/page-layout/MySide';
 import { InfoModal } from '../../component/modal/InfoModal';
 import { MyH1 } from '../../component/typography/MyFont';
+import { useData } from '../../utils/DataContext';
 import { dateFormatter } from '../../utils/formatter';
 import { selectedOrdersAtom } from './useSelectOrders';
 
@@ -90,6 +91,7 @@ export function OrderPage() {
 
 function OrderDate({ date, selected, orders }: { date: string; selected: Delivery | undefined; orders: Delivery[] }) {
   const { id } = useParams();
+  const { getCustomer } = useData();
   const navigate = useNavigate();
   const [toInvoice, setToInvoice]: [toInvoice: { [key: string]: boolean }, setToInvoice: any] =
     useAtom(selectedOrdersAtom);
@@ -102,7 +104,7 @@ function OrderDate({ date, selected, orders }: { date: string; selected: Deliver
           key={date}
         >
           {orders.map((delivery) => {
-            const customer = store.customers.find((customer) => customer.id === delivery.customerId);
+            const customer = getCustomer(delivery.customerId);
             return (
               <ListItem
                 isSelected={selected?.id === delivery.id}

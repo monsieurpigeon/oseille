@@ -1,7 +1,9 @@
 import { Center } from '@chakra-ui/react';
-import { store } from '../../backend';
+import { useData } from '../../utils/DataContext';
 
 export function CustomerAll() {
-  const length = store.customers.length;
+  const { customers } = useData();
+
+  const length = customers.length;
   return <Center>{`${length} client${length > 1 ? 's' : ''}`}</Center>;
 }

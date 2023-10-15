@@ -15,6 +15,7 @@ export function useProducts() {
   }, []);
 
   const getProduct = (id: string) => {
+    if (!id) return;
     return products.find((product) => product.id === id);
   };
 

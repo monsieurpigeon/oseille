@@ -14,6 +14,7 @@ import { MyScrollList } from '../../component/layout/page-layout/MyScrollList';
 import { MySide } from '../../component/layout/page-layout/MySide';
 import { InfoModal } from '../../component/modal/InfoModal';
 import { MyH1 } from '../../component/typography/MyFont';
+import { useData } from '../../utils/DataContext';
 import { dateFormatter } from '../../utils/formatter';
 import { InvoiceCreateModal } from '../invoice/modal/InvoiceCreateModal';
 
@@ -24,6 +25,7 @@ export function DeliveryPage() {
   }, []);
   const snap = useSnapshot(store);
   const { id } = useParams();
+  const { customers } = useData();
 
   const navigate = useNavigate();
 
@@ -68,7 +70,7 @@ export function DeliveryPage() {
           {store.deliveries.length === 0 && (
             <MyScrollList.Empty onClick={() => navigate('create')}>Ajouter ma première livraison</MyScrollList.Empty>
           )}
-          {store.customers.map((customer) => (
+          {customers.map((customer) => (
             <DeliveryCustomer
               key={customer.id}
               selected={selected}

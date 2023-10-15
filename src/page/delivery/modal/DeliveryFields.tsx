@@ -5,17 +5,19 @@ import { useNavigate } from 'react-router-dom';
 import { useSnapshot } from 'valtio';
 import { DeliveryInput, store } from '../../../backend';
 import { MyNumberInput } from '../../../component/form/MyNumberInput';
+import { useData } from '../../../utils/DataContext';
 import { priceFormatter } from '../../../utils/formatter';
 import { useFarmParameters } from '../../../utils/hooks/useFarmParameters';
 
 export function DeliveryFields({ watch, control, register, fields, append, remove, setValue }: any) {
   const snap = useSnapshot(store);
   const navigate = useNavigate();
+  const { products, customers } = useData();
 
   const watchCustomer = watch('customerId');
   const { isTVA } = useFarmParameters();
 
-  const { products, prices } = useMemo(() => {
+  const { availableProducts, prices } = useMemo(() => {
     const productPrices = store.prices.filter((price) => price.customer === watchCustomer);
     const productsList = productPrices.map((price) => price.product);
     const defaultPrices = store.prices.filter(
@@ -24,19 +26,19 @@ export function DeliveryFields({ watch, control, register, fields, append, remov
 
     const prices = [...productPrices, ...defaultPrices];
 
-    const products = store.products
+    const availableProducts = products
       .filter((product) => prices.map((price) => price.product).includes(product.id))
       .map((product) => ({
         ...product,
         price: prices.find((price) => price.product === product.id)?.value || 0,
       }));
 
-    return { products, prices };
+    return { availableProducts, prices };
   }, [watchCustomer]);
 
   return (
     <>
-      {store.customers.length === 0 ? (
+      {customers.length === 0 ? (
         <Flex
           direction="column"
           bg="blue.50"
@@ -54,7 +56,7 @@ export function DeliveryFields({ watch, control, register, fields, append, remov
           <Text>Client</Text>
           <Select {...register('customerId')}>
             <option value="">Choisir un client</option>
-            {store.customers.map((customer) => {
+            {customers.map((customer) => {
               return (
                 <option
                   key={customer.id}
@@ -107,7 +109,7 @@ export function DeliveryFields({ watch, control, register, fields, append, remov
                   })}
                 >
                   <option value="">...</option>
-                  {products.map((product) => (
+                  {availableProducts.map((product) => (
                     <option
                       value={product.id}
                       key={product.id}
@@ -145,7 +147,7 @@ export function DeliveryFields({ watch, control, register, fields, append, remov
           ))}
         </Grid>
         {watchCustomer &&
-          (products.length === 0 ? (
+          (availableProducts.length === 0 ? (
             <Flex
               direction="column"
               bg="blue.50"

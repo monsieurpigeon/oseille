@@ -2,6 +2,7 @@ import * as pdfMake from 'pdfmake/build/pdfmake';
 import { getIsTVA } from '../../../utils/aggregations';
 import { dateFormatter } from '../../../utils/formatter';
 import { FrBio01, FrBio09, FrBio15 } from '../../../utils/labels';
+import { getCustomerById } from '../../entity/customer';
 import { Delivery } from '../../entity/delivery';
 import { Product } from '../../entity/product';
 import { store } from '../store';
@@ -40,9 +41,9 @@ const getBioLogo = (label: string | undefined) => {
   }
 };
 
-export const exportDocument = ({ payload, type, open = false }: any) => {
+export const exportDocument = async ({ payload, type, open = false }: any) => {
   const isTVA = type === DocumentType.delivery ? payload.isTVA : getIsTVA(payload);
-  const currentCustomer = store.customers.find((customer) => customer.id === payload.customerId);
+  const currentCustomer = await getCustomerById(payload.customerId);
 
   const docDefinition: any = {
     defaultStyle: {
