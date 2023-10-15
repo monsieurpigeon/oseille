@@ -5,3 +5,7 @@
 .scroll-table thead tr th {
   width: 2500px;
 }
+
+.priceTableCell:hover .priceText {
+  opacity: 0.2;
+}
