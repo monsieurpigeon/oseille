@@ -88,14 +88,15 @@ export function PriceTable() {
                       key={c.id}
                       style={{
                         backgroundColor: directPrice ? 'powderblue' : defaultPrice ? 'whitesmoke' : 'white',
+                        cursor: 'pointer',
                       }}
+                      onClick={() => {
+                        if (currentEdit[0] !== c.id || currentEdit[1] !== p.id) setCurrentEdit([c.id, p.id]);
+                      }}
+                      className="priceTableCell"
+                      aria-label="modifier le prix"
                     >
-                      {(currentEdit[0] !== c.id || currentEdit[1] !== p.id) && (
-                        <button onClick={() => setCurrentEdit([c.id, p.id])}>
-                          {price?.value ? `${priceFormatter(price?.value || 0)}HT` : <AddPrice />}
-                        </button>
-                      )}
-                      {currentEdit[0] === c.id && currentEdit[1] === p.id && (
+                      {currentEdit[0] === c.id && currentEdit[1] === p.id ? (
                         <PriceNumberInput
                           product={p}
                           customer={c}
@@ -103,6 +104,10 @@ export function PriceTable() {
                           value={price?.value || 0}
                           onClose={() => setCurrentEdit(['', ''])}
                         />
+                      ) : !price?.value ? (
+                        <AddPrice />
+                      ) : (
+                        <div className="priceText">{`${priceFormatter(price?.value || 0)}HT`}</div>
                       )}
                     </Td>
                   );
@@ -118,6 +123,16 @@ export function PriceTable() {
 
 function AddPrice() {
   return (
-    <div style={{ borderRadius: '7px', color: 'white', padding: '5px 10px', backgroundColor: 'salmon' }}>Ajouter</div>
+    <div
+      style={{
+        borderRadius: '7px',
+        color: 'white',
+        padding: '5px 10px',
+        backgroundColor: 'salmon',
+        width: 'fit-content',
+      }}
+    >
+      Ajouter
+    </div>
   );
 }
