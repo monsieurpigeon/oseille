@@ -3,19 +3,20 @@ import { useAtom } from 'jotai';
 import { usePostHog } from 'posthog-js/react';
 import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useSnapshot } from 'valtio';
-import { Delivery, Product, confirmOrder, exportOrders, store } from '../../backend';
+import { Delivery, Product, confirmOrder, exportOrders } from '../../backend';
 import { MyHeader } from '../../component/layout/page-layout/MyHeader';
 import { useConfirm } from '../../component/modal/confirm-modal/ConfirmContext';
 import { useSideKick } from '../../component/modules/sidekick/SideKickContext';
 import { SideKickFeeling } from '../../component/modules/sidekick/enums';
+import { useData } from '../../context/DataContext';
 import { selectedOrdersAtom } from './useSelectOrders';
 
 export function OrderAll() {
-  const snap = useSnapshot(store);
+  const { deliveries, getDelivery } = useData();
+
   const length = useMemo(
-    () => store.deliveries.filter((delivery) => !delivery.invoiceId).filter((delivery) => delivery.isOrder).length,
-    [snap],
+    () => deliveries.filter((delivery) => !delivery.invoiceId).filter((delivery) => delivery.isOrder).length,
+    [deliveries],
   );
   const posthog = usePostHog();
   const { say } = useSideKick();
@@ -24,7 +25,7 @@ export function OrderAll() {
   const selectedOrders = Object.entries(toInvoice)
     .map(([key, value]) => {
       if (!value) return undefined;
-      return store.deliveries.find((delivery) => delivery.id === key);
+      return getDelivery(key);
     })
     .filter((el) => el && !el.invoiceId) as Delivery[];
 

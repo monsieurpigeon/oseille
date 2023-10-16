@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { useSnapshot } from 'valtio';
 import { isInvoicePaid, store } from '../../backend';
-import { useData } from '../../utils/DataContext';
+import { useData } from '../../context/DataContext';
 import { getInvoiceTotal } from '../../utils/aggregations';
 import { priceFormatter } from '../../utils/formatter';
 import { useFarmParameters } from '../../utils/hooks/useFarmParameters';
@@ -55,22 +55,25 @@ export function InvoiceAll() {
               </Tr>
             </Thead>
             <Tbody>
-              {lateInvoices.map((invoice) => (
-                <StyledTr
-                  key={invoice.id}
-                  onClick={() => navigate(invoice.id)}
-                  className="clickable"
-                >
-                  <Th>J+{differenceInDays(new Date(), new Date(invoice.createdAt))}</Th>
-                  <Th>
-                    <Flex direction="column">
-                      <Box>{invoice.customer.name}</Box>
-                      <Box>{getCustomer(invoice?.customerId)?.phone}</Box>
-                    </Flex>
-                  </Th>
-                  <Th isNumeric>{priceFormatter(getInvoiceTotal(invoice))}</Th>
-                </StyledTr>
-              ))}
+              {lateInvoices.map((invoice) => {
+                const customer = getCustomer(invoice.customerId);
+                return (
+                  <StyledTr
+                    key={invoice.id}
+                    onClick={() => navigate(invoice.id)}
+                    className="clickable"
+                  >
+                    <Th>J+{differenceInDays(new Date(), new Date(invoice.createdAt))}</Th>
+                    <Th>
+                      <Flex direction="column">
+                        <Box>{customer?.name}</Box>
+                        <Box>{customer?.phone}</Box>
+                      </Flex>
+                    </Th>
+                    <Th isNumeric>{priceFormatter(getInvoiceTotal(invoice))}</Th>
+                  </StyledTr>
+                );
+              })}
             </Tbody>
           </Table>
         </TableContainer>

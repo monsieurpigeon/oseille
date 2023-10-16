@@ -5,10 +5,11 @@ import { useMemo, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { z } from 'zod';
-import { Delivery, InvoiceInfoInput, addInvoice, store } from '../../../backend';
+import { Delivery, InvoiceInfoInput, addInvoice } from '../../../backend';
 import { MyModal } from '../../../component/modal/MyModal';
 import { useSideKick } from '../../../component/modules/sidekick/SideKickContext';
 import { SideKickFeeling } from '../../../component/modules/sidekick/enums';
+import { useData } from '../../../context/DataContext';
 import { InvoiceFields } from './InvoiceFields';
 
 interface InvoiceCreateModalProps {
@@ -33,6 +34,7 @@ export function InvoiceCreateModal({ toInvoice, setToInvoice }: InvoiceCreateMod
   const cancelRef = useRef<any>();
   const { say } = useSideKick();
   const navigate = useNavigate();
+  const { getDelivery } = useData();
 
   const handleClose = (val: { id: string } | undefined) => {
     if (!val) {
@@ -51,7 +53,7 @@ export function InvoiceCreateModal({ toInvoice, setToInvoice }: InvoiceCreateMod
 
     const deliveries = Object.entries(toInvoice)
       .filter(([_, value]) => value)
-      .map(([key]) => store.deliveries.find((delivery) => delivery.id === key))
+      .map(([key]) => getDelivery(key))
       .filter((d) => !!d) as Delivery[];
 
     addInvoice(deliveries, e.createdAt, e.notes)

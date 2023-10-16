@@ -1,10 +1,11 @@
-import { Delivery, Invoice, store } from '../backend';
+import { Delivery, Invoice, getDeliveries, store } from '../backend';
 import { round } from './compute';
 import { DEFAULT_TAX, TVA_RATES } from './defaults';
 
-export function getIsTVA(invoice: Invoice): boolean {
+export async function getIsTVA(invoice: Invoice): Promise<boolean> {
+  const deliveries = await getDeliveries(invoice.deliveries);
   const isTVAArray = invoice.deliveries.map((id) => {
-    const delivery = store.deliveries.find((d) => d.id === id);
+    const delivery = deliveries.find((d: Delivery) => d.id === id);
     if (!delivery) return null;
     return delivery.isTVA;
   });
@@ -15,8 +16,8 @@ export function getDeliveryTotal(delivery: Delivery): number {
   return delivery.lines.reduce((acc, el) => acc + el.product.price * el.quantity, 0);
 }
 
-export function getInvoiceTotal(invoice: Invoice, ht: boolean = false): number {
-  const isTva = getIsTVA(invoice);
+export async function getInvoiceTotal(invoice: Invoice, ht: boolean = false): Promise<number> {
+  const isTva = await getIsTVA(invoice);
   const taxes = computeTaxes(invoice);
   return round(isTva && !ht ? taxes.total.ttc : taxes.total.ht);
 }

@@ -4,6 +4,7 @@ import { atomWithHash } from 'jotai-location';
 import styled from 'styled-components';
 import { Customer, store } from '../../../backend';
 import { SalesGraph } from '../../../component/modules/graph/SalesGraph';
+import { useData } from '../../../context/DataContext';
 import { DeliveryCard, InvoiceCard } from './DocumentCard';
 
 interface CustomerDocumentsProps {
@@ -13,12 +14,12 @@ interface CustomerDocumentsProps {
 const tabAtom = atomWithHash('tab', 0);
 
 export function CustomerDocuments({ customer }: CustomerDocumentsProps) {
-  const invoices = store.invoices
+  const { getClientDeliveries } = useData();
+
+  const clientInvoices = store.invoices
     .filter((invoice) => invoice.customerId === customer.id)
     .sort((a, b) => b.documentId.localeCompare(a.documentId));
-  const deliveries = store.deliveries
-    .filter((delivery) => delivery.customerId === customer.id)
-    .sort((a, b) => b.documentId.localeCompare(a.documentId));
+  const clientDeliveries = getClientDeliveries(customer.id);
 
   const [tab, setTab] = useAtom(tabAtom);
 
@@ -48,8 +49,8 @@ export function CustomerDocuments({ customer }: CustomerDocumentsProps) {
         {tab === 0 && (
           <StyledTab>
             <DocumentWrapper>
-              {deliveries.length === 0 && <div>Aucun bon de livraison</div>}
-              {deliveries.map((delivery, index) => {
+              {clientDeliveries.length === 0 && <div>Aucun bon de livraison</div>}
+              {clientDeliveries.map((delivery, index) => {
                 return (
                   <DeliveryCard
                     key={index}
@@ -63,8 +64,8 @@ export function CustomerDocuments({ customer }: CustomerDocumentsProps) {
         {tab === 1 && (
           <StyledTab>
             <DocumentWrapper>
-              {invoices.length === 0 && <div>Aucune facture</div>}
-              {invoices.map((invoice) => (
+              {clientInvoices.length === 0 && <div>Aucune facture</div>}
+              {clientInvoices.map((invoice) => (
                 <InvoiceCard invoice={invoice} />
               ))}
             </DocumentWrapper>

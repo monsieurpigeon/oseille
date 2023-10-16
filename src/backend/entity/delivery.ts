@@ -1,16 +1,15 @@
 import { documentIdFormatter } from '../../utils/formatter';
 import { relDb } from '../service/database';
 import { store } from '../service/store';
-import { Customer, getCustomerById } from './customer';
 import { loadFarm, updateDocumentId } from './farm';
 import { ProductWithPrice, getProductById } from './product';
 
 export interface Delivery {
   id: string;
+  _rev: string;
   isOrder?: boolean;
   isTVA: boolean;
   deliveredAt: string;
-  customer: Customer;
   customerId: string;
   documentId: string;
   invoiceId?: string;
@@ -41,18 +40,7 @@ export interface DeliveryLineInput {
   totalPrice?: number;
 }
 
-export async function loadDeliveries() {
-  const result = await relDb.rel.find('delivery');
-  store.deliveries = result.deliveries
-    .map((delivery: Delivery) => ({
-      ...delivery,
-      deliveredAt: new Date(delivery.deliveredAt).toISOString().split('T')[0],
-    }))
-    .sort((a: Delivery, b: Delivery) => a.documentId.localeCompare(b.documentId));
-}
-
 export const addDelivery = async (delivery: DeliveryInput) => {
-  const customer = await getCustomerById(delivery.customerId);
   await loadFarm();
   const promise = async () => {
     const lines = await Promise.all(
@@ -64,7 +52,6 @@ export const addDelivery = async (delivery: DeliveryInput) => {
     return {
       ...delivery,
       isTVA: store.farm?.isTVA === 'oui',
-      customer,
       lines: lines.filter((p) => !!p).map((l) => ({ ...l, quantity: +l.quantity })),
     };
   };
@@ -104,7 +91,6 @@ export const removeInvoiceId = (deliveryId: string) => {
 };
 
 export const updateDelivery = async (delivery: Delivery, input: DeliveryInput) => {
-  const customer = await getCustomerById(input.customerId);
   await loadFarm();
   const promise = async () => {
     const lines = await Promise.all(
@@ -115,8 +101,7 @@ export const updateDelivery = async (delivery: Delivery, input: DeliveryInput) =
     );
     return {
       ...input,
-      customer,
-      lines: lines.filter((p) => !!p).map((l) => ({ ...l, quantity: +l.quantity })),
+      lines: lines.filter((p) => !!p).map((l) => ({ ...l, quantity: +l.quantity })), // TODO : check if quantity is a number even on past deliveries
     };
   };
 
@@ -134,3 +119,22 @@ export const deleteDelivery = (delivery: Delivery) => {
 export const confirmOrder = (delivery: Delivery) => {
   return relDb.rel.save('delivery', { ...delivery, isOrder: false });
 };
+
+export const getDeliveries = (ids?: string[]) =>
+  relDb.rel.find('delivery', ids).then((doc) =>
+    doc.deliveries
+      .map((delivery: Delivery) => ({
+        ...delivery,
+        deliveredAt: new Date(delivery.deliveredAt).toISOString().split('T')[0],
+      }))
+      .sort((a: Delivery, b: Delivery) => a.documentId.localeCompare(b.documentId)),
+  );
+
+export const getDeliveryById = (id: string) => relDb.rel.find('delivery', id).then((doc) => doc.deliveries[0]);
+
+export const onDeliveriesChange = (listener: (value: PouchDB.Core.ChangesResponseChange<{}>) => any) =>
+  relDb.changes({ since: 'now', live: true }).on('change', (e) => {
+    if (e.id.split('_')[0] === 'delivery') {
+      listener(e);
+    }
+  });

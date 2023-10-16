@@ -7,7 +7,7 @@ import { DetailButton, EditButton } from '../../component/buttons';
 import { MyHeader } from '../../component/layout/page-layout/MyHeader';
 import { DeliveryDescriptionLine } from '../../component/shared/Delivery';
 import { DeliveryDescription } from '../../component/table/DeliveryDescription';
-import { useData } from '../../utils/DataContext';
+import { useData } from '../../context/DataContext';
 import { DeliveryDeleteButton } from './button/DeliveryDeleteButton';
 import { DeliveryPrintButton } from './button/DeliveryPrintButton';
 
@@ -15,10 +15,10 @@ export const DeliveryDetail = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const snap = useSnapshot(store);
-  const { getCustomer } = useData();
+  const { getCustomer, getDelivery, deliveries } = useData();
 
-  const selected = useMemo(() => (id ? store.deliveries.find((el) => el.id === id) : undefined), [id, snap]);
-  const currentCustomer = getCustomer(selected?.customerId);
+  const selected = useMemo(() => (id ? getDelivery(id) : undefined), [id, deliveries]);
+  const currentCustomer = getCustomer(selected?.customerId || '');
 
   if (!currentCustomer) return null;
   const isEditable = !selected?.invoiceId;

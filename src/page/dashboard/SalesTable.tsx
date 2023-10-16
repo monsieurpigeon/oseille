@@ -4,7 +4,7 @@ import { useMemo, useState } from 'react';
 import styled from 'styled-components';
 import { useSnapshot } from 'valtio';
 import { store } from '../../backend';
-import { useData } from '../../utils/DataContext';
+import { useData } from '../../context/DataContext';
 import { priceFormatter } from '../../utils/formatter';
 
 const StyledTable = styled.table`
@@ -45,21 +45,22 @@ const StyledTable = styled.table`
 
 export function SalesTable() {
   const snap = useSnapshot(store);
-  const { products, getProduct, customers } = useData();
+  const { products, getProduct, customers, getDeliveriesByIds, getCustomer } = useData();
 
   const [show, setShow] = useState(false);
 
   const sales = useMemo(() => {
     return store.invoices.flatMap((invoice) => {
-      const deliveries = invoice.deliveryIds.map((id) => store.deliveries.find((d) => d.id === id));
+      const deliveries = getDeliveriesByIds(invoice.deliveryIds);
+      const customer = getCustomer(invoice.customerId);
       const products = deliveries.flatMap((delivery) => {
         return delivery?.lines.map((line) => {
           const product = getProduct(line.product.id);
           return {
             product: product?.name || 'defaultProduct',
             productId: product?.id || '000',
-            customer: invoice.customer.name,
-            customerId: invoice.customer.id,
+            customer: customer?.name,
+            customerId: customer?.id,
             totalPrice: line.quantity * line.price || 0,
           };
         });

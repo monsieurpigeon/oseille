@@ -1,5 +1,5 @@
 import { Center } from '@chakra-ui/react';
-import { useData } from '../../utils/DataContext';
+import { useData } from '../../context/DataContext';
 
 export function CustomerAll() {
   const { customers } = useData();

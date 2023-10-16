@@ -1,14 +1,16 @@
 import { useEffect, useState } from 'react';
-import { Customer, getCustomers, onProductsChange } from '../backend';
+import { Customer, getCustomers, onCustomersChange } from '../backend';
 
 export function useCustomers() {
   const [customers, setCustomers] = useState<Customer[]>([]);
-  const refreshCustomers = () => getCustomers().then(setCustomers);
+  const refreshCustomers = () => {
+    console.log('REFRESH CUSTOMER');
+    getCustomers().then(setCustomers);
+  };
 
   useEffect(() => {
-    console.log('REFRESH CUSTOMER');
     refreshCustomers();
-    const observer = onProductsChange(refreshCustomers);
+    const observer = onCustomersChange(refreshCustomers);
     return () => {
       observer.cancel();
     };

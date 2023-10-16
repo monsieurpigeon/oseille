@@ -3,7 +3,7 @@ import { Outlet, useNavigate, useParams } from 'react-router-dom';
 import styled from 'styled-components';
 import { DetailButton, EditButton } from '../../../component/buttons';
 import { MyHeader } from '../../../component/layout/page-layout/MyHeader';
-import { useData } from '../../../utils/DataContext';
+import { useData } from '../../../context/DataContext';
 import { CustomerDisplay } from './CustomerDisplay';
 import { CustomerDocuments } from './CustomerDocuments';
 

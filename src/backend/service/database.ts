@@ -1,10 +1,8 @@
 import PouchDb from 'pouchdb';
 import find from 'pouchdb-find';
 import rel from 'relational-pouch';
-import { loadDeliveries } from '../entity/delivery';
 import { addFarm, loadFarm } from '../entity/farm';
 import { loadInvoices } from '../entity/invoice';
-import { loadPrices } from '../entity/price';
 
 PouchDb.plugin(find).plugin(rel);
 
@@ -72,10 +70,8 @@ export const initDatabase = async () => {
 };
 
 export const loadDatabase = () => {
-  loadDeliveries();
   loadInvoices();
   loadFarm();
-  loadPrices();
 };
 
 export const destroyDatabase = async () => {

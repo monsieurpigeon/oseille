@@ -39,6 +39,7 @@ export const getCustomerById = (id: string) => relDb.rel.find('customer', id).th
 
 export const onCustomersChange = (listener: (value: PouchDB.Core.ChangesResponseChange<{}>) => any) =>
   relDb.changes({ since: 'now', live: true }).on('change', (e) => {
-    console.log(e);
-    listener(e);
+    if (e.id.split('_')[0] === 'customer') {
+      listener(e);
+    }
   });

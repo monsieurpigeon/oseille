@@ -1,9 +1,8 @@
 import { getIsTVA } from '../../../../utils/aggregations';
 import { TVA_RATES } from '../../../../utils/defaults';
 import { dateFormatter, priceFormatter } from '../../../../utils/formatter';
-import { Delivery, DeliveryLine } from '../../../entity/delivery';
+import { Delivery, DeliveryLine, getDeliveries } from '../../../entity/delivery';
 import { ProductWithPrice } from '../../../entity/product';
-import { store } from '../../store';
 import { DocumentType } from '../pdf';
 
 export const lines = (payload: any, type: DocumentType) => {
@@ -42,9 +41,10 @@ export const lines = (payload: any, type: DocumentType) => {
 
   if (type === 'Invoice') {
     const isTVA = getIsTVA(payload);
-    const deliveries = payload.deliveries
+    const deliveries = await getDeliveries(payload.deliveries);
+    const invoiceDeliveries = payload.deliveries
       .map((id: string) => {
-        return store.deliveries.find((d) => d.id === id);
+        return deliveries.find((d: Delivery) => d.id === id);
       })
       .sort((a: Delivery, b: Delivery) => a.documentId.localeCompare(b.documentId));
     return {
@@ -72,7 +72,7 @@ export const lines = (payload: any, type: DocumentType) => {
                 ]
               : []),
           ],
-          ...deliveries.flatMap((delivery: Delivery) => {
+          ...invoiceDeliveries.flatMap((delivery: Delivery) => {
             return [
               [
                 { text: `${delivery?.documentId} - ${dateFormatter(delivery?.deliveredAt || '')}`, bold: true },

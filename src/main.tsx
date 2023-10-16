@@ -6,9 +6,9 @@ import { RouterProvider } from 'react-router-dom';
 import './backend';
 import { ConfirmContextProvider } from './component/modal/confirm-modal/ConfirmContext';
 import { SideKickContextProvider } from './component/modules/sidekick/SideKickContext';
+import { DataProvider } from './context/DataContext';
 import './index.css';
 import { router } from './router';
-import { DataProvider } from './utils/DataContext';
 
 const options = {
   api_host: import.meta.env.VITE_POSTHOG_HOST,

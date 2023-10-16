@@ -1,5 +1,4 @@
 import { relDb } from '../service/database';
-import { store } from '../service/store';
 import { Customer } from './customer';
 import { Product } from './product';
 
@@ -17,11 +16,6 @@ export interface PriceInput {
   product: Product;
 }
 
-export async function loadPrices() {
-  const result = await relDb.rel.find('price');
-  store.prices = result.prices;
-}
-
 export const addPrice = (price: PriceInput) => {
   return relDb.rel.save('price', price);
 };
@@ -30,10 +24,15 @@ export const updatePrice = (price: Price) => {
   return relDb.rel.save('price', price);
 };
 
-export const getPrice = ({ customer, product }: { customer: string; product: string }) => {
-  return store.prices.find((price) => price.customer === customer && price.product === product);
-};
-
 export const deletePrice = (price: Price) => {
   return relDb.rel.del('price', price);
 };
+
+export const getPrices = () => relDb.rel.find('price').then((doc) => doc.prices);
+
+export const onPricesChange = (listener: (value: PouchDB.Core.ChangesResponseChange<{}>) => any) =>
+  relDb.changes({ since: 'now', live: true }).on('change', (e) => {
+    if (e.id.split('_')[0] === 'price') {
+      listener(e);
+    }
+  });

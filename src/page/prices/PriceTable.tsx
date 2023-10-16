@@ -2,7 +2,7 @@ import { Table, TableContainer, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/reac
 import { useMemo, useState } from 'react';
 import { useSnapshot } from 'valtio';
 import { Price, store } from '../../backend';
-import { useData } from '../../utils/DataContext';
+import { useData } from '../../context/DataContext';
 import { priceFormatter } from '../../utils/formatter';
 import { PriceEmpty } from './PriceEmpty';
 import { PriceNumberInput } from './PriceNumberInput';
@@ -13,17 +13,17 @@ type PriceList = { [key: string]: { [key: string]: Price } };
 export function PriceTable() {
   const snap = useSnapshot(store);
   const [currentEdit, setCurrentEdit] = useState(['', '']);
-  const { products, customers } = useData();
+  const { products, customers, prices } = useData();
   const [customerLength, productLength] = [customers.length, products.length];
 
   const priceList: PriceList = useMemo(
     () =>
-      store.prices.reduce((acc, price) => {
+      prices.reduce((acc, price) => {
         if (!acc[price.product]) acc[price.product] = {};
         acc[price.product][price.customer] = price;
         return acc;
       }, {} as PriceList),
-    [store.prices],
+    [prices],
   );
 
   if (customerLength === 0 || productLength === 0) {

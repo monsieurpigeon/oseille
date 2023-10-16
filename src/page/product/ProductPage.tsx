@@ -9,7 +9,7 @@ import { MyScrollList } from '../../component/layout/page-layout/MyScrollList';
 import { MySide } from '../../component/layout/page-layout/MySide';
 import { InfoModal } from '../../component/modal/InfoModal';
 import { MyH1 } from '../../component/typography/MyFont';
-import { useData } from '../../utils/DataContext';
+import { useData } from '../../context/DataContext';
 import { DEFAULT_TAX } from '../../utils/defaults';
 import { TVAFormatter } from '../../utils/formatter';
 import { useFarmParameters } from '../../utils/hooks/useFarmParameters';

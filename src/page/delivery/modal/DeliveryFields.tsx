@@ -5,35 +5,35 @@ import { useNavigate } from 'react-router-dom';
 import { useSnapshot } from 'valtio';
 import { DeliveryInput, store } from '../../../backend';
 import { MyNumberInput } from '../../../component/form/MyNumberInput';
-import { useData } from '../../../utils/DataContext';
+import { useData } from '../../../context/DataContext';
 import { priceFormatter } from '../../../utils/formatter';
 import { useFarmParameters } from '../../../utils/hooks/useFarmParameters';
 
 export function DeliveryFields({ watch, control, register, fields, append, remove, setValue }: any) {
   const snap = useSnapshot(store);
   const navigate = useNavigate();
-  const { products, customers } = useData();
+  const { products, customers, prices } = useData();
 
   const watchCustomer = watch('customerId');
   const { isTVA } = useFarmParameters();
 
-  const { availableProducts, prices } = useMemo(() => {
-    const productPrices = store.prices.filter((price) => price.customer === watchCustomer);
+  const { availableProducts, availablePrices } = useMemo(() => {
+    const productPrices = prices.filter((price) => price.customer === watchCustomer);
     const productsList = productPrices.map((price) => price.product);
-    const defaultPrices = store.prices.filter(
+    const defaultPrices = prices.filter(
       (price) => price.customer === 'DEFAULT' && !productsList.includes(price.product),
     );
 
-    const prices = [...productPrices, ...defaultPrices];
+    const availablePrices = [...productPrices, ...defaultPrices];
 
     const availableProducts = products
-      .filter((product) => prices.map((price) => price.product).includes(product.id))
+      .filter((product) => availablePrices.map((price) => price.product).includes(product.id))
       .map((product) => ({
         ...product,
-        price: prices.find((price) => price.product === product.id)?.value || 0,
+        price: availablePrices.find((price) => price.product === product.id)?.value || 0,
       }));
 
-    return { availableProducts, prices };
+    return { availableProducts, availablePrices };
   }, [watchCustomer]);
 
   return (
@@ -104,7 +104,10 @@ export function DeliveryFields({ watch, control, register, fields, append, remov
                 <Select
                   {...register(`lines.${index}.productId`, {
                     onChange: (e: any) => {
-                      setValue(`lines.${index}.price`, prices.find((price) => price.product === e.target.value)?.value);
+                      setValue(
+                        `lines.${index}.price`,
+                        availablePrices.find((price) => price.product === e.target.value)?.value,
+                      );
                     },
                   })}
                 >

@@ -9,7 +9,7 @@ import { MyScrollList } from '../../component/layout/page-layout/MyScrollList';
 import { DeliveryDescriptionLine } from '../../component/shared/Delivery';
 import { DeliveryDescription } from '../../component/table/DeliveryDescription';
 import { InvoiceTotals } from '../../component/table/InvoiceTotals';
-import { useData } from '../../utils/DataContext';
+import { useData } from '../../context/DataContext';
 import { dateFormatter } from '../../utils/formatter';
 import { InvoiceDeleteButton } from './button/InvoiceDeleteButton';
 import { InvoicePrintButton } from './button/InvoicePrintButton';
@@ -19,7 +19,7 @@ export const InvoiceDetail = () => {
   const snap = useSnapshot(store);
   const selected = useMemo(() => (id ? store.invoices.find((el) => el.id === id) : undefined), [id, snap]);
   const navigate = useNavigate();
-  const { getCustomer } = useData();
+  const { getCustomer, getDelivery } = useData();
   const currentCustomer = useMemo(() => getCustomer(selected?.customerId || ''), [selected?.customerId]);
 
   if (!selected) return null;
@@ -79,7 +79,7 @@ export const InvoiceDetail = () => {
       </Flex>
       <MyScrollList>
         {selected.deliveries.map((id) => {
-          const delivery = store.deliveries.find((delivery) => delivery.id === id);
+          const delivery = getDelivery(id);
           if (!delivery) return null;
 
           return (

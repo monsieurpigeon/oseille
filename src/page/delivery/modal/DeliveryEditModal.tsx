@@ -2,10 +2,11 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useMemo, useRef } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Delivery, DeliveryInput, store, updateDelivery } from '../../../backend';
+import { Delivery, DeliveryInput, updateDelivery } from '../../../backend';
 import { MyModal } from '../../../component/modal/MyModal';
 import { useSideKick } from '../../../component/modules/sidekick/SideKickContext';
 import { SideKickFeeling } from '../../../component/modules/sidekick/enums';
+import { useData } from '../../../context/DataContext';
 import { deliverySchema } from './DeliveryCreateModal';
 import { DeliveryFields } from './DeliveryFields';
 
@@ -15,7 +16,8 @@ interface DeliveryEditModalProps {
 
 export function DeliveryEditModal() {
   const { id } = useParams();
-  const delivery = useMemo(() => (id ? store.deliveries.find((el) => el.id === id) : undefined), [id]);
+  const { getDelivery, deliveries } = useData();
+  const delivery = useMemo(() => (id ? getDelivery(id) : undefined), [id, deliveries]);
   if (!delivery) return null;
 
   const isOrder = location.pathname.includes('order');

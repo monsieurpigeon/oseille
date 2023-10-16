@@ -1,11 +1,10 @@
 import { Center } from '@chakra-ui/react';
 import { useMemo } from 'react';
-import { useSnapshot } from 'valtio';
-import { store } from '../../backend';
+import { useData } from '../../context/DataContext';
 
 export function DeliveryAll() {
-  const snap = useSnapshot(store);
-  const length = useMemo(() => store.deliveries.filter((delivery) => !delivery.invoiceId).length, [snap]);
+  const { deliveries } = useData();
+  const length = useMemo(() => deliveries.filter((delivery) => !delivery.invoiceId).length, [deliveries]);
 
   return <Center>{`${length} bon${length > 1 ? 's' : ''} de livraison à facturer`}</Center>;
 }

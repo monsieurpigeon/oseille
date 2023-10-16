@@ -14,7 +14,7 @@ import { MyScrollList } from '../../component/layout/page-layout/MyScrollList';
 import { MySide } from '../../component/layout/page-layout/MySide';
 import { InfoModal } from '../../component/modal/InfoModal';
 import { MyH1 } from '../../component/typography/MyFont';
-import { useData } from '../../utils/DataContext';
+import { useData } from '../../context/DataContext';
 import { dateFormatter } from '../../utils/formatter';
 import { InvoiceCreateModal } from '../invoice/modal/InvoiceCreateModal';
 
@@ -25,11 +25,11 @@ export function DeliveryPage() {
   }, []);
   const snap = useSnapshot(store);
   const { id } = useParams();
-  const { customers } = useData();
+  const { customers, getDelivery, deliveries } = useData();
 
   const navigate = useNavigate();
 
-  const selected = useMemo(() => (id ? store.deliveries.find((el) => el.id === id) : undefined), [id, snap]);
+  const selected = useMemo(() => (id ? getDelivery(id) : undefined), [id, snap]);
 
   return (
     <MyPage>
@@ -67,7 +67,7 @@ export function DeliveryPage() {
           </Button>
         </MyHeader>
         <MyScrollList>
-          {store.deliveries.length === 0 && (
+          {deliveries.length === 0 && (
             <MyScrollList.Empty onClick={() => navigate('create')}>Ajouter ma première livraison</MyScrollList.Empty>
           )}
           {customers.map((customer) => (
@@ -90,18 +90,16 @@ export function DeliveryPage() {
 function DeliveryCustomer({ customer, selected }: any) {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { getClientDeliveries } = useData();
 
   const [toInvoice, setToInvoice] = useState<{ [key: string]: boolean }>({});
-  const deliveries = store.deliveries
-    .filter((delivery) => delivery.customerId === customer.id)
-    .filter((delivery) => {
-      const date = new Date(delivery.deliveredAt);
-      const today = addDays(new Date(), -2 * 7);
-      return !delivery.invoiceId || date > today;
-    })
-    .sort((a, b) => b.documentId.localeCompare(a.documentId));
+  const customerDeliveries = getClientDeliveries(customer.id).filter((delivery) => {
+    const date = new Date(delivery.deliveredAt);
+    const today = addDays(new Date(), -2 * 7);
+    return !delivery.invoiceId || date > today;
+  });
 
-  if (deliveries.length === 0) {
+  if (customerDeliveries.length === 0) {
     return null;
   }
   return (
@@ -115,7 +113,7 @@ function DeliveryCustomer({ customer, selected }: any) {
         />
       }
     >
-      {deliveries.map((delivery) => (
+      {customerDeliveries.map((delivery) => (
         <ListItem
           isSelected={selected?.id === delivery.id}
           key={delivery.id}

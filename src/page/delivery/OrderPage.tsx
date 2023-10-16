@@ -3,8 +3,7 @@ import { useAtom } from 'jotai';
 import { usePostHog } from 'posthog-js/react';
 import { useEffect, useMemo } from 'react';
 import { Outlet, useNavigate, useParams } from 'react-router-dom';
-import { useSnapshot } from 'valtio';
-import { Delivery, store } from '../../backend';
+import { Delivery } from '../../backend';
 import { ListItem } from '../../component/card/ListItem';
 import { ListItemGroup } from '../../component/card/ListItemGroup';
 import { MyHeader } from '../../component/layout/page-layout/MyHeader';
@@ -13,7 +12,7 @@ import { MyScrollList } from '../../component/layout/page-layout/MyScrollList';
 import { MySide } from '../../component/layout/page-layout/MySide';
 import { InfoModal } from '../../component/modal/InfoModal';
 import { MyH1 } from '../../component/typography/MyFont';
-import { useData } from '../../utils/DataContext';
+import { useData } from '../../context/DataContext';
 import { dateFormatter } from '../../utils/formatter';
 import { selectedOrdersAtom } from './useSelectOrders';
 
@@ -23,13 +22,12 @@ export function OrderPage() {
     posthog?.capture('order_page_viewed');
   }, []);
 
-  const snap = useSnapshot(store);
+  const { deliveries, getDelivery } = useData();
   const { id } = useParams();
-
   const navigate = useNavigate();
 
-  const selected = useMemo(() => (id ? store.deliveries.find((el) => el.id === id) : undefined), [id, snap]);
-  const orders = store.deliveries.filter((delivery) => delivery.isOrder);
+  const selected = useMemo(() => (id ? getDelivery(id) : undefined), [id, deliveries]);
+  const orders = deliveries.filter((delivery) => delivery.isOrder);
   const dateList = orders.map((delivery) => delivery.deliveredAt).sort();
   const dateSet = new Set(dateList);
 

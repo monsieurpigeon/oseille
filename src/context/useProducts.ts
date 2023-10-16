@@ -3,10 +3,12 @@ import { Product, getProducts, onProductsChange } from '../backend';
 
 export function useProducts() {
   const [products, setProducts] = useState<Product[]>([]);
-  const refreshProducts = () => getProducts().then(setProducts);
+  const refreshProducts = () => {
+    console.log('REFRESH PRODUCT');
+    getProducts().then(setProducts);
+  };
 
   useEffect(() => {
-    console.log('REFRESH PRODUCT');
     refreshProducts();
     const observer = onProductsChange(refreshProducts);
     return () => {

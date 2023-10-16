@@ -7,7 +7,7 @@ import { MyMessage } from '../../../component/MyMessage';
 import { MyModal } from '../../../component/modal/MyModal';
 import { useSideKick } from '../../../component/modules/sidekick/SideKickContext';
 import { SideKickFeeling } from '../../../component/modules/sidekick/enums';
-import { useData } from '../../../utils/DataContext';
+import { useData } from '../../../context/DataContext';
 import { customerSchema } from './CustomerCreateModal';
 import { CustomerFields } from './CustomerFields';
 
