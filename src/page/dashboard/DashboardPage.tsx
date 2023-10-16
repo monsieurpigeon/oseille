@@ -1,3 +1,4 @@
+import { Box, Stat, StatGroup, StatLabel, StatNumber } from '@chakra-ui/react';
 import { usePostHog } from 'posthog-js/react';
 import { useEffect, useMemo } from 'react';
 import { useSnapshot } from 'valtio';
@@ -5,7 +6,6 @@ import { Invoice, isInvoicePaid, store } from '../../backend';
 import { MySimpleLayout } from '../../component/layout/page-layout/MySimpleLayout';
 import { getInvoiceTotal } from '../../utils/aggregations';
 import { priceFormatter } from '../../utils/formatter';
-import { MetricCard, StyledMetricCards } from './MetricCards';
 import { SalesTable } from './SalesTable';
 
 function getValues(invoices: Invoice[]) {
@@ -33,18 +33,23 @@ export function DashboardPage() {
 
   return (
     <MySimpleLayout>
-      <StyledMetricCards>
-        <MetricCard
-          title="Factures en attente"
-          value={priceFormatter(invoiceWaiting.money)}
-          subValue={`${invoiceWaiting.quantity}`}
-        />
-        <MetricCard
-          title="Factures payées"
-          value={priceFormatter(invoicePaid.money)}
-          subValue={`${invoicePaid.quantity}`}
-        />
-      </StyledMetricCards>
+      <Box width={400}>
+        <StatGroup>
+          <Stat>
+            <StatLabel>{`${invoiceWaiting.quantity} facture${
+              invoiceWaiting.quantity > 1 && 's'
+            } en attente`}</StatLabel>
+            <StatNumber>{priceFormatter(invoiceWaiting.money)}</StatNumber>
+          </Stat>
+          <Stat>
+            <StatLabel>{`${invoicePaid.quantity} facture${invoicePaid.quantity > 1 && 's'} payée${
+              invoicePaid.quantity > 1 && 's'
+            }`}</StatLabel>
+            <StatNumber>{priceFormatter(invoicePaid.money)}</StatNumber>
+          </Stat>
+        </StatGroup>
+      </Box>
+
       <SalesTable />
     </MySimpleLayout>
   );
