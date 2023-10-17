@@ -19,9 +19,8 @@ export const InvoiceDetail = () => {
   const snap = useSnapshot(store);
   const selected = useMemo(() => (id ? store.invoices.find((el) => el.id === id) : undefined), [id, snap]);
   const navigate = useNavigate();
-  const { getCustomer, getDelivery } = useData();
+  const { getCustomer } = useData();
   const currentCustomer = useMemo(() => getCustomer(selected?.customerId || ''), [selected?.customerId]);
-
   if (!selected) return null;
   if (!currentCustomer) return null;
   return (
@@ -78,8 +77,7 @@ export const InvoiceDetail = () => {
         <InvoiceTotals invoice={selected} />
       </Flex>
       <MyScrollList>
-        {selected.deliveries.map((id) => {
-          const delivery = getDelivery(id);
+        {selected.deliveries.map((delivery) => {
           if (!delivery) return null;
 
           return (

@@ -75,7 +75,7 @@ export function SalesTable() {
       ...memo,
       [sale.productId]: {
         ...memo[sale.productId],
-        [sale.customerId]: (memo[sale.productId]?.[sale.customerId] || 0) + sale.totalPrice,
+        [sale.customerId as string]: (memo[sale.productId]?.[sale.customerId as string] || 0) + sale.totalPrice,
       },
     };
   }, {} as { [key: string]: { [key: string]: number } });

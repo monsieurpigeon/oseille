@@ -1,7 +1,7 @@
 import { getIsTVA } from '../../../../utils/aggregations';
 import { TVA_RATES } from '../../../../utils/defaults';
 import { dateFormatter, priceFormatter } from '../../../../utils/formatter';
-import { Delivery, DeliveryLine, getDeliveries } from '../../../entity/delivery';
+import { Delivery, DeliveryLine } from '../../../entity/delivery';
 import { ProductWithPrice } from '../../../entity/product';
 import { DocumentType } from '../pdf';
 
@@ -41,11 +41,7 @@ export const lines = (payload: any, type: DocumentType) => {
 
   if (type === 'Invoice') {
     const isTVA = getIsTVA(payload);
-    const deliveries = await getDeliveries(payload.deliveries);
     const invoiceDeliveries = payload.deliveries
-      .map((id: string) => {
-        return deliveries.find((d: Delivery) => d.id === id);
-      })
       .sort((a: Delivery, b: Delivery) => a.documentId.localeCompare(b.documentId));
     return {
       layout: 'lightHorizontalLines',
@@ -65,11 +61,11 @@ export const lines = (payload: any, type: DocumentType) => {
             },
             ...(isTVA
               ? [
-                  {
-                    text: `Code TVA`,
-                    alignment: 'right',
-                  },
-                ]
+                {
+                  text: `Code TVA`,
+                  alignment: 'right',
+                },
+              ]
               : []),
           ],
           ...invoiceDeliveries.flatMap((delivery: Delivery) => {
@@ -108,11 +104,11 @@ const productLine = (el: DeliveryLine, isTVA: boolean) => {
     { text: priceFormatter(el.product.price * el.quantity), alignment: 'right' },
     ...(isTVA
       ? [
-          {
-            text: TVA_RATES.find((rate) => rate.value === el.product.tva)?.code || '1',
-            alignment: 'right',
-          },
-        ]
+        {
+          text: TVA_RATES.find((rate) => rate.value === el.product.tva)?.code || '1',
+          alignment: 'right',
+        },
+      ]
       : []),
   ];
 };

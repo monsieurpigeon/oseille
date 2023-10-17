@@ -2,7 +2,7 @@ import { documentIdFormatter } from '../../utils/formatter';
 import { relDb } from '../service/database';
 import { DocumentType } from '../service/pdf/pdf';
 import { store } from '../service/store';
-import { Delivery, addInvoiceId, confirmOrder, removeInvoiceId } from './delivery';
+import { Delivery, addInvoiceId, confirmOrder, getDeliveries, removeInvoiceId } from './delivery';
 import { updateDocumentId } from './farm';
 
 export enum PaymentMode {
@@ -30,7 +30,7 @@ export interface Invoice {
   documentId: string;
   customerId: string;
   deliveryIds: string[];
-  deliveries: string[];
+  deliveries: Delivery[];
   createdAt: string;
   notes: string;
   isPaid?: boolean;
@@ -62,14 +62,17 @@ export interface InvoicePaymentInput {
 
 export async function loadInvoices() {
   const result = await relDb.rel.find('invoice');
-  store.invoices = result.invoices
-    .map((invoice: Invoice) => ({
-      ...invoice,
-      createdAt: new Date(invoice.createdAt).toISOString().split('T')[0],
-    }))
-    .sort((a: Invoice, b: Invoice) => {
-      return b.documentId.localeCompare(a.documentId);
-    });
+  const invoicesPromise = result.invoices
+    .map(async (invoice: Invoice) => {
+      const deliveries = await getDeliveries(invoice.deliveryIds);
+      return {
+        ...invoice,
+        deliveries,
+        createdAt: new Date(invoice.createdAt).toISOString().split('T')[0],
+      };
+    })
+  const invoices = await Promise.all(invoicesPromise);
+  store.invoices = invoices.sort((a: Invoice, b: Invoice) => b.documentId.localeCompare(a.documentId));
 }
 
 export const addInvoice = async (deliveries: Delivery[], createdAt: string, notes: string) => {

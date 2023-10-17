@@ -1,11 +1,9 @@
-import { Delivery, Invoice, getDeliveries, store } from '../backend';
+import { Delivery, Invoice } from '../backend';
 import { round } from './compute';
 import { DEFAULT_TAX, TVA_RATES } from './defaults';
 
-export async function getIsTVA(invoice: Invoice): Promise<boolean> {
-  const deliveries = await getDeliveries(invoice.deliveries);
-  const isTVAArray = invoice.deliveries.map((id) => {
-    const delivery = deliveries.find((d: Delivery) => d.id === id);
+export function getIsTVA(invoice: Invoice): boolean {
+  const isTVAArray = invoice.deliveries.map((delivery) => {
     if (!delivery) return null;
     return delivery.isTVA;
   });
@@ -16,8 +14,8 @@ export function getDeliveryTotal(delivery: Delivery): number {
   return delivery.lines.reduce((acc, el) => acc + el.product.price * el.quantity, 0);
 }
 
-export async function getInvoiceTotal(invoice: Invoice, ht: boolean = false): Promise<number> {
-  const isTva = await getIsTVA(invoice);
+export function getInvoiceTotal(invoice: Invoice, ht: boolean = false): number {
+  const isTva = getIsTVA(invoice);
   const taxes = computeTaxes(invoice);
   return round(isTva && !ht ? taxes.total.ttc : taxes.total.ht);
 }
@@ -31,8 +29,7 @@ interface TaxLine {
 
 export const computeTaxes = (invoice: Invoice): { total: TaxLine; detail: TaxLine[] } => {
   const deliveryLines = invoice.deliveries
-    .flatMap((id: string) => {
-      const delivery = store.deliveries.find((d) => d.id === id);
+    .flatMap((delivery) => {
       if (!delivery) return null;
       return delivery.lines.map((line) => ({
         value: line.price * line.quantity,

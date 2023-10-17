@@ -1,6 +1,7 @@
 import { documentIdFormatter } from '../../utils/formatter';
 import { relDb } from '../service/database';
 import { store } from '../service/store';
+import { Customer, getCustomerById } from './customer';
 import { loadFarm, updateDocumentId } from './farm';
 import { ProductWithPrice, getProductById } from './product';
 
@@ -10,6 +11,7 @@ export interface Delivery {
   isOrder?: boolean;
   isTVA: boolean;
   deliveredAt: string;
+  customer: Customer;
   customerId: string;
   documentId: string;
   invoiceId?: string;
@@ -123,10 +125,14 @@ export const confirmOrder = (delivery: Delivery) => {
 export const getDeliveries = (ids?: string[]) =>
   relDb.rel.find('delivery', ids).then((doc) =>
     doc.deliveries
-      .map((delivery: Delivery) => ({
-        ...delivery,
-        deliveredAt: new Date(delivery.deliveredAt).toISOString().split('T')[0],
-      }))
+      .map((delivery: Delivery) => {
+        const customer = getCustomerById(delivery.customerId);
+        return {
+          ...delivery,
+          customer,
+          deliveredAt: new Date(delivery.deliveredAt).toISOString().split('T')[0],
+        }
+      })
       .sort((a: Delivery, b: Delivery) => a.documentId.localeCompare(b.documentId)),
   );
 
