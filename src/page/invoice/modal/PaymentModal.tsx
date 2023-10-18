@@ -6,6 +6,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { z } from 'zod';
 import { Invoice, InvoicePaymentInput, PaymentMode, store, updateInvoice } from '../../../backend';
 import { MyModal } from '../../../component/modal/MyModal';
+import { useConfirm } from '../../../component/modal/confirm-modal/ConfirmContext';
 import { useSideKick } from '../../../component/modules/sidekick/SideKickContext';
 import { SideKickFeeling } from '../../../component/modules/sidekick/enums';
 import { getInvoiceTotal } from '../../../utils/aggregations';
@@ -29,6 +30,7 @@ export function PaymentModal() {
   const { say } = useSideKick();
   const navigate = useNavigate();
   const handleClose = () => navigate('..');
+  const { confirm } = useConfirm();
 
   const emptyPayment = {
     paymentMode: undefined,
@@ -43,6 +45,26 @@ export function PaymentModal() {
     defaultValues: { ...emptyPayment, ...invoice?.payments?.[0] },
   });
 
+  const onRemove = async () => {
+    if (
+      await confirm({
+        title: 'Êtes-vous sûr de vouloir supprimer ce paiement ?',
+        message: 'Vous ne pourrez pas revenir en arrière',
+      })
+    ) {
+      posthog?.capture('invoice_pay_delete');
+      invoice &&
+        updateInvoice({ ...invoice, payments: undefined })
+          .then(() =>
+            say({
+              sentence: `Le paiement pour la facture ${invoice.documentId} a bien été supprimé`,
+              autoShutUp: true,
+              feeling: SideKickFeeling.GOOD,
+            }),
+          )
+          .then(handleClose);
+    }
+  };
   const onSubmit = (payment: InvoicePaymentInput) => {
     posthog?.capture('invoice_pay');
     invoice &&
@@ -63,6 +85,7 @@ export function PaymentModal() {
       cancelRef={cancelRef}
       onClose={handleClose}
       onSubmit={handleSubmit(onSubmit)}
+      onRemove={(invoice?.payments && invoice.payments.length > 0 && onRemove) || undefined}
       title={invoice?.payments && invoice.payments.length > 0 ? "Edition d'un paiement" : "Ajout d'un paiement"}
     >
       <PaymentFields

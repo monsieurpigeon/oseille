@@ -7,6 +7,7 @@ import {
   AlertDialogHeader,
   AlertDialogOverlay,
   Button,
+  Flex,
 } from '@chakra-ui/react';
 import { ReactNode } from 'react';
 
@@ -20,6 +21,7 @@ interface CreateModalProps {
   disabled?: boolean;
   confirmLabel?: string;
   cancelLabel?: string;
+  onRemove?: () => void;
 }
 
 export const MyModal = ({
@@ -32,6 +34,7 @@ export const MyModal = ({
   disabled,
   confirmLabel,
   cancelLabel,
+  onRemove,
 }: CreateModalProps) => {
   return (
     <AlertDialog
@@ -59,22 +62,32 @@ export const MyModal = ({
             <AlertDialogBody>{children}</AlertDialogBody>
 
             <AlertDialogFooter>
-              <Button
-                ref={cancelRef}
-                onClick={onClose}
-              >
-                {cancelLabel ?? 'Annuler'}
-              </Button>
-              {onSubmit && (
+              <Flex gap={2}>
+                {onRemove && (
+                  <Button
+                    onClick={onRemove}
+                    variant="ghost"
+                    colorScheme="red"
+                  >
+                    Supprimer
+                  </Button>
+                )}
                 <Button
-                  colorScheme="twitter"
-                  type="submit"
-                  ml={3}
-                  disabled={disabled}
+                  ref={cancelRef}
+                  onClick={onClose}
                 >
-                  {confirmLabel ?? 'Enregistrer'}
+                  {cancelLabel ?? 'Annuler'}
                 </Button>
-              )}
+                {onSubmit && (
+                  <Button
+                    colorScheme="twitter"
+                    type="submit"
+                    disabled={disabled}
+                  >
+                    {confirmLabel ?? 'Enregistrer'}
+                  </Button>
+                )}
+              </Flex>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialogOverlay>
