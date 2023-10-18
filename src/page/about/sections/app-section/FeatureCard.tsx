@@ -1,10 +1,10 @@
-import { Box, Card, CardBody, CardHeader, Flex, Heading, Text } from '@chakra-ui/react';
+import { Avatar, Box, Card, CardBody, CardHeader, Flex, Heading, Text } from '@chakra-ui/react';
 
 interface Feature {
   title: string;
   description: string;
   user: {
-    avatar: string;
+    color: string;
     name: string;
     farm: string;
     link: string;
@@ -29,11 +29,10 @@ export function FeatureCard({ feature }: FeatureCardProps) {
             alignItems="center"
             flexWrap="wrap"
           >
-            {/* <Avatar
-              onClick={() => console.log('click')}
+            <Avatar
+              backgroundColor={feature.user.color}
               name={feature.user.name}
-              src={feature.user?.avatar || 'fdhsjf'}
-            /> */}
+            />
 
             <Flex
               alignItems="center"

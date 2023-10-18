@@ -73,11 +73,11 @@ export function TeamSection() {
         >
           <Text>
             Je m'appelle Maxime, je suis développeur web, je vis à Bordeaux et je fabrique l'application{' '}
-            <span className="bold">Oseille</span> sur mon temps libre.
+            <Text as="b">Oseille</Text> sur mon temps libre.
           </Text>
           <Text>
-            Je m'inspire de la permaculture pour développer <span className="bold">Oseille</span> afin d'aller en
-            permanence à l'économie maximum (de temps, d'argent et de tracas) pour pouvoir la proposer gratuitement.
+            Je m'inspire de la permaculture pour développer <Text as="b">Oseille</Text> afin d'aller en permanence à
+            l'économie maximum (de temps, d'argent et de tracas) pour pouvoir la proposer gratuitement.
           </Text>
           <Text>
             Chaque problème est une opportunité potentielle, il faut voir grand et commencer petit. Les bonnes idées
@@ -102,15 +102,19 @@ export function TeamSection() {
           </Text>
           <Text>
             <span className="bold">Oseille</span> est également un support pédagogique puisque je m'en sers pour aider
-            de nouveaux développeurs à apprendre ce métier. Certaines fonctionnalités ont été développées par des
+            de nouveaux développeurs web à apprendre ce métier. Certaines fonctionnalités ont été développées par des
             débutants que je conseille dans leur reconversion professionnelle. Si vous êtes intéressé par le
             développement web : contactez-moi !
           </Text>
-          <Text>
-            Mon objectif avec cette application :{' '}
-            <span className="bold">Faire gagner 1h par semaine à 35 maraîchers</span>. La vie est trop courte pour
-            copier-coller des cases dans Excel.
-          </Text>
+          <Box>
+            <Text>Mon objectif avec cette application :</Text>
+            <Text>
+              <Text as="b">Faire gagner 1h par semaine à 35 maraîchers</Text>, et cloner ma petite semaine de travail de
+              citadin.
+            </Text>
+          </Box>
+          <Text>La vie est trop courte pour copier-coller des cases dans Excel.</Text>
+          <Text>Vous avez des choses bien plus grandes à réaliser autour de chez vous.</Text>
         </Flex>
       </Box>
     </Flex>

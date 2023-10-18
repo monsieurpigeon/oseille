@@ -26,7 +26,10 @@ export function BusinessSection() {
         maxWidth="500px"
       >
         <Heading size="md">Principes</Heading>
-        <Text>L'intégralité des fonctionnalités hors-ligne de cette application resteront toujours gratuites.</Text>
+        <Text>
+          L'intégralité des fonctionnalités hors-ligne de cette application resteront <Text as="b">toujours</Text>{' '}
+          gratuites.
+        </Text>
         <Text>
           Lorsque je rajouterais la possibilité de synchroniser l'information en ligne alors il sera demandé une
           participation financière pour en profiter. Le bonus sera : multi-utilisateur, multi-appareil, sauvegarde en
@@ -34,10 +37,12 @@ export function BusinessSection() {
         </Text>
         <Text>
           Si j'avais un gros paquet d'oseille qui me tombait du ciel, je réunirais les compétences nécessaires pour que
-          l'utilisation d'<span className="bold">Oseille</span> par des maraîchers soit financée par les impôts qu'ils
-          payent déjà.
+          l'utilisation d'<Text as="b">Oseille</Text> par des maraîchers soit financée par les impôts qu'ils payent
+          déjà.
         </Text>
         <Text>Plutôt logique pour une application qui permet de gagner du temps pour gérer sa TVA...</Text>
+        <Text>Si l'application vous plait, envoyez-là à vos amis par e-mail, Discord ou Facebook.</Text>
+        <Text>Je n'ai pas beaucoup d'argent à gaspiller dans de la publicité.</Text>
       </Flex>
       <Flex
         direction="column"
@@ -63,8 +68,12 @@ export function BusinessSection() {
                   <Text>{priceFormatter(20)}</Text>
                 </Flex>
                 <Flex justifyContent="space-between">
+                  <Text>Impression de 700 flyers</Text>
+                  <Text>{priceFormatter(75)}</Text>
+                </Flex>
+                <Flex justifyContent="space-between">
                   <Text>Frais de serveur</Text>
-                  <Text>{priceFormatter(0)}</Text>
+                  <Text>{priceFormatter(5)}</Text>
                 </Flex>
                 <Flex justifyContent="space-between">
                   <Text>Salaires</Text>
@@ -102,7 +111,7 @@ export function BusinessSection() {
                     <span className="bold">Tipeee</span>.
                   </Text>
                   <Text>Pas la peine de donner plus de {priceFormatter(1)} par mois.</Text>
-                  <Text>J'ai besoin d'utilisateurs, pas d'argent.</Text>
+                  <Text>En parler autour de vous c'est mieux.</Text>
                 </Box>
                 <LinkOverlay
                   href="https://fr.tipeee.com/oseille-app/"

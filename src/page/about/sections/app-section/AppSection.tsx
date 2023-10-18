@@ -1,4 +1,5 @@
-import { Flex, Heading, SimpleGrid } from '@chakra-ui/react';
+import { Flex, Heading, Link, SimpleGrid, Text } from '@chakra-ui/react';
+import { Link as RouterLink } from 'react-router-dom';
 import { MyIcon } from '../../../../component/MyIcon';
 import { FEATURES } from '../../../../updateMe';
 import { FeatureCard } from './FeatureCard';
@@ -11,20 +12,26 @@ export function AppSection() {
       height="0"
       overflowY="scroll"
     >
-      <div>
-        <span className="bold">Oseille</span> est une application web qui permet de gérer ses{' '}
-        <span className="bold">bons de livraisons</span> et ses <span className="bold">factures,</span>.
-      </div>
-      <div>
-        adaptée à l'usage des <span className="bold">maraîchers</span>
-        <MyIcon name="vegetable" />, notamment pour la gestion des produits, clients et tarifs.
-      </div>
-      <div>
-        <span className="bold">Oseille</span> est une application{' '}
-        <span className="bold">gratuite, en code libre, et qui fonctionne sans internet.</span>
-      </div>
-      <div>Toutes les fonctionnalités sont issues de demandes directes des maraîchers qui utilisent l'app.</div>
-      <div>Contactez-moi pour que l'application réponde à vos besoins.</div>
+      <Text>
+        <Text as="b">Oseille</Text> est une application web qui permet de gérer ses{' '}
+        <Text as="b">bons de livraisons</Text> et ses <Text as="b">factures</Text>,
+      </Text>
+      <Text>
+        adaptée à l'usage des <Text as="b">maraîchers</Text>
+        <MyIcon name="vegetable" />, notamment pour la gestion des produits, des clients et des tarifs.
+      </Text>
+      <Text>
+        <Text as="b">Oseille</Text> est une application{' '}
+        <Text as="b">gratuite, en code libre, et qui fonctionne même sans internet.</Text>
+      </Text>
+      <Text>Toutes les fonctionnalités sont issues de demandes directes des maraîchers qui utilisent l'app.</Text>
+      <Text>N'hésitez pas à aller leur dire merci.</Text>
+      <Link
+        as={RouterLink}
+        to={'/about/team'}
+      >
+        Et contactez-moi pour que l'application réponde à vos besoins.
+      </Link>
       <Heading
         size="md"
         marginTop={8}

@@ -4,19 +4,19 @@ const users = {
   myriam: {
     name: 'Myriam',
     farm: "Les P'tits Poids",
-    avatar: '',
+    color: '#2a687a',
     link: 'https://www.facebook.com/lesptitspoids',
   },
   jeremy: {
     name: 'Jeremy',
     farm: "Le Pota'djé",
-    avatar: '',
+    color: '#72a25e',
     link: 'https://www.facebook.com/potadje',
   },
   thomas: {
     name: 'Thomas',
     farm: 'Ferme du Méridien',
-    avatar: '',
+    color: '#f9b409',
     link: 'https://www.facebook.com/fermedumeridien',
   },
 };
