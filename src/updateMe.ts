@@ -1,4 +1,4 @@
-export const VERSION = '13/10/2023';
+export const VERSION = '18/10/2023';
 
 const users = {
   myriam: {
