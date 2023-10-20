@@ -1,9 +1,9 @@
 import { documentIdFormatter } from '../../utils/formatter';
 import { relDb } from '../service/database';
 import { DocumentType } from '../service/pdf/pdf';
-import { store } from '../service/store';
+import { getCustomerById } from './customer';
 import { Delivery, addInvoiceId, confirmOrder, getDeliveries, removeInvoiceId } from './delivery';
-import { updateDocumentId } from './farm';
+import { getFarm, updateDocumentId } from './farm';
 
 export enum PaymentMode {
   cash = 'cash',
@@ -60,24 +60,10 @@ export interface InvoicePaymentInput {
   notes: string;
 }
 
-export async function loadInvoices() {
-  const result = await relDb.rel.find('invoice');
-  const invoicesPromise = result.invoices
-    .map(async (invoice: Invoice) => {
-      const deliveries = await getDeliveries(invoice.deliveryIds);
-      return {
-        ...invoice,
-        deliveries,
-        createdAt: new Date(invoice.createdAt).toISOString().split('T')[0],
-      };
-    })
-  const invoices = await Promise.all(invoicesPromise);
-  store.invoices = invoices.sort((a: Invoice, b: Invoice) => b.documentId.localeCompare(a.documentId));
-}
-
 export const addInvoice = async (deliveries: Delivery[], createdAt: string, notes: string) => {
+  const farm = await getFarm();
   const invoice: InvoiceInput = {
-    documentId: documentIdFormatter(store.farm?.invoiceId || 0, 'Invoice'),
+    documentId: documentIdFormatter(farm?.invoiceId || 0, 'Invoice'),
     customerId: deliveries[0].customerId,
     deliveryIds: deliveries.map((d) => d.id),
     deliveryDocumentIds: deliveries.map((d) => d.documentId),
@@ -112,3 +98,32 @@ export const deleteInvoice = (invoice: Invoice) => {
 export const isInvoicePaid = (invoice: Invoice): boolean => {
   return invoice.isPaid || (invoice?.payments && invoice.payments.length > 0) || false;
 };
+
+export const getInvoices = async (ids?: string[]) => {
+  const doc = await relDb.rel.find('invoice', ids);
+
+  const prom = doc.invoices.map(async (invoice: Invoice) => {
+    const customer = await getCustomerById(invoice.customerId);
+    const deliveries = await getDeliveries(invoice.deliveryIds);
+    return {
+      ...invoice,
+      deliveries,
+      customer,
+      createdAt: new Date(invoice.createdAt).toISOString().split('T')[0],
+    };
+  });
+  // TODO sort invoices
+  //.sort((a: Invoice, b: Invoice) => a.documentId.localeCompare(b.documentId));
+
+  return await Promise.all(prom);
+};
+
+// TODO useless function
+export const getInvoiceById = (id: string) => relDb.rel.find('invoice', id).then((doc) => doc.invoices[0]);
+
+export const onInvoicesChange = (listener: (value: PouchDB.Core.ChangesResponseChange<{}>) => any) =>
+  relDb.changes({ since: 'now', live: true }).on('change', (e) => {
+    if (e.id.split('_')[0] === 'invoice') {
+      listener(e);
+    }
+  });

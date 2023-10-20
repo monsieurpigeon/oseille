@@ -3,8 +3,8 @@ import 'chartjs-adapter-moment';
 import moment from 'moment';
 import 'moment/locale/fr';
 import { useEffect, useRef } from 'react';
-import { useSnapshot } from 'valtio';
-import { Customer, store } from '../../../backend';
+import { Customer } from '../../../backend';
+import { useData } from '../../../context/DataContext';
 import { getInvoiceTotal } from '../../../utils/aggregations';
 import { priceFormatter } from '../../../utils/formatter';
 
@@ -34,10 +34,10 @@ interface SalesGraphProps {
 Chart.register(...registerables);
 
 export function SalesGraph({ customer }: SalesGraphProps) {
-  const snap = useSnapshot(store);
   const chartRef = useRef(null);
+  const { getClientInvoices } = useData();
 
-  const customerInvoice = store.invoices.filter((invoice) => invoice.customerId === customer.id);
+  const customerInvoice = getClientInvoices(customer.id);
   const total = customerInvoice.reduce((acc, invoice) => acc + getInvoiceTotal(invoice), 0);
 
   useEffect(() => {

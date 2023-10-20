@@ -2,16 +2,19 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Invoice, InvoiceInfoInput, store, updateInvoice } from '../../../backend';
+import { InvoiceInfoInput, updateInvoice } from '../../../backend';
 import { MyModal } from '../../../component/modal/MyModal';
 import { useSideKick } from '../../../component/modules/sidekick/SideKickContext';
 import { SideKickFeeling } from '../../../component/modules/sidekick/enums';
+import { useData } from '../../../context/DataContext';
 import { invoiceSchema } from './InvoiceCreateModal';
 import { InvoiceFields } from './InvoiceFields';
 
 export function InvoiceEditModal() {
   const { id } = useParams();
-  const invoice = id ? (store.invoices.find((el) => el.id === id) as Invoice) : undefined;
+  const { getInvoice } = useData();
+
+  const invoice = id ? getInvoice(id) : undefined;
   if (!invoice) return null;
 
   const navigate = useNavigate();

@@ -2,8 +2,6 @@ import { Button } from '@chakra-ui/react';
 import clsx from 'clsx';
 import { useMemo, useState } from 'react';
 import styled from 'styled-components';
-import { useSnapshot } from 'valtio';
-import { store } from '../../backend';
 import { useData } from '../../context/DataContext';
 import { priceFormatter } from '../../utils/formatter';
 
@@ -44,13 +42,12 @@ const StyledTable = styled.table`
 `;
 
 export function SalesTable() {
-  const snap = useSnapshot(store);
-  const { products, getProduct, customers, getDeliveriesByIds, getCustomer } = useData();
+  const { products, getProduct, customers, getDeliveriesByIds, getCustomer, invoices } = useData();
 
   const [show, setShow] = useState(false);
 
   const sales = useMemo(() => {
-    return store.invoices.flatMap((invoice) => {
+    return invoices.flatMap((invoice) => {
       const deliveries = getDeliveriesByIds(invoice.deliveryIds);
       const customer = getCustomer(invoice.customerId);
       const products = deliveries.flatMap((delivery) => {
@@ -67,7 +64,7 @@ export function SalesTable() {
       });
       return products;
     });
-  }, [snap]);
+  }, [invoices]);
 
   const salesByProduct = sales.reduce((memo, sale) => {
     if (!sale) return memo;

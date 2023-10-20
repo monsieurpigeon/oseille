@@ -1,9 +1,9 @@
 import { Box, Stat, StatGroup, StatLabel, StatNumber } from '@chakra-ui/react';
 import { usePostHog } from 'posthog-js/react';
 import { useEffect, useMemo } from 'react';
-import { useSnapshot } from 'valtio';
-import { Invoice, isInvoicePaid, store } from '../../backend';
+import { Invoice, isInvoicePaid } from '../../backend';
 import { MySimpleLayout } from '../../component/layout/page-layout/MySimpleLayout';
+import { useData } from '../../context/DataContext';
 import { getInvoiceTotal } from '../../utils/aggregations';
 import { priceFormatter } from '../../utils/formatter';
 import { SalesTable } from './SalesTable';
@@ -23,13 +23,13 @@ export function DashboardPage() {
   useEffect(() => {
     posthog?.capture('home_page_viewed');
   }, []);
-  const snap = useSnapshot(store);
+  const { invoices } = useData();
 
   const { invoicePaid, invoiceWaiting } = useMemo(() => {
-    const invoicePaid = store.invoices.filter((i) => isInvoicePaid(i));
-    const invoiceWaiting = store.invoices.filter((i) => !isInvoicePaid(i));
+    const invoicePaid = invoices.filter((i) => isInvoicePaid(i));
+    const invoiceWaiting = invoices.filter((i) => !isInvoicePaid(i));
     return { invoicePaid: getValues(invoicePaid), invoiceWaiting: getValues(invoiceWaiting) };
-  }, [snap]);
+  }, [invoices]);
 
   return (
     <MySimpleLayout>

@@ -3,8 +3,7 @@ import { differenceInDays } from 'date-fns';
 import { usePostHog } from 'posthog-js/react';
 import { useEffect, useMemo } from 'react';
 import { Outlet, useNavigate, useParams } from 'react-router-dom';
-import { useSnapshot } from 'valtio';
-import { isInvoicePaid, store } from '../../backend';
+import { isInvoicePaid } from '../../backend';
 import { ListItem } from '../../component/card/ListItem';
 import { ListItemGroup } from '../../component/card/ListItemGroup';
 import { MyHeader } from '../../component/layout/page-layout/MyHeader';
@@ -25,11 +24,10 @@ export function InvoicePage() {
     posthog?.capture('invoice_page_viewed');
   }, []);
 
-  const snap = useSnapshot(store);
   const { id } = useParams();
-  const { customers } = useData();
+  const { customers, invoices, getInvoice } = useData();
 
-  const selected = useMemo(() => (id ? store.invoices.find((el) => el.id === id) : undefined), [id, snap]);
+  const selected = useMemo(() => (id ? getInvoice(id) : undefined), [id, invoices]);
 
   return (
     <MyPage>
@@ -62,7 +60,7 @@ export function InvoicePage() {
           <InvoiceExportCsvButton />
         </MyHeader>
         <MyScrollList>
-          {store.invoices.length === 0 && (
+          {invoices.length === 0 && (
             <MyScrollList.Empty onClick={() => navigate('../delivery')}>
               Facturer mon premier bon de livraison
             </MyScrollList.Empty>
@@ -86,8 +84,9 @@ export function InvoicePage() {
 function InvoiceCustomer({ customer, selected }: any) {
   const { id } = useParams();
   const { invoiceDelay } = useFarmParameters();
+  const { getClientInvoices } = useData();
 
-  const invoices = store.invoices.filter((invoice) => invoice.customerId === customer.id);
+  const invoices = getClientInvoices(customer.id);
   const navigate = useNavigate();
 
   if (invoices.length === 0) return null;

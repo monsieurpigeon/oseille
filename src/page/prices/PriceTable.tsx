@@ -1,7 +1,6 @@
 import { Table, TableContainer, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react';
 import { useMemo, useState } from 'react';
-import { useSnapshot } from 'valtio';
-import { Price, store } from '../../backend';
+import { Price } from '../../backend';
 import { useData } from '../../context/DataContext';
 import { priceFormatter } from '../../utils/formatter';
 import { PriceEmpty } from './PriceEmpty';
@@ -11,7 +10,6 @@ import './style.css';
 type PriceList = { [key: string]: { [key: string]: Price } };
 
 export function PriceTable() {
-  const snap = useSnapshot(store);
   const [currentEdit, setCurrentEdit] = useState(['', '']);
   const { products, customers, prices } = useData();
   const [customerLength, productLength] = [customers.length, products.length];

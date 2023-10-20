@@ -1,8 +1,7 @@
 import PouchDb from 'pouchdb';
 import find from 'pouchdb-find';
 import rel from 'relational-pouch';
-import { addFarm, loadFarm } from '../entity/farm';
-import { loadInvoices } from '../entity/invoice';
+import { addFarm } from '../entity/farm';
 
 PouchDb.plugin(find).plugin(rel);
 
@@ -48,36 +47,15 @@ export const relDb = db.setSchema([
 
 db.allDocs({ include_docs: true }).then(console.log);
 
-db.changes({
-  since: 'now',
-  live: true,
-})
-  .on('change', function (change) {
-    clearTimeout(debounce);
-    debounce = setTimeout(() => {
-      loadDatabase();
-    }, 100);
-  })
-  .on('error', console.error);
-
-let debounce: NodeJS.Timeout;
-
 export const initDatabase = async () => {
   await addFarm();
-  loadFarm();
 
   db.bulkDocs([{ _id: 'init' }]).catch(console.error);
-};
-
-export const loadDatabase = () => {
-  loadInvoices();
-  loadFarm();
 };
 
 export const destroyDatabase = async () => {
   await db.destroy();
   db = new PouchDb(DB_NAME);
-  loadDatabase();
 };
 
 export function exportData(data: any) {

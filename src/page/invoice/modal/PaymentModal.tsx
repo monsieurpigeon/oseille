@@ -4,11 +4,12 @@ import { useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router-dom';
 import { z } from 'zod';
-import { Invoice, InvoicePaymentInput, PaymentMode, store, updateInvoice } from '../../../backend';
+import { InvoicePaymentInput, PaymentMode, updateInvoice } from '../../../backend';
 import { MyModal } from '../../../component/modal/MyModal';
 import { useConfirm } from '../../../component/modal/confirm-modal/ConfirmContext';
 import { useSideKick } from '../../../component/modules/sidekick/SideKickContext';
 import { SideKickFeeling } from '../../../component/modules/sidekick/enums';
+import { useData } from '../../../context/DataContext';
 import { getInvoiceTotal } from '../../../utils/aggregations';
 import { PaymentFields } from './PaymentFields';
 
@@ -22,7 +23,8 @@ export const paymentSchema = z.object({
 
 export function PaymentModal() {
   const { id } = useParams();
-  const invoice = id ? (store.invoices.find((el) => el.id === id) as Invoice) : undefined;
+  const { getInvoice } = useData();
+  const invoice = id ? getInvoice(id) : undefined;
   if (!invoice) return null;
 
   const posthog = usePostHog();

@@ -2,7 +2,7 @@ import { Button } from '@chakra-ui/react';
 import { useAtom } from 'jotai';
 import { atomWithHash } from 'jotai-location';
 import styled from 'styled-components';
-import { Customer, store } from '../../../backend';
+import { Customer } from '../../../backend';
 import { SalesGraph } from '../../../component/modules/graph/SalesGraph';
 import { useData } from '../../../context/DataContext';
 import { DeliveryCard, InvoiceCard } from './DocumentCard';
@@ -14,11 +14,9 @@ interface CustomerDocumentsProps {
 const tabAtom = atomWithHash('tab', 0);
 
 export function CustomerDocuments({ customer }: CustomerDocumentsProps) {
-  const { getClientDeliveries } = useData();
+  const { getClientDeliveries, getClientInvoices } = useData();
 
-  const clientInvoices = store.invoices
-    .filter((invoice) => invoice.customerId === customer.id)
-    .sort((a, b) => b.documentId.localeCompare(a.documentId));
+  const clientInvoices = getClientInvoices(customer.id);
   const clientDeliveries = getClientDeliveries(customer.id);
 
   const [tab, setTab] = useAtom(tabAtom);

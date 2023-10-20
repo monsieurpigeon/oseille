@@ -1,7 +1,9 @@
 import { ReactNode, createContext, useContext } from 'react';
-import { Customer, Delivery, Price, Product } from '../backend';
+import { Customer, Delivery, Farm, Invoice, Price, Product } from '../backend';
 import { useCustomers } from './useCustomers';
 import { useDeliveries } from './useDeliveries';
+import { useFarm } from './useFarm';
+import { useInvoices } from './useInvoices';
 import { usePrices } from './usePrices';
 import { useProducts } from './useProducts';
 
@@ -16,6 +18,10 @@ interface DataContextType {
   getDelivery: (id: string) => Delivery | undefined;
   getClientDeliveries: (customerId: string) => Delivery[];
   getDeliveriesByIds: (ids: string[]) => Delivery[];
+  invoices: Invoice[];
+  getInvoice: (id: string) => Invoice | undefined;
+  getClientInvoices: (customerId: string) => Invoice[];
+  farm: Farm | undefined;
 }
 
 const DataContext = createContext<DataContextType>({
@@ -29,6 +35,10 @@ const DataContext = createContext<DataContextType>({
   getDelivery: () => undefined,
   getClientDeliveries: () => [],
   getDeliveriesByIds: () => [],
+  invoices: [],
+  getInvoice: () => undefined,
+  getClientInvoices: () => [],
+  farm: undefined,
 });
 
 export const DataProvider = ({ children }: { children: ReactNode }) => {
@@ -36,6 +46,8 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
   const { customers, getCustomer } = useCustomers();
   const { prices, getPrice } = usePrices();
   const { deliveries, getDelivery, getClientDeliveries, getDeliveriesByIds } = useDeliveries();
+  const { invoices, getInvoice, getClientInvoices } = useInvoices();
+  const { farm } = useFarm();
 
   return (
     <DataContext.Provider
@@ -50,6 +62,10 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
         getDelivery,
         getClientDeliveries,
         getDeliveriesByIds,
+        invoices,
+        getInvoice,
+        getClientInvoices,
+        farm,
       }}
     >
       {children}

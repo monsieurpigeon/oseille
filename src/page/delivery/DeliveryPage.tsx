@@ -3,8 +3,6 @@ import { addDays } from 'date-fns';
 import { usePostHog } from 'posthog-js/react';
 import { useEffect, useMemo, useState } from 'react';
 import { Outlet, useNavigate, useParams } from 'react-router-dom';
-import { useSnapshot } from 'valtio';
-import { store } from '../../backend';
 import { MyIcon } from '../../component/MyIcon';
 import { ListItem } from '../../component/card/ListItem';
 import { ListItemGroup } from '../../component/card/ListItemGroup';
@@ -23,13 +21,12 @@ export function DeliveryPage() {
   useEffect(() => {
     posthog?.capture('delivery_page_viewed');
   }, []);
-  const snap = useSnapshot(store);
   const { id } = useParams();
   const { customers, getDelivery, deliveries } = useData();
 
   const navigate = useNavigate();
 
-  const selected = useMemo(() => (id ? getDelivery(id) : undefined), [id, snap]);
+  const selected = useMemo(() => (id ? getDelivery(id) : undefined), [id, deliveries]);
 
   return (
     <MyPage>

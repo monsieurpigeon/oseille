@@ -3,8 +3,7 @@ import { differenceInDays } from 'date-fns';
 import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { useSnapshot } from 'valtio';
-import { isInvoicePaid, store } from '../../backend';
+import { isInvoicePaid } from '../../backend';
 import { useData } from '../../context/DataContext';
 import { getInvoiceTotal } from '../../utils/aggregations';
 import { priceFormatter } from '../../utils/formatter';
@@ -19,16 +18,15 @@ const StyledTr = styled(Tr)`
 `;
 
 export function InvoiceAll() {
-  const snap = useSnapshot(store);
   const { invoiceDelay } = useFarmParameters();
-  const { getCustomer } = useData();
+  const { getCustomer, invoices } = useData();
 
   const navigate = useNavigate();
 
-  const paidLength = useMemo(() => store.invoices.filter((el) => isInvoicePaid(el)).length, [snap]);
-  const notPaidLength = useMemo(() => store.invoices.filter((el) => !isInvoicePaid(el)).length, [snap]);
+  const paidLength = useMemo(() => invoices.filter((el) => isInvoicePaid(el)).length, [invoices]);
+  const notPaidLength = useMemo(() => invoices.filter((el) => !isInvoicePaid(el)).length, [invoices]);
 
-  const lateInvoices = store.invoices
+  const lateInvoices = invoices
     .filter((el) => !isInvoicePaid(el) && differenceInDays(new Date(), new Date(el.createdAt)) > invoiceDelay)
     .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
   const lateLength = lateInvoices.length;

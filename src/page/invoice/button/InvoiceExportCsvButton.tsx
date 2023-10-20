@@ -2,8 +2,7 @@ import { Button, useDisclosure } from '@chakra-ui/react';
 import { format } from 'date-fns';
 import _ from 'lodash';
 import { useRef } from 'react';
-import { useSnapshot } from 'valtio';
-import { isInvoicePaid, store } from '../../../backend';
+import { isInvoicePaid } from '../../../backend';
 import { MyModal } from '../../../component/modal/MyModal';
 import { useData } from '../../../context/DataContext';
 
@@ -11,13 +10,12 @@ const clean = (num: number) => Number(num.toFixed(5));
 const translate = (num: number) => num.toLocaleString('fr-FR', { minimumFractionDigits: 2 });
 
 export function InvoiceExportCsvButton() {
-  const snap = useSnapshot(store);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef<any>();
-  const { getProduct, getCustomer, getDeliveriesByIds } = useData();
+  const { getProduct, getCustomer, getDeliveriesByIds, invoices } = useData();
 
   const handleExport = () => {
-    const clone = _.cloneDeep(store.invoices);
+    const clone = _.cloneDeep(invoices);
     const data = clone
       .sort((a, b) => a.createdAt.localeCompare(b.createdAt))
       .flatMap((invoice) => {

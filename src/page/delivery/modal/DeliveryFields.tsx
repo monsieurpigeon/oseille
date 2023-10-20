@@ -2,15 +2,13 @@ import { Box, Button, Flex, Grid, GridItem, Input, Select, Text, Textarea } from
 import { useMemo } from 'react';
 import { FieldArrayWithId } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
-import { useSnapshot } from 'valtio';
-import { DeliveryInput, store } from '../../../backend';
+import { DeliveryInput } from '../../../backend';
 import { MyNumberInput } from '../../../component/form/MyNumberInput';
 import { useData } from '../../../context/DataContext';
 import { priceFormatter } from '../../../utils/formatter';
 import { useFarmParameters } from '../../../utils/hooks/useFarmParameters';
 
 export function DeliveryFields({ watch, control, register, fields, append, remove, setValue }: any) {
-  const snap = useSnapshot(store);
   const navigate = useNavigate();
   const { products, customers, prices } = useData();
 

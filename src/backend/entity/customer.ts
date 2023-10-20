@@ -35,7 +35,8 @@ export const getCustomers = () =>
     .find('customer')
     .then((doc) => doc.customers.sort((a: Customer, b: Customer) => a.name.localeCompare(b.name)));
 
-export const getCustomerById = (id: string) => relDb.rel.find('customer', id).then((doc) => doc.customers[0]);
+export const getCustomerById = (id: string): Promise<Customer> =>
+  relDb.rel.find('customer', id).then((doc) => doc.customers[0]);
 
 export const onCustomersChange = (listener: (value: PouchDB.Core.ChangesResponseChange<{}>) => any) =>
   relDb.changes({ since: 'now', live: true }).on('change', (e) => {

@@ -1,8 +1,7 @@
 import { documentIdFormatter } from '../../utils/formatter';
 import { relDb } from '../service/database';
-import { store } from '../service/store';
 import { Customer, getCustomerById } from './customer';
-import { loadFarm, updateDocumentId } from './farm';
+import { getFarm, updateDocumentId } from './farm';
 import { ProductWithPrice, getProductById } from './product';
 
 export interface Delivery {
@@ -43,7 +42,7 @@ export interface DeliveryLineInput {
 }
 
 export const addDelivery = async (delivery: DeliveryInput) => {
-  await loadFarm();
+  const farm = await getFarm();
   const promise = async () => {
     const lines = await Promise.all(
       delivery.lines.map(async (el) => {
@@ -53,7 +52,7 @@ export const addDelivery = async (delivery: DeliveryInput) => {
     );
     return {
       ...delivery,
-      isTVA: store.farm?.isTVA === 'oui',
+      isTVA: farm?.isTVA === 'oui',
       lines: lines.filter((p) => !!p).map((l) => ({ ...l, quantity: +l.quantity })),
     };
   };
@@ -62,7 +61,7 @@ export const addDelivery = async (delivery: DeliveryInput) => {
 
     const result = await relDb.rel.save('delivery', {
       ...deliveryFull,
-      documentId: documentIdFormatter(store.farm?.deliveryId || 0, 'Delivery'),
+      documentId: documentIdFormatter(farm?.deliveryId || 0, 'Delivery'),
     });
     updateDocumentId('Delivery');
     return result;
@@ -93,7 +92,6 @@ export const removeInvoiceId = (deliveryId: string) => {
 };
 
 export const updateDelivery = async (delivery: Delivery, input: DeliveryInput) => {
-  await loadFarm();
   const promise = async () => {
     const lines = await Promise.all(
       input.lines.map(async (el) => {
@@ -122,7 +120,7 @@ export const confirmOrder = (delivery: Delivery) => {
   return relDb.rel.save('delivery', { ...delivery, isOrder: false });
 };
 
-export const getDeliveries = (ids?: string[]) =>
+export const getDeliveries = async (ids?: string[]): Promise<Delivery[]> =>
   relDb.rel.find('delivery', ids).then((doc) =>
     doc.deliveries
       .map((delivery: Delivery) => {
@@ -131,11 +129,12 @@ export const getDeliveries = (ids?: string[]) =>
           ...delivery,
           customer,
           deliveredAt: new Date(delivery.deliveredAt).toISOString().split('T')[0],
-        }
+        };
       })
       .sort((a: Delivery, b: Delivery) => a.documentId.localeCompare(b.documentId)),
   );
 
+// TODO useless function
 export const getDeliveryById = (id: string) => relDb.rel.find('delivery', id).then((doc) => doc.deliveries[0]);
 
 export const onDeliveriesChange = (listener: (value: PouchDB.Core.ChangesResponseChange<{}>) => any) =>

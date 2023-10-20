@@ -1,8 +1,7 @@
 import { Badge, Box, Button, Flex } from '@chakra-ui/react';
 import { useMemo } from 'react';
 import { Link, Outlet, useNavigate, useParams } from 'react-router-dom';
-import { useSnapshot } from 'valtio';
-import { isInvoicePaid, store } from '../../backend';
+import { isInvoicePaid } from '../../backend';
 import { DetailButton, EditButton } from '../../component/buttons';
 import { MyHeader } from '../../component/layout/page-layout/MyHeader';
 import { MyScrollList } from '../../component/layout/page-layout/MyScrollList';
@@ -16,10 +15,9 @@ import { InvoicePrintButton } from './button/InvoicePrintButton';
 
 export const InvoiceDetail = () => {
   const { id } = useParams();
-  const snap = useSnapshot(store);
-  const selected = useMemo(() => (id ? store.invoices.find((el) => el.id === id) : undefined), [id, snap]);
   const navigate = useNavigate();
-  const { getCustomer } = useData();
+  const { getCustomer, getInvoice, invoices } = useData();
+  const selected = useMemo(() => (id ? getInvoice(id) : undefined), [id, invoices]);
   const currentCustomer = useMemo(() => getCustomer(selected?.customerId || ''), [selected?.customerId]);
   if (!selected) return null;
   if (!currentCustomer) return null;

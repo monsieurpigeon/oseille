@@ -4,8 +4,8 @@ import { dateFormatter } from '../../../utils/formatter';
 import { FrBio01, FrBio09, FrBio15 } from '../../../utils/labels';
 import { getCustomerById } from '../../entity/customer';
 import { Delivery } from '../../entity/delivery';
+import { getFarm } from '../../entity/farm';
 import { Product } from '../../entity/product';
-import { store } from '../store';
 import { addresses } from './blocks/addresses';
 import { lines } from './blocks/lines';
 import { taxes } from './blocks/taxes';
@@ -44,6 +44,7 @@ const getBioLogo = (label: string | undefined) => {
 export const exportDocument = async ({ payload, type, open = false }: any) => {
   const isTVA = type === DocumentType.delivery ? payload.isTVA : getIsTVA(payload);
   const currentCustomer = await getCustomerById(payload.customerId);
+  const farm = await getFarm();
   const docDefinition: any = {
     defaultStyle: {
       font: 'Roboto',
@@ -53,7 +54,7 @@ export const exportDocument = async ({ payload, type, open = false }: any) => {
     },
     footer: [
       {
-        text: store.farm?.footer,
+        text: farm?.footer,
         alignment: 'center',
       },
       {
@@ -68,8 +69,9 @@ export const exportDocument = async ({ payload, type, open = false }: any) => {
       addresses(
         { ...payload, customer: currentCustomer },
         type,
-        !!store.farm?._attachements?.logo,
-        !!store.farm?.bioLabel && store.farm?.bioLabel !== 'non',
+        !!farm?._attachements?.logo,
+        !!farm?.bioLabel && farm?.bioLabel !== 'non',
+        farm,
       ),
       { text: `${payload.documentId}`, style: 'header' },
       {
@@ -78,12 +80,12 @@ export const exportDocument = async ({ payload, type, open = false }: any) => {
       },
       lines(payload, type),
       ...(isTVA && type === DocumentType.invoice ? [taxes(payload)] : []),
-      totals(payload, type, store.farm),
+      totals(payload, type, farm),
       { columns: [{ qr: payload.id, fit: '50' }, { text: `Notes: ${payload.notes ?? ''}` }] },
     ],
     images: {
-      logo: store.farm?._attachements?.logo?.data || '',
-      bio: getBioLogo(store.farm?.bioLabel),
+      logo: farm?._attachements?.logo?.data || '',
+      bio: getBioLogo(farm?.bioLabel),
     },
     styles: {
       header: {

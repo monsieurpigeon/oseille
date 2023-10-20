@@ -1,6 +1,5 @@
 import { relDb } from '../service/database';
 import { DocumentType } from '../service/pdf/pdf';
-import { store } from '../service/store';
 
 export interface Farm {
   id: string;
@@ -61,12 +60,6 @@ export interface LogoInput {
 
 export const FARM_KEY = 'myFarm';
 
-export async function loadFarm() {
-  const result = await relDb.rel.find('farm', FARM_KEY);
-  store.farm = result.farms[0];
-  return result.farms.length;
-}
-
 export async function addFarm() {
   await relDb.rel.save('farm', {
     id: FARM_KEY,
@@ -74,7 +67,6 @@ export async function addFarm() {
     invoiceId: 1,
     deliveryId: 1,
   });
-  loadFarm();
 }
 
 export const updateFarm = (farm: Farm) => {
@@ -97,3 +89,12 @@ export const addLogo = async (logo: LogoInput) => {
 
   return updateFarm({ ...myFarm, _attachements: { logo: { content_type: 'image/png', data: logo.data } } });
 };
+
+export const getFarm = () => relDb.rel.find('farm', FARM_KEY).then((doc) => doc.farms[0]);
+
+export const onFarmChange = (listener: (value: PouchDB.Core.ChangesResponseChange<{}>) => any) =>
+  relDb.changes({ since: 'now', live: true }).on('change', (e) => {
+    if (e.id.split('_')[0] === 'farm') {
+      listener(e);
+    }
+  });
