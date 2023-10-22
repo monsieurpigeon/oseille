@@ -3,6 +3,7 @@ import { getIsTVA } from '../../../utils/aggregations';
 import { dateFormatter } from '../../../utils/formatter';
 import { FrBio01, FrBio09, FrBio15 } from '../../../utils/labels';
 import { Delivery } from '../../entity/delivery';
+import { Product } from '../../entity/product';
 import { store } from '../store';
 import { addresses } from './blocks/addresses';
 import { lines } from './blocks/lines';
@@ -124,7 +125,7 @@ export const exportOrders = (payload: Delivery[]) => {
         acc[product.id] = product;
       }
       return acc;
-    }, {});
+    }, {} as { [key: string]: Product });
 
   const docDefinition: any = {
     defaultStyle: {
