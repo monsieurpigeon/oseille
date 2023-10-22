@@ -22,6 +22,16 @@ export const relDb = db.setSchema([
     plural: 'customers',
   },
   {
+    singular: 'customerDetail',
+    plural: 'customerDetails',
+    documentType: 'customer',
+    relations: {
+      prices: { hasMany: 'price' },
+      deliveries: { hasMany: { type: 'delivery', options: { queryInverse: 'customer' } } },
+      invoices: { hasMany: { type: 'invoice', options: { queryInverse: 'customer' } } },
+    },
+  },
+  {
     singular: 'price',
     plural: 'prices',
     relations: {
@@ -33,6 +43,7 @@ export const relDb = db.setSchema([
     singular: 'delivery',
     plural: 'deliveries',
     relations: {
+      customer: { belongsTo: 'customer' },
       invoice: { belongsTo: 'invoice' },
     },
   },
@@ -40,12 +51,34 @@ export const relDb = db.setSchema([
     singular: 'invoice',
     plural: 'invoices',
     relations: {
+      customer: { belongsTo: 'customer' },
       deliveries: { hasMany: 'delivery' },
     },
   },
 ]);
 
-db.allDocs({ include_docs: true }).then(console.log);
+const cleanup = false;
+
+db.allDocs({ include_docs: true }).then((result) => {
+  console.log(result);
+  result.rows.forEach(async (doc) => {
+    if (doc.id.split('_')[0] === 'delivery') {
+      console.log(doc);
+      const newDelivery = { ...doc.doc?.data, id: doc.id, customer: doc.doc?.data.customerId };
+      delete newDelivery.customerId;
+      cleanup && (await relDb.rel.save('delivery', newDelivery).catch(console.error));
+    }
+    if (doc.id.split('_')[0] === 'invoice') {
+      const newInvoice = { ...doc.doc?.data, id: doc.id, customer: doc.doc?.data.customerId };
+      delete newInvoice.customerId;
+      delete newInvoice.deliveryIds;
+      console.log(newInvoice);
+
+      // La correction des factures cree de nouvelles livraisons ?
+      //await relDb.rel.save('invoice', newInvoice).catch(console.error);
+    }
+  });
+});
 
 export const initDatabase = async () => {
   await addFarm();

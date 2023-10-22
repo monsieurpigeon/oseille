@@ -29,7 +29,9 @@ export const updateProduct = (product: Product) => {
 };
 
 export const getProducts = () =>
-  relDb.rel.find('product').then((doc) => doc.products.sort((a: Product, b: Product) => a.name.localeCompare(b.name)));
+  relDb.rel.find('product').then((doc) => {
+    return doc.products.sort((a: Product, b: Product) => a.name.localeCompare(b.name));
+  });
 
 export const getProductById = (id: string) => relDb.rel.find('product', id).then((doc) => doc.products[0]);
 

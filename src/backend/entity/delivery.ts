@@ -121,8 +121,8 @@ export const confirmOrder = (delivery: Delivery) => {
 };
 
 export const getDeliveries = async (ids?: string[]): Promise<Delivery[]> =>
-  relDb.rel.find('delivery', ids).then((doc) =>
-    doc.deliveries
+  relDb.rel.find('delivery', ids).then((doc) => {
+    return doc.deliveries
       .map((delivery: Delivery) => {
         const customer = getCustomerById(delivery.customerId);
         return {
@@ -131,8 +131,8 @@ export const getDeliveries = async (ids?: string[]): Promise<Delivery[]> =>
           deliveredAt: new Date(delivery.deliveredAt).toISOString().split('T')[0],
         };
       })
-      .sort((a: Delivery, b: Delivery) => a.documentId.localeCompare(b.documentId)),
-  );
+      .sort((a: Delivery, b: Delivery) => a.documentId.localeCompare(b.documentId));
+  });
 
 // TODO useless function
 export const getDeliveryById = (id: string) => relDb.rel.find('delivery', id).then((doc) => doc.deliveries[0]);

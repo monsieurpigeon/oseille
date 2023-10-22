@@ -1,7 +1,8 @@
 import { Box, Button, Flex } from '@chakra-ui/react';
 import { usePostHog } from 'posthog-js/react';
-import { useEffect, useMemo } from 'react';
-import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { useEffect } from 'react';
+import { Outlet, useLoaderData, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { Customer } from '../../backend';
 import { ListItem } from '../../component/card/ListItem';
 import { MyHeader } from '../../component/layout/page-layout/MyHeader';
 import { MyPage } from '../../component/layout/page-layout/MyPage';
@@ -9,19 +10,17 @@ import { MyScrollList } from '../../component/layout/page-layout/MyScrollList';
 import { MySide } from '../../component/layout/page-layout/MySide';
 import { InfoModal } from '../../component/modal/InfoModal';
 import { MyH1 } from '../../component/typography/MyFont';
-import { useData } from '../../context/DataContext';
 
 export function CustomerPage() {
   const posthog = usePostHog();
   useEffect(() => {
     posthog?.capture('customer_page_viewed');
   }, []);
-  const { customers, getCustomer } = useData();
+
+  const customers = useLoaderData() as Customer[];
   const { id } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
-
-  const selected = useMemo(() => (id ? getCustomer(id) : undefined), [id, customers]);
 
   return (
     <MyPage>
@@ -59,7 +58,7 @@ export function CustomerPage() {
           {customers.map((entity) => (
             <ListItem
               key={entity.id}
-              isSelected={selected?.id === entity.id}
+              isSelected={id === entity.id}
               onClick={() => navigate(entity.id === id ? '' : `${entity.id}${location.hash}`)}
             >
               {entity.name}

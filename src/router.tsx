@@ -1,4 +1,5 @@
 import { Navigate, createBrowserRouter } from 'react-router-dom';
+import { Customer, Product, relDb } from './backend';
 import { AboutPageGroup } from './page-group/AboutPageGroup';
 import { InvoicingPageGroup } from './page-group/InvoicingPageGroup';
 import { SettingPageGroup } from './page-group/SettingPageGroup';
@@ -69,20 +70,55 @@ export const router = createBrowserRouter([
       { path: 'dashboard', element: <DashboardPage /> },
       {
         path: 'product',
+        id: 'products',
         element: <ProductPage />,
+        loader: async () => {
+          return relDb.rel
+            .find('product')
+            .then((doc) => doc.products.sort((a: Product, b: Product) => a.name.localeCompare(b.name)));
+        },
         children: [
-          { index: true, element: <ProductAll /> },
+          {
+            index: true,
+            element: <ProductAll />,
+          },
           { path: 'create', element: <ProductCreateModal /> },
-          { path: ':id', element: <ProductDetail />, children: [{ path: 'edit', element: <ProductEditModal /> }] },
+          {
+            path: ':id',
+            element: <ProductDetail />,
+            id: 'product',
+            loader: async ({ params }) => relDb.rel.find('product', params.id).then((doc) => doc.products[0]),
+            children: [
+              {
+                path: 'edit',
+                element: <ProductEditModal />,
+              },
+            ],
+          },
         ],
       },
       {
         path: 'customer',
         element: <CustomerPage />,
+        id: 'customers',
+        loader: async () =>
+          relDb.rel
+            .find('customer')
+            .then((doc) => doc.customers.sort((a: Customer, b: Customer) => a.name.localeCompare(b.name))),
         children: [
           { index: true, element: <CustomerAll /> },
           { path: 'create', element: <CustomerCreateModal /> },
-          { path: ':id', element: <CustomerDetail />, children: [{ path: 'edit', element: <CustomerEditModal /> }] },
+          {
+            path: ':id',
+            element: <CustomerDetail />,
+            loader: async ({ params }) =>
+              relDb.rel.find('customerDetail', params.id).then((doc) => {
+                console.log(doc);
+                return doc;
+                // .customers.sort((a: Customer, b: Customer) => a.name.localeCompare(b.name));
+              }),
+            children: [{ path: 'edit', element: <CustomerEditModal /> }],
+          },
         ],
       },
       { path: 'prices', element: <PricePage /> },

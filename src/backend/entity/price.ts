@@ -28,7 +28,10 @@ export const deletePrice = (price: Price) => {
   return relDb.rel.del('price', price);
 };
 
-export const getPrices = () => relDb.rel.find('price').then((doc) => doc.prices);
+export const getPrices = () =>
+  relDb.rel.find('price').then((doc) => {
+    return doc.prices;
+  });
 
 export const onPricesChange = (listener: (value: PouchDB.Core.ChangesResponseChange<{}>) => any) =>
   relDb.changes({ since: 'now', live: true }).on('change', (e) => {

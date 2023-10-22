@@ -1,8 +1,8 @@
 import { documentIdFormatter } from '../../utils/formatter';
 import { relDb } from '../service/database';
 import { DocumentType } from '../service/pdf/pdf';
-import { getCustomerById } from './customer';
-import { Delivery, addInvoiceId, confirmOrder, getDeliveries, removeInvoiceId } from './delivery';
+import { Customer } from './customer';
+import { Delivery, addInvoiceId, confirmOrder, removeInvoiceId } from './delivery';
 import { getFarm, updateDocumentId } from './farm';
 
 export enum PaymentMode {
@@ -103,8 +103,8 @@ export const getInvoices = async (ids?: string[]) => {
   const doc = await relDb.rel.find('invoice', ids);
 
   const prom = doc.invoices.map(async (invoice: Invoice) => {
-    const customer = await getCustomerById(invoice.customerId);
-    const deliveries = await getDeliveries(invoice.deliveryIds);
+    const customer = doc.customers.find((customer: Customer) => customer.id === invoice.customerId);
+    const deliveries = doc.deliveries.filter((delivery: Delivery) => delivery.invoiceId === invoice.id);
     return {
       ...invoice,
       deliveries,

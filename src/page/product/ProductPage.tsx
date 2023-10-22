@@ -1,7 +1,8 @@
 import { Box, Button, Flex, Spacer, Text } from '@chakra-ui/react';
 import { usePostHog } from 'posthog-js/react';
-import { useEffect, useMemo } from 'react';
-import { Outlet, useNavigate, useParams } from 'react-router-dom';
+import { useEffect } from 'react';
+import { Outlet, useLoaderData, useNavigate, useParams } from 'react-router-dom';
+import { Product } from '../../backend';
 import { ListItem } from '../../component/card/ListItem';
 import { MyHeader } from '../../component/layout/page-layout/MyHeader';
 import { MyPage } from '../../component/layout/page-layout/MyPage';
@@ -9,7 +10,6 @@ import { MyScrollList } from '../../component/layout/page-layout/MyScrollList';
 import { MySide } from '../../component/layout/page-layout/MySide';
 import { InfoModal } from '../../component/modal/InfoModal';
 import { MyH1 } from '../../component/typography/MyFont';
-import { useData } from '../../context/DataContext';
 import { DEFAULT_TAX } from '../../utils/defaults';
 import { TVAFormatter } from '../../utils/formatter';
 import { useFarmParameters } from '../../utils/hooks/useFarmParameters';
@@ -23,9 +23,7 @@ export function ProductPage() {
 
   const { id } = useParams();
   const { farm, isTVA } = useFarmParameters();
-  const { products, getProduct } = useData();
-
-  const selected = useMemo(() => (id ? getProduct(id) : undefined), [id, products]);
+  const products = useLoaderData() as Product[];
 
   return (
     <MyPage>
@@ -59,7 +57,7 @@ export function ProductPage() {
           {products.map((entity) => (
             <ListItem
               key={entity.id}
-              isSelected={selected?.id === entity.id}
+              isSelected={id === entity.id}
               onClick={() => navigate(entity.id === id ? '' : entity.id)}
             >
               <Flex width="100%">
