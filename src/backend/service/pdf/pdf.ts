@@ -139,7 +139,7 @@ export const exportOrders = (payload: Delivery[]) => {
       { text: `Bilan des commandes - Imprimé le ${new Date().toLocaleDateString()}`, alignment: 'left' },
       {
         layout: 'lightHorizontalLines',
-        margin: [0, 0, 0, 20],
+        margin: [0, 10],
         table: {
           headerRows: 1,
           width: ['auto', ...payload.map(() => 'auto')],
