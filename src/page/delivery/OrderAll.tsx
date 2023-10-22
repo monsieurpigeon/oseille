@@ -4,7 +4,7 @@ import { usePostHog } from 'posthog-js/react';
 import { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSnapshot } from 'valtio';
-import { Delivery, Product, confirmOrder, store } from '../../backend';
+import { Delivery, Product, confirmOrder, exportOrders, store } from '../../backend';
 import { MyHeader } from '../../component/layout/page-layout/MyHeader';
 import { useConfirm } from '../../component/modal/confirm-modal/ConfirmContext';
 import { useSideKick } from '../../component/modules/sidekick/SideKickContext';
@@ -72,6 +72,10 @@ export function OrderAll() {
     return Object.values(aggregatedLines).sort((a, b) => a.product.name.localeCompare(b.product.name));
   }, [selectedOrders]);
 
+  const onPrint = () => {
+    exportOrders(selectedOrders);
+  };
+
   return (
     <>
       <MyHeader>
@@ -83,6 +87,12 @@ export function OrderAll() {
             >
               <CloseButton onClick={() => setToInvoice({})} />
               <Button onClick={handleClick}>Passer en BL</Button>
+              <Button
+                colorScheme="twitter"
+                onClick={onPrint}
+              >
+                Imprimer
+              </Button>
             </Flex>
           )}
         </Box>
