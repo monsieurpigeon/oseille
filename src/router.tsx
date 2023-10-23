@@ -72,11 +72,10 @@ export const router = createBrowserRouter([
         path: 'product',
         id: 'products',
         element: <ProductPage />,
-        loader: async () => {
-          return relDb.rel
+        loader: async () =>
+          relDb.rel
             .find('product')
-            .then((doc) => doc.products.sort((a: Product, b: Product) => a.name.localeCompare(b.name)));
-        },
+            .then((doc) => doc.products.sort((a: Product, b: Product) => a.name.localeCompare(b.name))),
         children: [
           {
             index: true,
@@ -103,20 +102,21 @@ export const router = createBrowserRouter([
         id: 'customers',
         loader: async () =>
           relDb.rel
-            .find('customer')
-            .then((doc) => doc.customers.sort((a: Customer, b: Customer) => a.name.localeCompare(b.name))),
+            .find('customerSummary')
+            .then((doc) => doc.customerSummaries.sort((a: Customer, b: Customer) => a.name.localeCompare(b.name))),
         children: [
           { index: true, element: <CustomerAll /> },
           { path: 'create', element: <CustomerCreateModal /> },
           {
             path: ':id',
             element: <CustomerDetail />,
+            id: 'customer',
             loader: async ({ params }) =>
-              relDb.rel.find('customerDetail', params.id).then((doc) => {
-                console.log(doc);
-                return doc;
-                // .customers.sort((a: Customer, b: Customer) => a.name.localeCompare(b.name));
-              }),
+              relDb.rel.find('customer', params.id).then((doc) => ({
+                ...doc,
+                deliveries: doc.deliveries.sort((a: any, b: any) => b.documentId.localeCompare(a.documentId)),
+                invoices: doc.invoices.sort((a: any, b: any) => b.documentId.localeCompare(a.documentId)),
+              })),
             children: [{ path: 'edit', element: <CustomerEditModal /> }],
           },
         ],

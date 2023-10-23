@@ -1,20 +1,8 @@
-import { useEffect, useState } from 'react';
-import { Delivery, getDeliveries, onDeliveriesChange } from '../backend';
+import { useState } from 'react';
+import { Delivery } from '../backend';
 
 export function useDeliveries() {
   const [deliveries, setDeliveries] = useState<Delivery[]>([]);
-  const refreshDeliveries = () => {
-    console.log('REFRESH DELIVERY');
-    getDeliveries().then(setDeliveries);
-  };
-
-  useEffect(() => {
-    refreshDeliveries();
-    const observer = onDeliveriesChange(refreshDeliveries);
-    return () => {
-      observer.cancel();
-    };
-  }, []);
 
   const getDelivery = (id: string) => {
     if (!id) return;
@@ -23,7 +11,7 @@ export function useDeliveries() {
 
   const getClientDeliveries = (customerId: string) => {
     return deliveries
-      .filter((delivery) => delivery.customerId === customerId)
+      .filter((delivery) => delivery.customer === customerId)
       .sort((a, b) => b.documentId.localeCompare(a.documentId));
   };
 

@@ -1,6 +1,6 @@
 import { documentIdFormatter } from '../../utils/formatter';
 import { relDb } from '../service/database';
-import { Customer, getCustomerById } from './customer';
+import { getCustomerById } from './customer';
 import { getFarm, updateDocumentId } from './farm';
 import { ProductWithPrice, getProductById } from './product';
 
@@ -10,8 +10,7 @@ export interface Delivery {
   isOrder?: boolean;
   isTVA: boolean;
   deliveredAt: string;
-  customer: Customer;
-  customerId: string;
+  customer: string;
   documentId: string;
   invoiceId?: string;
   lines: Array<DeliveryLine>;
@@ -127,7 +126,6 @@ export const getDeliveries = async (ids?: string[]): Promise<Delivery[]> =>
         const customer = getCustomerById(delivery.customerId);
         return {
           ...delivery,
-          customer,
           deliveredAt: new Date(delivery.deliveredAt).toISOString().split('T')[0],
         };
       })

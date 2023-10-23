@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRef } from 'react';
 import { useForm } from 'react-hook-form';
-import { useNavigate, useRevalidator, useRouteLoaderData } from 'react-router-dom';
+import { useNavigate, useRouteLoaderData } from 'react-router-dom';
 import { Product, ProductInput, updateProduct } from '../../../backend';
 import { MyModal } from '../../../component/modal/MyModal';
 import { useSideKick } from '../../../component/modules/sidekick/SideKickContext';
@@ -11,7 +11,6 @@ import { ProductFields } from './ProductFields';
 
 export function ProductEditModal() {
   const product = useRouteLoaderData('product') as Product;
-  const revalidator = useRevalidator();
 
   const cancelRef = useRef<any>();
   const navigate = useNavigate();
@@ -31,7 +30,6 @@ export function ProductEditModal() {
             feeling: SideKickFeeling.GOOD,
           }),
         )
-        .then(revalidator.revalidate)
         .catch(console.error);
   };
 

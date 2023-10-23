@@ -1,20 +1,8 @@
-import { useEffect, useState } from 'react';
-import { Price, getPrices, onPricesChange } from '../backend';
+import { useState } from 'react';
+import { Price } from '../backend';
 
 export function usePrices() {
   const [prices, setPrices] = useState<Price[]>([]);
-  const refreshPrices = () => {
-    console.log('REFRESH PRICE');
-    getPrices().then(setPrices);
-  };
-
-  useEffect(() => {
-    refreshPrices();
-    const observer = onPricesChange(refreshPrices);
-    return () => {
-      observer.cancel();
-    };
-  }, []);
 
   // TODO get prices per customer
   const getPrice = (id: string) => {

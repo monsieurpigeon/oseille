@@ -1,4 +1,4 @@
-import { Delivery, Invoice } from '../backend';
+import { Delivery, Invoice, relDb } from '../backend';
 import { round } from './compute';
 import { DEFAULT_TAX, TVA_RATES } from './defaults';
 
@@ -14,9 +14,9 @@ export function getDeliveryTotal(delivery: Delivery): number {
   return delivery.lines.reduce((acc, el) => acc + el.product.price * el.quantity, 0);
 }
 
-export function getInvoiceTotal(invoice: Invoice, ht: boolean = false): number {
+export async function getInvoiceTotal(invoice: Invoice, ht: boolean = false): Promise<number> {
   const isTva = getIsTVA(invoice);
-  const taxes = computeTaxes(invoice);
+  const taxes = await computeTaxes(invoice);
   return round(isTva && !ht ? taxes.total.ttc : taxes.total.ht);
 }
 
@@ -27,8 +27,9 @@ interface TaxLine {
   taxValue?: { value: string; label: string; code: number };
 }
 
-export const computeTaxes = (invoice: Invoice): { total: TaxLine; detail: TaxLine[] } => {
-  const deliveryLines = invoice.deliveries
+export const computeTaxes = async (invoice: Invoice): Promise<{ total: TaxLine; detail: TaxLine[] }> => {
+  const deliveries = await relDb.rel.find('delivery', invoice.deliveries);
+  const deliveryLines = (deliveries.deliveries as Delivery[])
     .flatMap((delivery) => {
       if (!delivery) return null;
       return delivery.lines.map((line) => ({

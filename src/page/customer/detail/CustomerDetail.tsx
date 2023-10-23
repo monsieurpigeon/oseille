@@ -1,17 +1,16 @@
-import { useMemo } from 'react';
-import { Outlet, useNavigate, useParams } from 'react-router-dom';
+import { Outlet, useLoaderData, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { Customer } from '../../../backend';
 import { DetailButton, EditButton } from '../../../component/buttons';
 import { MyHeader } from '../../../component/layout/page-layout/MyHeader';
-import { useData } from '../../../context/DataContext';
 import { CustomerDisplay } from './CustomerDisplay';
 import { CustomerDocuments } from './CustomerDocuments';
 
 export const CustomerDetail = () => {
-  const { id } = useParams();
   const navigate = useNavigate();
-  const { getCustomer, customers } = useData();
-  const selected = useMemo(() => (id ? getCustomer(id) : undefined), [id, customers]);
+  const {
+    customers: [selected],
+  } = useLoaderData() as { customers: Customer[] };
 
   if (!selected) return <></>;
   return (

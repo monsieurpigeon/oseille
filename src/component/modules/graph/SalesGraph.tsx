@@ -2,9 +2,8 @@ import { Chart, registerables } from 'chart.js';
 import 'chartjs-adapter-moment';
 import moment from 'moment';
 import 'moment/locale/fr';
-import { useEffect, useRef } from 'react';
-import { Customer } from '../../../backend';
-import { useData } from '../../../context/DataContext';
+import { useEffect, useRef, useState } from 'react';
+import { Invoice } from '../../../backend';
 import { getInvoiceTotal } from '../../../utils/aggregations';
 import { priceFormatter } from '../../../utils/formatter';
 
@@ -28,30 +27,35 @@ function translate_month(month: string) {
 }
 
 interface SalesGraphProps {
-  customer: Customer;
+  invoices: Invoice[];
 }
 
 Chart.register(...registerables);
 
-export function SalesGraph({ customer }: SalesGraphProps) {
+export function SalesGraph({ invoices }: SalesGraphProps) {
   const chartRef = useRef(null);
-  const { getClientInvoices } = useData();
 
-  const customerInvoice = getClientInvoices(customer.id);
-  const total = customerInvoice.reduce((acc, invoice) => acc + getInvoiceTotal(invoice), 0);
+  const [total, setTotal] = useState(0);
+  const [data, setData] = useState<{ [key: string]: number }>({});
+  const [labels, setLabels] = useState<string[]>([]);
 
   useEffect(() => {
-    if (chartRef.current && customerInvoice.length > 0) {
+    async function calculateTotal() {
+      const sum = await Promise.all(invoices.map((invoice) => getInvoiceTotal(invoice, true))).then((totals) =>
+        totals.reduce((acc, total) => acc + total, 0),
+      );
+      setTotal(sum);
+    }
+    calculateTotal();
+  }, [invoices]);
+
+  useEffect(() => {
+    if (chartRef.current && invoices.length > 0) {
       const formatString = 'MMM YYYY';
+      invoices.sort((a, b) => moment(a.createdAt).diff(moment(b.createdAt)));
 
-      let minMonth = moment(customerInvoice[0].createdAt);
-      let maxMonth = moment(customerInvoice[0].createdAt);
-
-      customerInvoice.forEach((invoice) => {
-        const date = moment(invoice.createdAt);
-        if (date.isBefore(minMonth)) minMonth = date;
-        if (date.isAfter(maxMonth)) maxMonth = date;
-      });
+      let minMonth = moment(invoices[0].createdAt);
+      let maxMonth = moment(invoices[invoices.length - 1].createdAt);
 
       const labels: string[] = [];
       let aggregatedData: { [key: string]: number } = {};
@@ -63,14 +67,24 @@ export function SalesGraph({ customer }: SalesGraphProps) {
         aggregatedData[label] = 0;
         currentMonth.add(1, 'month');
       }
+      setLabels(labels);
 
-      aggregatedData = customerInvoice.reduce((acc, invoice) => {
-        const period = moment(invoice.createdAt).format(formatString);
-        if (!acc[period]) acc[period] = 0;
-        acc[period] += getInvoiceTotal(invoice);
-        return acc;
-      }, aggregatedData);
+      const getData = async () => {
+        return invoices.reduce(async (memo, invoice) => {
+          const acc = await memo;
+          const period = moment(invoice.createdAt).format(formatString);
+          const result = await getInvoiceTotal(invoice, true);
+          acc[period] += result;
+          return Promise.resolve(acc);
+        }, Promise.resolve(aggregatedData));
+      };
 
+      getData().then((data) => setData(data));
+    }
+  }, [invoices]);
+
+  useEffect(() => {
+    if (chartRef.current && invoices.length > 0) {
       const chart = new Chart(chartRef.current, {
         type: 'bar',
         data: {
@@ -81,7 +95,7 @@ export function SalesGraph({ customer }: SalesGraphProps) {
           }),
           datasets: [
             {
-              data: labels.map((label) => aggregatedData[label]),
+              data: labels.map((label) => data[label]),
               backgroundColor: 'rgba(75, 192, 192, 0.6)',
               borderColor: 'rgba(75, 192, 192, 1)',
               borderWidth: 1,
@@ -115,13 +129,11 @@ export function SalesGraph({ customer }: SalesGraphProps) {
 
       return () => chart.destroy();
     }
-  }, [customerInvoice]);
+  }, [data]);
 
   return (
     <div>
-      <div>
-        {`${customerInvoice.length} facture${customerInvoice.length > 1 ? 's' : ''}, total: ${priceFormatter(total)}`}
-      </div>
+      <div>{`${invoices.length} facture${invoices.length > 1 ? 's' : ''}, total: ${priceFormatter(total)}`}</div>
       <canvas
         ref={chartRef}
         height="300"

@@ -27,10 +27,9 @@ export interface Payment {
 
 export interface Invoice {
   id: string;
+  customer: string;
   documentId: string;
-  customerId: string;
-  deliveryIds: string[];
-  deliveries: Delivery[];
+  deliveries: string[];
   createdAt: string;
   notes: string;
   isPaid?: boolean;
@@ -38,11 +37,10 @@ export interface Invoice {
 }
 
 export interface InvoiceInput {
-  customerId: string;
-  documentId: string;
-  deliveryIds: string[];
-  deliveryDocumentIds: string[];
+  customer: string;
   deliveries: Delivery[];
+  documentId: string;
+  deliveryDocumentIds: string[];
   createdAt: string;
   notes: string;
 }
@@ -64,8 +62,7 @@ export const addInvoice = async (deliveries: Delivery[], createdAt: string, note
   const farm = await getFarm();
   const invoice: InvoiceInput = {
     documentId: documentIdFormatter(farm?.invoiceId || 0, 'Invoice'),
-    customerId: deliveries[0].customerId,
-    deliveryIds: deliveries.map((d) => d.id),
+    customer: deliveries[0].customerId,
     deliveryDocumentIds: deliveries.map((d) => d.documentId),
     deliveries,
     createdAt,
@@ -76,7 +73,7 @@ export const addInvoice = async (deliveries: Delivery[], createdAt: string, note
     const result = await relDb.rel.save('invoice', invoice);
     deliveries.forEach(confirmOrder);
 
-    invoice.deliveryIds.map((id) => addInvoiceId(result.id, id));
+    invoice.deliveries.map((delivery) => addInvoiceId(result.id, delivery.id));
     updateDocumentId('Invoice');
     return result;
   } catch (message) {
@@ -90,7 +87,7 @@ export const updateInvoice = (invoice: Invoice) => {
 };
 
 export const deleteInvoice = (invoice: Invoice) => {
-  invoice.deliveryIds.map((id) => removeInvoiceId(id));
+  invoice.deliveries.map((id) => removeInvoiceId(id));
   updateDocumentId(DocumentType.invoice, -1);
   return relDb.rel.del('invoice', invoice);
 };
@@ -103,7 +100,7 @@ export const getInvoices = async (ids?: string[]) => {
   const doc = await relDb.rel.find('invoice', ids);
 
   const prom = doc.invoices.map(async (invoice: Invoice) => {
-    const customer = doc.customers.find((customer: Customer) => customer.id === invoice.customerId);
+    const customer = doc.customers.find((customer: Customer) => customer.id === invoice.customer);
     const deliveries = doc.deliveries.filter((delivery: Delivery) => delivery.invoiceId === invoice.id);
     return {
       ...invoice,

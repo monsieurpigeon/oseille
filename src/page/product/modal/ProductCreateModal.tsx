@@ -2,7 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { usePostHog } from 'posthog-js/react';
 import { useRef } from 'react';
 import { useForm } from 'react-hook-form';
-import { useNavigate, useRevalidator } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 import { ProductInput, addProduct } from '../../../backend';
 import { MyModal } from '../../../component/modal/MyModal';
@@ -17,7 +17,6 @@ export const productSchema = z.object({
 });
 
 export function ProductCreateModal() {
-  const revalidator = useRevalidator();
   const posthog = usePostHog();
   const cancelRef = useRef<any>();
   const navigate = useNavigate();
@@ -52,7 +51,6 @@ export function ProductCreateModal() {
           feeling: SideKickFeeling.GOOD,
         }),
       )
-      .then(revalidator.revalidate)
       .catch(console.error);
   };
 

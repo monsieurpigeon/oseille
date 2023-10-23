@@ -1,4 +1,6 @@
-import { Outlet } from 'react-router-dom';
+import { useEffect } from 'react';
+import { Outlet, useRevalidator } from 'react-router-dom';
+import { relDb } from '../backend';
 import { InvoicingLayout } from '../component/layout/MainLayout';
 
 const items = [
@@ -12,6 +14,16 @@ const items = [
 ];
 
 export function InvoicingPageGroup() {
+  const revalidator = useRevalidator();
+
+  useEffect(() => {
+    const observer = relDb.changes({ since: 'now', live: true }).on('change', (e) => {
+      console.log('change', e);
+      revalidator.revalidate();
+    });
+    return () => observer.cancel();
+  }, []);
+
   return (
     <InvoicingLayout navItems={items}>
       <Outlet />

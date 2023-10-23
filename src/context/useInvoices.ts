@@ -1,20 +1,8 @@
-import { useEffect, useState } from 'react';
-import { Invoice, getInvoices, onInvoicesChange } from '../backend';
+import { useState } from 'react';
+import { Invoice } from '../backend';
 
 export function useInvoices() {
   const [invoices, setInvoices] = useState<Invoice[]>([]);
-  const refreshInvoices = () => {
-    console.log('REFRESH INVOICE');
-    getInvoices().then(setInvoices);
-  };
-
-  useEffect(() => {
-    refreshInvoices();
-    const observer = onInvoicesChange(refreshInvoices);
-    return () => {
-      observer.cancel();
-    };
-  }, []);
 
   const getInvoice = (id: string) => {
     if (!id) return;
