@@ -1,16 +1,19 @@
 import { Box, Button, Flex, Grid, GridItem, Input, Select, Text, Textarea } from '@chakra-ui/react';
 import { useMemo } from 'react';
 import { FieldArrayWithId } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
-import { DeliveryInput } from '../../../backend';
+import { useLoaderData, useNavigate } from 'react-router-dom';
+import { Customer, DeliveryInput, Price, Product } from '../../../backend';
 import { MyNumberInput } from '../../../component/form/MyNumberInput';
-import { useData } from '../../../context/DataContext';
 import { priceFormatter } from '../../../utils/formatter';
 import { useFarmParameters } from '../../../utils/hooks/useFarmParameters';
 
 export function DeliveryFields({ watch, control, register, fields, append, remove, setValue }: any) {
   const navigate = useNavigate();
-  const { products, customers, prices } = useData();
+  const { products, customers, prices } = useLoaderData() as {
+    products: Product[];
+    customers: Customer[];
+    prices: Price[];
+  };
 
   const watchCustomer = watch('customerId');
   const { isTVA } = useFarmParameters();

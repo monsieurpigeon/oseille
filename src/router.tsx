@@ -121,7 +121,21 @@ export const router = createBrowserRouter([
           },
         ],
       },
-      { path: 'prices', element: <PricePage /> },
+      {
+        path: 'prices',
+        element: <PricePage />,
+        loader: async () => {
+          const priceResult = relDb.rel.find('price');
+          const productResult = relDb.rel.find('product');
+          const customerResult = relDb.rel.find('customer');
+          return Promise.all([priceResult, productResult, customerResult]).then((results) => {
+            const prices = results[0].prices;
+            const products = results[1].products.sort((a: Product, b: Product) => a.name.localeCompare(b.name));
+            const customers = results[2].customers.sort((a: Customer, b: Customer) => a.name.localeCompare(b.name));
+            return { prices, products, customers };
+          });
+        },
+      },
       {
         path: 'order',
         element: <OrderPage />,
@@ -134,10 +148,36 @@ export const router = createBrowserRouter([
       {
         path: 'delivery',
         element: <DeliveryPage />,
+        id: 'deliveries',
+        loader: async () =>
+          relDb.rel.find('delivery').then((doc) => ({
+            ...doc,
+            customers: doc.customerSummaries.sort((a: any, b: any) => a.name.localeCompare(b.name)),
+          })),
         children: [
           { index: true, element: <DeliveryAll /> },
-          { path: 'create', element: <DeliveryCreateModal /> },
-          { path: ':id', element: <DeliveryDetail />, children: [{ path: 'edit', element: <DeliveryEditModal /> }] },
+          {
+            path: 'create',
+            element: <DeliveryCreateModal />,
+            loader: async () => {
+              const priceResult = relDb.rel.find('price');
+              const productResult = relDb.rel.find('product');
+              const customerResult = relDb.rel.find('customer');
+              return Promise.all([priceResult, productResult, customerResult]).then((results) => {
+                const prices = results[0].prices;
+                const products = results[1].products.sort((a: Product, b: Product) => a.name.localeCompare(b.name));
+                const customers = results[2].customers.sort((a: Customer, b: Customer) => a.name.localeCompare(b.name));
+                return { prices, products, customers };
+              });
+            },
+          },
+          {
+            path: ':id',
+            element: <DeliveryDetail />,
+            id: 'delivery',
+            loader: async ({ params }) => relDb.rel.find('delivery', params.id),
+            children: [{ path: 'edit', element: <DeliveryEditModal /> }],
+          },
         ],
       },
       {

@@ -32,7 +32,7 @@ export const relDb = db.setSchema([
     plural: 'prices',
     relations: {
       product: { belongsTo: 'product' },
-      customer: { belongsTo: 'customer' },
+      customer: { belongsTo: 'customerSummary' }, // TODO should belong to customer
     },
   },
   {

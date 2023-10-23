@@ -1,7 +1,7 @@
 import { Table, TableContainer, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react';
 import { useMemo, useState } from 'react';
-import { Price } from '../../backend';
-import { useData } from '../../context/DataContext';
+import { useLoaderData } from 'react-router-dom';
+import { Customer, Price, Product } from '../../backend';
 import { priceFormatter } from '../../utils/formatter';
 import { PriceEmpty } from './PriceEmpty';
 import { PriceNumberInput } from './PriceNumberInput';
@@ -11,7 +11,12 @@ type PriceList = { [key: string]: { [key: string]: Price } };
 
 export function PriceTable() {
   const [currentEdit, setCurrentEdit] = useState(['', '']);
-  const { products, customers, prices } = useData();
+  const { products, customers, prices } = useLoaderData() as {
+    products: Product[];
+    customers: Customer[];
+    prices: Price[];
+  };
+
   const [customerLength, productLength] = [customers.length, products.length];
 
   const priceList: PriceList = useMemo(

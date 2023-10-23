@@ -1,6 +1,6 @@
 import { documentIdFormatter } from '../../utils/formatter';
 import { relDb } from '../service/database';
-import { getCustomerById } from './customer';
+import { Customer, getCustomerById } from './customer';
 import { getFarm, updateDocumentId } from './farm';
 import { ProductWithPrice, getProductById } from './product';
 
@@ -10,7 +10,7 @@ export interface Delivery {
   isOrder?: boolean;
   isTVA: boolean;
   deliveredAt: string;
-  customer: string;
+  customer: string | Customer;
   documentId: string;
   invoiceId?: string;
   lines: Array<DeliveryLine>;

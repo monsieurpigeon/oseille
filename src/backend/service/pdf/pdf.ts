@@ -42,7 +42,7 @@ const getBioLogo = (label: string | undefined) => {
 };
 
 export const exportDocument = async ({ payload, type, open = false }: any) => {
-  const isTVA = type === DocumentType.delivery ? payload.isTVA : getIsTVA(payload);
+  const isTVA = type === DocumentType.delivery ? payload.isTVA : await getIsTVA(payload);
   const currentCustomer = await getCustomerById(payload.customerId);
   const farm = await getFarm();
   const docDefinition: any = {
@@ -78,9 +78,9 @@ export const exportDocument = async ({ payload, type, open = false }: any) => {
         text: `Date: ${dateFormatter(type === DocumentType.invoice ? payload.createdAt : payload.deliveredAt)}`,
         style: 'header',
       },
-      lines(payload, type),
-      ...(isTVA && type === DocumentType.invoice ? [taxes(payload)] : []),
-      totals(payload, type, farm),
+      await lines(payload, type),
+      ...(isTVA && type === DocumentType.invoice ? [await taxes(payload)] : []),
+      await totals(payload, type, farm),
       { columns: [{ qr: payload.id, fit: '50' }, { text: `Notes: ${payload.notes ?? ''}` }] },
     ],
     images: {

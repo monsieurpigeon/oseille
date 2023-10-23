@@ -2,8 +2,9 @@ import { Delivery, Invoice, relDb } from '../backend';
 import { round } from './compute';
 import { DEFAULT_TAX, TVA_RATES } from './defaults';
 
-export function getIsTVA(invoice: Invoice): boolean {
-  const isTVAArray = invoice.deliveries.map((delivery) => {
+export async function getIsTVA(invoice: Invoice): Promise<boolean> {
+  const result = await relDb.rel.find('delivery', invoice.deliveries);
+  const isTVAArray = (result.deliveries as Delivery[]).map((delivery) => {
     if (!delivery) return null;
     return delivery.isTVA;
   });
@@ -15,7 +16,7 @@ export function getDeliveryTotal(delivery: Delivery): number {
 }
 
 export async function getInvoiceTotal(invoice: Invoice, ht: boolean = false): Promise<number> {
-  const isTva = getIsTVA(invoice);
+  const isTva = await getIsTVA(invoice);
   const taxes = await computeTaxes(invoice);
   return round(isTva && !ht ? taxes.total.ttc : taxes.total.ht);
 }

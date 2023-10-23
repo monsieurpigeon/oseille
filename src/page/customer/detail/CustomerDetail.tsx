@@ -22,7 +22,7 @@ export const CustomerDetail = () => {
       </MyHeader>
 
       <CustomerDisplay customer={selected} />
-      <CustomerDocuments customer={selected} />
+      <CustomerDocuments />
     </StyledContainer>
   );
 };

@@ -1,8 +1,9 @@
 import { Box, Button, Flex } from '@chakra-ui/react';
 import { addDays } from 'date-fns';
 import { usePostHog } from 'posthog-js/react';
-import { useEffect, useMemo, useState } from 'react';
-import { Outlet, useNavigate, useParams } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Outlet, useLoaderData, useNavigate, useParams } from 'react-router-dom';
+import { Customer, Delivery, relDb } from '../../backend';
 import { MyIcon } from '../../component/MyIcon';
 import { ListItem } from '../../component/card/ListItem';
 import { ListItemGroup } from '../../component/card/ListItemGroup';
@@ -12,7 +13,6 @@ import { MyScrollList } from '../../component/layout/page-layout/MyScrollList';
 import { MySide } from '../../component/layout/page-layout/MySide';
 import { InfoModal } from '../../component/modal/InfoModal';
 import { MyH1 } from '../../component/typography/MyFont';
-import { useData } from '../../context/DataContext';
 import { dateFormatter } from '../../utils/formatter';
 import { InvoiceCreateModal } from '../invoice/modal/InvoiceCreateModal';
 
@@ -21,12 +21,12 @@ export function DeliveryPage() {
   useEffect(() => {
     posthog?.capture('delivery_page_viewed');
   }, []);
-  const { id } = useParams();
-  const { customers, getDelivery, deliveries } = useData();
+  const { customers, deliveries } = useLoaderData() as {
+    customers: Customer[];
+    deliveries: Delivery[];
+  };
 
   const navigate = useNavigate();
-
-  const selected = useMemo(() => (id ? getDelivery(id) : undefined), [id, deliveries]);
 
   return (
     <MyPage>
@@ -70,7 +70,6 @@ export function DeliveryPage() {
           {customers.map((customer) => (
             <DeliveryCustomer
               key={customer.id}
-              selected={selected}
               customer={customer}
             />
           ))}
@@ -84,13 +83,18 @@ export function DeliveryPage() {
   );
 }
 
-function DeliveryCustomer({ customer, selected }: any) {
+function DeliveryCustomer({ customer }: any) {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { getClientDeliveries } = useData();
+  const [deliveries, setDeliveries] = useState<Delivery[]>([]);
+
+  useEffect(() => {
+    const getClientDeliveries = async () => relDb.rel.find('customer', customer.id);
+    getClientDeliveries().then((result) => setDeliveries(result.deliveries));
+  }, []);
 
   const [toInvoice, setToInvoice] = useState<{ [key: string]: boolean }>({});
-  const customerDeliveries = getClientDeliveries(customer.id).filter((delivery) => {
+  const customerDeliveries = deliveries.filter((delivery) => {
     const date = new Date(delivery.deliveredAt);
     const today = addDays(new Date(), -2 * 7);
     return !delivery.invoiceId || date > today;
@@ -112,7 +116,7 @@ function DeliveryCustomer({ customer, selected }: any) {
     >
       {customerDeliveries.map((delivery) => (
         <ListItem
-          isSelected={selected?.id === delivery.id}
+          isSelected={id === delivery.id}
           key={delivery.id}
           onClick={() => navigate(delivery.id === id ? '' : delivery.id)}
           checkable={!delivery.invoiceId}
