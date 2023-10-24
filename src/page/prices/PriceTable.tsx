@@ -38,7 +38,6 @@ export function PriceTable() {
       overflowY="scroll"
       overflowX="scroll"
       height="100%"
-      className="hide-scroll"
     >
       <Table>
         <Thead>
