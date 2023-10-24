@@ -1,8 +1,9 @@
 import { Button } from '@chakra-ui/react';
 import clsx from 'clsx';
-import { useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useLoaderData } from 'react-router-dom';
 import styled from 'styled-components';
-import { useData } from '../../context/DataContext';
+import { Customer, Delivery, Invoice, Product, relDb } from '../../backend';
 import { priceFormatter } from '../../utils/formatter';
 
 const StyledTable = styled.table`
@@ -41,29 +42,48 @@ const StyledTable = styled.table`
   }
 `;
 
-export function SalesTable() {
-  const { products, getProduct, customers, getDeliveriesByIds, getCustomer, invoices } = useData();
+interface Sales {
+  product: string;
+  productId: string;
+  customer: string;
+  customerId: string;
+  totalPrice: number;
+}
 
+export function SalesTable() {
+  const [sales, setSales] = useState<Sales[]>([]);
+
+  const { products, customers, invoices } = useLoaderData() as {
+    products: Product[];
+    customers: Customer[];
+    invoices: Invoice[];
+  };
   const [show, setShow] = useState(false);
 
-  const sales = useMemo(() => {
-    return invoices.flatMap((invoice) => {
-      const deliveries = getDeliveriesByIds(invoice.deliveryIds);
-      const customer = getCustomer(invoice.customerId);
-      const products = deliveries.flatMap((delivery) => {
-        return delivery?.lines.map((line) => {
-          const product = getProduct(line.product.id);
-          return {
-            product: product?.name || 'defaultProduct',
-            productId: product?.id || '000',
-            customer: customer?.name,
-            customerId: customer?.id,
-            totalPrice: line.quantity * line.price || 0,
-          };
-        });
-      });
-      return products;
-    });
+  useEffect(() => {
+    const getSales = async () => {
+      const sales = await Promise.all(
+        invoices.map(async (invoice) => {
+          const deliveries = (await relDb.rel.find('delivery', invoice.deliveries)).deliveries as Delivery[];
+          const customer = (await relDb.rel.find('customer', invoice.customer)).customers[0] as Customer;
+          const products = deliveries.flatMap((delivery) => {
+            return delivery?.lines.map((line) => {
+              const product = line.product;
+              return {
+                product: product?.name || 'defaultProduct',
+                productId: product?.id || '000',
+                customer: customer?.name,
+                customerId: customer?.id,
+                totalPrice: line.quantity * line.price || 0,
+              };
+            });
+          });
+          return products;
+        }),
+      );
+      return sales.flat() as Array<Sales>;
+    };
+    getSales().then(setSales);
   }, [invoices]);
 
   const salesByProduct = sales.reduce((memo, sale) => {

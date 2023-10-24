@@ -1,18 +1,25 @@
 import { Box, Stat, StatGroup, StatLabel, StatNumber } from '@chakra-ui/react';
 import { usePostHog } from 'posthog-js/react';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useState } from 'react';
+import { useLoaderData } from 'react-router-dom';
 import { Invoice, isInvoicePaid } from '../../backend';
 import { MySimpleLayout } from '../../component/layout/page-layout/MySimpleLayout';
-import { useData } from '../../context/DataContext';
 import { getInvoiceTotal } from '../../utils/aggregations';
 import { priceFormatter } from '../../utils/formatter';
 import { SalesTable } from './SalesTable';
 
-function getValues(invoices: Invoice[]) {
-  return invoices.reduce(
-    (memo, invoice) => ({
-      quantity: memo.quantity + 1,
-      money: memo.money + getInvoiceTotal(invoice, true),
+async function getValues(invoices: Invoice[]) {
+  const result = await Promise.all(
+    invoices.map(async (invoice) => {
+      const total = await getInvoiceTotal(invoice, true);
+      return { quantity: 1, money: total };
+    }),
+  );
+
+  return result.reduce(
+    (memo, value) => ({
+      quantity: memo.quantity + value.quantity,
+      money: memo.money + value.money,
     }),
     { quantity: 0, money: 0 },
   );
@@ -23,12 +30,19 @@ export function DashboardPage() {
   useEffect(() => {
     posthog?.capture('home_page_viewed');
   }, []);
-  const { invoices } = useData();
+  const { invoices } = useLoaderData() as { invoices: Invoice[] };
+  const [{ invoicePaid, invoiceWaiting }, setInvoices] = useState({
+    invoicePaid: { quantity: 0, money: 0 },
+    invoiceWaiting: { quantity: 0, money: 0 },
+  });
 
-  const { invoicePaid, invoiceWaiting } = useMemo(() => {
-    const invoicePaid = invoices.filter((i) => isInvoicePaid(i));
-    const invoiceWaiting = invoices.filter((i) => !isInvoicePaid(i));
-    return { invoicePaid: getValues(invoicePaid), invoiceWaiting: getValues(invoiceWaiting) };
+  useEffect(() => {
+    const getInvoices = async () => {
+      const invoicePaid = await getValues(invoices.filter((i) => isInvoicePaid(i)));
+      const invoiceWaiting = await getValues(invoices.filter((i) => !isInvoicePaid(i)));
+      return { invoicePaid, invoiceWaiting };
+    };
+    getInvoices().then((result) => setInvoices(result));
   }, [invoices]);
 
   return (
@@ -37,13 +51,13 @@ export function DashboardPage() {
         <StatGroup>
           <Stat>
             <StatLabel>{`${invoiceWaiting.quantity} facture${
-              invoiceWaiting.quantity > 1 && 's'
+              invoiceWaiting.quantity > 1 ? 's' : ''
             } en attente`}</StatLabel>
             <StatNumber>{priceFormatter(invoiceWaiting.money)}</StatNumber>
           </Stat>
           <Stat>
-            <StatLabel>{`${invoicePaid.quantity} facture${invoicePaid.quantity > 1 && 's'} payée${
-              invoicePaid.quantity > 1 && 's'
+            <StatLabel>{`${invoicePaid.quantity} facture${invoicePaid.quantity > 1 ? 's' : ''} payée${
+              invoicePaid.quantity > 1 ? 's' : ''
             }`}</StatLabel>
             <StatNumber>{priceFormatter(invoicePaid.money)}</StatNumber>
           </Stat>
