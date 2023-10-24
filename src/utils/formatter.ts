@@ -3,7 +3,7 @@ import { DocumentType } from '../backend';
 import { DEFAULT_TAX } from './defaults';
 
 export function priceFormatter(value: number) {
-  if (!value) return undefined;
+  if (!value == null) return undefined;
   return value.toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' }).split(' ').join(' ');
 }
 

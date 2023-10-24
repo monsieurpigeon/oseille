@@ -134,12 +134,14 @@ export function SalesGraph({ invoices }: SalesGraphProps) {
   return (
     <div>
       <div>{`${invoices.length} facture${invoices.length > 1 ? 's' : ''}, total: ${priceFormatter(total)}`}</div>
-      <canvas
-        ref={chartRef}
-        height="300"
-        width="500"
-        style={{ display: 'block', maxWidth: '100%', height: 'auto' }}
-      />
+      {invoices.length > 0 && (
+        <canvas
+          ref={chartRef}
+          height="300"
+          width="500"
+          style={{ display: 'block', maxWidth: '100%', height: 'auto' }}
+        />
+      )}
     </div>
   );
 }

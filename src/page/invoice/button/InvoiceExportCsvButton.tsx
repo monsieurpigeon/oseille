@@ -19,9 +19,9 @@ export function InvoiceExportCsvButton() {
     const data = clone
       .sort((a, b) => a.createdAt.localeCompare(b.createdAt))
       .flatMap((invoice) => {
-        const customer = getCustomer(invoice.customerId);
+        const customer = getCustomer(invoice.customer);
         const customerName = customer?.name;
-        const deliveries = getDeliveriesByIds(invoice.deliveryIds);
+        const deliveries = getDeliveriesByIds(invoice.deliveries);
         const products = deliveries.flatMap((delivery) => {
           return delivery?.lines.map((line) => {
             const product = getProduct(line.product.id);
