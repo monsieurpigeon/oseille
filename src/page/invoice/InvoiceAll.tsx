@@ -1,10 +1,9 @@
 import { Box, Flex, Table, TableContainer, Tbody, Th, Thead, Tr } from '@chakra-ui/react';
 import { differenceInDays } from 'date-fns';
-import { useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useMemo, useState } from 'react';
+import { useNavigate, useRouteLoaderData } from 'react-router-dom';
 import styled from 'styled-components';
-import { isInvoicePaid } from '../../backend';
-import { useData } from '../../context/DataContext';
+import { Customer, Invoice, isInvoicePaid } from '../../backend';
 import { getInvoiceTotal } from '../../utils/aggregations';
 import { priceFormatter } from '../../utils/formatter';
 import { useFarmParameters } from '../../utils/hooks/useFarmParameters';
@@ -19,7 +18,24 @@ const StyledTr = styled(Tr)`
 
 export function InvoiceAll() {
   const { invoiceDelay } = useFarmParameters();
-  const { getCustomer, invoices } = useData();
+  const { invoices, customerSummaries: customers } = useRouteLoaderData('invoices') as {
+    invoices: Invoice[];
+    customerSummaries: Customer[];
+  };
+
+  const [totals, setTotals] = useState<Record<string, number>>({});
+
+  useEffect(() => {
+    const totalsPromise = invoices.map((invoice) => getInvoiceTotal(invoice));
+    Promise.all(totalsPromise)
+      .then((result) =>
+        result.reduce((memo, total, index) => {
+          memo[invoices[index].id] = total;
+          return memo;
+        }, {} as Record<string, number>),
+      )
+      .then(setTotals);
+  });
 
   const navigate = useNavigate();
 
@@ -54,7 +70,7 @@ export function InvoiceAll() {
             </Thead>
             <Tbody>
               {lateInvoices.map((invoice) => {
-                const customer = getCustomer(invoice.customerId);
+                const customer = customers.find((customer) => customer.id === invoice.customer);
                 return (
                   <StyledTr
                     key={invoice.id}
@@ -68,7 +84,7 @@ export function InvoiceAll() {
                         <Box>{customer?.phone}</Box>
                       </Flex>
                     </Th>
-                    <Th isNumeric>{priceFormatter(getInvoiceTotal(invoice))}</Th>
+                    <Th isNumeric>{priceFormatter(totals[invoice.id])}</Th>
                   </StyledTr>
                 );
               })}

@@ -1,9 +1,9 @@
 import { Box, Flex } from '@chakra-ui/react';
 import { differenceInDays } from 'date-fns';
 import { usePostHog } from 'posthog-js/react';
-import { useEffect, useMemo } from 'react';
-import { Outlet, useNavigate, useParams } from 'react-router-dom';
-import { isInvoicePaid } from '../../backend';
+import { useEffect, useState } from 'react';
+import { Outlet, useLoaderData, useNavigate, useParams } from 'react-router-dom';
+import { Customer, Invoice, isInvoicePaid, relDb } from '../../backend';
 import { ListItem } from '../../component/card/ListItem';
 import { ListItemGroup } from '../../component/card/ListItemGroup';
 import { MyHeader } from '../../component/layout/page-layout/MyHeader';
@@ -12,7 +12,6 @@ import { MyScrollList } from '../../component/layout/page-layout/MyScrollList';
 import { MySide } from '../../component/layout/page-layout/MySide';
 import { InfoModal } from '../../component/modal/InfoModal';
 import { MyH1 } from '../../component/typography/MyFont';
-import { useData } from '../../context/DataContext';
 import { dateFormatter } from '../../utils/formatter';
 import { useFarmParameters } from '../../utils/hooks/useFarmParameters';
 import { InvoiceExportCsvButton } from './button/InvoiceExportCsvButton';
@@ -24,10 +23,10 @@ export function InvoicePage() {
     posthog?.capture('invoice_page_viewed');
   }, []);
 
-  const { id } = useParams();
-  const { customers, invoices, getInvoice } = useData();
-
-  const selected = useMemo(() => (id ? getInvoice(id) : undefined), [id, invoices]);
+  const { customerSummaries: customers, invoices } = useLoaderData() as {
+    customerSummaries: Customer[];
+    invoices: Invoice[];
+  };
 
   return (
     <MyPage>
@@ -68,7 +67,6 @@ export function InvoicePage() {
           {customers.map((customer) => (
             <InvoiceCustomer
               key={customer.id}
-              selected={selected}
               customer={customer}
             />
           ))}
@@ -81,13 +79,16 @@ export function InvoicePage() {
   );
 }
 
-function InvoiceCustomer({ customer, selected }: any) {
+function InvoiceCustomer({ customer }: any) {
   const { id } = useParams();
-  const { invoiceDelay } = useFarmParameters();
-  const { getClientInvoices } = useData();
-
-  const invoices = getClientInvoices(customer.id);
   const navigate = useNavigate();
+  const { invoiceDelay } = useFarmParameters();
+  const [invoices, setInvoices] = useState<Invoice[]>([]);
+
+  useEffect(() => {
+    const getClientInvoices = async () => relDb.rel.find('customer', customer.id);
+    getClientInvoices().then((result) => setInvoices(result.invoices));
+  }, []);
 
   if (invoices.length === 0) return null;
   return (
@@ -101,7 +102,7 @@ function InvoiceCustomer({ customer, selected }: any) {
             key={invoice.id}
             done={isInvoicePaid(invoice)}
             alert={isLate}
-            isSelected={selected?.id === invoice.id}
+            isSelected={id === invoice.id}
             onClick={() => navigate(invoice.id === id ? '' : invoice.id)}
           >
             {isLate && '⚠️'} {`${invoice.documentId} - ${dateFormatter(invoice.createdAt)}`}

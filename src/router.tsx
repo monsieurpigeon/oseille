@@ -197,11 +197,15 @@ export const router = createBrowserRouter([
       {
         path: 'invoice',
         element: <InvoicePage />,
+        id: 'invoices',
+        loader: async () => relDb.rel.find('invoice'),
         children: [
           { index: true, element: <InvoiceAll /> },
           {
             path: ':id',
             element: <InvoiceDetail />,
+            id: 'invoice',
+            loader: async ({ params }) => relDb.rel.find('invoice', params.id),
             children: [
               { path: 'pay', element: <PaymentModal /> },
               { path: 'edit', element: <InvoiceEditModal /> },

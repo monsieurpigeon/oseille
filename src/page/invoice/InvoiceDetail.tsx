@@ -1,24 +1,25 @@
 import { Badge, Box, Button, Flex } from '@chakra-ui/react';
-import { useMemo } from 'react';
-import { Link, Outlet, useNavigate, useParams } from 'react-router-dom';
-import { isInvoicePaid } from '../../backend';
+import { Link, Outlet, useLoaderData, useNavigate } from 'react-router-dom';
+import { Customer, Delivery, Invoice, isInvoicePaid } from '../../backend';
 import { DetailButton, EditButton } from '../../component/buttons';
 import { MyHeader } from '../../component/layout/page-layout/MyHeader';
 import { MyScrollList } from '../../component/layout/page-layout/MyScrollList';
 import { DeliveryDescriptionLine } from '../../component/shared/Delivery';
 import { DeliveryDescription } from '../../component/table/DeliveryDescription';
 import { InvoiceTotals } from '../../component/table/InvoiceTotals';
-import { useData } from '../../context/DataContext';
 import { dateFormatter } from '../../utils/formatter';
 import { InvoiceDeleteButton } from './button/InvoiceDeleteButton';
 import { InvoicePrintButton } from './button/InvoicePrintButton';
 
 export const InvoiceDetail = () => {
-  const { id } = useParams();
   const navigate = useNavigate();
-  const { getCustomer, getInvoice, invoices } = useData();
-  const selected = useMemo(() => (id ? getInvoice(id) : undefined), [id, invoices]);
-  const currentCustomer = useMemo(() => getCustomer(selected?.customerId || ''), [selected?.customerId]);
+
+  const {
+    invoices: [selected],
+    customerSummaries: [currentCustomer],
+    deliveries,
+  } = useLoaderData() as { invoices: Invoice[]; customerSummaries: Customer[]; deliveries: Delivery[] };
+
   if (!selected) return null;
   if (!currentCustomer) return null;
   return (
@@ -75,15 +76,18 @@ export const InvoiceDetail = () => {
         <InvoiceTotals invoice={selected} />
       </Flex>
       <MyScrollList>
-        {selected.deliveries.map((delivery) => {
+        {deliveries.map((delivery) => {
           if (!delivery) return null;
 
           return (
             <div
               style={{ marginTop: '15px' }}
-              key={id}
+              key={delivery.id}
             >
-              <DeliveryDescriptionLine delivery={{ ...delivery, customer: currentCustomer }} />
+              <DeliveryDescriptionLine
+                delivery={delivery}
+                customer={currentCustomer}
+              />
               <DeliveryDescription delivery={delivery} />
             </div>
           );

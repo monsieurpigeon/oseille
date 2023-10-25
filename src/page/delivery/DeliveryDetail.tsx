@@ -37,7 +37,10 @@ export const DeliveryDetail = () => {
       </MyHeader>
 
       <div>
-        <DeliveryDescriptionLine delivery={{ ...selected, customer: currentCustomer }} />
+        <DeliveryDescriptionLine
+          delivery={selected}
+          customer={currentCustomer}
+        />
         <div>Notes: {selected.notes}</div>
         {!!selected.invoiceId && <div>{selected.invoiceId}</div>}
         <DeliveryDescription delivery={selected} />
