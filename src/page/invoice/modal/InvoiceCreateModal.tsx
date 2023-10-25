@@ -5,7 +5,7 @@ import { useMemo, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { z } from 'zod';
-import { Delivery, InvoiceInfoInput, addInvoice } from '../../../backend';
+import { InvoiceInfoInput, addInvoice } from '../../../backend';
 import { MyModal } from '../../../component/modal/MyModal';
 import { useSideKick } from '../../../component/modules/sidekick/SideKickContext';
 import { SideKickFeeling } from '../../../component/modules/sidekick/enums';
@@ -51,10 +51,10 @@ export function InvoiceCreateModal({ toInvoice, setToInvoice }: InvoiceCreateMod
   const onSubmit = (e: InvoiceInfoInput) => {
     posthog?.capture('invoice_add');
 
-    const deliveries = Object.entries(toInvoice)
-      .filter(([_, value]) => value)
-      .map(([key]) => getDelivery(key))
-      .filter((d) => !!d) as Delivery[];
+    const deliveries = Object.keys(toInvoice)
+      .map((id) => toInvoice[id] && id)
+      .filter((d) => !!d) as string[];
+    console.log(deliveries);
 
     addInvoice(deliveries, e.createdAt, e.notes)
       .then((val) => {

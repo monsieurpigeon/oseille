@@ -15,7 +15,7 @@ export function OrderAll() {
   const { deliveries, getDelivery } = useData();
 
   const length = useMemo(
-    () => deliveries.filter((delivery) => !delivery.invoiceId).filter((delivery) => delivery.isOrder).length,
+    () => deliveries.filter((delivery) => !delivery.invoice).filter((delivery) => delivery.isOrder).length,
     [deliveries],
   );
   const posthog = usePostHog();
@@ -27,7 +27,7 @@ export function OrderAll() {
       if (!value) return undefined;
       return getDelivery(key);
     })
-    .filter((el) => el && !el.invoiceId) as Delivery[];
+    .filter((el) => el && !el.invoice) as Delivery[];
 
   const selectedLength = selectedOrders.length;
 
@@ -43,7 +43,7 @@ export function OrderAll() {
       })
     ) {
       posthog?.capture('order_confirm');
-      await Promise.all(selectedOrders.map((order) => confirmOrder(order)));
+      await Promise.all(selectedOrders.map((order) => confirmOrder(order.id)));
 
       say({
         sentence: `${

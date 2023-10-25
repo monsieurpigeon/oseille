@@ -55,11 +55,19 @@ export const relDb = db.setSchema([
 
 relDb.rel.find('delivery').then((result) => {
   result.deliveries.forEach(async (delivery: any) => {
+    let isUpdated = false;
+    const newDelivery = { ...delivery };
     if (delivery.customerId) {
-      const newDelivery = { ...delivery, customer: delivery.customerId };
+      newDelivery.customer = delivery.customerId;
       delete newDelivery.customerId;
-      await relDb.rel.save('delivery', newDelivery).catch(console.error);
+      isUpdated = true;
     }
+    if (delivery.invoiceId) {
+      newDelivery.invoice = delivery.invoiceId;
+      delete newDelivery.invoiceId;
+      isUpdated = true;
+    }
+    isUpdated && (await relDb.rel.save('delivery', newDelivery).catch(console.error));
   });
 });
 

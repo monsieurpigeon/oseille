@@ -1,6 +1,6 @@
 import { documentIdFormatter } from '../../utils/formatter';
 import { relDb } from '../service/database';
-import { Customer, getCustomerById } from './customer';
+import { Customer } from './customer';
 import { getFarm, updateDocumentId } from './farm';
 import { ProductWithPrice, getProductById } from './product';
 
@@ -12,7 +12,7 @@ export interface Delivery {
   deliveredAt: string;
   customer: string | Customer;
   documentId: string;
-  invoiceId?: string;
+  invoice?: string;
   lines: Array<DeliveryLine>;
   notes: string;
 }
@@ -70,12 +70,12 @@ export const addDelivery = async (delivery: DeliveryInput) => {
   }
 };
 
-export const addInvoiceId = (invoiceId: string, deliveryId: string) => {
+export const addInvoiceId = (invoice: string, deliveryId: string) => {
   relDb.rel
     .find('delivery', deliveryId)
     .then((result) => {
       const delivery = result.deliveries[0];
-      relDb.rel.save('delivery', { ...delivery, invoiceId }).catch(console.error);
+      return relDb.rel.save('delivery', { ...delivery, invoice, isOrder: false });
     })
     .catch(console.error);
 };
@@ -85,7 +85,7 @@ export const removeInvoiceId = (deliveryId: string) => {
     .find('delivery', deliveryId)
     .then((result) => {
       const delivery = result.deliveries[0];
-      relDb.rel.save('delivery', { ...delivery, invoiceId: undefined }).catch(console.error);
+      return relDb.rel.save('delivery', { ...delivery, invoice: undefined });
     })
     .catch(console.error);
 };
@@ -115,29 +115,7 @@ export const deleteDelivery = (delivery: Delivery) => {
   return relDb.rel.del('delivery', delivery);
 };
 
-export const confirmOrder = (delivery: Delivery) => {
-  return relDb.rel.save('delivery', { ...delivery, isOrder: false });
+export const confirmOrder = async (orderId: string) => {
+  const result = await relDb.rel.find('delivery', orderId);
+  return relDb.rel.save('delivery', { ...result.deliveries[0], isOrder: false });
 };
-
-export const getDeliveries = async (ids?: string[]): Promise<Delivery[]> =>
-  relDb.rel.find('delivery', ids).then((doc) => {
-    return doc.deliveries
-      .map((delivery: Delivery) => {
-        const customer = getCustomerById(delivery.customerId);
-        return {
-          ...delivery,
-          deliveredAt: new Date(delivery.deliveredAt).toISOString().split('T')[0],
-        };
-      })
-      .sort((a: Delivery, b: Delivery) => a.documentId.localeCompare(b.documentId));
-  });
-
-// TODO useless function
-export const getDeliveryById = (id: string) => relDb.rel.find('delivery', id).then((doc) => doc.deliveries[0]);
-
-export const onDeliveriesChange = (listener: (value: PouchDB.Core.ChangesResponseChange<{}>) => any) =>
-  relDb.changes({ since: 'now', live: true }).on('change', (e) => {
-    if (e.id.split('_')[0] === 'delivery') {
-      listener(e);
-    }
-  });

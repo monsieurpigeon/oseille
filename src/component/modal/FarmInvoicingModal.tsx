@@ -2,10 +2,10 @@ import { Flex, FormControl, FormLabel, Input, Select, Text, Textarea } from '@ch
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
+import { useRouteLoaderData } from 'react-router-dom';
 import { z } from 'zod';
 import { FarmInput, updateFarm } from '../../backend';
 import { DEFAULT_FOOTER, DEFAULT_THREAT, EMPTY_FARM } from '../../utils/defaults';
-import { useFarmParameters } from '../../utils/hooks/useFarmParameters';
 import { MyNumberInput } from '../form/MyNumberInput';
 import { useSideKick } from '../modules/sidekick/SideKickContext';
 import { SideKickFeeling } from '../modules/sidekick/enums';
@@ -24,7 +24,8 @@ export const configSchema = z.object({
 });
 
 export function FarmInvoicingModal({ isOpen, onClose }: FarmInvoicingModalProps) {
-  const { farm } = useFarmParameters();
+  const { farm } = useRouteLoaderData('farm') as any;
+
   const { say } = useSideKick();
   const cancelRef = useRef<any>();
 

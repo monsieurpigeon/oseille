@@ -1,11 +1,11 @@
 import { Flex, Spacer, Text } from '@chakra-ui/react';
-import { Link } from 'react-router-dom';
+import { Link, useRouteLoaderData } from 'react-router-dom';
 import { DEFAULT_FARM } from '../../utils/defaults';
-import { useFarmParameters } from '../../utils/hooks/useFarmParameters';
 import { HeaderNavigation } from './Navigation';
 
 export function Header() {
-  const { farm } = useFarmParameters();
+  const { farm } = useRouteLoaderData('farm') as any;
+
   return (
     <Flex
       alignItems="center"

@@ -2,6 +2,7 @@ import { Button } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
+import { useRouteLoaderData } from 'react-router-dom';
 import { z } from 'zod';
 import { Customer, Product } from '../../backend';
 import { Price, PriceInput, addPrice, deletePrice } from '../../backend/entity/price';
@@ -10,7 +11,6 @@ import { useConfirm } from '../../component/modal/confirm-modal/ConfirmContext';
 import { useSideKick } from '../../component/modules/sidekick/SideKickContext';
 import { SideKickFeeling } from '../../component/modules/sidekick/enums';
 import { priceFormatter } from '../../utils/formatter';
-import { useFarmParameters } from '../../utils/hooks/useFarmParameters';
 
 export const priceSchema = z.object({
   value: z.number().gt(0),
@@ -29,7 +29,7 @@ export function PriceNumberInput({
   value: number;
   onClose: () => void;
 }) {
-  const { isTVA } = useFarmParameters();
+  const { isTVA } = useRouteLoaderData('farm') as any;
   const { watch, control, handleSubmit, reset } = useForm<PriceInput>({
     resolver: zodResolver(priceSchema),
     defaultValues: {

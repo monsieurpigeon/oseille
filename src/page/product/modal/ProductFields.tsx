@@ -1,10 +1,10 @@
 import { Input, Select } from '@chakra-ui/react';
+import { useRouteLoaderData } from 'react-router-dom';
 import { MyField } from '../../../component/MyField';
 import { PRODUCT_UNITS } from '../../../utils/defaults';
-import { useFarmParameters } from '../../../utils/hooks/useFarmParameters';
 
 export const ProductFields = ({ control, register }: any) => {
-  const { isTVA } = useFarmParameters();
+  const { isTVA } = useRouteLoaderData('farm') as any;
   return (
     <>
       <MyField title="Nom">

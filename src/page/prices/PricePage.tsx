@@ -1,10 +1,10 @@
 import { Box, Flex } from '@chakra-ui/react';
 import { usePostHog } from 'posthog-js/react';
 import { useEffect } from 'react';
+import { useRouteLoaderData } from 'react-router-dom';
 import { styled } from 'styled-components';
 import { InfoModal } from '../../component/modal/InfoModal';
 import { MyH1 } from '../../component/typography/MyFont';
-import { useFarmParameters } from '../../utils/hooks/useFarmParameters';
 import { PriceTable } from './PriceTable';
 
 const StyledPricePage = styled.div`
@@ -20,7 +20,7 @@ export function PricePage() {
   useEffect(() => {
     posthog?.capture('price_page_viewed');
   }, []);
-  const { farm } = useFarmParameters();
+  const { farm } = useRouteLoaderData('farm') as any;
 
   return (
     <StyledPricePage>

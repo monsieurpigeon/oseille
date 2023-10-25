@@ -6,7 +6,6 @@ import styled from 'styled-components';
 import { Customer, Invoice, isInvoicePaid } from '../../backend';
 import { getInvoiceTotal } from '../../utils/aggregations';
 import { priceFormatter } from '../../utils/formatter';
-import { useFarmParameters } from '../../utils/hooks/useFarmParameters';
 
 const plural = (val: number) => (val > 1 ? 's' : '');
 
@@ -17,7 +16,7 @@ const StyledTr = styled(Tr)`
 `;
 
 export function InvoiceAll() {
-  const { invoiceDelay } = useFarmParameters();
+  const { invoiceDelay } = useRouteLoaderData('farm') as any;
   const { invoices, customerSummaries: customers } = useRouteLoaderData('invoices') as {
     invoices: Invoice[];
     customerSummaries: Customer[];

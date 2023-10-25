@@ -3,7 +3,7 @@ import { addDays } from 'date-fns';
 import { usePostHog } from 'posthog-js/react';
 import { useEffect, useState } from 'react';
 import { Outlet, useLoaderData, useNavigate, useParams } from 'react-router-dom';
-import { Customer, Delivery, relDb } from '../../backend';
+import { Customer, Delivery } from '../../backend';
 import { MyIcon } from '../../component/MyIcon';
 import { ListItem } from '../../component/card/ListItem';
 import { ListItemGroup } from '../../component/card/ListItemGroup';
@@ -71,6 +71,7 @@ export function DeliveryPage() {
             <DeliveryCustomer
               key={customer.id}
               customer={customer}
+              deliveries={deliveries.filter((delivery) => delivery.customer === customer.id)}
             />
           ))}
         </MyScrollList>
@@ -83,24 +84,15 @@ export function DeliveryPage() {
   );
 }
 
-function DeliveryCustomer({ customer }: any) {
+function DeliveryCustomer({ customer, deliveries }: { customer: Customer; deliveries: Delivery[] }) {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [deliveries, setDeliveries] = useState<Delivery[]>([]);
-
-  useEffect(() => {
-    const getClientDeliveries = async () =>
-      relDb.rel.find('customer', customer.id) as Promise<{ deliveries: Delivery[] }>;
-    getClientDeliveries().then((result) =>
-      setDeliveries(result.deliveries.sort((a, b) => b.documentId.localeCompare(a.documentId))),
-    );
-  }, [id]);
 
   const [toInvoice, setToInvoice] = useState<{ [key: string]: boolean }>({});
   const customerDeliveries = deliveries.filter((delivery) => {
     const date = new Date(delivery.deliveredAt);
     const today = addDays(new Date(), -2 * 7);
-    return !delivery.invoiceId || date > today;
+    return !delivery.invoice || date > today;
   });
 
   if (customerDeliveries.length === 0) {
@@ -122,7 +114,7 @@ function DeliveryCustomer({ customer }: any) {
           isSelected={id === delivery.id}
           key={delivery.id}
           onClick={() => navigate(delivery.id === id ? '' : delivery.id)}
-          checkable={!delivery.invoiceId}
+          checkable={!delivery.invoice}
           checked={toInvoice[delivery.id] || false}
           onCheck={() =>
             setToInvoice((i) => ({
