@@ -89,9 +89,12 @@ function DeliveryCustomer({ customer }: any) {
   const [deliveries, setDeliveries] = useState<Delivery[]>([]);
 
   useEffect(() => {
-    const getClientDeliveries = async () => relDb.rel.find('customer', customer.id);
-    getClientDeliveries().then((result) => setDeliveries(result.deliveries));
-  }, []);
+    const getClientDeliveries = async () =>
+      relDb.rel.find('customer', customer.id) as Promise<{ deliveries: Delivery[] }>;
+    getClientDeliveries().then((result) =>
+      setDeliveries(result.deliveries.sort((a, b) => b.documentId.localeCompare(a.documentId))),
+    );
+  }, [id]);
 
   const [toInvoice, setToInvoice] = useState<{ [key: string]: boolean }>({});
   const customerDeliveries = deliveries.filter((delivery) => {

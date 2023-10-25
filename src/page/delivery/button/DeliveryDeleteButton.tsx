@@ -31,7 +31,7 @@ export function DeliveryDeleteButton({ delivery }: DeleteDeliveryActionProps) {
         autoShutUp: true,
         feeling: SideKickFeeling.GOOD,
       });
-      navigate('/delivery');
+      navigate('..');
     }
   };
 

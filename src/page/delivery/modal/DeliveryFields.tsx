@@ -15,7 +15,7 @@ export function DeliveryFields({ watch, control, register, fields, append, remov
     prices: Price[];
   };
 
-  const watchCustomer = watch('customerId');
+  const watchCustomer = watch('customer');
   const { isTVA } = useFarmParameters();
 
   const { availableProducts, availablePrices } = useMemo(() => {
@@ -55,7 +55,7 @@ export function DeliveryFields({ watch, control, register, fields, append, remov
       ) : (
         <Box p={1}>
           <Text>Client</Text>
-          <Select {...register('customerId')}>
+          <Select {...register('customer')}>
             <option value="">Choisir un client</option>
             {customers.map((customer) => {
               return (

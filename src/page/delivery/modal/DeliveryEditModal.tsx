@@ -1,25 +1,20 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useMemo, useRef } from 'react';
+import { useRef } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useRouteLoaderData } from 'react-router-dom';
 import { Delivery, DeliveryInput, updateDelivery } from '../../../backend';
 import { MyModal } from '../../../component/modal/MyModal';
 import { useSideKick } from '../../../component/modules/sidekick/SideKickContext';
 import { SideKickFeeling } from '../../../component/modules/sidekick/enums';
-import { useData } from '../../../context/DataContext';
 import { deliverySchema } from './DeliveryCreateModal';
 import { DeliveryFields } from './DeliveryFields';
 
-interface DeliveryEditModalProps {
-  delivery: Delivery;
-}
-
 export function DeliveryEditModal() {
-  const { id } = useParams();
-  const { getDelivery, deliveries } = useData();
-  const delivery = useMemo(() => (id ? getDelivery(id) : undefined), [id, deliveries]);
-  if (!delivery) return null;
+  const {
+    deliveries: [delivery],
+  } = useRouteLoaderData('delivery') as { deliveries: Delivery[] };
 
+  if (!delivery) return null;
   const isOrder = location.pathname.includes('order');
 
   const cancelRef = useRef<any>();
@@ -27,7 +22,7 @@ export function DeliveryEditModal() {
   const { say } = useSideKick();
 
   const updatedValues = {
-    customerId: delivery.customerId,
+    customer: delivery.customer as string,
     deliveredAt: delivery.deliveredAt,
     lines: delivery.lines.map((line) => ({
       productId: line.product.id,

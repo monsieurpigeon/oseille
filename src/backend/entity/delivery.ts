@@ -27,7 +27,7 @@ export interface DeliveryLine {
 export interface DeliveryInput {
   isTVA: boolean;
   isOrder?: boolean;
-  customerId: string;
+  customer: string;
   deliveredAt: string;
   lines: Array<DeliveryLineInput>;
   notes: string;
