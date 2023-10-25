@@ -166,7 +166,7 @@ export const exportOrders = (payload: Delivery[]) => {
       },
       ...payload.map((delivery) => ({
         text: `${dateFormatter(delivery.deliveredAt)} | ${getDeliveryNumber(delivery.documentId)} | ${
-          delivery.customer.name
+          delivery.customer
         }`,
         alignment: 'left',
       })),

@@ -102,13 +102,13 @@ function OrderDate({ date, selected, orders }: { date: string; selected: Deliver
           key={date}
         >
           {orders.map((delivery) => {
-            const customer = getCustomer(delivery.customerId);
+            const customer = getCustomer(delivery.customer as string);
             return (
               <ListItem
                 isSelected={selected?.id === delivery.id}
                 key={delivery.id}
                 onClick={() => (delivery.id === id ? navigate('') : navigate(delivery.id))}
-                checkable={!delivery.invoiceId}
+                checkable={!delivery.invoice}
                 checked={toInvoice[delivery.id] || false}
                 onCheck={() => {
                   setToInvoice((i: { [key: string]: boolean }) => ({

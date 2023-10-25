@@ -13,7 +13,7 @@ interface DeleteDeliveryActionProps {
 export function DeliveryDeleteButton({ delivery }: DeleteDeliveryActionProps) {
   const navigate = useNavigate();
   const posthog = usePostHog();
-  const isEditable = !delivery.invoiceId;
+  const isEditable = !delivery.invoice;
   const { say } = useSideKick();
   const { confirm } = useConfirm();
 

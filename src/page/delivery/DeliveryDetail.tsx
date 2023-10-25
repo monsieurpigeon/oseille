@@ -17,7 +17,7 @@ export const DeliveryDetail = () => {
   } = useLoaderData() as { deliveries: [Delivery]; customerSummaries: [Customer] };
 
   if (!currentCustomer) return null;
-  const isEditable = !selected?.invoiceId;
+  const isEditable = !selected?.invoice;
 
   if (!selected) return null;
   return (
@@ -42,7 +42,7 @@ export const DeliveryDetail = () => {
           customer={currentCustomer}
         />
         <div>Notes: {selected.notes}</div>
-        {!!selected.invoiceId && <div>{selected.invoiceId}</div>}
+        {!!selected.invoice && <div>{selected.invoice}</div>}
         <DeliveryDescription delivery={selected} />
       </div>
     </>

@@ -1,15 +1,14 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { usePostHog } from 'posthog-js/react';
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useRouteLoaderData } from 'react-router-dom';
 import { z } from 'zod';
-import { InvoicePaymentInput, PaymentMode, updateInvoice } from '../../../backend';
+import { Invoice, InvoicePaymentInput, PaymentMode, updateInvoice } from '../../../backend';
 import { MyModal } from '../../../component/modal/MyModal';
 import { useConfirm } from '../../../component/modal/confirm-modal/ConfirmContext';
 import { useSideKick } from '../../../component/modules/sidekick/SideKickContext';
 import { SideKickFeeling } from '../../../component/modules/sidekick/enums';
-import { useData } from '../../../context/DataContext';
 import { getInvoiceTotal } from '../../../utils/aggregations';
 import { PaymentFields } from './PaymentFields';
 
@@ -22,9 +21,12 @@ export const paymentSchema = z.object({
 });
 
 export function PaymentModal() {
-  const { id } = useParams();
-  const { getInvoice } = useData();
-  const invoice = id ? getInvoice(id) : undefined;
+  const invoice = useRouteLoaderData('invoice') as Invoice;
+  const [amount, setAmount] = useState(0);
+  useEffect(() => {
+    getInvoiceTotal(invoice).then(setAmount);
+  }, [invoice]);
+
   if (!invoice) return null;
 
   const posthog = usePostHog();
@@ -37,7 +39,7 @@ export function PaymentModal() {
   const emptyPayment = {
     paymentMode: undefined,
     paidAt: new Date().toISOString().split('T')[0],
-    amount: getInvoiceTotal(invoice),
+    amount,
     reference: '',
     notes: '',
   };

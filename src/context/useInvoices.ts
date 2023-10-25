@@ -11,7 +11,7 @@ export function useInvoices() {
 
   const getClientInvoices = (customerId: string) => {
     return invoices
-      .filter((invoice) => invoice.customerId === customerId)
+      .filter((invoice) => invoice.customer === customerId)
       .sort((a, b) => b.documentId.localeCompare(a.documentId));
   };
 
