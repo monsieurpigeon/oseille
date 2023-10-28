@@ -30,7 +30,9 @@ export function DeliveryDescription({ delivery }: { delivery: Delivery }) {
               </Tr>
             ))}
           <Tr>
-            <Td></Td>
+            <Td fontWeight="bold">
+              {delivery.lines.length} ligne{delivery.lines.length > 1 ? 's' : ''} produit
+            </Td>
             <Td></Td>
             <Td></Td>
             <Td

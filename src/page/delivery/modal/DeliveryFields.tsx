@@ -80,7 +80,9 @@ export function DeliveryFields({ watch, control, register, fields, append, remov
         direction="column"
         gap={1}
       >
-        <Text>Lignes produit</Text>
+        <Text>
+          {fields.length} ligne{fields.length > 1 ? 's' : ''} produit
+        </Text>
         <Grid
           gap={1}
           templateColumns="3fr 2fr 2fr auto"
