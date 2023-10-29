@@ -33,7 +33,7 @@ export const DEFAULT_FARM = {
   zip: '33000',
   city: 'Bordeaux',
   phone: '06 45 66 56 55',
-  email: 'maxpige@gmail.com',
+  email: 'contact@oseille.app',
 };
 
 export const EMPTY_CUSTOMER = {

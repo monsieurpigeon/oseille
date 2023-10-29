@@ -1,4 +1,16 @@
-export const VERSION = '22/10/2023';
+export const VERSION = '29/10/2023';
+
+export const MONEY_OUT = [
+  { label: 'Impression de 700 flyers', value: 75 },
+  { label: 'Email pro (proton)', value: 47.88 },
+  { label: 'Nom de domaine (1 an)', value: 20 },
+  { label: 'Frais de serveur', value: 0 },
+  { label: 'Salaires', value: 0 },
+];
+export const MONEY_IN = [
+  { label: 'Dons', value: 1 },
+  { label: 'Levée de fonds', value: 0 },
+];
 
 const users = {
   myriam: {

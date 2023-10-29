@@ -11,6 +11,7 @@ import {
   SimpleGrid,
   Text,
 } from '@chakra-ui/react';
+import { MONEY_IN, MONEY_OUT } from '../../../../updateMe';
 import { priceFormatter } from '../../../../utils/formatter';
 
 export function BusinessSection() {
@@ -62,38 +63,38 @@ export function BusinessSection() {
                 direction="column"
                 marginRight={4}
               >
-                <Heading size="sm">Dépenses</Heading>
                 <Flex justifyContent="space-between">
-                  <Text>Nom de domaine (1 an)</Text>
-                  <Text>{priceFormatter(20)}</Text>
+                  <Text as="b">Dépenses</Text>
+                  <Text as="b">{priceFormatter(MONEY_OUT.reduce((memo, el) => memo + el.value, 0))}</Text>
                 </Flex>
-                <Flex justifyContent="space-between">
-                  <Text>Impression de 700 flyers</Text>
-                  <Text>{priceFormatter(75)}</Text>
-                </Flex>
-                <Flex justifyContent="space-between">
-                  <Text>Frais de serveur</Text>
-                  <Text>{priceFormatter(5)}</Text>
-                </Flex>
-                <Flex justifyContent="space-between">
-                  <Text>Salaires</Text>
-                  <Text>{priceFormatter(0)}</Text>
-                </Flex>
+                {MONEY_OUT.map((el, index) => (
+                  <Flex
+                    justifyContent="space-between"
+                    key={index}
+                  >
+                    <Text>{el.label}</Text>
+                    <Text>{priceFormatter(el.value)}</Text>
+                  </Flex>
+                ))}
               </Flex>
               <Divider orientation="vertical" />
               <Flex
                 direction="column"
                 marginLeft={4}
               >
-                <Heading size="sm">Recettes</Heading>
                 <Flex justifyContent="space-between">
-                  <Text>Dons</Text>
-                  <Text>{priceFormatter(1)}</Text>
+                  <Text as="b">Recettes</Text>
+                  <Text as="b">{priceFormatter(MONEY_IN.reduce((memo, el) => memo + el.value, 0))}</Text>
                 </Flex>
-                <Flex justifyContent="space-between">
-                  <Text>Levée de fonds</Text>
-                  <Text>{priceFormatter(0)}</Text>
-                </Flex>
+                {MONEY_IN.map((el, index) => (
+                  <Flex
+                    justifyContent="space-between"
+                    key={index}
+                  >
+                    <Text>{el.label}</Text>
+                    <Text>{priceFormatter(el.value)}</Text>
+                  </Flex>
+                ))}
               </Flex>
             </SimpleGrid>
           </CardBody>

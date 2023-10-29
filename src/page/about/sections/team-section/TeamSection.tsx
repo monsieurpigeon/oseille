@@ -54,7 +54,7 @@ export function TeamSection() {
             alignItems="flex-end"
           >
             <Box>06 45 66 56 55</Box>
-            <Box>maxpige@gmail.com</Box>
+            <Box>contact@oseille.app</Box>
           </Flex>
         </Flex>
       </Flex>
