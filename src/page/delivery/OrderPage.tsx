@@ -1,9 +1,9 @@
 import { Box, Button, Flex } from '@chakra-ui/react';
 import { useAtom } from 'jotai';
 import { usePostHog } from 'posthog-js/react';
-import { useEffect, useMemo } from 'react';
-import { Outlet, useNavigate, useParams } from 'react-router-dom';
-import { Delivery } from '../../backend';
+import { useEffect, useMemo, useState } from 'react';
+import { Outlet, useLoaderData, useNavigate, useParams } from 'react-router-dom';
+import { Customer, Delivery, relDb } from '../../backend';
 import { ListItem } from '../../component/card/ListItem';
 import { ListItemGroup } from '../../component/card/ListItemGroup';
 import { MyHeader } from '../../component/layout/page-layout/MyHeader';
@@ -22,7 +22,12 @@ export function OrderPage() {
     posthog?.capture('order_page_viewed');
   }, []);
 
-  const { deliveries, getDelivery } = useData();
+  const { getDelivery } = useData();
+  const { customers, deliveries } = useLoaderData() as {
+    customers: Customer[];
+    deliveries: Delivery[];
+  };
+
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -72,7 +77,6 @@ export function OrderPage() {
           {Array.from(dateSet).map((date) => (
             <OrderDate
               key={date}
-              selected={selected}
               date={date}
               orders={orders.filter((order) => order.deliveredAt === date)}
             />
@@ -87,12 +91,26 @@ export function OrderPage() {
   );
 }
 
-function OrderDate({ date, selected, orders }: { date: string; selected: Delivery | undefined; orders: Delivery[] }) {
+function OrderDate({ date, orders }: { date: string; orders: Delivery[] }) {
   const { id } = useParams();
   const { getCustomer } = useData();
   const navigate = useNavigate();
   const [toInvoice, setToInvoice]: [toInvoice: { [key: string]: boolean }, setToInvoice: any] =
     useAtom(selectedOrdersAtom);
+
+  const [customers, setCustomer] = useState<{ [key: string]: Customer }>({});
+
+  useEffect(() => {
+    const getCustomers = async () => {
+      const result = (await relDb.rel.find('customers')) as { customers: Customer[] };
+      return result.customers.reduce((memo, customer) => {
+        memo[customer.id] = customer;
+        return memo;
+      }, {} as { [key: string]: Customer });
+    };
+
+    getCustomers().then(setCustomer);
+  }, [date]);
 
   return (
     <>
@@ -102,10 +120,10 @@ function OrderDate({ date, selected, orders }: { date: string; selected: Deliver
           key={date}
         >
           {orders.map((delivery) => {
-            const customer = getCustomer(delivery.customer as string);
+            const customer = customers[delivery.customer as string];
             return (
               <ListItem
-                isSelected={selected?.id === delivery.id}
+                isSelected={id === delivery.id}
                 key={delivery.id}
                 onClick={() => (delivery.id === id ? navigate('') : navigate(delivery.id))}
                 checkable={!delivery.invoice}

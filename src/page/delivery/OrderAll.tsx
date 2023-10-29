@@ -2,7 +2,7 @@ import { Box, Button, CloseButton, Flex, Table, TableContainer, Tbody, Th, Thead
 import { useAtom } from 'jotai';
 import { usePostHog } from 'posthog-js/react';
 import { useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useRouteLoaderData } from 'react-router-dom';
 import { Delivery, Product, confirmOrder, exportOrders } from '../../backend';
 import { MyHeader } from '../../component/layout/page-layout/MyHeader';
 import { useConfirm } from '../../component/modal/confirm-modal/ConfirmContext';
@@ -12,20 +12,29 @@ import { useData } from '../../context/DataContext';
 import { selectedOrdersAtom } from './useSelectOrders';
 
 export function OrderAll() {
-  const { deliveries, getDelivery } = useData();
+  const { getDelivery } = useData();
 
+  const { deliveries } = useRouteLoaderData('orders') as { deliveries: Delivery[] };
   const length = useMemo(
     () => deliveries.filter((delivery) => !delivery.invoice).filter((delivery) => delivery.isOrder).length,
     [deliveries],
   );
+
   const posthog = usePostHog();
   const { say } = useSideKick();
 
   const [toInvoice, setToInvoice] = useAtom(selectedOrdersAtom);
+  const deliveryMap = useMemo(() => {
+    return deliveries.reduce((memo, delivery) => {
+      memo[delivery.id] = delivery;
+      return memo;
+    }, {} as { [key: string]: Delivery });
+  }, [toInvoice]);
+
   const selectedOrders = Object.entries(toInvoice)
     .map(([key, value]) => {
       if (!value) return undefined;
-      return getDelivery(key);
+      return deliveryMap[key];
     })
     .filter((el) => el && !el.invoice) as Delivery[];
 

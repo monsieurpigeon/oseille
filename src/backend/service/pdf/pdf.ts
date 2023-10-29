@@ -119,7 +119,7 @@ const getDeliveryNumber = (id: string) => {
   return Number(id.split('-')[2]);
 };
 
-export const exportOrders = (payload: Delivery[]) => {
+export const exportOrders = async (payload: Delivery[]) => {
   const products = payload
     .flatMap((delivery) => delivery.lines.map((line) => line.product))
     .reduce((acc, product) => {
@@ -164,12 +164,17 @@ export const exportOrders = (payload: Delivery[]) => {
           ],
         },
       },
-      ...payload.map((delivery) => ({
-        text: `${dateFormatter(delivery.deliveredAt)} | ${getDeliveryNumber(delivery.documentId)} | ${
-          delivery.customer
-        }`,
-        alignment: 'left',
-      })),
+      ...(await Promise.all(
+        payload.map(async (delivery) => {
+          const currentCustomer = await getCustomerById(delivery.customer as string);
+          return {
+            text: `${dateFormatter(delivery.deliveredAt)} | ${getDeliveryNumber(delivery.documentId)} | ${
+              currentCustomer.name
+            }`,
+            alignment: 'left',
+          };
+        }),
+      )),
     ],
 
     styles: {
