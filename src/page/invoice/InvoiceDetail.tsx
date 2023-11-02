@@ -16,9 +16,9 @@ export const InvoiceDetail = () => {
 
   const {
     invoices: [selected],
-    customerSummaries: [currentCustomer],
+    customers: [currentCustomer],
     deliveries,
-  } = useLoaderData() as { invoices: Invoice[]; customerSummaries: Customer[]; deliveries: Delivery[] };
+  } = useLoaderData() as { invoices: Invoice[]; customers: Customer[]; deliveries: Delivery[] };
 
   if (!selected) return null;
   if (!currentCustomer) return null;

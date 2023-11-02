@@ -62,10 +62,10 @@ export const addInvoice = async (deliveries: string[], createdAt: string, notes:
   const farm = await getFarm();
   const allDeliveries = (await relDb.rel.find('delivery', deliveries)) as {
     deliveries: Delivery[];
-    customerSummaries: Customer[];
+    customers: Customer[];
   };
 
-  const customer = allDeliveries.customerSummaries[0].id;
+  const customer = allDeliveries.customers[0].id;
 
   const invoice: InvoiceInput = {
     documentId: documentIdFormatter(farm?.invoiceId || 0, 'Invoice'),

@@ -52,7 +52,6 @@ export function InvoiceCreateModal({ toInvoice, setToInvoice }: InvoiceCreateMod
     const deliveries = Object.keys(toInvoice)
       .map((id) => toInvoice[id] && id)
       .filter((d) => !!d) as string[];
-    console.log(deliveries);
 
     addInvoice(deliveries, e.createdAt, e.notes)
       .then((val) => {

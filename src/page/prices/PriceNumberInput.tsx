@@ -37,7 +37,7 @@ export function PriceNumberInput({
     },
   });
 
-  const { say, shutUp } = useSideKick();
+  const { say } = useSideKick();
   const { confirm } = useConfirm();
 
   const watchValue = watch('value', value);

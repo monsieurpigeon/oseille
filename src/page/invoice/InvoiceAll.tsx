@@ -17,9 +17,9 @@ const StyledTr = styled(Tr)`
 
 export function InvoiceAll() {
   const { invoiceDelay } = useRouteLoaderData('farm') as any;
-  const { invoices, customerSummaries: customers } = useRouteLoaderData('invoices') as {
+  const { invoices, customers } = useRouteLoaderData('invoices') as {
     invoices: Invoice[];
-    customerSummaries: Customer[];
+    customers: Customer[];
   };
 
   const [totals, setTotals] = useState<Record<string, number>>({});

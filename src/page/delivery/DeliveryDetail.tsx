@@ -13,8 +13,8 @@ export const DeliveryDetail = () => {
 
   const {
     deliveries: [selected],
-    customerSummaries: [currentCustomer],
-  } = useLoaderData() as { deliveries: [Delivery]; customerSummaries: [Customer] };
+    customers: [currentCustomer],
+  } = useLoaderData() as { deliveries: [Delivery]; customers: [Customer] };
 
   if (!currentCustomer) return null;
   const isEditable = !selected?.invoice;

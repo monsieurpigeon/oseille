@@ -40,6 +40,7 @@ import { InvoiceSection } from './page/settings/sections/invoice-section/Invoice
 import { ToolPage } from './page/tools/ToolPage';
 import { ScaleToolPage } from './page/tools/scale/ScaleToolPage';
 import { DEFAULT_INVOICE_DELAY } from './utils/defaults';
+import { sortAlpha } from './utils/sort';
 
 const visitDefault = (route: string) => {
   return {
@@ -127,8 +128,8 @@ export const router = createBrowserRouter([
             id: 'customers',
             loader: async () =>
               relDb.rel
-                .find('customerSummary')
-                .then((doc) => doc.customerSummaries.sort((a: Customer, b: Customer) => a.name.localeCompare(b.name))),
+                .find('customer')
+                .then((doc) => doc.customers.sort((a: Customer, b: Customer) => a.name.localeCompare(b.name))),
             children: [
               { index: true, element: <CustomerAll /> },
               { path: 'create', element: <CustomerCreateModal /> },
@@ -137,8 +138,9 @@ export const router = createBrowserRouter([
                 element: <CustomerDetail />,
                 id: 'customer',
                 loader: async ({ params }) =>
-                  relDb.rel.find('customer', params.id).then((doc) => ({
+                  relDb.rel.find('customerRel', params.id).then((doc) => ({
                     ...doc,
+                    customers: doc.customerRels,
                     deliveries: doc.deliveries.sort((a: any, b: any) => b.documentId.localeCompare(a.documentId)),
                     invoices: doc.invoices.sort((a: any, b: any) => b.documentId.localeCompare(a.documentId)),
                   })),
@@ -166,10 +168,12 @@ export const router = createBrowserRouter([
             element: <OrderPage />,
             id: 'orders',
             loader: async () =>
-              relDb.rel.find('delivery').then((doc) => ({
+              relDb.rel.find('deliveryRel').then((doc) => ({
                 ...doc,
-                deliveries: doc.deliveries.sort((a: Delivery, b: Delivery) => b.documentId.localeCompare(a.documentId)), // sort and filter should stay here
-                customers: doc.customerSummaries.sort((a: any, b: any) => a.name.localeCompare(b.name)),
+                deliveries: doc.deliveryRels.sort((a: Delivery, b: Delivery) =>
+                  b.documentId.localeCompare(a.documentId),
+                ), // sort and filter should stay here
+                customers: doc.customers.sort((a: any, b: any) => a.name.localeCompare(b.name)),
                 timestamp: new Date().getTime(), // TODO necessary ?
               })),
             children: [
@@ -195,7 +199,8 @@ export const router = createBrowserRouter([
                 path: ':id',
                 element: <DeliveryDetail />,
                 id: 'order',
-                loader: async ({ params }) => relDb.rel.find('delivery', params.id),
+                loader: async ({ params }) =>
+                  relDb.rel.find('deliveryRel', params.id).then((doc) => ({ ...doc, deliveries: doc.deliveryRels })),
                 children: [
                   {
                     path: 'edit',
@@ -225,11 +230,13 @@ export const router = createBrowserRouter([
             element: <DeliveryPage />,
             id: 'deliveries',
             loader: async () =>
-              relDb.rel.find('delivery').then((doc) => ({
+              relDb.rel.find('deliveryRel').then((doc) => ({
                 ...doc,
-                deliveries: doc.deliveries.sort((a: Delivery, b: Delivery) => b.documentId.localeCompare(a.documentId)), // sort and filter should stay here
-                customers: doc.customerSummaries.sort((a: any, b: any) => a.name.localeCompare(b.name)),
-                timestamp: new Date().getTime(),
+                deliveries: doc.deliveryRels.sort((a: Delivery, b: Delivery) =>
+                  b.documentId.localeCompare(a.documentId),
+                ), // sort and filter should stay here
+                customers: doc.customers.sort((a: any, b: any) => a.name.localeCompare(b.name)),
+                timestamp: new Date().getTime(), // TODO : Necessary ?
               })),
             children: [
               { index: true, element: <DeliveryAll /> },
@@ -254,7 +261,8 @@ export const router = createBrowserRouter([
                 path: ':id',
                 element: <DeliveryDetail />,
                 id: 'delivery',
-                loader: async ({ params }) => relDb.rel.find('delivery', params.id),
+                loader: async ({ params }) =>
+                  relDb.rel.find('deliveryRel', params.id).then((doc) => ({ ...doc, deliveries: doc.deliveryRels })),
                 children: [
                   {
                     path: 'edit',
@@ -286,14 +294,12 @@ export const router = createBrowserRouter([
             loader: async () => {
               const resProd = await relDb.rel.find('product');
               const resDelivery = await relDb.rel.find('delivery');
-              return relDb.rel.find('invoice').then((doc) => ({
+              return relDb.rel.find('invoiceRel').then((doc) => ({
                 ...doc,
                 products: resProd.products,
                 deliveries: resDelivery.deliveries,
-                invoices: doc.invoices.sort((a: Invoice, b: Invoice) => b.documentId.localeCompare(a.documentId)),
-                customerSummaries: doc.customerSummaries.sort((a: Customer, b: Customer) =>
-                  a.name.localeCompare(b.name),
-                ),
+                invoices: doc.invoiceRels.sort(sortAlpha<Invoice>('documentId')),
+                customers: doc.customers.sort(sortAlpha<Customer>('name')),
               }));
             },
             children: [
@@ -302,7 +308,8 @@ export const router = createBrowserRouter([
                 path: ':id',
                 element: <InvoiceDetail />,
                 id: 'invoice',
-                loader: async ({ params }) => relDb.rel.find('invoice', params.id),
+                loader: async ({ params }) =>
+                  relDb.rel.find('invoiceRels', params.id).then((doc) => ({ ...doc, invoices: doc.invoiceRels })),
                 children: [
                   { path: 'pay', element: <PaymentModal /> },
                   { path: 'edit', element: <InvoiceEditModal /> },

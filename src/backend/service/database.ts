@@ -17,37 +17,52 @@ export const relDb = db.setSchema([
     singular: 'product',
     plural: 'products',
   },
+  { singular: 'productRel', plural: 'productRels', documentType: 'product' },
   {
     singular: 'customer',
     plural: 'customers',
+  },
+  {
+    singular: 'customerRel',
+    plural: 'customerRels',
+    documentType: 'customer',
     relations: {
       prices: { hasMany: 'price' },
       deliveries: { hasMany: { type: 'delivery', options: { queryInverse: 'customer' } } },
       invoices: { hasMany: { type: 'invoice', options: { queryInverse: 'customer' } } },
     },
   },
-  { singular: 'customerSummary', plural: 'customerSummaries', documentType: 'customer' },
   {
     singular: 'price',
     plural: 'prices',
     relations: {
       product: { belongsTo: 'product' },
-      customer: { belongsTo: 'customerSummary' }, // TODO should belong to customer
+      customer: { belongsTo: 'customer' },
     },
   },
   {
     singular: 'delivery',
     plural: 'deliveries',
+  },
+  {
+    singular: 'deliveryRel',
+    plural: 'deliveryRels',
+    documentType: 'delivery',
     relations: {
-      customer: { belongsTo: 'customerSummary' }, // TODO should belong to customer
+      customer: { belongsTo: 'customer' },
       invoice: { belongsTo: 'invoice' },
     },
   },
   {
     singular: 'invoice',
     plural: 'invoices',
+  },
+  {
+    singular: 'invoiceRel',
+    plural: 'invoiceRels',
+    documentType: 'invoice',
     relations: {
-      customer: { belongsTo: 'customerSummary' },
+      customer: { belongsTo: 'customer' },
       deliveries: { hasMany: 'delivery' },
     },
   },

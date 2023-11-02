@@ -22,12 +22,8 @@ export function InvoicePage() {
     posthog?.capture('invoice_page_viewed');
   }, []);
 
-  const {
-    customerSummaries: customers,
-    invoices,
-    timestamp,
-  } = useLoaderData() as {
-    customerSummaries: Customer[];
+  const { customers, invoices, timestamp } = useLoaderData() as {
+    customers: Customer[];
     invoices: Invoice[];
     timestamp: number;
   };

@@ -12,14 +12,14 @@ const translate = (num: number) => num.toLocaleString('fr-FR', { minimumFraction
 export function InvoiceExportCsvButton() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef<any>();
-  const { invoices, customerSummaries, products, deliveries } = useRouteLoaderData('invoices') as {
+  const { invoices, customers, products, deliveries } = useRouteLoaderData('invoices') as {
     invoices: Invoice[];
-    customerSummaries: Customer[];
+    customers: Customer[];
     products: Product[];
     deliveries: Delivery[];
   };
 
-  const customersMap = customerSummaries.reduce((memo, cus) => {
+  const customersMap = customers.reduce((memo, cus) => {
     memo[cus.id] = cus;
     return memo;
   }, {} as Record<string, Customer>);

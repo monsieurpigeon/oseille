@@ -19,7 +19,6 @@ export function InvoicingPageGroup() {
   useEffect(() => {
     const observer = relDb.changes({ since: 'now', live: true }).on('change', (e) => {
       console.log('change', e);
-      // TODO delivery list is not updated when a delivery date is updated
       revalidator.revalidate();
     });
     return () => observer.cancel();
