@@ -147,20 +147,22 @@ export const exportOrders = async (payload: Delivery[]) => {
           width: ['auto', ...payload.map(() => 'auto')],
           body: [
             ['', 'TOTAL', 'unité', ...payload.map((delivery) => getDeliveryNumber(delivery.documentId))],
-            ...Object.keys(products).map((id) => {
-              const productColumns = payload.map((delivery) =>
-                delivery.lines.filter((line) => line.product.id === id).reduce((acc, line) => acc + line.quantity, 0),
-              );
-              const total = productColumns.reduce((acc, column) => acc + column, 0);
-              return [
-                { text: products[id].name, alignment: 'left' },
-                total,
-                { text: products[id].unit, alignment: 'left' },
-                ...productColumns.map((column) => {
-                  return column > 0 ? column : '.';
-                }),
-              ];
-            }),
+            ...Object.keys(products)
+              .sort((a, b) => products[a].name.localeCompare(products[b].name))
+              .map((id) => {
+                const productColumns = payload.map((delivery) =>
+                  delivery.lines.filter((line) => line.product.id === id).reduce((acc, line) => acc + line.quantity, 0),
+                );
+                const total = productColumns.reduce((acc, column) => acc + column, 0);
+                return [
+                  { text: products[id].name, alignment: 'left' },
+                  total,
+                  { text: products[id].unit, alignment: 'left' },
+                  ...productColumns.map((column) => {
+                    return column > 0 ? column : '.';
+                  }),
+                ];
+              }),
           ],
         },
       },

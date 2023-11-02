@@ -1,7 +1,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRef } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
-import { useNavigate, useRouteLoaderData } from 'react-router-dom';
+import { useLocation, useNavigate, useRouteLoaderData } from 'react-router-dom';
 import { Delivery, DeliveryInput, updateDelivery } from '../../../backend';
 import { MyModal } from '../../../component/modal/MyModal';
 import { useSideKick } from '../../../component/modules/sidekick/SideKickContext';
@@ -10,9 +10,11 @@ import { deliverySchema } from './DeliveryCreateModal';
 import { DeliveryFields } from './DeliveryFields';
 
 export function DeliveryEditModal() {
+  const location = useLocation();
+
   const {
     deliveries: [delivery],
-  } = useRouteLoaderData('delivery') as { deliveries: Delivery[] };
+  } = useRouteLoaderData(location.pathname.split('/')[2]) as { deliveries: Delivery[] };
 
   if (!delivery) return null;
   const isOrder = location.pathname.includes('order');
