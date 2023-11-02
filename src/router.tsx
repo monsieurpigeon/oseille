@@ -283,14 +283,19 @@ export const router = createBrowserRouter([
             path: 'invoice',
             element: <InvoicePage />,
             id: 'invoices',
-            loader: async () =>
-              relDb.rel.find('invoice').then((doc) => ({
+            loader: async () => {
+              const resProd = await relDb.rel.find('product');
+              const resDelivery = await relDb.rel.find('delivery');
+              return relDb.rel.find('invoice').then((doc) => ({
                 ...doc,
+                products: resProd.products,
+                deliveries: resDelivery.deliveries,
                 invoices: doc.invoices.sort((a: Invoice, b: Invoice) => b.documentId.localeCompare(a.documentId)),
                 customerSummaries: doc.customerSummaries.sort((a: Customer, b: Customer) =>
                   a.name.localeCompare(b.name),
                 ),
-              })),
+              }));
+            },
             children: [
               { index: true, element: <InvoiceAll /> },
               {

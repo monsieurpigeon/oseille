@@ -2,9 +2,9 @@ import { Button, useDisclosure } from '@chakra-ui/react';
 import { format } from 'date-fns';
 import _ from 'lodash';
 import { useRef } from 'react';
-import { isInvoicePaid } from '../../../backend';
+import { useRouteLoaderData } from 'react-router-dom';
+import { Customer, Delivery, Invoice, Product, isInvoicePaid } from '../../../backend';
 import { MyModal } from '../../../component/modal/MyModal';
-import { useData } from '../../../context/DataContext';
 
 const clean = (num: number) => Number(num.toFixed(5));
 const translate = (num: number) => num.toLocaleString('fr-FR', { minimumFractionDigits: 2 });
@@ -12,19 +12,39 @@ const translate = (num: number) => num.toLocaleString('fr-FR', { minimumFraction
 export function InvoiceExportCsvButton() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = useRef<any>();
-  const { getProduct, getCustomer, getDeliveriesByIds, invoices } = useData();
+  const { invoices, customerSummaries, products, deliveries } = useRouteLoaderData('invoices') as {
+    invoices: Invoice[];
+    customerSummaries: Customer[];
+    products: Product[];
+    deliveries: Delivery[];
+  };
+
+  const customersMap = customerSummaries.reduce((memo, cus) => {
+    memo[cus.id] = cus;
+    return memo;
+  }, {} as Record<string, Customer>);
+
+  const productMap = products.reduce((memo, prod) => {
+    memo[prod.id] = prod;
+    return memo;
+  }, {} as Record<string, Product>);
+
+  const deliveryMap = deliveries.reduce((memo, del) => {
+    memo[del.id] = del;
+    return memo;
+  }, {} as Record<string, Delivery>);
 
   const handleExport = () => {
     const clone = _.cloneDeep(invoices);
     const data = clone
       .sort((a, b) => a.createdAt.localeCompare(b.createdAt))
       .flatMap((invoice) => {
-        const customer = getCustomer(invoice.customer);
+        const customer = customersMap[invoice.customer];
         const customerName = customer?.name;
-        const deliveries = getDeliveriesByIds(invoice.deliveries);
+        const deliveries = invoice.deliveries.map((id) => deliveryMap[id]);
         const products = deliveries.flatMap((delivery) => {
           return delivery?.lines.map((line) => {
-            const product = getProduct(line.product.id);
+            const product = productMap[line.product.id];
             return {
               product: product?.name,
               unit: product?.unit,

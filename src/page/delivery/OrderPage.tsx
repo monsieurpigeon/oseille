@@ -1,7 +1,7 @@
 import { Box, Button, Flex } from '@chakra-ui/react';
 import { useAtom } from 'jotai';
 import { usePostHog } from 'posthog-js/react';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Outlet, useLoaderData, useNavigate, useParams } from 'react-router-dom';
 import { Customer, Delivery, relDb } from '../../backend';
 import { ListItem } from '../../component/card/ListItem';
@@ -12,7 +12,6 @@ import { MyScrollList } from '../../component/layout/page-layout/MyScrollList';
 import { MySide } from '../../component/layout/page-layout/MySide';
 import { InfoModal } from '../../component/modal/InfoModal';
 import { MyH1 } from '../../component/typography/MyFont';
-import { useData } from '../../context/DataContext';
 import { dateFormatter } from '../../utils/formatter';
 import { selectedOrdersAtom } from './useSelectOrders';
 
@@ -22,16 +21,12 @@ export function OrderPage() {
     posthog?.capture('order_page_viewed');
   }, []);
 
-  const { getDelivery } = useData();
-  const { customers, deliveries } = useLoaderData() as {
-    customers: Customer[];
+  const { deliveries } = useLoaderData() as {
     deliveries: Delivery[];
   };
 
-  const { id } = useParams();
   const navigate = useNavigate();
 
-  const selected = useMemo(() => (id ? getDelivery(id) : undefined), [id, deliveries]);
   const orders = deliveries.filter((delivery) => delivery.isOrder);
   const dateList = orders.map((delivery) => delivery.deliveredAt).sort();
   const dateSet = new Set(dateList);

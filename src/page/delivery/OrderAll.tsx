@@ -8,12 +8,9 @@ import { MyHeader } from '../../component/layout/page-layout/MyHeader';
 import { useConfirm } from '../../component/modal/confirm-modal/ConfirmContext';
 import { useSideKick } from '../../component/modules/sidekick/SideKickContext';
 import { SideKickFeeling } from '../../component/modules/sidekick/enums';
-import { useData } from '../../context/DataContext';
 import { selectedOrdersAtom } from './useSelectOrders';
 
 export function OrderAll() {
-  const { getDelivery } = useData();
-
   const { deliveries } = useRouteLoaderData('orders') as { deliveries: Delivery[] };
   const length = useMemo(
     () => deliveries.filter((delivery) => !delivery.invoice).filter((delivery) => delivery.isOrder).length,
