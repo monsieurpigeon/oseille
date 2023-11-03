@@ -1,5 +1,6 @@
 import { Navigate, Outlet, createBrowserRouter } from 'react-router-dom';
 import { Customer, Delivery, FARM_KEY, Invoice, Product, relDb } from './backend';
+import { TopBar } from './component/TopBar';
 import { AboutPageGroup } from './page-group/AboutPageGroup';
 import { InvoicingPageGroup } from './page-group/InvoicingPageGroup';
 import { SettingPageGroup } from './page-group/SettingPageGroup';
@@ -59,6 +60,7 @@ export const router = createBrowserRouter([
     path: '/',
     element: (
       <div>
+        <TopBar />
         <Outlet />
       </div>
     ),
