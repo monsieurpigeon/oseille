@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { Outlet, useRevalidator } from 'react-router-dom';
 import { relDb } from '../../backend';
 import { TopBar } from '../TopBar';
+import { WelcomeModal } from '../modal/WelcomeModal';
 
 export function MasterLayout() {
   const revalidator = useRevalidator();
@@ -18,6 +19,7 @@ export function MasterLayout() {
     <div>
       <TopBar />
       <Outlet />
+      <WelcomeModal />
     </div>
   );
 }
