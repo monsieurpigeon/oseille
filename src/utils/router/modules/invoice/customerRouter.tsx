@@ -22,9 +22,9 @@ export const customerRouter = {
       element: <CustomerDetail />,
       id: 'customer',
       loader: async ({ params }: { params: Params<string> }) =>
-        relDb.rel.find('customerRel', params.id).then((doc) => ({
+        relDb.rel.find('customer', params.id).then((doc) => ({
           ...doc,
-          customers: doc.customerRels,
+          customers: doc.customers,
           deliveries: doc.deliveries.sort((a: any, b: any) => b.documentId.localeCompare(a.documentId)),
           invoices: doc.invoices.sort((a: any, b: any) => b.documentId.localeCompare(a.documentId)),
         })),

@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useLoaderData } from 'react-router-dom';
 import styled from 'styled-components';
 import { Customer, Delivery, Invoice, Product, relDb } from '../../backend';
+import { round } from '../../utils/compute';
 import { priceFormatter } from '../../utils/formatter';
 
 const StyledTable = styled.table`
@@ -64,8 +65,8 @@ export function SalesTable() {
     const getSales = async () => {
       const sales = await Promise.all(
         invoices.map(async (invoice) => {
-          const deliveries = (await relDb.rel.find('delivery', invoice.deliveries)).deliveries as Delivery[];
-          const customer = (await relDb.rel.find('customer', invoice.customer)).customers[0] as Customer;
+          const deliveries = (await relDb.rel.find('Idelivery', invoice.deliveries)).Ideliveries as Delivery[];
+          const customer = (await relDb.rel.find('Icustomer', invoice.customer)).Icustomers[0] as Customer;
           const products = deliveries.flatMap((delivery) => {
             return delivery?.lines.map((line) => {
               const product = line.product;
@@ -134,7 +135,7 @@ export function SalesTable() {
             <td className="total">
               <div>Total:</div>
               <div className="price">
-                🌞 {priceFormatter(sales.reduce((memo, sale) => memo + (sale?.totalPrice || 0), 0))}
+                🌞 {priceFormatter(sales.reduce((memo, sale) => memo + (round(sale?.totalPrice) || 0), 0))}
               </div>{' '}
             </td>
             {customersPlus.map((customer) => (

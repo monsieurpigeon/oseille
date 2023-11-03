@@ -6,13 +6,14 @@ export const dashboardRouter = {
   element: <DashboardPage />,
   id: 'dashboard',
   loader: async () => {
-    const invoicesResult = await relDb.rel.find('invoice');
-    const productsResult = await relDb.rel.find('products');
-    const customersResult = await relDb.rel.find('customers');
+    const invoicesResult = relDb.rel.find('Iinvoice');
+    const productsResult = relDb.rel.find('products');
+    const customersResult = relDb.rel.find('Icustomers');
+    const result = await Promise.all([invoicesResult, productsResult, customersResult]);
     return {
-      invoices: invoicesResult.invoices,
-      products: productsResult.products,
-      customers: customersResult.customers,
+      invoices: result[0].Iinvoices,
+      products: result[1].products,
+      customers: result[2].Icustomers,
     };
   },
 };

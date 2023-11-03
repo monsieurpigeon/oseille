@@ -38,9 +38,10 @@ export function DashboardPage() {
 
   useEffect(() => {
     const getInvoices = async () => {
-      const invoicePaid = await getValues(invoices.filter((i) => isInvoicePaid(i)));
-      const invoiceWaiting = await getValues(invoices.filter((i) => !isInvoicePaid(i)));
-      return { invoicePaid, invoiceWaiting };
+      const invoicePaid = getValues(invoices.filter((i) => isInvoicePaid(i)));
+      const invoiceWaiting = getValues(invoices.filter((i) => !isInvoicePaid(i)));
+      const result = await Promise.all([invoicePaid, invoiceWaiting]);
+      return { invoicePaid: result[0], invoiceWaiting: result[1] };
     };
     getInvoices().then((result) => setInvoices(result));
   }, [invoices]);

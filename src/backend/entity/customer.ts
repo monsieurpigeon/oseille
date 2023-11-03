@@ -1,3 +1,4 @@
+import { sortAlpha } from '../../utils/sort';
 import { relDb } from '../service/database';
 
 export interface Customer {
@@ -31,9 +32,7 @@ export const updateCustomer = (customer: Customer) => {
 };
 
 export const getCustomers = () =>
-  relDb.rel
-    .find('customer')
-    .then((doc) => doc.customers.sort((a: Customer, b: Customer) => a.name.localeCompare(b.name)));
+  relDb.rel.find('customer').then((doc) => doc.customers.sort(sortAlpha<Customer>('name')));
 
 export const getCustomerById = (id: string): Promise<Customer> =>
   relDb.rel.find('customer', id).then((doc) => doc.customers[0]);

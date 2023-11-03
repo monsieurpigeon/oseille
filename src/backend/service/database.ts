@@ -17,21 +17,16 @@ export const relDb = db.setSchema([
     singular: 'product',
     plural: 'products',
   },
-  { singular: 'productRel', plural: 'productRels', documentType: 'product' },
   {
     singular: 'customer',
     plural: 'customers',
-  },
-  {
-    singular: 'customerRel',
-    plural: 'customerRels',
-    documentType: 'customer',
     relations: {
       prices: { hasMany: 'price' },
       deliveries: { hasMany: { type: 'delivery', options: { queryInverse: 'customer' } } },
       invoices: { hasMany: { type: 'invoice', options: { queryInverse: 'customer' } } },
     },
   },
+  { singular: 'Icustomer', plural: 'Icustomers', documentType: 'customer' },
   {
     singular: 'price',
     plural: 'prices',
@@ -43,29 +38,21 @@ export const relDb = db.setSchema([
   {
     singular: 'delivery',
     plural: 'deliveries',
-  },
-  {
-    singular: 'deliveryRel',
-    plural: 'deliveryRels',
-    documentType: 'delivery',
     relations: {
       customer: { belongsTo: 'customer' },
       invoice: { belongsTo: 'invoice' },
     },
   },
+  { singular: 'Idelivery', plural: 'Ideliveries', documentType: 'delivery' },
   {
     singular: 'invoice',
     plural: 'invoices',
-  },
-  {
-    singular: 'invoiceRel',
-    plural: 'invoiceRels',
-    documentType: 'invoice',
     relations: {
       customer: { belongsTo: 'customer' },
       deliveries: { hasMany: 'delivery' },
     },
   },
+  { singular: 'Iinvoice', plural: 'Iinvoices', documentType: 'invoice' },
 ]);
 
 relDb.rel.find('delivery').then((result) => {

@@ -14,12 +14,12 @@ export const invoiceRouter = {
   loader: async () => {
     const resProd = await relDb.rel.find('product');
     const resDelivery = await relDb.rel.find('delivery');
-    return relDb.rel.find('invoiceRel').then((doc) => ({
+    return relDb.rel.find('invoice').then((doc) => ({
       ...doc,
       products: resProd.products,
       deliveries: resDelivery.deliveries,
-      invoices: doc.invoiceRels.sort(sortAlpha<Invoice>('documentId')),
-      customers: doc.customers.sort(sortAlpha<Customer>('name')),
+      invoices: doc.invoices.sort(sortAlpha<Invoice>('documentId')),
+      customers: doc.customers.sort(sortAlpha<Customer>('name', true)),
     }));
   },
   children: [
@@ -28,8 +28,7 @@ export const invoiceRouter = {
       path: ':id',
       element: <InvoiceDetail />,
       id: 'invoice',
-      loader: async ({ params }: { params: Params<string> }) =>
-        relDb.rel.find('invoiceRels', params.id).then((doc) => ({ ...doc, invoices: doc.invoiceRels })),
+      loader: async ({ params }: { params: Params<string> }) => relDb.rel.find('invoice', params.id),
       children: [
         { path: 'pay', element: <PaymentModal /> },
         { path: 'edit', element: <InvoiceEditModal /> },

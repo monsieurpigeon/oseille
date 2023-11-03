@@ -21,7 +21,10 @@ export const paymentSchema = z.object({
 });
 
 export function PaymentModal() {
-  const invoice = useRouteLoaderData('invoice') as Invoice;
+  const {
+    invoices: [invoice],
+  } = useRouteLoaderData('invoice') as { invoices: Invoice[] };
+
   const [amount, setAmount] = useState(0);
   useEffect(() => {
     getInvoiceTotal(invoice).then(setAmount);
@@ -48,6 +51,8 @@ export function PaymentModal() {
     resolver: zodResolver(paymentSchema),
     defaultValues: { ...emptyPayment, ...invoice?.payments?.[0] },
   });
+
+  useEffect(() => reset({ ...emptyPayment, amount, ...invoice?.payments?.[0] }), [amount]);
 
   const onRemove = async () => {
     if (

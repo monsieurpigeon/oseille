@@ -1,8 +1,9 @@
 import { Chart, registerables } from 'chart.js';
 import 'chartjs-adapter-moment';
+import _ from 'lodash';
 import moment from 'moment';
 import 'moment/locale/fr';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { Invoice } from '../../../backend';
 import { getInvoiceTotal } from '../../../utils/aggregations';
 import { priceFormatter } from '../../../utils/formatter';
@@ -32,8 +33,9 @@ interface SalesGraphProps {
 
 Chart.register(...registerables);
 
-export function SalesGraph({ invoices }: SalesGraphProps) {
+export function SalesGraph({ invoices: invoicesClone }: SalesGraphProps) {
   const chartRef = useRef(null);
+  const invoices = useMemo(() => _.cloneDeep(invoicesClone), [invoicesClone]);
 
   const [total, setTotal] = useState(0);
   const [data, setData] = useState<{ [key: string]: number }>({});

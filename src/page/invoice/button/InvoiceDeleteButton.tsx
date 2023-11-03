@@ -11,13 +11,15 @@ interface DeleteInvoiceActionProps {
 }
 
 export function InvoiceDeleteButton({ invoice }: DeleteInvoiceActionProps) {
+  // TODO Bug au create et delete facture
   const { confirm } = useConfirm();
   const { say } = useSideKick();
   const posthog = usePostHog();
   const navigate = useNavigate();
-  const farm = useRouteLoaderData('farm') as Farm;
+  const { farm } = useRouteLoaderData('farm') as { farm: Farm };
 
-  const isDeletable = farm && Number(invoice.documentId.split('-')[2]) === farm.invoiceId - 1;
+  const isDeletable =
+    farm && Number(invoice.documentId.split('-')[2]) === farm.invoiceId - 1 && invoice.payments?.length === 0;
 
   const handleDeleteInvoice = async () => {
     if (

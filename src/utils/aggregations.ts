@@ -29,7 +29,9 @@ interface TaxLine {
 }
 
 export const computeTaxes = async (invoice: Invoice): Promise<{ total: TaxLine; detail: TaxLine[] }> => {
-  const deliveries = await relDb.rel.find('delivery', invoice.deliveries);
+  const deliveries = await relDb.rel
+    .find('Idelivery', invoice.deliveries)
+    .then((doc) => ({ ...doc, deliveries: doc.Ideliveries }));
   const deliveryLines = (deliveries.deliveries as Delivery[])
     .flatMap((delivery) => {
       if (!delivery) return null;

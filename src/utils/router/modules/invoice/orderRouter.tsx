@@ -11,9 +11,9 @@ export const orderRouter = {
   element: <OrderPage />,
   id: 'orders',
   loader: async () =>
-    relDb.rel.find('deliveryRel').then((doc) => ({
+    relDb.rel.find('delivery').then((doc) => ({
       ...doc,
-      deliveries: doc.deliveryRels.sort((a: Delivery, b: Delivery) => b.documentId.localeCompare(a.documentId)), // sort and filter should stay here
+      deliveries: doc.deliveries.sort((a: Delivery, b: Delivery) => b.documentId.localeCompare(a.documentId)), // sort and filter should stay here
       customers: doc.customers.sort((a: any, b: any) => a.name.localeCompare(b.name)),
       timestamp: new Date().getTime(), // TODO necessary ?
     })),
@@ -38,8 +38,7 @@ export const orderRouter = {
       path: ':id',
       element: <DeliveryDetail />,
       id: 'order',
-      loader: async ({ params }: { params: Params<string> }) =>
-        relDb.rel.find('deliveryRel', params.id).then((doc) => ({ ...doc, deliveries: doc.deliveryRels })),
+      loader: async ({ params }: { params: Params<string> }) => relDb.rel.find('delivery', params.id),
       children: [
         {
           path: 'edit',
