@@ -7,6 +7,7 @@ import { SettingCard } from '../../../components/SettingCard';
 export function AddressSettingBlock() {
   const { farm } = useRouteLoaderData('farm') as any;
   const { isOpen, onOpen, onClose } = useDisclosure();
+  console.log({ farm });
 
   return (
     <SettingCard

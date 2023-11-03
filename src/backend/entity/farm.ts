@@ -91,10 +91,3 @@ export const addLogo = async (logo: LogoInput) => {
 };
 
 export const getFarm = () => relDb.rel.find('farm', FARM_KEY).then((doc) => doc.farms[0]);
-
-export const onFarmChange = (listener: (value: PouchDB.Core.ChangesResponseChange<{}>) => any) =>
-  relDb.changes({ since: 'now', live: true }).on('change', (e) => {
-    if (e.id.split('_')[0] === 'farm') {
-      listener(e);
-    }
-  });
