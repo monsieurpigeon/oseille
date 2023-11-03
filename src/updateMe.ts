@@ -8,7 +8,7 @@ export const MONEY_OUT = [
   { label: 'Salaires', value: 0 },
 ];
 export const MONEY_IN = [
-  { label: 'Dons', value: 1 },
+  { label: 'Dons', value: 123 },
   { label: 'Levée de fonds', value: 0 },
 ];
 
