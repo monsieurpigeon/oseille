@@ -39,8 +39,8 @@ export const relDb = db.setSchema([
     singular: 'delivery',
     plural: 'deliveries',
     relations: {
-      customer: { belongsTo: 'customer' },
-      invoice: { belongsTo: 'invoice' },
+      customer: { belongsTo: 'Icustomer' },
+      invoice: { belongsTo: 'Iinvoice' },
     },
   },
   { singular: 'Idelivery', plural: 'Ideliveries', documentType: 'delivery' },
@@ -48,8 +48,8 @@ export const relDb = db.setSchema([
     singular: 'invoice',
     plural: 'invoices',
     relations: {
-      customer: { belongsTo: 'customer' },
-      deliveries: { hasMany: 'delivery' },
+      customer: { belongsTo: 'Icustomer' },
+      deliveries: { hasMany: 'Idelivery' },
     },
   },
   { singular: 'Iinvoice', plural: 'Iinvoices', documentType: 'invoice' },

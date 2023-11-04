@@ -42,7 +42,9 @@ export const lines = async (payload: any, type: DocumentType) => {
 
   if (type === 'Invoice') {
     const isTVA = await getIsTVA(payload);
-    const result = await relDb.rel.find('delivery', payload.deliveries);
+    const result = await relDb.rel
+      .find('Idelivery', payload.deliveries)
+      .then((doc) => ({ ...doc, deliveries: doc.Ideliveries }));
     const invoiceDeliveries = result.deliveries.sort((a: Delivery, b: Delivery) =>
       a.documentId.localeCompare(b.documentId),
     );

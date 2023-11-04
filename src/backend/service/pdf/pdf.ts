@@ -43,7 +43,7 @@ const getBioLogo = (label: string | undefined) => {
 
 export const exportDocument = async ({ payload, type, open = false }: any) => {
   const isTVA = type === DocumentType.delivery ? payload.isTVA : await getIsTVA(payload);
-  const currentCustomer = await getCustomerById(payload.customerId);
+  const currentCustomer = await getCustomerById(payload.customer);
   const farm = await getFarm();
   const docDefinition: any = {
     defaultStyle: {

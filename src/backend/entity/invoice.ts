@@ -60,7 +60,9 @@ export interface InvoicePaymentInput {
 
 export const addInvoice = async (deliveries: string[], createdAt: string, notes: string) => {
   const farm = await getFarm();
-  const allDeliveries = (await relDb.rel.find('delivery', deliveries)) as {
+  const allDeliveries = (await relDb.rel
+    .find('delivery', deliveries)
+    .then((doc) => ({ ...doc, customers: doc.Icustomers }))) as {
     deliveries: Delivery[];
     customers: Customer[];
   };

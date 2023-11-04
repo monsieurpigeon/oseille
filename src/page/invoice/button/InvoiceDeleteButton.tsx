@@ -18,8 +18,7 @@ export function InvoiceDeleteButton({ invoice }: DeleteInvoiceActionProps) {
   const navigate = useNavigate();
   const { farm } = useRouteLoaderData('farm') as { farm: Farm };
 
-  const isDeletable =
-    farm && Number(invoice.documentId.split('-')[2]) === farm.invoiceId - 1 && invoice.payments?.length === 0;
+  const isDeletable = farm && Number(invoice.documentId.split('-')[2]) === farm.invoiceId - 1 && !invoice.payments;
 
   const handleDeleteInvoice = async () => {
     if (

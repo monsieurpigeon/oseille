@@ -14,7 +14,7 @@ export const orderRouter = {
     relDb.rel.find('delivery').then((doc) => ({
       ...doc,
       deliveries: doc.deliveries.sort((a: Delivery, b: Delivery) => b.documentId.localeCompare(a.documentId)), // sort and filter should stay here
-      customers: doc.customers.sort((a: any, b: any) => a.name.localeCompare(b.name)),
+      customers: doc.Icustomers.sort((a: any, b: any) => a.name.localeCompare(b.name)),
       timestamp: new Date().getTime(), // TODO necessary ?
     })),
   children: [
@@ -38,7 +38,10 @@ export const orderRouter = {
       path: ':id',
       element: <DeliveryDetail />,
       id: 'order',
-      loader: async ({ params }: { params: Params<string> }) => relDb.rel.find('delivery', params.id),
+      loader: async ({ params }: { params: Params<string> }) =>
+        relDb.rel
+          .find('delivery', params.id)
+          .then((doc) => ({ ...doc, customers: doc.Icustomers, invoices: doc.Iinvoices || [] })),
       children: [
         {
           path: 'edit',

@@ -1,6 +1,7 @@
-import { Box } from '@chakra-ui/react';
-import { Outlet, useLoaderData, useNavigate } from 'react-router-dom';
-import { Customer, Delivery } from '../../backend';
+import { Box, Link } from '@chakra-ui/react';
+import { Outlet, Link as RouterLink, useLoaderData, useNavigate } from 'react-router-dom';
+import { Customer, Delivery, Invoice } from '../../backend';
+import { MyIcon } from '../../component/MyIcon';
 import { DetailButton, EditButton } from '../../component/buttons';
 import { MyHeader } from '../../component/layout/page-layout/MyHeader';
 import { DeliveryDescriptionLine } from '../../component/shared/Delivery';
@@ -14,7 +15,8 @@ export const DeliveryDetail = () => {
   const {
     deliveries: [selected],
     customers: [currentCustomer],
-  } = useLoaderData() as { deliveries: [Delivery]; customers: [Customer] };
+    invoices: [invoice],
+  } = useLoaderData() as { deliveries: Delivery[]; customers: Customer[]; invoices: Invoice[] };
 
   if (!currentCustomer) return null;
   const isEditable = !selected?.invoice;
@@ -42,7 +44,14 @@ export const DeliveryDetail = () => {
           customer={currentCustomer}
         />
         <div>Notes: {selected.notes}</div>
-        {!!selected.invoice && <div>{selected.invoice}</div>}
+        {!!selected.invoice && (
+          <Link
+            to={`/invoicing/invoice/${selected.invoice}`}
+            as={RouterLink}
+          >
+            <MyIcon name="link" /> {invoice.documentId}
+          </Link>
+        )}
         <DeliveryDescription delivery={selected} />
       </div>
     </>

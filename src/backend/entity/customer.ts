@@ -35,7 +35,7 @@ export const getCustomers = () =>
   relDb.rel.find('customer').then((doc) => doc.customers.sort(sortAlpha<Customer>('name')));
 
 export const getCustomerById = (id: string): Promise<Customer> =>
-  relDb.rel.find('customer', id).then((doc) => doc.customers[0]);
+  relDb.rel.find('Icustomer', id).then((doc) => doc.Icustomers[0]);
 
 export const onCustomersChange = (listener: (value: PouchDB.Core.ChangesResponseChange<{}>) => any) =>
   relDb.changes({ since: 'now', live: true }).on('change', (e) => {
