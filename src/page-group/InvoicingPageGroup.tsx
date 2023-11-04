@@ -8,7 +8,7 @@ const items = [
   { label: 'Tarifs', emoji: '💎', path: 'prices' },
   { label: 'Commandes', emoji: '🗒️', path: 'order' },
   { label: 'Livraisons', emoji: '🧺', path: 'delivery' },
-  { label: 'Factures', emoji: '🧲', path: 'invoice' },
+  { label: 'Factures', emoji: '💌', path: 'invoice' },
 ];
 
 export function InvoicingPageGroup() {
