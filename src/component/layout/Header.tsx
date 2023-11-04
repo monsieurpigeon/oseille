@@ -1,5 +1,6 @@
 import { Flex, Spacer, Text } from '@chakra-ui/react';
 import { Link, useRouteLoaderData } from 'react-router-dom';
+import { ExportAction } from '../../page/settings/sections/advanced-section/actions/ExportAction';
 import { DEFAULT_FARM } from '../../utils/defaults';
 import { HeaderNavigation } from './Navigation';
 
@@ -27,6 +28,7 @@ export function Header() {
         {farm?.title && <Text as="b">{farm?.title?.toUpperCase()}</Text>}
         {farm && !farm?.title && <Text as="b">{DEFAULT_FARM.title.toUpperCase()}</Text>}
       </Link>
+      <ExportAction />
     </Flex>
   );
 }
