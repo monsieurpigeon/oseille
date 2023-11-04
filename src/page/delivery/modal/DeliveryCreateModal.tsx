@@ -11,7 +11,7 @@ import { SideKickFeeling } from '../../../component/modules/sidekick/enums';
 import { DeliveryFields } from './DeliveryFields';
 
 export const deliverySchema = z.object({
-  customerId: z.string().min(1),
+  customer: z.string().min(1),
   deliveredAt: z.string(),
   lines: z
     .object({
@@ -36,7 +36,7 @@ export function DeliveryCreateModal() {
 
   const { control, register, handleSubmit, watch, setValue, getValues } = useForm<DeliveryInput>({
     resolver: zodResolver(deliverySchema),
-    defaultValues: { customerId: '', deliveredAt: new Date().toISOString().split('T')[0], notes: '' },
+    defaultValues: { customer: '', deliveredAt: new Date().toISOString().split('T')[0], notes: '' },
   });
 
   const { fields, append, remove } = useFieldArray({

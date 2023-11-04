@@ -1,10 +1,10 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { usePostHog } from 'posthog-js/react';
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useRouteLoaderData } from 'react-router-dom';
 import { z } from 'zod';
-import { Invoice, InvoicePaymentInput, PaymentMode, store, updateInvoice } from '../../../backend';
+import { Invoice, InvoicePaymentInput, PaymentMode, updateInvoice } from '../../../backend';
 import { MyModal } from '../../../component/modal/MyModal';
 import { useConfirm } from '../../../component/modal/confirm-modal/ConfirmContext';
 import { useSideKick } from '../../../component/modules/sidekick/SideKickContext';
@@ -21,8 +21,15 @@ export const paymentSchema = z.object({
 });
 
 export function PaymentModal() {
-  const { id } = useParams();
-  const invoice = id ? (store.invoices.find((el) => el.id === id) as Invoice) : undefined;
+  const {
+    invoices: [invoice],
+  } = useRouteLoaderData('invoice') as { invoices: Invoice[] };
+
+  const [amount, setAmount] = useState(0);
+  useEffect(() => {
+    getInvoiceTotal(invoice).then(setAmount);
+  }, [invoice]);
+
   if (!invoice) return null;
 
   const posthog = usePostHog();
@@ -35,7 +42,7 @@ export function PaymentModal() {
   const emptyPayment = {
     paymentMode: undefined,
     paidAt: new Date().toISOString().split('T')[0],
-    amount: getInvoiceTotal(invoice),
+    amount,
     reference: '',
     notes: '',
   };
@@ -44,6 +51,8 @@ export function PaymentModal() {
     resolver: zodResolver(paymentSchema),
     defaultValues: { ...emptyPayment, ...invoice?.payments?.[0] },
   });
+
+  useEffect(() => reset({ ...emptyPayment, amount, ...invoice?.payments?.[0] }), [amount]);
 
   const onRemove = async () => {
     if (

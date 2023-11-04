@@ -1,8 +1,8 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useMemo, useRef } from 'react';
+import { useRef } from 'react';
 import { useForm } from 'react-hook-form';
-import { useNavigate, useParams } from 'react-router-dom';
-import { ProductInput, store, updateProduct } from '../../../backend';
+import { useNavigate, useRouteLoaderData } from 'react-router-dom';
+import { Product, ProductInput, updateProduct } from '../../../backend';
 import { MyModal } from '../../../component/modal/MyModal';
 import { useSideKick } from '../../../component/modules/sidekick/SideKickContext';
 import { SideKickFeeling } from '../../../component/modules/sidekick/enums';
@@ -10,9 +10,7 @@ import { productSchema } from './ProductCreateModal';
 import { ProductFields } from './ProductFields';
 
 export function ProductEditModal() {
-  const { id } = useParams();
-  const product = useMemo(() => (id ? store.products.find((el) => el.id === id) : undefined), [id, store.products]);
-  if (!product) return null;
+  const product = useRouteLoaderData('product') as Product;
 
   const cancelRef = useRef<any>();
   const navigate = useNavigate();
@@ -40,6 +38,7 @@ export function ProductEditModal() {
     defaultValues: { ...product, tva: product?.tva || '5.5' },
   });
 
+  if (!product) return null;
   return (
     <MyModal
       isOpen={true}

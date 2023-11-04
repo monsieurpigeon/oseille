@@ -1,23 +1,22 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useMemo, useRef } from 'react';
+import { useRef } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
-import { useNavigate, useParams } from 'react-router-dom';
-import { Delivery, DeliveryInput, store, updateDelivery } from '../../../backend';
+import { useLocation, useNavigate, useRouteLoaderData } from 'react-router-dom';
+import { Delivery, DeliveryInput, updateDelivery } from '../../../backend';
 import { MyModal } from '../../../component/modal/MyModal';
 import { useSideKick } from '../../../component/modules/sidekick/SideKickContext';
 import { SideKickFeeling } from '../../../component/modules/sidekick/enums';
 import { deliverySchema } from './DeliveryCreateModal';
 import { DeliveryFields } from './DeliveryFields';
 
-interface DeliveryEditModalProps {
-  delivery: Delivery;
-}
-
 export function DeliveryEditModal() {
-  const { id } = useParams();
-  const delivery = useMemo(() => (id ? store.deliveries.find((el) => el.id === id) : undefined), [id]);
-  if (!delivery) return null;
+  const location = useLocation();
 
+  const {
+    deliveries: [delivery],
+  } = useRouteLoaderData(location.pathname.split('/')[2]) as { deliveries: Delivery[] };
+
+  if (!delivery) return null;
   const isOrder = location.pathname.includes('order');
 
   const cancelRef = useRef<any>();
@@ -25,7 +24,7 @@ export function DeliveryEditModal() {
   const { say } = useSideKick();
 
   const updatedValues = {
-    customerId: delivery.customerId,
+    customer: delivery.customer as string,
     deliveredAt: delivery.deliveredAt,
     lines: delivery.lines.map((line) => ({
       productId: line.product.id,

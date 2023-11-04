@@ -1,9 +1,8 @@
 import { Box, Button, Flex, Spacer, Text } from '@chakra-ui/react';
 import { usePostHog } from 'posthog-js/react';
-import { useEffect, useMemo } from 'react';
-import { Outlet, useNavigate, useParams } from 'react-router-dom';
-import { useSnapshot } from 'valtio';
-import { store } from '../../backend';
+import { useEffect } from 'react';
+import { Outlet, useLoaderData, useNavigate, useParams, useRouteLoaderData } from 'react-router-dom';
+import { Product } from '../../backend';
 import { ListItem } from '../../component/card/ListItem';
 import { MyHeader } from '../../component/layout/page-layout/MyHeader';
 import { MyPage } from '../../component/layout/page-layout/MyPage';
@@ -13,24 +12,17 @@ import { InfoModal } from '../../component/modal/InfoModal';
 import { MyH1 } from '../../component/typography/MyFont';
 import { DEFAULT_TAX } from '../../utils/defaults';
 import { TVAFormatter } from '../../utils/formatter';
-import { useFarmParameters } from '../../utils/hooks/useFarmParameters';
 
 export function ProductPage() {
   const posthog = usePostHog();
   useEffect(() => {
     posthog?.capture('product_page_viewed');
   }, []);
-
-  const { farm } = useFarmParameters();
-
-  const snap = useSnapshot(store);
-  const { id } = useParams();
-
   const navigate = useNavigate();
 
-  const selected = useMemo(() => (id ? store.products.find((el) => el.id === id) : undefined), [id, snap]);
-
-  const { isTVA } = useFarmParameters();
+  const { id } = useParams();
+  const { farm, isTVA } = useRouteLoaderData('farm') as any;
+  const products = useLoaderData() as Product[];
 
   return (
     <MyPage>
@@ -61,10 +53,10 @@ export function ProductPage() {
           </Button>
         </MyHeader>
         <MyScrollList empty={{ title: 'Ajouter mon premier produit', onClick: () => navigate('create') }}>
-          {store.products.map((entity) => (
+          {products.map((entity) => (
             <ListItem
               key={entity.id}
-              isSelected={selected?.id === entity.id}
+              isSelected={id === entity.id}
               onClick={() => navigate(entity.id === id ? '' : entity.id)}
             >
               <Flex width="100%">

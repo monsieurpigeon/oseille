@@ -1,13 +1,11 @@
 import { Box, Flex, Table, TableContainer, Tbody, Th, Thead, Tr } from '@chakra-ui/react';
 import { differenceInDays } from 'date-fns';
-import { useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useMemo, useState } from 'react';
+import { useNavigate, useRouteLoaderData } from 'react-router-dom';
 import styled from 'styled-components';
-import { useSnapshot } from 'valtio';
-import { isInvoicePaid, store } from '../../backend';
+import { Customer, Invoice, isInvoicePaid } from '../../backend';
 import { getInvoiceTotal } from '../../utils/aggregations';
 import { priceFormatter } from '../../utils/formatter';
-import { useFarmParameters } from '../../utils/hooks/useFarmParameters';
 
 const plural = (val: number) => (val > 1 ? 's' : '');
 
@@ -18,22 +16,35 @@ const StyledTr = styled(Tr)`
 `;
 
 export function InvoiceAll() {
-  const snap = useSnapshot(store);
-  const { invoiceDelay } = useFarmParameters();
+  const { invoiceDelay } = useRouteLoaderData('farm') as any;
+  const { invoices, customers } = useRouteLoaderData('invoices') as {
+    invoices: Invoice[];
+    customers: Customer[];
+  };
+
+  const [totals, setTotals] = useState<Record<string, number>>({});
+
+  useEffect(() => {
+    const totalsPromise = invoices.map((invoice) => getInvoiceTotal(invoice));
+    Promise.all(totalsPromise)
+      .then((result) =>
+        result.reduce((memo, total, index) => {
+          memo[invoices[index].id] = total;
+          return memo;
+        }, {} as Record<string, number>),
+      )
+      .then(setTotals);
+  });
 
   const navigate = useNavigate();
 
-  const paidLength = useMemo(() => store.invoices.filter((el) => isInvoicePaid(el)).length, [snap]);
-  const notPaidLength = useMemo(() => store.invoices.filter((el) => !isInvoicePaid(el)).length, [snap]);
+  const paidLength = useMemo(() => invoices.filter((el) => isInvoicePaid(el)).length, [invoices]);
+  const notPaidLength = useMemo(() => invoices.filter((el) => !isInvoicePaid(el)).length, [invoices]);
 
-  const lateInvoices = store.invoices
+  const lateInvoices = invoices
     .filter((el) => !isInvoicePaid(el) && differenceInDays(new Date(), new Date(el.createdAt)) > invoiceDelay)
     .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
   const lateLength = lateInvoices.length;
-
-  const getCustomer = (id: string) => {
-    return store.customers.find((el) => el.id === id);
-  };
 
   return (
     <Flex
@@ -57,22 +68,25 @@ export function InvoiceAll() {
               </Tr>
             </Thead>
             <Tbody>
-              {lateInvoices.map((invoice) => (
-                <StyledTr
-                  key={invoice.id}
-                  onClick={() => navigate(invoice.id)}
-                  className="clickable"
-                >
-                  <Th>J+{differenceInDays(new Date(), new Date(invoice.createdAt))}</Th>
-                  <Th>
-                    <Flex direction="column">
-                      <Box>{invoice.customer.name}</Box>
-                      <Box>{getCustomer(invoice?.customerId)?.phone}</Box>
-                    </Flex>
-                  </Th>
-                  <Th isNumeric>{priceFormatter(getInvoiceTotal(invoice))}</Th>
-                </StyledTr>
-              ))}
+              {lateInvoices.map((invoice) => {
+                const customer = customers.find((customer) => customer.id === invoice.customer);
+                return (
+                  <StyledTr
+                    key={invoice.id}
+                    onClick={() => navigate(invoice.id)}
+                    className="clickable"
+                  >
+                    <Th>J+{differenceInDays(new Date(), new Date(invoice.createdAt))}</Th>
+                    <Th>
+                      <Flex direction="column">
+                        <Box>{customer?.name}</Box>
+                        <Box>{customer?.phone}</Box>
+                      </Flex>
+                    </Th>
+                    <Th isNumeric>{priceFormatter(totals[invoice.id])}</Th>
+                  </StyledTr>
+                );
+              })}
             </Tbody>
           </Table>
         </TableContainer>

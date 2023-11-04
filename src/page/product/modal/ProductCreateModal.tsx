@@ -23,7 +23,7 @@ export function ProductCreateModal() {
 
   const { say } = useSideKick();
 
-  const { control, register, handleSubmit, reset } = useForm<ProductInput>({
+  const { control, register, handleSubmit } = useForm<ProductInput>({
     resolver: zodResolver(productSchema),
     defaultValues: {
       name: '',

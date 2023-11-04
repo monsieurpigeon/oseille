@@ -1,12 +1,7 @@
 import PouchDb from 'pouchdb';
 import find from 'pouchdb-find';
 import rel from 'relational-pouch';
-import { loadCustomers } from '../entity/customer';
-import { loadDeliveries } from '../entity/delivery';
-import { addFarm, loadFarm } from '../entity/farm';
-import { loadInvoices } from '../entity/invoice';
-import { loadPrices } from '../entity/price';
-import { loadProducts } from '../entity/product';
+import { addFarm } from '../entity/farm';
 
 PouchDb.plugin(find).plugin(rel);
 
@@ -25,7 +20,13 @@ export const relDb = db.setSchema([
   {
     singular: 'customer',
     plural: 'customers',
+    relations: {
+      prices: { hasMany: 'price' },
+      deliveries: { hasMany: { type: 'delivery', options: { queryInverse: 'customer' } } },
+      invoices: { hasMany: { type: 'invoice', options: { queryInverse: 'customer' } } },
+    },
   },
+  { singular: 'Icustomer', plural: 'Icustomers', documentType: 'customer' },
   {
     singular: 'price',
     plural: 'prices',
@@ -38,54 +39,64 @@ export const relDb = db.setSchema([
     singular: 'delivery',
     plural: 'deliveries',
     relations: {
-      invoice: { belongsTo: 'invoice' },
+      customer: { belongsTo: 'Icustomer' },
+      invoice: { belongsTo: 'Iinvoice' },
     },
   },
+  { singular: 'Idelivery', plural: 'Ideliveries', documentType: 'delivery' },
   {
     singular: 'invoice',
     plural: 'invoices',
     relations: {
-      deliveries: { hasMany: 'delivery' },
+      customer: { belongsTo: 'Icustomer' },
+      deliveries: { hasMany: 'Idelivery' },
     },
   },
+  { singular: 'Iinvoice', plural: 'Iinvoices', documentType: 'invoice' },
 ]);
 
-db.allDocs({ include_docs: true }).then(console.log);
+relDb.rel.find('delivery').then((result) => {
+  result.deliveries.forEach(async (delivery: any) => {
+    let isUpdated = false;
+    const newDelivery = { ...delivery };
+    if (delivery.customerId) {
+      newDelivery.customer = delivery.customerId;
+      delete newDelivery.customerId;
+      isUpdated = true;
+    }
+    if (delivery.invoiceId) {
+      newDelivery.invoice = delivery.invoiceId;
+      delete newDelivery.invoiceId;
+      isUpdated = true;
+    }
+    isUpdated && (await relDb.rel.save('delivery', newDelivery).catch(console.error));
+  });
+});
 
-db.changes({
-  since: 'now',
-  live: true,
-})
-  .on('change', function (change) {
-    clearTimeout(debounce);
-    debounce = setTimeout(() => {
-      loadDatabase();
-    }, 100);
-  })
-  .on('error', console.error);
+relDb.rel.find('invoice').then((result) => {
+  result.invoices.forEach(async (invoice: any) => {
+    if (invoice.customerId) {
+      const newInvoice = { ...invoice, customer: invoice.customerId };
+      delete newInvoice.customerId;
+      delete newInvoice.deliveryIds;
+      await relDb.rel.save('invoice', newInvoice).catch(console.error);
+    }
+  });
+});
 
-let debounce: NodeJS.Timeout;
+db.allDocs({ include_docs: true }).then((result) => {
+  console.log(result);
+});
 
 export const initDatabase = async () => {
   await addFarm();
-  loadFarm();
 
   db.bulkDocs([{ _id: 'init' }]).catch(console.error);
-};
-
-export const loadDatabase = () => {
-  loadCustomers();
-  loadProducts();
-  loadDeliveries();
-  loadInvoices();
-  loadFarm();
-  loadPrices();
 };
 
 export const destroyDatabase = async () => {
   await db.destroy();
   db = new PouchDb(DB_NAME);
-  loadDatabase();
 };
 
 export function exportData(data: any) {

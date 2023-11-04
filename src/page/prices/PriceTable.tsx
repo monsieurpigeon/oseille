@@ -1,7 +1,7 @@
 import { Table, TableContainer, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react';
 import { useMemo, useState } from 'react';
-import { useSnapshot } from 'valtio';
-import { Price, store } from '../../backend';
+import { useLoaderData } from 'react-router-dom';
+import { Customer, Price, Product } from '../../backend';
 import { priceFormatter } from '../../utils/formatter';
 import { PriceEmpty } from './PriceEmpty';
 import { PriceNumberInput } from './PriceNumberInput';
@@ -10,18 +10,23 @@ import './style.css';
 type PriceList = { [key: string]: { [key: string]: Price } };
 
 export function PriceTable() {
-  const snap = useSnapshot(store);
   const [currentEdit, setCurrentEdit] = useState(['', '']);
-  const [customerLength, productLength] = [store.customers.length, store.products.length];
+  const { products, customers, prices } = useLoaderData() as {
+    products: Product[];
+    customers: Customer[];
+    prices: Price[];
+  };
+
+  const [customerLength, productLength] = [customers.length, products.length];
 
   const priceList: PriceList = useMemo(
     () =>
-      store.prices.reduce((acc, price) => {
+      prices.reduce((acc, price) => {
         if (!acc[price.product]) acc[price.product] = {};
         acc[price.product][price.customer] = price;
         return acc;
       }, {} as PriceList),
-    [store.prices],
+    [prices],
   );
 
   if (customerLength === 0 || productLength === 0) {
@@ -44,13 +49,13 @@ export function PriceTable() {
           <Tr style={{ position: 'sticky', top: '0px', backgroundColor: 'white', zIndex: 200 }}>
             <Th style={{ borderBottom: 'none' }}></Th>
             <Th>Par Défaut</Th>
-            {store.customers.map((c) => (
+            {customers.map((c) => (
               <Th key={c.id}>{c.name}</Th>
             ))}
           </Tr>
         </Thead>
         <Tbody>
-          {store.products.map((p) => {
+          {products.map((p) => {
             const defaultPrice: Price | undefined = priceList[p.id]?.['DEFAULT'];
 
             return (
@@ -79,7 +84,7 @@ export function PriceTable() {
                     />
                   )}
                 </Td>
-                {store.customers.map((c) => {
+                {customers.map((c) => {
                   const directPrice = priceList[p.id]?.[c.id];
                   const price = directPrice || defaultPrice;
                   return (

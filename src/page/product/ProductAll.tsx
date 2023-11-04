@@ -1,7 +1,10 @@
 import { Center } from '@chakra-ui/react';
-import { store } from '../../backend';
+import { useRouteLoaderData } from 'react-router-dom';
+import { Product } from '../../backend';
 
 export function ProductAll() {
-  const length = store.products.length;
+  const products = useRouteLoaderData('products') as Product[];
+  const length = products?.length;
+
   return <Center>{`${length} produit${length > 1 ? 's' : ''}`}</Center>;
 }

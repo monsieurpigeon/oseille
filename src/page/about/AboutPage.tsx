@@ -13,12 +13,6 @@ const StyledAboutPage = styled.div`
   height: 100%;
 `;
 
-const ITEMS = [
-  { to: 'app', label: 'Application' },
-  { to: 'team', label: 'Équipe' },
-  { to: 'business', label: 'Financement' },
-];
-
 export function AboutPage() {
   const posthog = usePostHog();
   useEffect(() => {

@@ -1,7 +1,9 @@
 import { Center } from '@chakra-ui/react';
-import { store } from '../../backend';
+import { useRouteLoaderData } from 'react-router-dom';
+import { Customer } from '../../backend';
 
 export function CustomerAll() {
-  const length = store.customers.length;
+  const customers = useRouteLoaderData('customers') as Customer[];
+  const length = customers?.length;
   return <Center>{`${length} client${length > 1 ? 's' : ''}`}</Center>;
 }
