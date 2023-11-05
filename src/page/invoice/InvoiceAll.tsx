@@ -34,7 +34,7 @@ export function InvoiceAll() {
         }, {} as Record<string, number>),
       )
       .then(setTotals);
-  });
+  }, [invoices, customers]);
 
   const navigate = useNavigate();
 

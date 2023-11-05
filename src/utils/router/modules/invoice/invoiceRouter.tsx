@@ -15,10 +15,10 @@ export const invoiceRouter = {
     const resProd = await relDb.rel.find('product');
     return relDb.rel.find('invoice').then((doc) => ({
       ...doc,
-      products: resProd.products,
-      deliveries: doc.Ideliveries,
-      invoices: doc.invoices.sort(sortAlpha<Invoice>('documentId')),
-      customers: doc.Icustomers.sort(sortAlpha<Customer>('name', true)),
+      products: resProd.products || [],
+      deliveries: doc.Ideliveries || [],
+      invoices: doc.invoices?.sort(sortAlpha<Invoice>('documentId')) || [],
+      customers: doc.Icustomers?.sort(sortAlpha<Customer>('name', true)) || [],
     }));
   },
   children: [

@@ -90,9 +90,14 @@ db.allDocs({ include_docs: true }).then((result) => {
 
 export const initDatabase = async () => {
   await addFarm();
-
   db.bulkDocs([{ _id: 'init' }]).catch(console.error);
 };
+
+db.get('_init').catch((err) => {
+  if (err.status === 404) {
+    initDatabase();
+  }
+});
 
 export const destroyDatabase = async () => {
   await db.destroy();

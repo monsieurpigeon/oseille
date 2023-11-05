@@ -13,8 +13,8 @@ export const orderRouter = {
   loader: async () =>
     relDb.rel.find('delivery').then((doc) => ({
       ...doc,
-      deliveries: doc.deliveries.sort((a: Delivery, b: Delivery) => b.documentId.localeCompare(a.documentId)), // sort and filter should stay here
-      customers: doc.Icustomers.sort((a: any, b: any) => a.name.localeCompare(b.name)),
+      deliveries: doc.deliveries?.sort((a: Delivery, b: Delivery) => b.documentId.localeCompare(a.documentId)) || [], // sort and filter should stay here
+      customers: doc.Icustomers?.sort((a: any, b: any) => a.name.localeCompare(b.name)) || [],
       timestamp: new Date().getTime(), // TODO necessary ?
     })),
   children: [
