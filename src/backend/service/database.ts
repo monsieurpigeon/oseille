@@ -6,6 +6,7 @@ import { addFarm } from '../entity/farm';
 PouchDb.plugin(find).plugin(rel);
 
 const DB_NAME = 'hello_world';
+const INIT_KEY = 'init';
 
 export let db = new PouchDb(DB_NAME);
 export const relDb = db.setSchema([
@@ -90,10 +91,10 @@ db.allDocs({ include_docs: true }).then((result) => {
 
 export const initDatabase = async () => {
   await addFarm();
-  db.bulkDocs([{ _id: 'init' }]).catch(console.error);
+  db.bulkDocs([{ _id: INIT_KEY }]).catch(console.error);
 };
 
-db.get('_init').catch((err) => {
+db.get(INIT_KEY).catch((err) => {
   if (err.status === 404) {
     initDatabase();
   }
