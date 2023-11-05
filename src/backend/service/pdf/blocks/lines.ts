@@ -3,10 +3,10 @@ import { TVA_RATES } from '../../../../utils/defaults';
 import { dateFormatter, priceFormatter } from '../../../../utils/formatter';
 import { Delivery, DeliveryLine } from '../../../entity/delivery';
 import { ProductWithPrice } from '../../../entity/product';
-import { store } from '../../store';
+import { relDb } from '../../database';
 import { DocumentType } from '../pdf';
 
-export const lines = (payload: any, type: DocumentType) => {
+export const lines = async (payload: any, type: DocumentType) => {
   if (type === DocumentType.delivery) {
     const isTVA = payload.isTVA;
     return {
@@ -41,12 +41,13 @@ export const lines = (payload: any, type: DocumentType) => {
   }
 
   if (type === 'Invoice') {
-    const isTVA = getIsTVA(payload);
-    const deliveries = payload.deliveries
-      .map((id: string) => {
-        return store.deliveries.find((d) => d.id === id);
-      })
-      .sort((a: Delivery, b: Delivery) => a.documentId.localeCompare(b.documentId));
+    const isTVA = await getIsTVA(payload);
+    const result = await relDb.rel
+      .find('Idelivery', payload.deliveries)
+      .then((doc) => ({ ...doc, deliveries: doc.Ideliveries }));
+    const invoiceDeliveries = result.deliveries.sort((a: Delivery, b: Delivery) =>
+      a.documentId.localeCompare(b.documentId),
+    );
     return {
       layout: 'lightHorizontalLines',
       style: 'tableExample',
@@ -72,7 +73,7 @@ export const lines = (payload: any, type: DocumentType) => {
                 ]
               : []),
           ],
-          ...deliveries.flatMap((delivery: Delivery) => {
+          ...invoiceDeliveries.flatMap((delivery: Delivery) => {
             return [
               [
                 { text: `${delivery?.documentId} - ${dateFormatter(delivery?.deliveredAt || '')}`, bold: true },

@@ -2,9 +2,9 @@ import { Box, Text } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
+import { useRouteLoaderData } from 'react-router-dom';
 import { z } from 'zod';
 import { updateFarm } from '../../backend';
-import { useFarmParameters } from '../../utils/hooks/useFarmParameters';
 import { MyNumberInput } from '../form/MyNumberInput';
 import { useSideKick } from '../modules/sidekick/SideKickContext';
 import { SideKickFeeling } from '../modules/sidekick/enums';
@@ -21,7 +21,7 @@ interface DocumentIdInput {
 }
 
 export function FarmDocumentIdModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
-  const { farm } = useFarmParameters();
+  const { farm } = useRouteLoaderData('farm') as any;
   const cancelRef = useRef<any>();
   const { say } = useSideKick();
 

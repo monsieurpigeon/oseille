@@ -1,10 +1,9 @@
 import { Box, Button, Flex } from '@chakra-ui/react';
 import { addDays } from 'date-fns';
 import { usePostHog } from 'posthog-js/react';
-import { useEffect, useMemo, useState } from 'react';
-import { Outlet, useNavigate, useParams } from 'react-router-dom';
-import { useSnapshot } from 'valtio';
-import { store } from '../../backend';
+import { useEffect, useState } from 'react';
+import { Outlet, useLoaderData, useNavigate, useParams } from 'react-router-dom';
+import { Customer, Delivery } from '../../backend';
 import { MyIcon } from '../../component/MyIcon';
 import { ListItem } from '../../component/card/ListItem';
 import { ListItemGroup } from '../../component/card/ListItemGroup';
@@ -22,12 +21,12 @@ export function DeliveryPage() {
   useEffect(() => {
     posthog?.capture('delivery_page_viewed');
   }, []);
-  const snap = useSnapshot(store);
-  const { id } = useParams();
+  const { customers, deliveries } = useLoaderData() as {
+    customers: Customer[];
+    deliveries: Delivery[];
+  };
 
   const navigate = useNavigate();
-
-  const selected = useMemo(() => (id ? store.deliveries.find((el) => el.id === id) : undefined), [id, snap]);
 
   return (
     <MyPage>
@@ -65,14 +64,14 @@ export function DeliveryPage() {
           </Button>
         </MyHeader>
         <MyScrollList>
-          {store.deliveries.length === 0 && (
+          {deliveries.length === 0 && (
             <MyScrollList.Empty onClick={() => navigate('create')}>Ajouter ma première livraison</MyScrollList.Empty>
           )}
-          {store.customers.map((customer) => (
+          {customers.map((customer) => (
             <DeliveryCustomer
               key={customer.id}
-              selected={selected}
               customer={customer}
+              deliveries={deliveries.filter((delivery) => delivery.customer === customer.id)}
             />
           ))}
         </MyScrollList>
@@ -85,21 +84,18 @@ export function DeliveryPage() {
   );
 }
 
-function DeliveryCustomer({ customer, selected }: any) {
+function DeliveryCustomer({ customer, deliveries }: { customer: Customer; deliveries: Delivery[] }) {
   const { id } = useParams();
   const navigate = useNavigate();
 
   const [toInvoice, setToInvoice] = useState<{ [key: string]: boolean }>({});
-  const deliveries = store.deliveries
-    .filter((delivery) => delivery.customerId === customer.id)
-    .filter((delivery) => {
-      const date = new Date(delivery.deliveredAt);
-      const today = addDays(new Date(), -2 * 7);
-      return !delivery.invoiceId || date > today;
-    })
-    .sort((a, b) => b.documentId.localeCompare(a.documentId));
+  const customerDeliveries = deliveries.filter((delivery) => {
+    const date = new Date(delivery.deliveredAt);
+    const today = addDays(new Date(), -2 * 7);
+    return !delivery.invoice || date > today;
+  });
 
-  if (deliveries.length === 0) {
+  if (customerDeliveries.length === 0) {
     return null;
   }
   return (
@@ -113,12 +109,12 @@ function DeliveryCustomer({ customer, selected }: any) {
         />
       }
     >
-      {deliveries.map((delivery) => (
+      {customerDeliveries.map((delivery) => (
         <ListItem
-          isSelected={selected?.id === delivery.id}
+          isSelected={id === delivery.id}
           key={delivery.id}
           onClick={() => navigate(delivery.id === id ? '' : delivery.id)}
-          checkable={!delivery.invoiceId}
+          checkable={!delivery.invoice}
           checked={toInvoice[delivery.id] || false}
           onCheck={() =>
             setToInvoice((i) => ({

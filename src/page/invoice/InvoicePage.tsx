@@ -1,10 +1,9 @@
 import { Box, Flex } from '@chakra-ui/react';
 import { differenceInDays } from 'date-fns';
 import { usePostHog } from 'posthog-js/react';
-import { useEffect, useMemo } from 'react';
-import { Outlet, useNavigate, useParams } from 'react-router-dom';
-import { useSnapshot } from 'valtio';
-import { isInvoicePaid, store } from '../../backend';
+import { useEffect } from 'react';
+import { Outlet, useLoaderData, useNavigate, useParams, useRouteLoaderData } from 'react-router-dom';
+import { Customer, Invoice, isInvoicePaid } from '../../backend';
 import { ListItem } from '../../component/card/ListItem';
 import { ListItemGroup } from '../../component/card/ListItemGroup';
 import { MyHeader } from '../../component/layout/page-layout/MyHeader';
@@ -14,7 +13,6 @@ import { MySide } from '../../component/layout/page-layout/MySide';
 import { InfoModal } from '../../component/modal/InfoModal';
 import { MyH1 } from '../../component/typography/MyFont';
 import { dateFormatter } from '../../utils/formatter';
-import { useFarmParameters } from '../../utils/hooks/useFarmParameters';
 import { InvoiceExportCsvButton } from './button/InvoiceExportCsvButton';
 
 export function InvoicePage() {
@@ -24,10 +22,11 @@ export function InvoicePage() {
     posthog?.capture('invoice_page_viewed');
   }, []);
 
-  const snap = useSnapshot(store);
-  const { id } = useParams();
-
-  const selected = useMemo(() => (id ? store.invoices.find((el) => el.id === id) : undefined), [id, snap]);
+  const { customers, invoices, timestamp } = useLoaderData() as {
+    customers: Customer[];
+    invoices: Invoice[];
+    timestamp: number;
+  };
 
   return (
     <MyPage>
@@ -60,16 +59,16 @@ export function InvoicePage() {
           <InvoiceExportCsvButton />
         </MyHeader>
         <MyScrollList>
-          {store.invoices.length === 0 && (
+          {invoices.length === 0 && (
             <MyScrollList.Empty onClick={() => navigate('../delivery')}>
               Facturer mon premier bon de livraison
             </MyScrollList.Empty>
           )}
-          {store.customers.map((customer) => (
+          {customers.map((customer) => (
             <InvoiceCustomer
               key={customer.id}
-              selected={selected}
               customer={customer}
+              invoices={invoices.filter((invoice) => invoice.customer === customer.id)}
             />
           ))}
         </MyScrollList>
@@ -81,12 +80,10 @@ export function InvoicePage() {
   );
 }
 
-function InvoiceCustomer({ customer, selected }: any) {
+function InvoiceCustomer({ customer, invoices }: { customer: Customer; invoices: Invoice[] }) {
   const { id } = useParams();
-  const { invoiceDelay } = useFarmParameters();
-
-  const invoices = store.invoices.filter((invoice) => invoice.customerId === customer.id);
   const navigate = useNavigate();
+  const { invoiceDelay } = useRouteLoaderData('farm') as any;
 
   if (invoices.length === 0) return null;
   return (
@@ -100,7 +97,7 @@ function InvoiceCustomer({ customer, selected }: any) {
             key={invoice.id}
             done={isInvoicePaid(invoice)}
             alert={isLate}
-            isSelected={selected?.id === invoice.id}
+            isSelected={id === invoice.id}
             onClick={() => navigate(invoice.id === id ? '' : invoice.id)}
           >
             {isLate && '⚠️'} {`${invoice.documentId} - ${dateFormatter(invoice.createdAt)}`}

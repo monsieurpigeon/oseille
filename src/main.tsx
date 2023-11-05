@@ -1,13 +1,9 @@
-import { ChakraProvider } from '@chakra-ui/react';
 import { PostHogProvider } from 'posthog-js/react';
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import { RouterProvider } from 'react-router-dom';
+import { App } from './App';
 import './backend';
-import { ConfirmContextProvider } from './component/modal/confirm-modal/ConfirmContext';
-import { SideKickContextProvider } from './component/modules/sidekick/SideKickContext';
 import './index.css';
-import { router } from './router';
 
 const options = {
   api_host: import.meta.env.VITE_POSTHOG_HOST,
@@ -21,13 +17,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
       apiKey={import.meta.env.VITE_POSTHOG_KEY}
       options={options}
     >
-      <ChakraProvider>
-        <ConfirmContextProvider>
-          <SideKickContextProvider>
-            <RouterProvider router={router} />
-          </SideKickContextProvider>
-        </ConfirmContextProvider>
-      </ChakraProvider>
+      <App />
     </PostHogProvider>
   </React.StrictMode>,
 );

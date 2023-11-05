@@ -2,9 +2,8 @@ import { Box, Button, CloseButton, Flex, Table, TableContainer, Tbody, Th, Thead
 import { useAtom } from 'jotai';
 import { usePostHog } from 'posthog-js/react';
 import { useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useSnapshot } from 'valtio';
-import { Delivery, Product, confirmOrder, exportOrders, store } from '../../backend';
+import { useNavigate, useRouteLoaderData } from 'react-router-dom';
+import { Delivery, Product, confirmOrder, exportOrders } from '../../backend';
 import { MyHeader } from '../../component/layout/page-layout/MyHeader';
 import { useConfirm } from '../../component/modal/confirm-modal/ConfirmContext';
 import { useSideKick } from '../../component/modules/sidekick/SideKickContext';
@@ -12,21 +11,29 @@ import { SideKickFeeling } from '../../component/modules/sidekick/enums';
 import { selectedOrdersAtom } from './useSelectOrders';
 
 export function OrderAll() {
-  const snap = useSnapshot(store);
+  const { deliveries } = useRouteLoaderData('orders') as { deliveries: Delivery[] };
   const length = useMemo(
-    () => store.deliveries.filter((delivery) => !delivery.invoiceId).filter((delivery) => delivery.isOrder).length,
-    [snap],
+    () => deliveries.filter((delivery) => !delivery.invoice).filter((delivery) => delivery.isOrder).length,
+    [deliveries],
   );
+
   const posthog = usePostHog();
   const { say } = useSideKick();
 
   const [toInvoice, setToInvoice] = useAtom(selectedOrdersAtom);
+  const deliveryMap = useMemo(() => {
+    return deliveries.reduce((memo, delivery) => {
+      memo[delivery.id] = delivery;
+      return memo;
+    }, {} as { [key: string]: Delivery });
+  }, [toInvoice]);
+
   const selectedOrders = Object.entries(toInvoice)
     .map(([key, value]) => {
       if (!value) return undefined;
-      return store.deliveries.find((delivery) => delivery.id === key);
+      return deliveryMap[key];
     })
-    .filter((el) => el && !el.invoiceId) as Delivery[];
+    .filter((el) => el && !el.invoice) as Delivery[];
 
   const selectedLength = selectedOrders.length;
 
@@ -42,7 +49,7 @@ export function OrderAll() {
       })
     ) {
       posthog?.capture('order_confirm');
-      await Promise.all(selectedOrders.map((order) => confirmOrder(order)));
+      await Promise.all(selectedOrders.map((order) => confirmOrder(order.id)));
 
       say({
         sentence: `${

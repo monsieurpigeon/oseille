@@ -1,24 +1,16 @@
 import { Button } from '@chakra-ui/react';
 import { useAtom } from 'jotai';
 import { atomWithHash } from 'jotai-location';
+import { useLoaderData } from 'react-router-dom';
 import styled from 'styled-components';
-import { Customer, store } from '../../../backend';
+import { Delivery, Invoice } from '../../../backend';
 import { SalesGraph } from '../../../component/modules/graph/SalesGraph';
 import { DeliveryCard, InvoiceCard } from './DocumentCard';
 
-interface CustomerDocumentsProps {
-  customer: Customer;
-}
-
 const tabAtom = atomWithHash('tab', 0);
 
-export function CustomerDocuments({ customer }: CustomerDocumentsProps) {
-  const invoices = store.invoices
-    .filter((invoice) => invoice.customerId === customer.id)
-    .sort((a, b) => b.documentId.localeCompare(a.documentId));
-  const deliveries = store.deliveries
-    .filter((delivery) => delivery.customerId === customer.id)
-    .sort((a, b) => b.documentId.localeCompare(a.documentId));
+export function CustomerDocuments() {
+  const { invoices, deliveries } = useLoaderData() as { invoices: Invoice[]; deliveries: Delivery[] };
 
   const [tab, setTab] = useAtom(tabAtom);
 
@@ -49,10 +41,10 @@ export function CustomerDocuments({ customer }: CustomerDocumentsProps) {
           <StyledTab>
             <DocumentWrapper>
               {deliveries.length === 0 && <div>Aucun bon de livraison</div>}
-              {deliveries.map((delivery, index) => {
+              {deliveries.map((delivery) => {
                 return (
                   <DeliveryCard
-                    key={index}
+                    key={delivery.id}
                     delivery={delivery}
                   />
                 );
@@ -65,14 +57,17 @@ export function CustomerDocuments({ customer }: CustomerDocumentsProps) {
             <DocumentWrapper>
               {invoices.length === 0 && <div>Aucune facture</div>}
               {invoices.map((invoice) => (
-                <InvoiceCard invoice={invoice} />
+                <InvoiceCard
+                  key={invoice.id}
+                  invoice={invoice}
+                />
               ))}
             </DocumentWrapper>
           </StyledTab>
         )}
         {tab === 2 && (
           <StyledTab>
-            <SalesGraph customer={customer} />
+            <SalesGraph invoices={invoices} />
           </StyledTab>
         )}
       </StyledWrapper>

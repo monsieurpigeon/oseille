@@ -3,8 +3,6 @@ import { usePostHog } from 'posthog-js/react';
 import { useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import styled from 'styled-components';
-import { useSnapshot } from 'valtio';
-import { store } from '../../backend';
 
 const StyledSettingPages = styled.div`
   display: flex;
@@ -19,7 +17,6 @@ export function SettingPage() {
   useEffect(() => {
     posthog?.capture('setting_page_viewed');
   }, []);
-  const snap = useSnapshot(store);
 
   return (
     <Container maxW="container.xl">

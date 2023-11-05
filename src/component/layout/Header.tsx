@@ -1,11 +1,12 @@
 import { Flex, Spacer, Text } from '@chakra-ui/react';
-import { Link } from 'react-router-dom';
+import { Link, useRouteLoaderData } from 'react-router-dom';
+import { ExportAction } from '../../page/settings/sections/advanced-section/actions/ExportAction';
 import { DEFAULT_FARM } from '../../utils/defaults';
-import { useFarmParameters } from '../../utils/hooks/useFarmParameters';
 import { HeaderNavigation } from './Navigation';
 
 export function Header() {
-  const { farm } = useFarmParameters();
+  const { farm } = useRouteLoaderData('farm') as any;
+
   return (
     <Flex
       alignItems="center"
@@ -27,6 +28,7 @@ export function Header() {
         {farm?.title && <Text as="b">{farm?.title?.toUpperCase()}</Text>}
         {farm && !farm?.title && <Text as="b">{DEFAULT_FARM.title.toUpperCase()}</Text>}
       </Link>
+      <ExportAction />
     </Flex>
   );
 }

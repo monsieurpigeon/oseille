@@ -1,10 +1,10 @@
 import { useDisclosure } from '@chakra-ui/react';
+import { useRouteLoaderData } from 'react-router-dom';
 import { FarmDocumentIdModal } from '../../../../../component/modal/FarmDocumentIdModal';
-import { useFarmParameters } from '../../../../../utils/hooks/useFarmParameters';
 import { SettingCard } from '../../../components/SettingCard';
 
 export function DocumentSettingBlock() {
-  const { farm } = useFarmParameters();
+  const { farm } = useRouteLoaderData('farm') as any;
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (

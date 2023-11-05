@@ -1,42 +1,44 @@
 import { Box, Button, Flex, Grid, GridItem, Input, Select, Text, Textarea } from '@chakra-ui/react';
 import { useMemo } from 'react';
 import { FieldArrayWithId } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
-import { useSnapshot } from 'valtio';
-import { DeliveryInput, store } from '../../../backend';
+import { useLoaderData, useNavigate, useRouteLoaderData } from 'react-router-dom';
+import { Customer, DeliveryInput, Price, Product } from '../../../backend';
 import { MyNumberInput } from '../../../component/form/MyNumberInput';
 import { priceFormatter } from '../../../utils/formatter';
-import { useFarmParameters } from '../../../utils/hooks/useFarmParameters';
 
 export function DeliveryFields({ watch, control, register, fields, append, remove, setValue }: any) {
-  const snap = useSnapshot(store);
   const navigate = useNavigate();
+  const { products, customers, prices } = useLoaderData() as {
+    products: Product[];
+    customers: Customer[];
+    prices: Price[];
+  };
 
-  const watchCustomer = watch('customerId');
-  const { isTVA } = useFarmParameters();
+  const watchCustomer = watch('customer');
+  const { isTVA } = useRouteLoaderData('farm') as any;
 
-  const { products, prices } = useMemo(() => {
-    const productPrices = store.prices.filter((price) => price.customer === watchCustomer);
+  const { availableProducts, availablePrices } = useMemo(() => {
+    const productPrices = prices.filter((price) => price.customer === watchCustomer);
     const productsList = productPrices.map((price) => price.product);
-    const defaultPrices = store.prices.filter(
+    const defaultPrices = prices.filter(
       (price) => price.customer === 'DEFAULT' && !productsList.includes(price.product),
     );
 
-    const prices = [...productPrices, ...defaultPrices];
+    const availablePrices = [...productPrices, ...defaultPrices];
 
-    const products = store.products
-      .filter((product) => prices.map((price) => price.product).includes(product.id))
+    const availableProducts = products
+      .filter((product) => availablePrices.map((price) => price.product).includes(product.id))
       .map((product) => ({
         ...product,
-        price: prices.find((price) => price.product === product.id)?.value || 0,
+        price: availablePrices.find((price) => price.product === product.id)?.value || 0,
       }));
 
-    return { products, prices };
+    return { availableProducts, availablePrices };
   }, [watchCustomer]);
 
   return (
     <>
-      {store.customers.length === 0 ? (
+      {customers.length === 0 ? (
         <Flex
           direction="column"
           bg="blue.50"
@@ -52,9 +54,9 @@ export function DeliveryFields({ watch, control, register, fields, append, remov
       ) : (
         <Box p={1}>
           <Text>Client</Text>
-          <Select {...register('customerId')}>
+          <Select {...register('customer')}>
             <option value="">Choisir un client</option>
-            {store.customers.map((customer) => {
+            {customers.map((customer) => {
               return (
                 <option
                   key={customer.id}
@@ -102,12 +104,15 @@ export function DeliveryFields({ watch, control, register, fields, append, remov
                 <Select
                   {...register(`lines.${index}.productId`, {
                     onChange: (e: any) => {
-                      setValue(`lines.${index}.price`, prices.find((price) => price.product === e.target.value)?.value);
+                      setValue(
+                        `lines.${index}.price`,
+                        availablePrices.find((price) => price.product === e.target.value)?.value,
+                      );
                     },
                   })}
                 >
                   <option value="">...</option>
-                  {products.map((product) => (
+                  {availableProducts.map((product) => (
                     <option
                       value={product.id}
                       key={product.id}
@@ -145,7 +150,7 @@ export function DeliveryFields({ watch, control, register, fields, append, remov
           ))}
         </Grid>
         {watchCustomer &&
-          (products.length === 0 ? (
+          (availableProducts.length === 0 ? (
             <Flex
               direction="column"
               bg="blue.50"

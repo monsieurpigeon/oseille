@@ -1,9 +1,10 @@
 import { Button } from '@chakra-ui/react';
 import clsx from 'clsx';
-import { useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { useLoaderData } from 'react-router-dom';
 import styled from 'styled-components';
-import { useSnapshot } from 'valtio';
-import { store } from '../../backend';
+import { Customer, Delivery, Invoice, Product, relDb } from '../../backend';
+import { round } from '../../utils/compute';
 import { priceFormatter } from '../../utils/formatter';
 
 const StyledTable = styled.table`
@@ -42,29 +43,49 @@ const StyledTable = styled.table`
   }
 `;
 
-export function SalesTable() {
-  const snap = useSnapshot(store);
+interface Sales {
+  product: string;
+  productId: string;
+  customer: string;
+  customerId: string;
+  totalPrice: number;
+}
 
+export function SalesTable() {
+  const [sales, setSales] = useState<Sales[]>([]);
+
+  const { products, customers, invoices } = useLoaderData() as {
+    products: Product[];
+    customers: Customer[];
+    invoices: Invoice[];
+  };
   const [show, setShow] = useState(false);
 
-  const sales = useMemo(() => {
-    return store.invoices.flatMap((invoice) => {
-      const deliveries = invoice.deliveryIds.map((id) => store.deliveries.find((d) => d.id === id));
-      const products = deliveries.flatMap((delivery) => {
-        return delivery?.lines.map((line) => {
-          const product = store.products.find((p) => p.id === line.product.id);
-          return {
-            product: product?.name || 'defaultProduct',
-            productId: product?.id || '000',
-            customer: invoice.customer.name,
-            customerId: invoice.customer.id,
-            totalPrice: line.quantity * line.price || 0,
-          };
-        });
-      });
-      return products;
-    });
-  }, [snap]);
+  useEffect(() => {
+    const getSales = async () => {
+      const sales = await Promise.all(
+        invoices.map(async (invoice) => {
+          const deliveries = (await relDb.rel.find('Idelivery', invoice.deliveries)).Ideliveries as Delivery[];
+          const customer = (await relDb.rel.find('Icustomer', invoice.customer)).Icustomers[0] as Customer;
+          const products = deliveries.flatMap((delivery) => {
+            return delivery?.lines.map((line) => {
+              const product = line.product;
+              return {
+                product: product?.name || 'defaultProduct',
+                productId: product?.id || '000',
+                customer: customer?.name,
+                customerId: customer?.id,
+                totalPrice: line.quantity * line.price || 0,
+              };
+            });
+          });
+          return products;
+        }),
+      );
+      return sales.flat() as Array<Sales>;
+    };
+    getSales().then(setSales);
+  }, [invoices]);
 
   const salesByProduct = sales.reduce((memo, sale) => {
     if (!sale) return memo;
@@ -72,7 +93,7 @@ export function SalesTable() {
       ...memo,
       [sale.productId]: {
         ...memo[sale.productId],
-        [sale.customerId]: (memo[sale.productId]?.[sale.customerId] || 0) + sale.totalPrice,
+        [sale.customerId as string]: (memo[sale.productId]?.[sale.customerId as string] || 0) + sale.totalPrice,
       },
     };
   }, {} as { [key: string]: { [key: string]: number } });
@@ -83,7 +104,7 @@ export function SalesTable() {
 
   const threshold = valuesList[Math.floor(valuesList.length / 4)];
 
-  const products = snap.products
+  const productsPlus = products
     .map((product) => {
       const customerSales = salesByProduct[product.id];
       return {
@@ -95,7 +116,7 @@ export function SalesTable() {
     })
     .sort((a, b) => b.total - a.total);
 
-  const customers = snap.customers
+  const customersPlus = customers
     .map((customer) => ({
       name: customer.name,
       id: customer.id,
@@ -114,10 +135,10 @@ export function SalesTable() {
             <td className="total">
               <div>Total:</div>
               <div className="price">
-                🌞 {priceFormatter(sales.reduce((memo, sale) => memo + (sale?.totalPrice || 0), 0))}
+                🌞 {priceFormatter(sales.reduce((memo, sale) => memo + (round(sale?.totalPrice) || 0), 0))}
               </div>{' '}
             </td>
-            {customers.map((customer) => (
+            {customersPlus.map((customer) => (
               <td className="vertical">
                 <div>{customer.name}</div>
                 <div className="main-price">{priceFormatter(customer.total)}</div>
@@ -125,13 +146,13 @@ export function SalesTable() {
             ))}
           </thead>
           <tbody>
-            {products.map((product: any) => (
+            {productsPlus.map((product: any) => (
               <tr>
                 <td className="horizontal">
                   <div>{product.name}</div>
                   <div className="main-price">{priceFormatter(product.total)}</div>
                 </td>
-                {customers.map((customer) => (
+                {customersPlus.map((customer) => (
                   <td
                     className={clsx('cell', { top: product[customer.id] > threshold })}
                     title={`${product.name}\n${customer.name}`}

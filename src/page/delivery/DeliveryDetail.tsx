@@ -1,8 +1,7 @@
-import { Box } from '@chakra-ui/react';
-import { useMemo } from 'react';
-import { Outlet, useNavigate, useParams } from 'react-router-dom';
-import { useSnapshot } from 'valtio';
-import { store } from '../../backend';
+import { Box, Link } from '@chakra-ui/react';
+import { Outlet, Link as RouterLink, useLoaderData, useNavigate } from 'react-router-dom';
+import { Customer, Delivery, Invoice } from '../../backend';
+import { MyIcon } from '../../component/MyIcon';
 import { DetailButton, EditButton } from '../../component/buttons';
 import { MyHeader } from '../../component/layout/page-layout/MyHeader';
 import { DeliveryDescriptionLine } from '../../component/shared/Delivery';
@@ -12,14 +11,15 @@ import { DeliveryPrintButton } from './button/DeliveryPrintButton';
 
 export const DeliveryDetail = () => {
   const navigate = useNavigate();
-  const { id } = useParams();
-  const snap = useSnapshot(store);
 
-  const selected = useMemo(() => (id ? store.deliveries.find((el) => el.id === id) : undefined), [id, snap]);
-  const currentCustomer = store.customers.find((customer) => customer.id === selected?.customerId);
+  const {
+    deliveries: [selected],
+    customers: [currentCustomer],
+    invoices: [invoice],
+  } = useLoaderData() as { deliveries: Delivery[]; customers: Customer[]; invoices: Invoice[] };
 
   if (!currentCustomer) return null;
-  const isEditable = !selected?.invoiceId;
+  const isEditable = !selected?.invoice;
 
   if (!selected) return null;
   return (
@@ -39,10 +39,18 @@ export const DeliveryDetail = () => {
       </MyHeader>
 
       <div>
-        <DeliveryDescriptionLine delivery={{ ...selected, customer: currentCustomer }} />
+        <DeliveryDescriptionLine
+          delivery={selected}
+          customer={currentCustomer}
+        />
         <div>Notes: {selected.notes}</div>
-        {!!selected.invoiceId && (
-          <div>{store.invoices.find((invoice) => invoice.id === selected.invoiceId)?.documentId}</div>
+        {!!selected.invoice && (
+          <Link
+            to={`/invoicing/invoice/${selected.invoice}`}
+            as={RouterLink}
+          >
+            <MyIcon name="link" /> {invoice.documentId}
+          </Link>
         )}
         <DeliveryDescription delivery={selected} />
       </div>

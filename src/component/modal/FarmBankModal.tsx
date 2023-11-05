@@ -2,10 +2,10 @@ import { Flex, FormLabel, Input } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
+import { useRouteLoaderData } from 'react-router-dom';
 import { z } from 'zod';
 import { FarmInput, updateFarm } from '../../backend';
 import { EMPTY_FARM } from '../../utils/defaults';
-import { useFarmParameters } from '../../utils/hooks/useFarmParameters';
 import { useSideKick } from '../modules/sidekick/SideKickContext';
 import { SideKickFeeling } from '../modules/sidekick/enums';
 import { MyModal } from './MyModal';
@@ -22,7 +22,8 @@ export const configSchema = z.object({
 });
 
 export function FarmBankModal({ isOpen, onClose }: FarmBankModalProps) {
-  const { farm } = useFarmParameters();
+  const { farm } = useRouteLoaderData('farm') as any;
+
   const cancelRef = useRef<any>();
   const { say } = useSideKick();
 

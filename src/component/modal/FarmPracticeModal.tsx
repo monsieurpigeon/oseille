@@ -3,11 +3,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { usePostHog } from 'posthog-js/react';
 import { useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
-import { Link } from 'react-router-dom';
+import { Link, useRouteLoaderData } from 'react-router-dom';
 import { z } from 'zod';
 import { FarmInput, updateFarm } from '../../backend';
 import { EMPTY_FARM } from '../../utils/defaults';
-import { useFarmParameters } from '../../utils/hooks/useFarmParameters';
 import { useSideKick } from '../modules/sidekick/SideKickContext';
 import { SideKickFeeling } from '../modules/sidekick/enums';
 import { MyModal } from './MyModal';
@@ -23,8 +22,8 @@ interface FarmPracticeModalProps {
 
 export function FarmPracticeModal({ isOpen, onClose }: FarmPracticeModalProps) {
   const posthog = usePostHog();
+  const { farm } = useRouteLoaderData('farm') as any;
 
-  const { farm } = useFarmParameters();
   const cancelRef = useRef<any>();
   const { say } = useSideKick();
 

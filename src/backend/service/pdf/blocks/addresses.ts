@@ -1,9 +1,15 @@
 import { DEFAULT_FARM } from '../../../../utils/defaults';
 import { Customer } from '../../../entity/customer';
-import { store } from '../../store';
+import { Farm } from '../../../entity/farm';
 import { DocumentType } from '../pdf';
 
-export const addresses = (payload: { customer: Customer }, type: DocumentType, hasLogo: boolean, hasBio: boolean) => ({
+export const addresses = (
+  payload: { customer: Customer },
+  type: DocumentType,
+  hasLogo: boolean,
+  hasBio: boolean,
+  farm: Farm,
+) => ({
   columns: [
     ...(hasLogo
       ? [
@@ -15,13 +21,13 @@ export const addresses = (payload: { customer: Customer }, type: DocumentType, h
       : []),
 
     [
-      { text: store.farm?.title || DEFAULT_FARM.title, bold: true },
-      { text: store.farm?.address1 || DEFAULT_FARM.address1 },
-      { text: store.farm?.address2 || DEFAULT_FARM.address2 },
-      { text: `${store.farm?.zip || DEFAULT_FARM.zip} ${store.farm?.city || DEFAULT_FARM.city}` },
-      { text: `${store.farm?.phone || ''}` },
-      { text: `${store.farm?.email || ''}` },
-      ...(store.farm?.tva ? [{ text: `N° TVA: ${store.farm?.tva || ''}` }] : []),
+      { text: farm?.title || DEFAULT_FARM.title, bold: true },
+      { text: farm?.address1 || DEFAULT_FARM.address1 },
+      { text: farm?.address2 || DEFAULT_FARM.address2 },
+      { text: `${farm?.zip || DEFAULT_FARM.zip} ${farm?.city || DEFAULT_FARM.city}` },
+      { text: `${farm?.phone || ''}` },
+      { text: `${farm?.email || ''}` },
+      ...(farm?.tva ? [{ text: `N° TVA: ${farm?.tva || ''}` }] : []),
     ],
     [
       ...(hasBio

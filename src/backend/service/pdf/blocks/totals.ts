@@ -4,11 +4,11 @@ import { dateFormatterDelay, priceFormatter } from '../../../../utils/formatter'
 import { Farm } from '../../../entity/farm';
 import { DocumentType } from '../pdf';
 
-export const totals = (payload: any, type: DocumentType, farm: Farm | null) => {
+export const totals = async (payload: any, type: DocumentType, farm: Farm | null) => {
   const isTVA = type === DocumentType.delivery ? payload.isTVA : getIsTVA(payload);
   const totals =
     type === DocumentType.invoice
-      ? computeTaxes(payload)
+      ? await computeTaxes(payload)
       : { total: { ht: getDeliveryTotal(payload), tax: 0, ttc: 0 } };
   return {
     layout: 'noBorders',

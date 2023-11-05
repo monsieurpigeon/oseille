@@ -1,8 +1,8 @@
 import { computeTaxes } from '../../../../utils/aggregations';
 import { priceFormatter } from '../../../../utils/formatter';
 
-export function taxes(payload: any) {
-  const taxes = computeTaxes(payload);
+export async function taxes(payload: any) {
+  const taxes = await computeTaxes(payload);
 
   return {
     table: {

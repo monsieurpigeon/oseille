@@ -1,19 +1,18 @@
 import { documentIdFormatter } from '../../utils/formatter';
 import { relDb } from '../service/database';
-import { store } from '../service/store';
-import { Customer, getCustomer } from './customer';
-import { loadFarm, updateDocumentId } from './farm';
-import { ProductWithPrice, loadProduct } from './product';
+import { Customer } from './customer';
+import { getFarm, updateDocumentId } from './farm';
+import { ProductWithPrice, getProductById } from './product';
 
 export interface Delivery {
   id: string;
+  _rev: string;
   isOrder?: boolean;
   isTVA: boolean;
   deliveredAt: string;
-  customer: Customer;
-  customerId: string;
+  customer: string | Customer;
   documentId: string;
-  invoiceId?: string;
+  invoice?: string;
   lines: Array<DeliveryLine>;
   notes: string;
 }
@@ -28,7 +27,7 @@ export interface DeliveryLine {
 export interface DeliveryInput {
   isTVA: boolean;
   isOrder?: boolean;
-  customerId: string;
+  customer: string;
   deliveredAt: string;
   lines: Array<DeliveryLineInput>;
   notes: string;
@@ -41,30 +40,18 @@ export interface DeliveryLineInput {
   totalPrice?: number;
 }
 
-export async function loadDeliveries() {
-  const result = await relDb.rel.find('delivery');
-  store.deliveries = result.deliveries
-    .map((delivery: Delivery) => ({
-      ...delivery,
-      deliveredAt: new Date(delivery.deliveredAt).toISOString().split('T')[0],
-    }))
-    .sort((a: Delivery, b: Delivery) => a.documentId.localeCompare(b.documentId));
-}
-
 export const addDelivery = async (delivery: DeliveryInput) => {
-  const customer = await getCustomer(delivery.customerId);
-  await loadFarm();
+  const farm = await getFarm();
   const promise = async () => {
     const lines = await Promise.all(
       delivery.lines.map(async (el) => {
-        const product = await loadProduct(el.productId);
+        const product = await getProductById(el.productId);
         return { ...el, product: { ...product, price: +el.price || 0 } };
       }),
     );
     return {
       ...delivery,
-      isTVA: store.farm?.isTVA === 'oui',
-      customer,
+      isTVA: farm?.isTVA === 'oui',
       lines: lines.filter((p) => !!p).map((l) => ({ ...l, quantity: +l.quantity })),
     };
   };
@@ -73,7 +60,7 @@ export const addDelivery = async (delivery: DeliveryInput) => {
 
     const result = await relDb.rel.save('delivery', {
       ...deliveryFull,
-      documentId: documentIdFormatter(store.farm?.deliveryId || 0, 'Delivery'),
+      documentId: documentIdFormatter(farm?.deliveryId || 0, 'Delivery'),
     });
     updateDocumentId('Delivery');
     return result;
@@ -83,12 +70,12 @@ export const addDelivery = async (delivery: DeliveryInput) => {
   }
 };
 
-export const addInvoiceId = (invoiceId: string, deliveryId: string) => {
+export const addInvoiceId = (invoice: string, deliveryId: string) => {
   relDb.rel
     .find('delivery', deliveryId)
     .then((result) => {
       const delivery = result.deliveries[0];
-      relDb.rel.save('delivery', { ...delivery, invoiceId }).catch(console.error);
+      return relDb.rel.save('delivery', { ...delivery, invoice, isOrder: false });
     })
     .catch(console.error);
 };
@@ -98,25 +85,22 @@ export const removeInvoiceId = (deliveryId: string) => {
     .find('delivery', deliveryId)
     .then((result) => {
       const delivery = result.deliveries[0];
-      relDb.rel.save('delivery', { ...delivery, invoiceId: undefined }).catch(console.error);
+      return relDb.rel.save('delivery', { ...delivery, invoice: undefined });
     })
     .catch(console.error);
 };
 
 export const updateDelivery = async (delivery: Delivery, input: DeliveryInput) => {
-  const customer = await getCustomer(input.customerId);
-  await loadFarm();
   const promise = async () => {
     const lines = await Promise.all(
       input.lines.map(async (el) => {
-        const product = await loadProduct(el.productId);
+        const product = await getProductById(el.productId);
         return { ...el, product: { ...product, price: +el.price || 0 } };
       }),
     );
     return {
       ...input,
-      customer,
-      lines: lines.filter((p) => !!p).map((l) => ({ ...l, quantity: +l.quantity })),
+      lines: lines.filter((p) => !!p).map((l) => ({ ...l, quantity: +l.quantity })), // TODO : check if quantity is a number even on past deliveries
     };
   };
 
@@ -131,6 +115,7 @@ export const deleteDelivery = (delivery: Delivery) => {
   return relDb.rel.del('delivery', delivery);
 };
 
-export const confirmOrder = (delivery: Delivery) => {
-  return relDb.rel.save('delivery', { ...delivery, isOrder: false });
+export const confirmOrder = async (orderId: string) => {
+  const result = await relDb.rel.find('delivery', orderId);
+  return relDb.rel.save('delivery', { ...result.deliveries[0], isOrder: false });
 };
