@@ -27,7 +27,7 @@
     "lodash": "^4.17.21",
     "moment": "^2.29.4",
     "pdfmake": "^0.2.6",
-    "posthog-js": "^1.84.1",
+    "posthog-js": "^1.88.1",
     "pouchdb": "^7.3.1",
     "pouchdb-find": "^7.3.1",
     "prettier": "^2.8.0",
