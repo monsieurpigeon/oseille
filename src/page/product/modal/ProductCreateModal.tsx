@@ -15,6 +15,7 @@ export const productSchema = z.object({
   name: z.string().min(1),
   unit: z.string(),
   tva: z.string().optional(),
+  tvq: z.boolean().optional(),
 });
 
 export function ProductCreateModal() {
@@ -31,6 +32,7 @@ export function ProductCreateModal() {
       name: '',
       unit: 'kg',
       tva: DEFAULT_TVA_MAP[country.value],
+      tvq: false,
     },
   });
 

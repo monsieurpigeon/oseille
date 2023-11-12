@@ -1,5 +1,6 @@
 import * as pdfMake from 'pdfmake/build/pdfmake';
 import { getIsTVA } from '../../../utils/aggregations';
+import { CountryCode } from '../../../utils/defaults';
 import { dateFormatter } from '../../../utils/formatter';
 import { FrBio01, FrBio09, FrBio15 } from '../../../utils/labels';
 import { getCustomerById } from '../../entity/customer';
@@ -80,7 +81,9 @@ export const exportDocument = async ({ payload, type, open = false }: any) => {
         style: 'header',
       },
       await lines(payload, type, farm),
-      ...(isTVA && type === DocumentType.invoice ? [await taxes(payload, farm)] : []),
+      ...(isTVA && type === DocumentType.invoice && farm.country !== CountryCode.CA
+        ? [await taxes(payload, farm)]
+        : []),
       await totals(payload, type, farm),
       {
         columns: [

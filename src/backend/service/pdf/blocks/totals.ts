@@ -1,4 +1,11 @@
-import { computeTaxes, getCountry, getDeliveryTotal, getIsTVA } from '../../../../utils/aggregations';
+import {
+  TaxLine,
+  computeCanadaTaxes,
+  computeTaxes,
+  getCountry,
+  getDeliveryTotal,
+  getIsTVA,
+} from '../../../../utils/aggregations';
 import { DEFAULT_INVOICE_DELAY, DEFAULT_THREAT } from '../../../../utils/defaults';
 import { dateFormatterDelay, priceFormatter } from '../../../../utils/formatter';
 import { Farm } from '../../../entity/farm';
@@ -6,11 +13,20 @@ import { DocumentType } from '../pdf';
 
 export const totals = async (payload: any, type: DocumentType, farm: Farm | null) => {
   const isTVA = type === DocumentType.delivery ? payload.isTVA : await getIsTVA(payload);
+  const isCanada = farm?.country === 'CA';
   const country = getCountry(farm?.country);
-  const totals =
-    type === DocumentType.invoice
-      ? await computeTaxes(payload, country.value)
-      : { total: { ht: getDeliveryTotal(payload), tax: 0, ttc: 0 } };
+
+  let totals;
+
+  if (type === DocumentType.invoice) {
+    if (isCanada) {
+      totals = await computeCanadaTaxes(payload);
+    } else {
+      totals = await computeTaxes(payload, country.value);
+    }
+  } else {
+    totals = { total: { ht: getDeliveryTotal(payload), tax: 0, ttc: 0 } };
+  }
   return {
     layout: 'noBorders',
     style: 'tableExample',
@@ -63,12 +79,47 @@ export const totals = async (payload: any, type: DocumentType, farm: Farm | null
                   ':',
                   { text: priceFormatter(totals?.total.ht || 0, country.currency), alignment: 'right' },
                 ],
-                ...(isTVA && type === DocumentType.invoice
+                ...(isTVA && !isCanada && type === DocumentType.invoice
                   ? [
                       [
                         'Total TVA',
                         ':',
                         { text: priceFormatter(totals?.total.tax || 0, country.currency), alignment: 'right' },
+                      ],
+                      [
+                        'Net à payer',
+                        ':',
+                        {
+                          text: priceFormatter(totals?.total.ttc || 0, country.currency),
+                          alignment: 'right',
+                          bold: true,
+                        },
+                      ],
+                    ]
+                  : []),
+                ...(isTVA && isCanada && type === DocumentType.invoice
+                  ? [
+                      [
+                        'T.P.S.',
+                        ':',
+                        {
+                          text: priceFormatter(
+                            (totals?.total as TaxLine & { tps: number; tvq: number }).tps || 0,
+                            country.currency,
+                          ),
+                          alignment: 'right',
+                        },
+                      ],
+                      [
+                        'T.V.Q.',
+                        ':',
+                        {
+                          text: priceFormatter(
+                            (totals?.total as TaxLine & { tps: number; tvq: number }).tvq || 0,
+                            country.currency,
+                          ),
+                          alignment: 'right',
+                        },
                       ],
                       [
                         'Net à payer',

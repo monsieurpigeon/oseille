@@ -83,11 +83,18 @@ export function PriceNumberInput({
   const tva = +product.tva || 5.5;
 
   useEffect(() => {
-    isTVA &&
+    if (country.value === 'CA' && isTVA) {
+      const tvaRate = product.tvq ? 14.975 : 5;
+      say({
+        feeling: SideKickFeeling.COMPUTE,
+        sentence: `Ce qui fait: ${priceFormatter((watchValue || value) * (1 + tvaRate / 100), country.currency)}TTC`,
+      });
+    } else if (isTVA) {
       say({
         feeling: SideKickFeeling.COMPUTE,
         sentence: `Ce qui fait: ${priceFormatter((watchValue || value) * (1 + tva / 100), country.currency)}TTC`,
       });
+    }
   }, [watchValue]);
 
   return (

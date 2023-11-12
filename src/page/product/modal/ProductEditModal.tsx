@@ -37,7 +37,7 @@ export function ProductEditModal() {
 
   const { register, handleSubmit, formState } = useForm<ProductInput>({
     resolver: zodResolver(productSchema),
-    defaultValues: { ...product, tva: product?.tva || DEFAULT_TVA_MAP[country.value] },
+    defaultValues: { ...product, tva: product?.tva || DEFAULT_TVA_MAP[country.value], tvq: product?.tvq || false },
   });
 
   if (!product) return null;

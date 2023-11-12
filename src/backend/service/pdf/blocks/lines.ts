@@ -45,6 +45,7 @@ export const lines = async (payload: any, type: DocumentType, farm: Farm) => {
 
   if (type === 'Invoice') {
     const isTVA = await getIsTVA(payload);
+    const isCanada = country.value === 'CA';
     const result = await relDb.rel
       .find('Idelivery', payload.deliveries)
       .then((doc) => ({ ...doc, deliveries: doc.Ideliveries }));
@@ -56,7 +57,7 @@ export const lines = async (payload: any, type: DocumentType, farm: Farm) => {
       style: 'tableExample',
       table: {
         headerRows: 1,
-        widths: ['*', 'auto', 'auto', 'auto', 'auto', ...(isTVA ? ['auto'] : [])],
+        widths: ['*', 'auto', 'auto', 'auto', 'auto', ...(isTVA && !isCanada ? ['auto'] : [])],
         body: [
           [
             'Désignation',
@@ -67,7 +68,7 @@ export const lines = async (payload: any, type: DocumentType, farm: Farm) => {
               text: `Total ${isTVA ? 'HT' : ''}`,
               alignment: 'right',
             },
-            ...(isTVA
+            ...(isTVA && !isCanada
               ? [
                   {
                     text: `Code TVA`,
@@ -84,11 +85,11 @@ export const lines = async (payload: any, type: DocumentType, farm: Farm) => {
                 '',
                 '',
                 '',
-                ...(isTVA ? [''] : []),
+                ...(isTVA && !isCanada ? [''] : []),
               ],
               ...delivery.lines
                 .sort((a, b) => a.product.name.localeCompare(b.product.name))
-                .map((el) => productLine(el, isTVA, country.currency)),
+                .map((el) => productLine(el, isTVA, country.currency, isCanada)),
             ];
           }),
         ],
@@ -97,7 +98,7 @@ export const lines = async (payload: any, type: DocumentType, farm: Farm) => {
   }
 };
 
-const productLine = (el: DeliveryLine, isTVA: boolean, currency: string = 'EUR') => {
+const productLine = (el: DeliveryLine, isTVA: boolean, currency: string = 'EUR', isCanada: boolean = false) => {
   return [
     el.product.name,
     {
@@ -110,7 +111,7 @@ const productLine = (el: DeliveryLine, isTVA: boolean, currency: string = 'EUR')
     },
     { text: priceFormatter(el.product.price, currency), alignment: 'right' },
     { text: priceFormatter(el.product.price * el.quantity, currency), alignment: 'right' },
-    ...(isTVA
+    ...(isTVA && !isCanada
       ? [
           {
             text: TVA_RATES.find((rate) => rate.value === el.product.tva)?.code || '1',
