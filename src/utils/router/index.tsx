@@ -1,6 +1,7 @@
 import { Navigate, createBrowserRouter } from 'react-router-dom';
-import { FARM_KEY, relDb } from '../../backend';
+import { FARM_KEY, Farm, relDb } from '../../backend';
 import { MasterLayout } from '../../component/layout/MasterLayout';
+import { getCountry } from '../aggregations';
 import { DEFAULT_INVOICE_DELAY } from '../defaults';
 import { aboutRouter } from './modules/aboutRouter';
 import { visitDefault } from './modules/common';
@@ -21,11 +22,12 @@ export const router = createBrowserRouter([
     ),
     loader: async () =>
       relDb.rel.find('farm', FARM_KEY).then((doc) => {
-        const farm = doc.farms[0];
+        const farm = doc.farms[0] as Farm;
         const isTVA = farm?.isTVA === 'oui';
         const logo = farm?._attachements?.logo?.data;
         const invoiceDelay = farm?.invoiceDelay ?? DEFAULT_INVOICE_DELAY;
-        return { farm, logo, isTVA, invoiceDelay };
+        const country = getCountry(farm?.country);
+        return { farm, logo, isTVA, invoiceDelay, country };
       }),
     children: [visitDefault('invoicing'), invoicingRouter, toolsRouter, settingsRouter, aboutRouter],
   },

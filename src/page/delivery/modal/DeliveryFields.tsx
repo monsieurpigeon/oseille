@@ -7,6 +7,7 @@ import { MyNumberInput } from '../../../component/form/MyNumberInput';
 import { useConfirm } from '../../../component/modal/confirm-modal/ConfirmContext';
 import { useSideKick } from '../../../component/modules/sidekick/SideKickContext';
 import { SideKickFeeling } from '../../../component/modules/sidekick/enums';
+import { Country } from '../../../utils/defaults';
 import { priceFormatter } from '../../../utils/formatter';
 
 export function DeliveryFields({ watch, control, register, fields, append, remove, setValue }: any) {
@@ -18,7 +19,7 @@ export function DeliveryFields({ watch, control, register, fields, append, remov
   };
 
   const watchCustomer = watch('customer');
-  const { isTVA } = useRouteLoaderData('farm') as any;
+  const { isTVA } = useRouteLoaderData('farm') as { isTVA: boolean; country: Country };
 
   const { availableProducts, availablePrices } = useMemo(() => {
     const productPrices = prices.filter((price) => price.customer === watchCustomer);
@@ -161,7 +162,7 @@ const ProductLine = ({
   watch,
   customer,
 }: any) => {
-  const { isTVA } = useRouteLoaderData('farm') as any;
+  const { isTVA, country } = useRouteLoaderData('farm') as { isTVA: boolean; country: Country };
   const { say } = useSideKick();
   const { confirm } = useConfirm();
 
@@ -224,7 +225,7 @@ const ProductLine = ({
               value={product.id}
               key={product.id}
             >
-              {product.name} {priceFormatter(product.price)}
+              {product.name} {priceFormatter(product.price, country.currency)}
               {isTVA && 'HT'}/{product.unit}
             </option>
           ))}

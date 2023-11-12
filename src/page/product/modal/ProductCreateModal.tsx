@@ -2,12 +2,13 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { usePostHog } from 'posthog-js/react';
 import { useRef } from 'react';
 import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useRouteLoaderData } from 'react-router-dom';
 import { z } from 'zod';
 import { ProductInput, addProduct } from '../../../backend';
 import { MyModal } from '../../../component/modal/MyModal';
 import { useSideKick } from '../../../component/modules/sidekick/SideKickContext';
 import { SideKickFeeling } from '../../../component/modules/sidekick/enums';
+import { Country, DEFAULT_TVA_MAP } from '../../../utils/defaults';
 import { ProductFields } from './ProductFields';
 
 export const productSchema = z.object({
@@ -20,15 +21,16 @@ export function ProductCreateModal() {
   const posthog = usePostHog();
   const cancelRef = useRef<any>();
   const navigate = useNavigate();
+  const { country } = useRouteLoaderData('farm') as { country: Country };
 
   const { say } = useSideKick();
 
-  const { control, register, handleSubmit } = useForm<ProductInput>({
+  const { register, handleSubmit } = useForm<ProductInput>({
     resolver: zodResolver(productSchema),
     defaultValues: {
       name: '',
       unit: 'kg',
-      tva: '5.5',
+      tva: DEFAULT_TVA_MAP[country.value],
     },
   });
 
@@ -62,10 +64,7 @@ export function ProductCreateModal() {
       onClose={handleClose}
       onSubmit={handleSubmit(onSubmit)}
     >
-      <ProductFields
-        control={control}
-        register={register}
-      />
+      <ProductFields register={register} />
     </MyModal>
   );
 }

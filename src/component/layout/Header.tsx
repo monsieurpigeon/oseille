@@ -1,11 +1,12 @@
 import { Flex, Spacer, Text } from '@chakra-ui/react';
 import { Link, useRouteLoaderData } from 'react-router-dom';
+import { Farm } from '../../backend';
 import { ExportAction } from '../../page/settings/sections/advanced-section/actions/ExportAction';
-import { DEFAULT_FARM } from '../../utils/defaults';
+import { Country, DEFAULT_FARM } from '../../utils/defaults';
 import { HeaderNavigation } from './Navigation';
 
 export function Header() {
-  const { farm } = useRouteLoaderData('farm') as any;
+  const { farm, country } = useRouteLoaderData('farm') as { farm: Farm; country: Country };
 
   return (
     <Flex
@@ -25,7 +26,11 @@ export function Header() {
       <Spacer />
 
       <Link to="/settings/farm">
-        {farm?.title && <Text as="b">{farm?.title?.toUpperCase()}</Text>}
+        {farm?.title && (
+          <Text as="b">
+            {country.flag} {farm?.title?.toUpperCase()}
+          </Text>
+        )}
         {farm && !farm?.title && <Text as="b">{DEFAULT_FARM.title.toUpperCase()}</Text>}
       </Link>
       <ExportAction />

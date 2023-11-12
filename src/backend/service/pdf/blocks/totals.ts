@@ -1,4 +1,4 @@
-import { computeTaxes, getDeliveryTotal, getIsTVA } from '../../../../utils/aggregations';
+import { computeTaxes, getCountry, getDeliveryTotal, getIsTVA } from '../../../../utils/aggregations';
 import { DEFAULT_INVOICE_DELAY, DEFAULT_THREAT } from '../../../../utils/defaults';
 import { dateFormatterDelay, priceFormatter } from '../../../../utils/formatter';
 import { Farm } from '../../../entity/farm';
@@ -6,10 +6,10 @@ import { DocumentType } from '../pdf';
 
 export const totals = async (payload: any, type: DocumentType, farm: Farm | null) => {
   const isTVA = type === DocumentType.delivery ? payload.isTVA : await getIsTVA(payload);
-
+  const country = getCountry(farm?.country);
   const totals =
     type === DocumentType.invoice
-      ? await computeTaxes(payload)
+      ? await computeTaxes(payload, country.value)
       : { total: { ht: getDeliveryTotal(payload), tax: 0, ttc: 0 } };
   return {
     layout: 'noBorders',
@@ -61,16 +61,20 @@ export const totals = async (payload: any, type: DocumentType, farm: Farm | null
                 [
                   `Total${isTVA ? ' HT' : ''}`,
                   ':',
-                  { text: priceFormatter(totals?.total.ht || 0), alignment: 'right' },
+                  { text: priceFormatter(totals?.total.ht || 0, country.currency), alignment: 'right' },
                 ],
                 ...(isTVA && type === DocumentType.invoice
                   ? [
-                      ['Total TVA', ':', { text: priceFormatter(totals?.total.tax || 0), alignment: 'right' }],
+                      [
+                        'Total TVA',
+                        ':',
+                        { text: priceFormatter(totals?.total.tax || 0, country.currency), alignment: 'right' },
+                      ],
                       [
                         'Net à payer',
                         ':',
                         {
-                          text: priceFormatter(totals?.total.ttc || 0),
+                          text: priceFormatter(totals?.total.ttc || 0, country.currency),
                           alignment: 'right',
                           bold: true,
                         },

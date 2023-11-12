@@ -1,17 +1,18 @@
 import { Box, Stat, StatGroup, StatLabel, StatNumber } from '@chakra-ui/react';
 import { usePostHog } from 'posthog-js/react';
 import { useEffect, useState } from 'react';
-import { useLoaderData } from 'react-router-dom';
+import { useLoaderData, useRouteLoaderData } from 'react-router-dom';
 import { Invoice, isInvoicePaid } from '../../backend';
 import { MySimpleLayout } from '../../component/layout/page-layout/MySimpleLayout';
 import { getInvoiceTotal } from '../../utils/aggregations';
+import { Country, CountryCode } from '../../utils/defaults';
 import { priceFormatter } from '../../utils/formatter';
 import { SalesTable } from './SalesTable';
 
-async function getValues(invoices: Invoice[]) {
+async function getValues(invoices: Invoice[], code: CountryCode) {
   const result = await Promise.all(
     invoices.map(async (invoice) => {
-      const total = await getInvoiceTotal(invoice, true);
+      const total = await getInvoiceTotal(invoice, true, code);
       return { quantity: 1, money: total };
     }),
   );
@@ -31,6 +32,7 @@ export function DashboardPage() {
     posthog?.capture('home_page_viewed');
   }, []);
   const { invoices } = useLoaderData() as { invoices: Invoice[] };
+  const { country } = useRouteLoaderData('farm') as { country: Country };
   const [{ invoicePaid, invoiceWaiting }, setInvoices] = useState({
     invoicePaid: { quantity: 0, money: 0 },
     invoiceWaiting: { quantity: 0, money: 0 },
@@ -38,8 +40,14 @@ export function DashboardPage() {
 
   useEffect(() => {
     const getInvoices = async () => {
-      const invoicePaid = getValues(invoices.filter((i) => isInvoicePaid(i)));
-      const invoiceWaiting = getValues(invoices.filter((i) => !isInvoicePaid(i)));
+      const invoicePaid = getValues(
+        invoices.filter((i) => isInvoicePaid(i)),
+        country.value,
+      );
+      const invoiceWaiting = getValues(
+        invoices.filter((i) => !isInvoicePaid(i)),
+        country.value,
+      );
       const result = await Promise.all([invoicePaid, invoiceWaiting]);
       return { invoicePaid: result[0], invoiceWaiting: result[1] };
     };
@@ -54,13 +62,13 @@ export function DashboardPage() {
             <StatLabel>{`${invoiceWaiting.quantity} facture${
               invoiceWaiting.quantity > 1 ? 's' : ''
             } en attente`}</StatLabel>
-            <StatNumber>{priceFormatter(invoiceWaiting.money)}</StatNumber>
+            <StatNumber>{priceFormatter(invoiceWaiting.money, country.currency)}</StatNumber>
           </Stat>
           <Stat>
             <StatLabel>{`${invoicePaid.quantity} facture${invoicePaid.quantity > 1 ? 's' : ''} payée${
               invoicePaid.quantity > 1 ? 's' : ''
             }`}</StatLabel>
-            <StatNumber>{priceFormatter(invoicePaid.money)}</StatNumber>
+            <StatNumber>{priceFormatter(invoicePaid.money, country.currency)}</StatNumber>
           </Stat>
         </StatGroup>
       </Box>

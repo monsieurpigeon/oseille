@@ -2,9 +2,9 @@ import { addDays } from 'date-fns';
 import { DocumentType } from '../backend';
 import { DEFAULT_TAX } from './defaults';
 
-export function priceFormatter(value: number) {
+export function priceFormatter(value: number, currency: string = 'EUR') {
   if (value == null) return undefined;
-  return value.toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' }).split(' ').join(' ');
+  return value.toLocaleString('fr-FR', { style: 'currency', currency }).split(' ').join(' ');
 }
 
 export function documentIdFormatter(value: number, type: DocumentType) {

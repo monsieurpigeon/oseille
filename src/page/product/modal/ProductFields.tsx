@@ -1,10 +1,11 @@
 import { Input, Select } from '@chakra-ui/react';
 import { useRouteLoaderData } from 'react-router-dom';
 import { MyField } from '../../../component/MyField';
-import { PRODUCT_UNITS } from '../../../utils/defaults';
+import { Country, PRODUCT_UNITS, TVA_RATES_MAP } from '../../../utils/defaults';
 
-export const ProductFields = ({ control, register }: any) => {
-  const { isTVA } = useRouteLoaderData('farm') as any;
+export const ProductFields = ({ register }: any) => {
+  const { isTVA, country } = useRouteLoaderData('farm') as { isTVA: boolean; country: Country };
+  const tvaRates = TVA_RATES_MAP[country.value];
   return (
     <>
       <MyField title="Nom">
@@ -29,10 +30,14 @@ export const ProductFields = ({ control, register }: any) => {
       {isTVA && (
         <MyField title="Taux de TVA">
           <Select {...register('tva')}>
-            <option value="0">0%</option>
-            <option value="5.5">5.5%</option>
-            <option value="10">10%</option>
-            <option value="20">20%</option>
+            {tvaRates.map((rate) => (
+              <option
+                key={rate.value}
+                value={rate.value}
+              >
+                {rate.label}
+              </option>
+            ))}
           </Select>
         </MyField>
       )}

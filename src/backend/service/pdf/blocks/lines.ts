@@ -1,12 +1,15 @@
-import { getIsTVA } from '../../../../utils/aggregations';
+import { getCountry, getIsTVA } from '../../../../utils/aggregations';
 import { TVA_RATES } from '../../../../utils/defaults';
 import { dateFormatter, priceFormatter } from '../../../../utils/formatter';
 import { Delivery, DeliveryLine } from '../../../entity/delivery';
+import { Farm } from '../../../entity/farm';
 import { ProductWithPrice } from '../../../entity/product';
 import { relDb } from '../../database';
 import { DocumentType } from '../pdf';
 
-export const lines = async (payload: any, type: DocumentType) => {
+export const lines = async (payload: any, type: DocumentType, farm: Farm) => {
+  const country = getCountry(farm?.country);
+
   if (type === DocumentType.delivery) {
     const isTVA = payload.isTVA;
     return {
@@ -34,7 +37,7 @@ export const lines = async (payload: any, type: DocumentType) => {
                 b: { product: ProductWithPrice; quantity: number },
               ) => a.product.name.localeCompare(b.product.name),
             )
-            .map((el: DeliveryLine) => productLine(el, false)),
+            .map((el: DeliveryLine) => productLine(el, false, country.currency)),
         ],
       },
     };
@@ -85,7 +88,7 @@ export const lines = async (payload: any, type: DocumentType) => {
               ],
               ...delivery.lines
                 .sort((a, b) => a.product.name.localeCompare(b.product.name))
-                .map((el) => productLine(el, isTVA)),
+                .map((el) => productLine(el, isTVA, country.currency)),
             ];
           }),
         ],
@@ -94,7 +97,7 @@ export const lines = async (payload: any, type: DocumentType) => {
   }
 };
 
-const productLine = (el: DeliveryLine, isTVA: boolean) => {
+const productLine = (el: DeliveryLine, isTVA: boolean, currency: string = 'EUR') => {
   return [
     el.product.name,
     {
@@ -105,8 +108,8 @@ const productLine = (el: DeliveryLine, isTVA: boolean) => {
       text: el.product.unit,
       alignment: 'left',
     },
-    { text: priceFormatter(el.product.price), alignment: 'right' },
-    { text: priceFormatter(el.product.price * el.quantity), alignment: 'right' },
+    { text: priceFormatter(el.product.price, currency), alignment: 'right' },
+    { text: priceFormatter(el.product.price * el.quantity, currency), alignment: 'right' },
     ...(isTVA
       ? [
           {

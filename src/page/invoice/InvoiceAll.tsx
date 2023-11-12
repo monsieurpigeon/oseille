@@ -5,6 +5,7 @@ import { useNavigate, useRouteLoaderData } from 'react-router-dom';
 import styled from 'styled-components';
 import { Customer, Invoice, isInvoicePaid } from '../../backend';
 import { getInvoiceTotal } from '../../utils/aggregations';
+import { Country } from '../../utils/defaults';
 import { priceFormatter } from '../../utils/formatter';
 
 const plural = (val: number) => (val > 1 ? 's' : '');
@@ -22,10 +23,12 @@ export function InvoiceAll() {
     customers: Customer[];
   };
 
+  const { country } = useRouteLoaderData('farm') as { country: Country };
+
   const [totals, setTotals] = useState<Record<string, number>>({});
 
   useEffect(() => {
-    const totalsPromise = invoices.map((invoice) => getInvoiceTotal(invoice));
+    const totalsPromise = invoices.map((invoice) => getInvoiceTotal(invoice, false, country.value));
     Promise.all(totalsPromise)
       .then((result) =>
         result.reduce((memo, total, index) => {
@@ -83,7 +86,7 @@ export function InvoiceAll() {
                         <Box>{customer?.phone}</Box>
                       </Flex>
                     </Th>
-                    <Th isNumeric>{priceFormatter(totals[invoice.id])}</Th>
+                    <Th isNumeric>{priceFormatter(totals[invoice.id], country.currency)}</Th>
                   </StyledTr>
                 );
               })}

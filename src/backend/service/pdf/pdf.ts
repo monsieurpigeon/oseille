@@ -79,8 +79,8 @@ export const exportDocument = async ({ payload, type, open = false }: any) => {
         text: `Date: ${dateFormatter(type === DocumentType.invoice ? payload.createdAt : payload.deliveredAt)}`,
         style: 'header',
       },
-      await lines(payload, type),
-      ...(isTVA && type === DocumentType.invoice ? [await taxes(payload)] : []),
+      await lines(payload, type, farm),
+      ...(isTVA && type === DocumentType.invoice ? [await taxes(payload, farm)] : []),
       await totals(payload, type, farm),
       {
         columns: [

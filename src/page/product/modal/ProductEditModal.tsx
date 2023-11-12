@@ -6,11 +6,13 @@ import { Product, ProductInput, updateProduct } from '../../../backend';
 import { MyModal } from '../../../component/modal/MyModal';
 import { useSideKick } from '../../../component/modules/sidekick/SideKickContext';
 import { SideKickFeeling } from '../../../component/modules/sidekick/enums';
+import { Country, DEFAULT_TVA_MAP } from '../../../utils/defaults';
 import { productSchema } from './ProductCreateModal';
 import { ProductFields } from './ProductFields';
 
 export function ProductEditModal() {
   const product = useRouteLoaderData('product') as Product;
+  const { country } = useRouteLoaderData('farm') as { country: Country };
 
   const cancelRef = useRef<any>();
   const navigate = useNavigate();
@@ -33,9 +35,9 @@ export function ProductEditModal() {
         .catch(console.error);
   };
 
-  const { control, register, handleSubmit, formState } = useForm<ProductInput>({
+  const { register, handleSubmit, formState } = useForm<ProductInput>({
     resolver: zodResolver(productSchema),
-    defaultValues: { ...product, tva: product?.tva || '5.5' },
+    defaultValues: { ...product, tva: product?.tva || DEFAULT_TVA_MAP[country.value] },
   });
 
   if (!product) return null;
@@ -48,10 +50,7 @@ export function ProductEditModal() {
       onSubmit={handleSubmit(onSubmit)}
       disabled={!formState.isDirty}
     >
-      <ProductFields
-        control={control}
-        register={register}
-      />
+      <ProductFields register={register} />
     </MyModal>
   );
 }

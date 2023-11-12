@@ -1,8 +1,10 @@
-import { computeTaxes } from '../../../../utils/aggregations';
+import { computeTaxes, getCountry } from '../../../../utils/aggregations';
 import { priceFormatter } from '../../../../utils/formatter';
+import { Farm } from '../../../entity/farm';
 
-export async function taxes(payload: any) {
-  const taxes = await computeTaxes(payload);
+export async function taxes(payload: any, farm: Farm) {
+  const country = getCountry(farm?.country);
+  const taxes = await computeTaxes(payload, country.value);
 
   return {
     table: {
@@ -13,9 +15,9 @@ export async function taxes(payload: any) {
         ...taxes.detail.map((line) => [
           { text: line.taxValue?.code, alignment: 'right' },
           { text: line.taxValue?.label, alignment: 'right' },
-          { text: priceFormatter(line.ttc), alignment: 'right' },
-          { text: priceFormatter(line.tax), alignment: 'right' },
-          { text: priceFormatter(line.ht), alignment: 'right' },
+          { text: priceFormatter(line.ttc, country.currency), alignment: 'right' },
+          { text: priceFormatter(line.tax, country.currency), alignment: 'right' },
+          { text: priceFormatter(line.ht, country.currency), alignment: 'right' },
         ]),
       ],
     },
