@@ -22,6 +22,7 @@ interface CreateModalProps {
   confirmLabel?: string;
   cancelLabel?: string;
   onRemove?: () => void;
+  width?: string;
 }
 
 export const MyModal = ({
@@ -35,6 +36,7 @@ export const MyModal = ({
   confirmLabel,
   cancelLabel,
   onRemove,
+  width,
 }: CreateModalProps) => {
   return (
     <AlertDialog
@@ -51,7 +53,7 @@ export const MyModal = ({
         }}
       >
         <AlertDialogOverlay>
-          <AlertDialogContent>
+          <AlertDialogContent maxW={width}>
             <AlertDialogHeader
               fontSize="lg"
               fontWeight="bold"
