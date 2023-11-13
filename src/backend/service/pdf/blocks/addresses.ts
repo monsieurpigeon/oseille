@@ -38,7 +38,7 @@ export const addresses = (
               alignment: 'right',
             },
           ]
-        : []),
+        : [{ text: '.', height: 50, color: 'white' }]),
       { text: payload.customer.name, alignment: 'right', bold: true },
       { text: payload.customer.address1, alignment: 'right' },
       { text: payload.customer.address2, alignment: 'right' },
