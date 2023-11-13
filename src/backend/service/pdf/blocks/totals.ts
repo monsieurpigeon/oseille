@@ -5,7 +5,8 @@ import { Farm } from '../../../entity/farm';
 import { DocumentType } from '../pdf';
 
 export const totals = async (payload: any, type: DocumentType, farm: Farm | null) => {
-  const isTVA = type === DocumentType.delivery ? payload.isTVA : getIsTVA(payload);
+  const isTVA = type === DocumentType.delivery ? payload.isTVA : await getIsTVA(payload);
+
   const totals =
     type === DocumentType.invoice
       ? await computeTaxes(payload)

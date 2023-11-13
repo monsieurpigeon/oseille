@@ -1,4 +1,4 @@
-export const VERSION = '08/11/2023';
+export const VERSION = '13/11/2023';
 
 export const MONEY_OUT = [
   { label: 'Impression de 700 flyers', value: 75 },
