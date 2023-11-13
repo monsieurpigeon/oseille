@@ -29,7 +29,6 @@ export function LogoSettingBlock() {
   const handleClose = () => {
     onClose();
     reset();
-    window.location.reload();
   };
 
   const onSubmit = (e: LogoInput) =>
@@ -42,6 +41,7 @@ export function LogoSettingBlock() {
         }),
       )
       .then(handleClose)
+      .then(() => window.location.reload())
       .catch(console.error);
 
   return (
