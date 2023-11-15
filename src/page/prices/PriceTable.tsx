@@ -9,6 +9,18 @@ import './style.css';
 
 type PriceList = { [key: string]: { [key: string]: Price } };
 
+const getPriceColor = (defaultPrice: number | undefined, directPrice: number) => {
+  if (directPrice) {
+    if (directPrice > 0) {
+      return 'powderblue';
+    } else {
+      return 'yellow';
+    }
+  }
+  if (defaultPrice) return 'whitesmoke';
+  return 'white';
+};
+
 export function PriceTable() {
   const [currentEdit, setCurrentEdit] = useState(['', '']);
   const { products, customers, prices } = useLoaderData() as {
@@ -91,7 +103,7 @@ export function PriceTable() {
                     <Td
                       key={c.id}
                       style={{
-                        backgroundColor: directPrice ? 'powderblue' : defaultPrice ? 'whitesmoke' : 'white',
+                        backgroundColor: getPriceColor(defaultPrice?.value, directPrice?.value),
                         cursor: 'pointer',
                       }}
                       onClick={() => {

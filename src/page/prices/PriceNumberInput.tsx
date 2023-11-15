@@ -13,7 +13,7 @@ import { SideKickFeeling } from '../../component/modules/sidekick/enums';
 import { priceFormatter } from '../../utils/formatter';
 
 export const priceSchema = z.object({
-  value: z.number().gt(0),
+  value: z.number(),
 });
 
 export function PriceNumberInput({
@@ -98,7 +98,6 @@ export function PriceNumberInput({
               <MyNumberInput
                 control={control}
                 name="value"
-                min={0}
                 step={0.01}
                 size="sm"
               />
