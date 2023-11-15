@@ -31,6 +31,12 @@ const users = {
     color: '#f9b409',
     link: 'https://www.facebook.com/fermedumeridien',
   },
+  cedric: {
+    name: 'Cédric',
+    farm: 'Les légumes de Cédric',
+    color: '#06668c',
+    link: 'https://www.facebook.com/leslegumesdecedric',
+  },
 };
 export const FEATURES = [
   {
@@ -98,5 +104,11 @@ export const FEATURES = [
     user: users.thomas,
     description:
       "A la fin de la saison, pour passer moins de temps à se gratter la tête avec son comptable, Thomas a besoin de pouvoir ressortir tous les paiements reçu pour chaque facture, j'ai donc amélioré l'enregistrement actuel des paiements pour enregistrer les références nécessaires",
+  },
+  {
+    title: 'Gestion des consignes',
+    user: users.cedric,
+    description:
+      "Cédric a besoin de gérer les consignes dans sa facturation, et j'ai ajouté la possibilité de saisir un tarif négatif pour qu'il puisse retrouver son usage actuel",
   },
 ];
