@@ -14,10 +14,16 @@ const getPriceColor = (defaultPrice: number | undefined, directPrice: number) =>
     if (directPrice > 0) {
       return 'powderblue';
     } else {
+      return '#E7B8B1';
+    }
+  }
+  if (defaultPrice) {
+    if (defaultPrice > 0) {
+      return 'whitesmoke';
+    } else {
       return 'yellow';
     }
   }
-  if (defaultPrice) return 'whitesmoke';
   return 'white';
 };
 
@@ -77,7 +83,7 @@ export function PriceTable() {
                 </Th>
                 <Td
                   style={{
-                    backgroundColor: defaultPrice?.value ? 'gainsboro' : 'white',
+                    backgroundColor: defaultPrice?.value ? (defaultPrice?.value > 0 ? 'gainsboro' : 'orange') : 'white',
                     borderRight: '3px solid grey',
                   }}
                 >
