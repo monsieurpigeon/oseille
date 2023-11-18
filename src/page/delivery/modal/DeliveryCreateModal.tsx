@@ -71,6 +71,7 @@ export function DeliveryCreateModal() {
       title={isOrder ? 'Nouvelle commande' : 'Nouveau bon de livraison'}
       onClose={handleClose}
       onSubmit={handleSubmit(onSubmit)}
+      width="600px"
     >
       <DeliveryFields
         control={control}
