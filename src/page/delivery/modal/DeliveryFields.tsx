@@ -2,7 +2,7 @@ import { Box, Button, Flex, Grid, GridItem, Input, Select, Text, Textarea } from
 import { useMemo } from 'react';
 import { FieldArrayWithId } from 'react-hook-form';
 import { useLoaderData, useNavigate, useRouteLoaderData } from 'react-router-dom';
-import { Customer, DeliveryInput, Price, Product, addPrice } from '../../../backend';
+import { Customer, DeliveryInput, Price, Product, ProductWithPrice, addPrice } from '../../../backend';
 import { MyNumberInput } from '../../../component/form/MyNumberInput';
 import { useConfirm } from '../../../component/modal/confirm-modal/ConfirmContext';
 import { useSideKick } from '../../../component/modules/sidekick/SideKickContext';
@@ -213,13 +213,13 @@ const ProductLine = ({
             onChange: (e: any) => {
               setValue(
                 `lines.${index}.price`,
-                availablePrices.find((price) => price.product === e.target.value)?.value,
+                availablePrices.find((price: Price) => price.product === e.target.value)?.value,
               );
             },
           })}
         >
           <option value="">...</option>
-          {availableProducts.map((product) => (
+          {availableProducts.map((product: ProductWithPrice) => (
             <option
               value={product.id}
               key={product.id}
