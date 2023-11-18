@@ -42,7 +42,7 @@ export function PaymentFields({ control, register }: any) {
       <MyField title="Référence">
         <Input {...register('reference')} />
       </MyField>
-      <MyField title="Notes">
+      <MyField title="Notes privées">
         <Textarea {...register('notes')} />
       </MyField>
     </>

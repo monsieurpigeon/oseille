@@ -63,7 +63,7 @@ export function PaymentModal() {
     ) {
       posthog?.capture('invoice_pay_delete');
       invoice &&
-        updateInvoice({ ...invoice, payments: undefined })
+        updateInvoice({ ...invoice, payments: undefined, isPaid: undefined })
           .then(() =>
             say({
               sentence: `Le paiement pour la facture ${invoice.documentId} a bien été supprimé`,
