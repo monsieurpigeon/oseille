@@ -1,13 +1,13 @@
-import { Badge, Box, Button, Flex } from '@chakra-ui/react';
+import { Badge, Box, Button, Flex, Text } from '@chakra-ui/react';
 import { Link, Outlet, useLoaderData, useNavigate } from 'react-router-dom';
-import { Customer, Delivery, Invoice, isInvoicePaid } from '../../backend';
+import { Customer, Delivery, Invoice, isInvoicePaid, paymentModesMap } from '../../backend';
 import { DetailButton, EditButton } from '../../component/buttons';
 import { MyHeader } from '../../component/layout/page-layout/MyHeader';
 import { MyScrollList } from '../../component/layout/page-layout/MyScrollList';
 import { DeliveryDescriptionLine } from '../../component/shared/Delivery';
 import { DeliveryDescription } from '../../component/table/DeliveryDescription';
 import { InvoiceTotals } from '../../component/table/InvoiceTotals';
-import { dateFormatter } from '../../utils/formatter';
+import { dateFormatter, priceFormatter } from '../../utils/formatter';
 import { InvoiceDeleteButton } from './button/InvoiceDeleteButton';
 import { InvoicePrintButton } from './button/InvoicePrintButton';
 
@@ -34,7 +34,7 @@ export const InvoiceDetail = () => {
               colorScheme="green"
               onClick={() => navigate('pay')}
             >
-              Payer
+              Paiement
             </Button>
             <InvoicePrintButton invoice={selected} />
           </Flex>
@@ -42,33 +42,54 @@ export const InvoiceDetail = () => {
           <Outlet />
         </Box>
       </MyHeader>
-
-      <Flex
-        fontWeight="bold"
-        alignItems="center"
-        gap={2}
-      >
-        {isInvoicePaid(selected) && '✅'}
-        {selected.isPaid && !selected.payments && (
-          <Badge
-            colorScheme="yellow"
-            variant="solid"
+      <Flex gap={10}>
+        <Box>
+          <Flex
+            fontWeight="bold"
+            alignItems="center"
+            gap={2}
           >
-            Paiement incomplet
-          </Badge>
+            {isInvoicePaid(selected) && '✅'}
+            {selected.isPaid && !selected.payments && (
+              <Badge
+                colorScheme="yellow"
+                variant="solid"
+              >
+                Paiement incomplet
+              </Badge>
+            )}
+            <Link to={`../../customer/${currentCustomer.id}`}>{currentCustomer.name}</Link>
+          </Flex>
+          <Flex
+            fontWeight="bold"
+            alignItems="center"
+            gap={2}
+          >
+            <div>{dateFormatter(selected.createdAt)}</div>
+            <div>{selected.documentId}</div>
+          </Flex>
+          {currentCustomer?.phone && <div>📞 {currentCustomer.phone}</div>}
+          {!!selected.notes && <div>Notes: {selected.notes}</div>}
+        </Box>
+        {selected?.payments?.length && (
+          <Box
+            onClick={() => navigate('pay')}
+            className="clickable"
+          >
+            <Text as="b">Paiement</Text>
+            {selected.payments.map((pay) => (
+              <>
+                <Text>
+                  {dateFormatter(pay.paidAt)} {paymentModesMap[pay.paymentMode]} {priceFormatter(pay.amount)}
+                </Text>
+                <Text as="kbd">{pay.reference}</Text>
+                {pay.notes && <Text>Notes: {pay.notes}</Text>}
+              </>
+            ))}
+          </Box>
         )}
-        <Link to={`../../customer/${currentCustomer.id}`}>{currentCustomer.name}</Link>
       </Flex>
-      <Flex
-        fontWeight="bold"
-        alignItems="center"
-        gap={2}
-      >
-        <div>{dateFormatter(selected.createdAt)}</div>
-        <div>{selected.documentId}</div>
-      </Flex>
-      {currentCustomer?.phone && <div>📞 {currentCustomer.phone}</div>}
-      {!!selected.notes && <div>Notes: {selected.notes}</div>}
+
       <Flex
         justifyContent="flex-end"
         mt={5}

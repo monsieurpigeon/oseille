@@ -5,6 +5,7 @@ import { FrBio01, FrBio09, FrBio15 } from '../../../utils/labels';
 import { getCustomerById } from '../../entity/customer';
 import { Delivery } from '../../entity/delivery';
 import { getFarm } from '../../entity/farm';
+import { paymentModesMap } from '../../entity/invoice';
 import { Product } from '../../entity/product';
 import { addresses } from './blocks/addresses';
 import { lines } from './blocks/lines';
@@ -81,7 +82,26 @@ export const exportDocument = async ({ payload, type, open = false }: any) => {
       await lines(payload, type),
       ...(isTVA && type === DocumentType.invoice ? [await taxes(payload)] : []),
       await totals(payload, type, farm),
-      { columns: [{ qr: payload.id, fit: '50' }, { text: `Notes: ${payload.notes ?? ''}` }] },
+      {
+        columns: [
+          { qr: payload.id, fit: '50' },
+          [
+            { text: `Notes: ${payload.notes ?? ''}` },
+            ...[
+              type === DocumentType.invoice && payload.payments?.length
+                ? [
+                    {
+                      text: `Payé le ${dateFormatter(payload.payments[0].paidAt)} par ${
+                        paymentModesMap[payload.payments[0].paymentMode]
+                      }`,
+                    },
+                    { text: payload.payments[0].reference, bold: true },
+                  ]
+                : null,
+            ],
+          ],
+        ],
+      },
     ],
     images: {
       logo: farm?._attachements?.logo?.data || '',

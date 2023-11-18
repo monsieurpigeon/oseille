@@ -17,6 +17,12 @@ export const PAYMENT_MODES = [
   { value: PaymentMode.virement, label: 'Virement' },
   { value: PaymentMode.cb, label: 'CB' },
 ];
+
+export const paymentModesMap = PAYMENT_MODES.reduce((acc, { value, label }) => {
+  acc[value] = label;
+  return acc;
+}, {} as Record<string, string>);
+
 export interface Payment {
   paymentMode: PaymentMode;
   paidAt: string;

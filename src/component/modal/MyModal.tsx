@@ -62,29 +62,34 @@ export const MyModal = ({
             <AlertDialogBody>{children}</AlertDialogBody>
 
             <AlertDialogFooter>
-              <Flex gap={2}>
+              <Flex
+                flexGrow={1}
+                justifyContent="space-between"
+                direction="row-reverse"
+              >
+                <Flex gap={2}>
+                  <Button
+                    ref={cancelRef}
+                    onClick={onClose}
+                  >
+                    {cancelLabel ?? 'Annuler'}
+                  </Button>
+                  {onSubmit && (
+                    <Button
+                      colorScheme="twitter"
+                      type="submit"
+                      disabled={disabled}
+                    >
+                      {confirmLabel ?? 'Enregistrer'}
+                    </Button>
+                  )}
+                </Flex>
                 {onRemove && (
                   <Button
                     onClick={onRemove}
-                    variant="ghost"
                     colorScheme="red"
                   >
                     Supprimer
-                  </Button>
-                )}
-                <Button
-                  ref={cancelRef}
-                  onClick={onClose}
-                >
-                  {cancelLabel ?? 'Annuler'}
-                </Button>
-                {onSubmit && (
-                  <Button
-                    colorScheme="twitter"
-                    type="submit"
-                    disabled={disabled}
-                  >
-                    {confirmLabel ?? 'Enregistrer'}
                   </Button>
                 )}
               </Flex>
