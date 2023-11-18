@@ -2,8 +2,11 @@ import { Box, Button, Flex, Grid, GridItem, Input, Select, Text, Textarea } from
 import { useMemo } from 'react';
 import { FieldArrayWithId } from 'react-hook-form';
 import { useLoaderData, useNavigate, useRouteLoaderData } from 'react-router-dom';
-import { Customer, DeliveryInput, Price, Product } from '../../../backend';
+import { Customer, DeliveryInput, Price, Product, ProductWithPrice, addPrice } from '../../../backend';
 import { MyNumberInput } from '../../../component/form/MyNumberInput';
+import { useConfirm } from '../../../component/modal/confirm-modal/ConfirmContext';
+import { useSideKick } from '../../../component/modules/sidekick/SideKickContext';
+import { SideKickFeeling } from '../../../component/modules/sidekick/enums';
 import { priceFormatter } from '../../../utils/formatter';
 
 export function DeliveryFields({ watch, control, register, fields, append, remove, setValue }: any) {
@@ -34,7 +37,7 @@ export function DeliveryFields({ watch, control, register, fields, append, remov
       }));
 
     return { availableProducts, availablePrices };
-  }, [watchCustomer]);
+  }, [watchCustomer, products, customers, prices]);
 
   return (
     <>
@@ -99,54 +102,17 @@ export function DeliveryFields({ watch, control, register, fields, append, remov
           )}
 
           {fields.map((field: FieldArrayWithId<DeliveryInput, 'lines', 'id'>, index: number) => (
-            <>
-              <GridItem key={`${index}-a`}>
-                <Select
-                  {...register(`lines.${index}.productId`, {
-                    onChange: (e: any) => {
-                      setValue(
-                        `lines.${index}.price`,
-                        availablePrices.find((price) => price.product === e.target.value)?.value,
-                      );
-                    },
-                  })}
-                >
-                  <option value="">...</option>
-                  {availableProducts.map((product) => (
-                    <option
-                      value={product.id}
-                      key={product.id}
-                    >
-                      {product.name} {priceFormatter(product.price)}
-                      {isTVA && 'HT'}/{product.unit}
-                    </option>
-                  ))}
-                </Select>
-              </GridItem>
-              <GridItem key={`${index}-c`}>
-                <MyNumberInput
-                  control={control}
-                  name={`lines.${index}.quantity`}
-                  min={0}
-                />
-              </GridItem>
-              <GridItem key={`${index}-b`}>
-                <MyNumberInput
-                  control={control}
-                  name={`lines.${index}.price`}
-                  min={0}
-                  step={0.01}
-                />
-              </GridItem>
-              <GridItem key={`${index}-d`}>
-                <Button
-                  colorScheme="red"
-                  onClick={() => remove(index)}
-                >
-                  X
-                </Button>
-              </GridItem>
-            </>
+            <ProductLine
+              index={index}
+              register={register}
+              control={control}
+              availableProducts={availableProducts}
+              availablePrices={availablePrices}
+              setValue={setValue}
+              remove={remove}
+              watch={watch}
+              customer={customers.find((customer) => customer.id === watchCustomer)}
+            />
           ))}
         </Grid>
         {watchCustomer &&
@@ -183,3 +149,121 @@ export function DeliveryFields({ watch, control, register, fields, append, remov
     </>
   );
 }
+
+const ProductLine = ({
+  index,
+  control,
+  register,
+  availableProducts,
+  availablePrices,
+  setValue,
+  remove,
+  watch,
+  customer,
+}: any) => {
+  const { isTVA } = useRouteLoaderData('farm') as any;
+  const { say } = useSideKick();
+  const { confirm } = useConfirm();
+
+  const watchPrice = watch(`lines.${index}.price`);
+  const watchProduct = watch(`lines.${index}.productId`);
+  const watchCustomer = watch('customer');
+
+  const currentPrice = useMemo(
+    () => availablePrices.find((price: Price) => price.product === watchProduct),
+    [availableProducts, watchProduct],
+  );
+
+  const updatePrice = async () => {
+    const product = availableProducts.find((product: Product) => product.id === watchProduct) as Product;
+    if (
+      await confirm({
+        title: 'Éditer le tarif ?',
+        message: `${product.name} => ${customer.name} : ${priceFormatter(watchPrice)} HT par ${product.unit} ?`,
+      })
+    ) {
+      if ((currentPrice as Price).customer === watchCustomer) {
+        addPrice({ ...currentPrice, value: watchPrice })
+          .then(() =>
+            say({
+              sentence: `Le tarif a bien été enregistré`,
+              autoShutUp: true,
+              feeling: SideKickFeeling.GOOD,
+            }),
+          )
+          .catch(console.error);
+      } else {
+        addPrice({ product: watchProduct, customer: watchCustomer, value: watchPrice })
+          .then(() =>
+            say({
+              sentence: `Le tarif a bien été enregistré`,
+              autoShutUp: true,
+              feeling: SideKickFeeling.GOOD,
+            }),
+          )
+          .catch(console.error);
+      }
+    }
+  };
+  return (
+    <>
+      <GridItem key={`${index}-a`}>
+        <Select
+          {...register(`lines.${index}.productId`, {
+            onChange: (e: any) => {
+              setValue(
+                `lines.${index}.price`,
+                availablePrices.find((price: Price) => price.product === e.target.value)?.value,
+              );
+            },
+          })}
+        >
+          <option value="">...</option>
+          {availableProducts.map((product: ProductWithPrice) => (
+            <option
+              value={product.id}
+              key={product.id}
+            >
+              {product.name} {priceFormatter(product.price)}
+              {isTVA && 'HT'}/{product.unit}
+            </option>
+          ))}
+        </Select>
+      </GridItem>
+      <GridItem key={`${index}-c`}>
+        <MyNumberInput
+          control={control}
+          name={`lines.${index}.quantity`}
+          min={0}
+        />
+      </GridItem>
+      <GridItem key={`${index}-b`}>
+        <MyNumberInput
+          control={control}
+          name={`lines.${index}.price`}
+          min={0}
+          step={0.01}
+        />
+      </GridItem>
+      <GridItem key={`${index}-d`}>
+        <Flex gap={1}>
+          <Button
+            colorScheme="green"
+            onClick={updatePrice}
+            variant="outline"
+            disabled={watchPrice == null || watchPrice === (currentPrice as Price)?.value}
+            title="Sauvegarder le nouveau prix"
+          >
+            💾
+          </Button>
+          <Button
+            colorScheme="red"
+            onClick={() => remove(index)}
+          >
+            X
+          </Button>
+        </Flex>
+      </GridItem>
+    </>
+  );
+};

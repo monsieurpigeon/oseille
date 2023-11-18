@@ -66,6 +66,7 @@ export function DeliveryEditModal() {
       onClose={handleClose}
       onSubmit={handleSubmit(onSubmit)}
       disabled={!formState.isDirty}
+      width="600px"
     >
       <DeliveryFields
         control={control}
