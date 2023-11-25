@@ -50,7 +50,7 @@ export const computeCanadaTaxes = async (
     (deliveryLines.filter((line) => line?.isTvq).reduce((acc, el) => acc + el!.value, 0) * 9.975) / 100,
   );
   const ttc = round(ht + tps + tvq);
-  return { total: { ht, ttc, tps, tvq, tax: 0 } };
+  return { total: { ht, ttc, tps, tvq, tax: tps + tvq } };
 };
 
 export const computeTaxes = async (

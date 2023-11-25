@@ -2,7 +2,7 @@ import { Table, TableContainer, Tbody, Td, Tr } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { useRouteLoaderData } from 'react-router-dom';
 import { Invoice } from '../../backend';
-import { computeTaxes, getIsTVA } from '../../utils/aggregations';
+import { computeCanadaTaxes, computeTaxes, getIsTVA } from '../../utils/aggregations';
 import { Country } from '../../utils/defaults';
 import { priceFormatter } from '../../utils/formatter';
 
@@ -13,7 +13,7 @@ export function InvoiceTotals({ invoice }: { invoice: Invoice }) {
   useEffect(() => {
     const getState = async () => ({
       isTVA: await getIsTVA(invoice),
-      taxes: await computeTaxes(invoice, country.value),
+      taxes: country.value === 'CA' ? await computeCanadaTaxes(invoice) : await computeTaxes(invoice, country.value),
     });
     getState().then(setState);
   }, [invoice]);
