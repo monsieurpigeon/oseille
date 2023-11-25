@@ -84,7 +84,7 @@ export function FarmPracticeModal({ isOpen, onClose }: FarmPracticeModalProps) {
         </Select>
       </Flex>
       <div>
-        <Link to="/contact">Contactez moi</Link> pour ajouter des labels
+        <Link to="/about/team">Contactez moi</Link> pour ajouter des labels
       </div>
     </MyModal>
   );
