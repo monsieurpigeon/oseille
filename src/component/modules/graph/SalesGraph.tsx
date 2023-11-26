@@ -4,8 +4,10 @@ import _ from 'lodash';
 import moment from 'moment';
 import 'moment/locale/fr';
 import { useEffect, useMemo, useRef, useState } from 'react';
+import { useRouteLoaderData } from 'react-router-dom';
 import { Invoice } from '../../../backend';
 import { getInvoiceTotal } from '../../../utils/aggregations';
+import { Country } from '../../../utils/defaults';
 import { priceFormatter } from '../../../utils/formatter';
 
 const months: { [key: string]: string } = {
@@ -37,14 +39,16 @@ export function SalesGraph({ invoices: invoicesClone }: SalesGraphProps) {
   const chartRef = useRef(null);
   const invoices = useMemo(() => _.cloneDeep(invoicesClone), [invoicesClone]);
 
+  const { country } = useRouteLoaderData('farm') as { country: Country };
+
   const [total, setTotal] = useState(0);
   const [data, setData] = useState<{ [key: string]: number }>({});
   const [labels, setLabels] = useState<string[]>([]);
 
   useEffect(() => {
     async function calculateTotal() {
-      const sum = await Promise.all(invoices.map((invoice) => getInvoiceTotal(invoice, true))).then((totals) =>
-        totals.reduce((acc, total) => acc + total, 0),
+      const sum = await Promise.all(invoices.map((invoice) => getInvoiceTotal(invoice, true, country.value))).then(
+        (totals) => totals.reduce((acc, total) => acc + total, 0),
       );
       setTotal(sum);
     }
@@ -75,7 +79,7 @@ export function SalesGraph({ invoices: invoicesClone }: SalesGraphProps) {
         return invoices.reduce(async (memo, invoice) => {
           const acc = await memo;
           const period = moment(invoice.createdAt).format(formatString);
-          const result = await getInvoiceTotal(invoice, true);
+          const result = await getInvoiceTotal(invoice, true, country.value);
           acc[period] += result;
           return Promise.resolve(acc);
         }, Promise.resolve(aggregatedData));
@@ -111,7 +115,7 @@ export function SalesGraph({ invoices: invoicesClone }: SalesGraphProps) {
             },
             tooltip: {
               callbacks: {
-                label: (value) => priceFormatter(value.raw as number),
+                label: (value) => priceFormatter(value.raw as number, country.currency),
               },
             },
           },
@@ -122,7 +126,7 @@ export function SalesGraph({ invoices: invoicesClone }: SalesGraphProps) {
             y: {
               beginAtZero: true,
               ticks: {
-                callback: (value) => priceFormatter(value as number),
+                callback: (value) => priceFormatter(value as number, country.currency),
               },
             },
           },
@@ -135,7 +139,10 @@ export function SalesGraph({ invoices: invoicesClone }: SalesGraphProps) {
 
   return (
     <div>
-      <div>{`${invoices.length} facture${invoices.length > 1 ? 's' : ''}, total: ${priceFormatter(total)}`}</div>
+      <div>{`${invoices.length} facture${invoices.length > 1 ? 's' : ''}, total: ${priceFormatter(
+        total,
+        country.currency,
+      )}`}</div>
       {invoices.length > 0 && (
         <canvas
           ref={chartRef}

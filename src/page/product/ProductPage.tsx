@@ -1,17 +1,15 @@
-import { Box, Button, Flex, Spacer, Text } from '@chakra-ui/react';
+import { Box, Button, Flex } from '@chakra-ui/react';
 import { usePostHog } from 'posthog-js/react';
 import { useEffect } from 'react';
 import { Outlet, useLoaderData, useNavigate, useParams, useRouteLoaderData } from 'react-router-dom';
-import { Product } from '../../backend';
-import { ListItem } from '../../component/card/ListItem';
+import { Farm, Product } from '../../backend';
 import { MyHeader } from '../../component/layout/page-layout/MyHeader';
 import { MyPage } from '../../component/layout/page-layout/MyPage';
 import { MyScrollList } from '../../component/layout/page-layout/MyScrollList';
 import { MySide } from '../../component/layout/page-layout/MySide';
 import { InfoModal } from '../../component/modal/InfoModal';
 import { MyH1 } from '../../component/typography/MyFont';
-import { DEFAULT_TAX } from '../../utils/defaults';
-import { TVAFormatter } from '../../utils/formatter';
+import { ProductListElement } from './modal/ProductListElement';
 
 export function ProductPage() {
   const posthog = usePostHog();
@@ -21,7 +19,7 @@ export function ProductPage() {
   const navigate = useNavigate();
 
   const { id } = useParams();
-  const { farm, isTVA } = useRouteLoaderData('farm') as any;
+  const { farm } = useRouteLoaderData('farm') as { farm: Farm };
   const products = useLoaderData() as Product[];
 
   return (
@@ -54,17 +52,11 @@ export function ProductPage() {
         </MyHeader>
         <MyScrollList empty={{ title: 'Ajouter mon premier produit', onClick: () => navigate('create') }}>
           {products.map((entity) => (
-            <ListItem
+            <ProductListElement
               key={entity.id}
-              isSelected={id === entity.id}
-              onClick={() => navigate(entity.id === id ? '' : entity.id)}
-            >
-              <Flex width="100%">
-                <div>{`${entity.name} /${entity.unit}`}</div>
-                <Spacer />
-                <Text whiteSpace="nowrap">{isTVA && `TVA: ${TVAFormatter(entity.tva || DEFAULT_TAX)}`}</Text>
-              </Flex>
-            </ListItem>
+              entity={entity}
+              selected={id === entity.id}
+            />
           ))}
         </MyScrollList>
       </MySide>

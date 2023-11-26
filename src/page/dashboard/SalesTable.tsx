@@ -1,10 +1,11 @@
 import { Button } from '@chakra-ui/react';
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
-import { useLoaderData } from 'react-router-dom';
+import { useLoaderData, useRouteLoaderData } from 'react-router-dom';
 import styled from 'styled-components';
 import { Customer, Delivery, Invoice, Product, relDb } from '../../backend';
 import { round } from '../../utils/compute';
+import { Country } from '../../utils/defaults';
 import { priceFormatter } from '../../utils/formatter';
 
 const StyledTable = styled.table`
@@ -53,6 +54,7 @@ interface Sales {
 
 export function SalesTable() {
   const [sales, setSales] = useState<Sales[]>([]);
+  const { country } = useRouteLoaderData('farm') as { country: Country };
 
   const { products, customers, invoices } = useLoaderData() as {
     products: Product[];
@@ -135,13 +137,17 @@ export function SalesTable() {
             <td className="total">
               <div>Total:</div>
               <div className="price">
-                🌞 {priceFormatter(sales.reduce((memo, sale) => memo + (round(sale?.totalPrice) || 0), 0))}
+                🌞{' '}
+                {priceFormatter(
+                  sales.reduce((memo, sale) => memo + (round(sale?.totalPrice) || 0), 0),
+                  country.currency,
+                )}
               </div>{' '}
             </td>
             {customersPlus.map((customer) => (
               <td className="vertical">
                 <div>{customer.name}</div>
-                <div className="main-price">{priceFormatter(customer.total)}</div>
+                <div className="main-price">{priceFormatter(customer.total, country.currency)}</div>
               </td>
             ))}
           </thead>
@@ -150,14 +156,14 @@ export function SalesTable() {
               <tr>
                 <td className="horizontal">
                   <div>{product.name}</div>
-                  <div className="main-price">{priceFormatter(product.total)}</div>
+                  <div className="main-price">{priceFormatter(product.total, country.currency)}</div>
                 </td>
                 {customersPlus.map((customer) => (
                   <td
                     className={clsx('cell', { top: product[customer.id] > threshold })}
                     title={`${product.name}\n${customer.name}`}
                   >
-                    {!!product[customer.id] && priceFormatter(product[customer.id])}
+                    {!!product[customer.id] && priceFormatter(product[customer.id], country.currency)}
                   </td>
                 ))}
               </tr>

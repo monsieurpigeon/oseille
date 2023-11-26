@@ -3,11 +3,12 @@ import { Outlet, useLoaderData, useNavigate, useRouteLoaderData } from 'react-ro
 import { Product } from '../../backend';
 import { DetailButton, EditButton } from '../../component/buttons';
 import { MyHeader } from '../../component/layout/page-layout/MyHeader';
-import { TVAFormatter } from '../../utils/formatter';
+import { Country } from '../../utils/defaults';
+import { renderTaxFields } from './modal/ProductListElement';
 
 export const ProductDetail = () => {
   const navigate = useNavigate();
-  const { isTVA } = useRouteLoaderData('farm') as any;
+  const { isTVA, country } = useRouteLoaderData('farm') as { isTVA: boolean; country: Country };
   const selected = useLoaderData() as Product;
 
   if (!selected) return <></>;
@@ -22,7 +23,7 @@ export const ProductDetail = () => {
         <Box>
           {selected.name} /{selected.unit}
         </Box>
-        {isTVA && <Box>TVA: {TVAFormatter(selected.tva)}</Box>}
+        {renderTaxFields(isTVA, selected, country.value)}
       </Box>
     </Box>
   );

@@ -1,9 +1,13 @@
 import { Table, TableContainer, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react';
+import { useRouteLoaderData } from 'react-router-dom';
 import { Delivery } from '../../backend';
 import { getDeliveryTotal } from '../../utils/aggregations';
+import { Country } from '../../utils/defaults';
 import { priceFormatter } from '../../utils/formatter';
 
 export function DeliveryDescription({ delivery }: { delivery: Delivery }) {
+  const { country } = useRouteLoaderData('farm') as { country: Country };
+
   return (
     <TableContainer>
       <Table size="sm">
@@ -25,8 +29,8 @@ export function DeliveryDescription({ delivery }: { delivery: Delivery }) {
                   {line.quantity} {line.product.unit}
                   {line.quantity > 1 ? 's' : ''}
                 </Td>
-                <Td isNumeric>{priceFormatter(line.product.price)}</Td>
-                <Td isNumeric>{priceFormatter(line.product.price * line.quantity)}</Td>
+                <Td isNumeric>{priceFormatter(line.product.price, country.currency)}</Td>
+                <Td isNumeric>{priceFormatter(line.product.price * line.quantity, country.currency)}</Td>
               </Tr>
             ))}
           <Tr>
@@ -39,7 +43,7 @@ export function DeliveryDescription({ delivery }: { delivery: Delivery }) {
               isNumeric
               fontWeight="bold"
             >
-              {priceFormatter(getDeliveryTotal(delivery))}
+              {priceFormatter(getDeliveryTotal(delivery), country.currency)}
             </Td>
           </Tr>
         </Tbody>

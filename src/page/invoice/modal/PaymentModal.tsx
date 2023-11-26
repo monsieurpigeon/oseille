@@ -10,6 +10,7 @@ import { useConfirm } from '../../../component/modal/confirm-modal/ConfirmContex
 import { useSideKick } from '../../../component/modules/sidekick/SideKickContext';
 import { SideKickFeeling } from '../../../component/modules/sidekick/enums';
 import { getInvoiceTotal } from '../../../utils/aggregations';
+import { Country } from '../../../utils/defaults';
 import { PaymentFields } from './PaymentFields';
 
 export const paymentSchema = z.object({
@@ -24,10 +25,11 @@ export function PaymentModal() {
   const {
     invoices: [invoice],
   } = useRouteLoaderData('invoice') as { invoices: Invoice[] };
+  const { country } = useRouteLoaderData('farm') as { country: Country };
 
   const [amount, setAmount] = useState(0);
   useEffect(() => {
-    getInvoiceTotal(invoice).then(setAmount);
+    getInvoiceTotal(invoice, false, country.value).then(setAmount);
   }, [invoice]);
 
   if (!invoice) return null;

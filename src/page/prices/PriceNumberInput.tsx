@@ -10,6 +10,7 @@ import { MyNumberInput } from '../../component/form/MyNumberInput';
 import { useConfirm } from '../../component/modal/confirm-modal/ConfirmContext';
 import { useSideKick } from '../../component/modules/sidekick/SideKickContext';
 import { SideKickFeeling } from '../../component/modules/sidekick/enums';
+import { Country } from '../../utils/defaults';
 import { priceFormatter } from '../../utils/formatter';
 
 export const priceSchema = z.object({
@@ -29,7 +30,7 @@ export function PriceNumberInput({
   value: number;
   onClose: () => void;
 }) {
-  const { isTVA } = useRouteLoaderData('farm') as any;
+  const { isTVA, country } = useRouteLoaderData('farm') as { isTVA: boolean; country: Country };
   const { watch, control, handleSubmit, reset } = useForm<PriceInput>({
     resolver: zodResolver(priceSchema),
     defaultValues: {
@@ -82,11 +83,18 @@ export function PriceNumberInput({
   const tva = +product.tva || 5.5;
 
   useEffect(() => {
-    isTVA &&
+    if (country.value === 'CA' && isTVA) {
+      const tvaRate = product.tvq ? 14.975 : 5;
       say({
         feeling: SideKickFeeling.COMPUTE,
-        sentence: `Ce qui fait: ${priceFormatter((watchValue || value) * (1 + tva / 100))}TTC`,
+        sentence: `Ce qui fait: ${priceFormatter((watchValue || value) * (1 + tvaRate / 100), country.currency)}TTC`,
       });
+    } else if (isTVA) {
+      say({
+        feeling: SideKickFeeling.COMPUTE,
+        sentence: `Ce qui fait: ${priceFormatter((watchValue || value) * (1 + tva / 100), country.currency)}TTC`,
+      });
+    }
   }, [watchValue]);
 
   return (
