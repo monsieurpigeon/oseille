@@ -1,12 +1,15 @@
-import { getIsTVA } from '../../../../utils/aggregations';
+import { getCountry, getIsTVA } from '../../../../utils/aggregations';
 import { TVA_RATES } from '../../../../utils/defaults';
 import { dateFormatter, priceFormatter } from '../../../../utils/formatter';
 import { Delivery, DeliveryLine } from '../../../entity/delivery';
+import { Farm } from '../../../entity/farm';
 import { ProductWithPrice } from '../../../entity/product';
 import { relDb } from '../../database';
 import { DocumentType } from '../pdf';
 
-export const lines = async (payload: any, type: DocumentType) => {
+export const lines = async (payload: any, type: DocumentType, farm: Farm) => {
+  const country = getCountry(farm?.country);
+
   if (type === DocumentType.delivery) {
     const isTVA = payload.isTVA;
     return {
@@ -34,7 +37,7 @@ export const lines = async (payload: any, type: DocumentType) => {
                 b: { product: ProductWithPrice; quantity: number },
               ) => a.product.name.localeCompare(b.product.name),
             )
-            .map((el: DeliveryLine) => productLine(el, false)),
+            .map((el: DeliveryLine) => productLine(el, false, country.currency)),
         ],
       },
     };
@@ -42,6 +45,7 @@ export const lines = async (payload: any, type: DocumentType) => {
 
   if (type === 'Invoice') {
     const isTVA = await getIsTVA(payload);
+    const isCanada = country.value === 'CA';
     const result = await relDb.rel
       .find('Idelivery', payload.deliveries)
       .then((doc) => ({ ...doc, deliveries: doc.Ideliveries }));
@@ -53,7 +57,7 @@ export const lines = async (payload: any, type: DocumentType) => {
       style: 'tableExample',
       table: {
         headerRows: 1,
-        widths: ['*', 'auto', 'auto', 'auto', 'auto', ...(isTVA ? ['auto'] : [])],
+        widths: ['*', 'auto', 'auto', 'auto', 'auto', ...(isTVA && !isCanada ? ['auto'] : [])],
         body: [
           [
             'Désignation',
@@ -64,7 +68,7 @@ export const lines = async (payload: any, type: DocumentType) => {
               text: `Total ${isTVA ? 'HT' : ''}`,
               alignment: 'right',
             },
-            ...(isTVA
+            ...(isTVA && !isCanada
               ? [
                   {
                     text: `Code TVA`,
@@ -81,11 +85,11 @@ export const lines = async (payload: any, type: DocumentType) => {
                 '',
                 '',
                 '',
-                ...(isTVA ? [''] : []),
+                ...(isTVA && !isCanada ? [''] : []),
               ],
               ...delivery.lines
                 .sort((a, b) => a.product.name.localeCompare(b.product.name))
-                .map((el) => productLine(el, isTVA)),
+                .map((el) => productLine(el, isTVA, country.currency, isCanada)),
             ];
           }),
         ],
@@ -94,7 +98,7 @@ export const lines = async (payload: any, type: DocumentType) => {
   }
 };
 
-const productLine = (el: DeliveryLine, isTVA: boolean) => {
+const productLine = (el: DeliveryLine, isTVA: boolean, currency: string = 'EUR', isCanada: boolean = false) => {
   return [
     el.product.name,
     {
@@ -105,9 +109,9 @@ const productLine = (el: DeliveryLine, isTVA: boolean) => {
       text: el.product.unit,
       alignment: 'left',
     },
-    { text: priceFormatter(el.product.price), alignment: 'right' },
-    { text: priceFormatter(el.product.price * el.quantity), alignment: 'right' },
-    ...(isTVA
+    { text: priceFormatter(el.product.price, currency), alignment: 'right' },
+    { text: priceFormatter(el.product.price * el.quantity, currency), alignment: 'right' },
+    ...(isTVA && !isCanada
       ? [
           {
             text: TVA_RATES.find((rate) => rate.value === el.product.tva)?.code || '1',

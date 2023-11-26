@@ -1,7 +1,8 @@
 import { Table, TableContainer, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react';
 import { useMemo, useState } from 'react';
-import { useLoaderData } from 'react-router-dom';
+import { useLoaderData, useRouteLoaderData } from 'react-router-dom';
 import { Customer, Price, Product } from '../../backend';
+import { Country } from '../../utils/defaults';
 import { priceFormatter } from '../../utils/formatter';
 import { PriceEmpty } from './PriceEmpty';
 import { PriceNumberInput } from './PriceNumberInput';
@@ -29,6 +30,7 @@ const getPriceColor = (defaultPrice: number | undefined, directPrice: number) =>
 
 export function PriceTable() {
   const [currentEdit, setCurrentEdit] = useState(['', '']);
+  const { country } = useRouteLoaderData('farm') as { country: Country };
   const { products, customers, prices } = useLoaderData() as {
     products: Product[];
     customers: Customer[];
@@ -89,7 +91,7 @@ export function PriceTable() {
                 >
                   {(currentEdit[0] !== 'DEFAULT' || currentEdit[1] !== p.id) && (
                     <button onClick={() => setCurrentEdit(['DEFAULT', p.id])}>
-                      {defaultPrice?.value ? `${priceFormatter(defaultPrice.value)}HT` : <AddPrice />}
+                      {defaultPrice?.value ? `${priceFormatter(defaultPrice.value, country.currency)}HT` : <AddPrice />}
                     </button>
                   )}
                   {currentEdit[0] === 'DEFAULT' && currentEdit[1] === p.id && (
@@ -129,7 +131,7 @@ export function PriceTable() {
                       ) : !price?.value ? (
                         <AddPrice />
                       ) : (
-                        <div className="priceText">{`${priceFormatter(price?.value || 0)}HT`}</div>
+                        <div className="priceText">{`${priceFormatter(price?.value || 0, country.currency)}HT`}</div>
                       )}
                     </Td>
                   );

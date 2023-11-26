@@ -1,3 +1,4 @@
+import { CountryCode, DEFAULT_COUNTRY } from '../../utils/defaults';
 import { relDb } from '../service/database';
 import { DocumentType } from '../service/pdf/pdf';
 
@@ -24,6 +25,7 @@ export interface Farm {
   tva: string;
   invoiceDelay: number;
   threat: string;
+  country: CountryCode;
   _attachements: {
     logo: {
       data: string;
@@ -52,6 +54,7 @@ export interface FarmInput {
   tva?: string;
   invoiceDelay?: number;
   threat?: string;
+  country?: string;
 }
 
 export interface LogoInput {
@@ -66,6 +69,7 @@ export async function addFarm() {
     footer: 'Tous nos produits sont certifies par FR-BIO-IT',
     invoiceId: 1,
     deliveryId: 1,
+    country: DEFAULT_COUNTRY,
   });
 }
 

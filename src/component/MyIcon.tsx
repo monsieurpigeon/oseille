@@ -3,6 +3,7 @@ const icons = {
   phone: '📞',
   good: '✅',
   warning: '❗',
+  bad: '❌',
   vegetable: '🥕',
   order: '🗒️',
   info: 'ℹ️',
