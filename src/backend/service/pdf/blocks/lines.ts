@@ -1,5 +1,5 @@
 import { getCountry, getIsTVA } from '../../../../utils/aggregations';
-import { TVA_RATES } from '../../../../utils/defaults';
+import { Country, TVA_RATES_MAP } from '../../../../utils/defaults';
 import { dateFormatter, priceFormatter } from '../../../../utils/formatter';
 import { Delivery, DeliveryLine } from '../../../entity/delivery';
 import { Farm } from '../../../entity/farm';
@@ -37,7 +37,7 @@ export const lines = async (payload: any, type: DocumentType, farm: Farm) => {
                 b: { product: ProductWithPrice; quantity: number },
               ) => a.product.name.localeCompare(b.product.name),
             )
-            .map((el: DeliveryLine) => productLine(el, false, country.currency)),
+            .map((el: DeliveryLine) => productLine(el, false, country)),
         ],
       },
     };
@@ -89,7 +89,7 @@ export const lines = async (payload: any, type: DocumentType, farm: Farm) => {
               ],
               ...delivery.lines
                 .sort((a, b) => a.product.name.localeCompare(b.product.name))
-                .map((el) => productLine(el, isTVA, country.currency, isCanada)),
+                .map((el) => productLine(el, isTVA, country)),
             ];
           }),
         ],
@@ -98,7 +98,9 @@ export const lines = async (payload: any, type: DocumentType, farm: Farm) => {
   }
 };
 
-const productLine = (el: DeliveryLine, isTVA: boolean, currency: string = 'EUR', isCanada: boolean = false) => {
+const productLine = (el: DeliveryLine, isTVA: boolean, country: Country) => {
+  const { currency } = country;
+  const isCanada = country.value === 'CA';
   return [
     el.product.name,
     {
@@ -114,7 +116,7 @@ const productLine = (el: DeliveryLine, isTVA: boolean, currency: string = 'EUR',
     ...(isTVA && !isCanada
       ? [
           {
-            text: TVA_RATES.find((rate) => rate.value === el.product.tva)?.code || '1',
+            text: TVA_RATES_MAP[country.value].find((rate) => rate.value === el.product.tva)?.code || '1',
             alignment: 'right',
           },
         ]

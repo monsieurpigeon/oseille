@@ -76,8 +76,9 @@ export const computeTaxes = async (
     .map((rate) => {
       const lines = deliveryLines.filter((line) => line?.tvaRate === rate.value);
       const ht = round(lines.reduce((acc, el) => acc + el!.value, 0));
-      const ttc = round(ht * (1 + +rate.value / 100));
       const tax = round((ht * +rate.value) / 100);
+      const ttc = round(ht + tax);
+
       return { taxValue: rate, ht, ttc, tax };
     })
     .filter((line) => line.ht > 0);
