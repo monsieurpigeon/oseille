@@ -20,15 +20,19 @@ export const addresses = (
         ]
       : []),
 
-    [
-      { text: farm?.title || DEFAULT_FARM.title, bold: true },
-      { text: farm?.address1 || DEFAULT_FARM.address1 },
-      { text: farm?.address2 || DEFAULT_FARM.address2 },
-      { text: `${farm?.zip || DEFAULT_FARM.zip} ${farm?.city || DEFAULT_FARM.city}` },
-      { text: `${farm?.phone || ''}` },
-      { text: `${farm?.email || ''}` },
-      ...(farm?.tva ? [{ text: `N° TVA: ${farm?.tva || ''}` }] : []),
-    ],
+    {
+      width: 160,
+
+      stack: [
+        { text: farm?.title || DEFAULT_FARM.title, bold: true, width: 150 },
+        { text: farm?.address1 || DEFAULT_FARM.address1 },
+        { text: farm?.address2 || DEFAULT_FARM.address2 },
+        { text: `${farm?.zip || DEFAULT_FARM.zip} ${farm?.city || DEFAULT_FARM.city}` },
+        { text: `${farm?.phone || ''}` },
+        { text: `${farm?.email || ''}` },
+        ...(farm?.tva ? [{ text: `N° TVA: ${farm?.tva || ''}` }] : []),
+      ],
+    },
     [
       ...(hasBio
         ? [

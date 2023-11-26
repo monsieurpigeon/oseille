@@ -53,6 +53,7 @@ export function ProductPage() {
         <MyScrollList empty={{ title: 'Ajouter mon premier produit', onClick: () => navigate('create') }}>
           {products.map((entity) => (
             <ProductListElement
+              key={entity.id}
               entity={entity}
               selected={id === entity.id}
             />

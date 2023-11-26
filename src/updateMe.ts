@@ -37,6 +37,12 @@ const users = {
     color: '#06668c',
     link: 'https://www.facebook.com/leslegumesdecedric',
   },
+  multi: {
+    name: 'Plusieurs maraîchers',
+    farm: '',
+    color: '#a4f3c1',
+    link: '',
+  },
 };
 export const FEATURES = [
   {
@@ -110,5 +116,11 @@ export const FEATURES = [
     user: users.cedric,
     description:
       "Cédric a besoin de gérer les consignes dans sa facturation, et j'ai ajouté la possibilité de saisir un tarif négatif pour qu'il puisse retrouver son usage actuel",
+  },
+  {
+    title: 'Taxes internationales',
+    user: users.multi,
+    description:
+      'Ajout de la possibilité de gérer des taxes internationales pour facturer des clients en Belgique, en Suisse et au Canada',
   },
 ];
