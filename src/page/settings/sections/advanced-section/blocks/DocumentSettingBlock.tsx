@@ -7,6 +7,8 @@ export function DocumentSettingBlock() {
   const { farm } = useRouteLoaderData('farm') as any;
   const { isOpen, onOpen, onClose } = useDisclosure();
 
+  const currentYear = farm.year || 2023;
+
   return (
     <SettingCard
       title="Documents"
@@ -19,6 +21,7 @@ export function DocumentSettingBlock() {
       />
       <div>Prochaine livraison : {farm?.deliveryId}</div>
       <div>Prochaine facture : {farm?.invoiceId}</div>
+      <div>Année en cours: {currentYear}</div>
     </SettingCard>
   );
 }

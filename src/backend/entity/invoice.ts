@@ -76,7 +76,7 @@ export const addInvoice = async (deliveries: string[], createdAt: string, notes:
   const customer = allDeliveries.customers[0].id;
 
   const invoice: InvoiceInput = {
-    documentId: documentIdFormatter(farm?.invoiceId || 0, 'Invoice'),
+    documentId: documentIdFormatter(farm?.invoiceId || 0, 'Invoice', farm?.year),
     customer,
     deliveryDocumentIds: allDeliveries.deliveries.map((d) => d.documentId),
     deliveries,
