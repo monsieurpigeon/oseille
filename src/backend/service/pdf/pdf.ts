@@ -75,10 +75,29 @@ export const exportDocument = async ({ payload, type, open = false }: any) => {
         !!farm?.bioLabel && farm?.bioLabel !== 'non',
         farm,
       ),
-      { text: `${payload.documentId}`, style: 'header' },
       {
-        text: `Date: ${dateFormatter(type === DocumentType.invoice ? payload.createdAt : payload.deliveredAt)}`,
-        style: 'header',
+        columns: [
+          [
+            { text: `${payload.documentId}`, style: 'header' },
+            {
+              text: `Date: ${dateFormatter(type === DocumentType.invoice ? payload.createdAt : payload.deliveredAt)}`,
+              style: 'header',
+            },
+          ],
+          ...[
+            type === DocumentType.invoice && payload.payments?.length
+              ? [
+                  { text: 'PAYÉ', style: 'alert' },
+                  {
+                    text: `Par ${paymentModesMap[payload.payments[0].paymentMode]} le ${dateFormatter(
+                      payload.payments[0].paidAt,
+                    )}`,
+                  },
+                  { text: payload.payments[0].reference, bold: true },
+                ]
+              : null,
+          ],
+        ],
       },
       await lines(payload, type, farm),
       ...(isTVA && type === DocumentType.invoice && farm.country !== CountryCode.CA
@@ -86,24 +105,7 @@ export const exportDocument = async ({ payload, type, open = false }: any) => {
         : []),
       await totals(payload, type, farm),
       {
-        columns: [
-          { qr: payload.id, fit: '50' },
-          [
-            { text: `Notes: ${payload.notes ?? ''}` },
-            ...[
-              type === DocumentType.invoice && payload.payments?.length
-                ? [
-                    {
-                      text: `Payé le ${dateFormatter(payload.payments[0].paidAt)} par ${
-                        paymentModesMap[payload.payments[0].paymentMode]
-                      }`,
-                    },
-                    { text: payload.payments[0].reference, bold: true },
-                  ]
-                : null,
-            ],
-          ],
-        ],
+        columns: [{ qr: payload.id, fit: '50' }, { text: `Notes: ${payload.notes ?? ''}` }],
       },
     ],
     images: {
@@ -111,6 +113,11 @@ export const exportDocument = async ({ payload, type, open = false }: any) => {
       bio: getBioLogo(farm?.bioLabel),
     },
     styles: {
+      alert: {
+        color: 'red',
+        fontSize: 20,
+        bold: true,
+      },
       header: {
         fontSize: 18,
         bold: true,
