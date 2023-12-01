@@ -1,10 +1,10 @@
-import { Box, Text } from '@chakra-ui/react';
+import { Box, Select, Text } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { useRouteLoaderData } from 'react-router-dom';
 import { z } from 'zod';
-import { updateFarm } from '../../backend';
+import { Farm, updateFarm } from '../../backend';
 import { MyNumberInput } from '../form/MyNumberInput';
 import { useSideKick } from '../modules/sidekick/SideKickContext';
 import { SideKickFeeling } from '../modules/sidekick/enums';
@@ -13,23 +13,30 @@ import { MyModal } from './MyModal';
 export const documentsSchema = z.object({
   invoiceId: z.number().gte(0),
   deliveryId: z.number().gte(0),
+  year: z.string(),
 });
 
 interface DocumentIdInput {
   invoiceId: number;
   deliveryId: number;
+  year: number;
 }
 
+const YEARS = [2023, 2024, 2025, 2026, 2027, 2028, 2029];
+
 export function FarmDocumentIdModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
-  const { farm } = useRouteLoaderData('farm') as any;
+  const { farm } = useRouteLoaderData('farm') as { farm: Farm };
   const cancelRef = useRef<any>();
   const { say } = useSideKick();
 
-  const { control, formState, handleSubmit, reset } = useForm<DocumentIdInput>({
+  const currentYear = farm.year || 2023;
+
+  const { control, register, formState, handleSubmit, reset } = useForm<DocumentIdInput>({
     resolver: zodResolver(documentsSchema),
     defaultValues: {
       invoiceId: farm?.invoiceId,
       deliveryId: farm?.deliveryId,
+      year: currentYear,
     },
   });
 
@@ -37,12 +44,13 @@ export function FarmDocumentIdModal({ isOpen, onClose }: { isOpen: boolean; onCl
     reset({
       invoiceId: farm?.invoiceId,
       deliveryId: farm?.deliveryId,
+      year: currentYear,
     });
   }, [farm, isOpen]);
 
   const onSubmit = (e: DocumentIdInput) =>
     farm &&
-    updateFarm({ ...farm, ...e })
+    updateFarm({ ...farm, ...e, year: +e.year })
       .then(() =>
         say({
           sentence: `Les compteurs de documents ont bien été enregistrés`,
@@ -76,6 +84,20 @@ export function FarmDocumentIdModal({ isOpen, onClose }: { isOpen: boolean; onCl
           control={control}
           name="invoiceId"
         />
+      </Box>
+      <Box flexGrow={1}>
+        <Text>Année en cours:</Text>
+        <Select {...register('year')}>
+          {YEARS.map((year) => (
+            <option
+              key={year}
+              value={year}
+              selected={year === currentYear}
+            >
+              {year}
+            </option>
+          ))}
+        </Select>
       </Box>
     </MyModal>
   );

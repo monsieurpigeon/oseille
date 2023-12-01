@@ -1,3 +1,4 @@
+import getYear from 'date-fns/getYear';
 import { CountryCode, DEFAULT_COUNTRY } from '../../utils/defaults';
 import { relDb } from '../service/database';
 import { DocumentType } from '../service/pdf/pdf';
@@ -15,6 +16,7 @@ export interface Farm {
   footer: string;
   invoiceId: number;
   deliveryId: number;
+  year: number;
   isTVA?: string;
   bioLabel: string;
   rib: string;
@@ -44,6 +46,7 @@ export interface FarmInput {
   footer?: string;
   invoiceId?: number;
   deliveryId?: number;
+  year?: number;
   isTVA?: string;
   bioLabel?: string;
   rib?: string;
@@ -69,6 +72,7 @@ export async function addFarm() {
     footer: 'Tous nos produits sont certifies par FR-BIO-IT',
     invoiceId: 1,
     deliveryId: 1,
+    year: getYear(new Date()),
     country: DEFAULT_COUNTRY,
   });
 }

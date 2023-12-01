@@ -60,7 +60,7 @@ export const addDelivery = async (delivery: DeliveryInput) => {
 
     const result = await relDb.rel.save('delivery', {
       ...deliveryFull,
-      documentId: documentIdFormatter(farm?.deliveryId || 0, 'Delivery'),
+      documentId: documentIdFormatter(farm?.deliveryId || 0, 'Delivery', farm?.year),
     });
     updateDocumentId('Delivery');
     return result;

@@ -7,9 +7,9 @@ export function priceFormatter(value: number, currency: string = 'EUR') {
   return value.toLocaleString('fr-FR', { style: 'currency', currency }).split(' ').join(' ');
 }
 
-export function documentIdFormatter(value: number, type: DocumentType) {
-  // TODO : Prévoir le changement d’année pour le documentId
-  const numbers = `2023-${`00000${value}`.slice(-5)}`;
+export function documentIdFormatter(value: number, type: DocumentType, year: number) {
+  const currentYear = year || 2023;
+  const numbers = `${currentYear}-${`00000${value}`.slice(-5)}`;
 
   if (type === DocumentType.delivery) {
     return `BL-${numbers}`;
