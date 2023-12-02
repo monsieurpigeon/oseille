@@ -11,6 +11,7 @@ export interface Customer {
   city: string;
   notes: string;
   phone: string;
+  tvaRef: string;
 }
 
 export interface CustomerInput {
@@ -21,6 +22,7 @@ export interface CustomerInput {
   city: string;
   notes: string;
   phone: string;
+  tvaRef?: string;
 }
 
 export const addCustomer = (customer: CustomerInput) => {

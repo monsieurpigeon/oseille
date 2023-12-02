@@ -1,8 +1,10 @@
 import { Input, Textarea } from '@chakra-ui/react';
+import { useRouteLoaderData } from 'react-router-dom';
 import { MyField } from '../../../component/MyField';
 import { DEFAULT_CUSTOMER } from '../../../utils/defaults';
 
 export function CustomerFields({ control, register }: any) {
+  const { isTVA } = useRouteLoaderData('farm') as { isTVA: boolean };
   return (
     <>
       <MyField title="Nom">
@@ -41,6 +43,15 @@ export function CustomerFields({ control, register }: any) {
           {...register('phone')}
         />
       </MyField>
+      {isTVA && (
+        <MyField title="N°  TVA">
+          <Input
+            placeholder={DEFAULT_CUSTOMER.tvaRef}
+            {...register('tvaRef')}
+          />
+        </MyField>
+      )}
+
       <MyField title="Notes">
         <Textarea
           placeholder={DEFAULT_CUSTOMER.notes}

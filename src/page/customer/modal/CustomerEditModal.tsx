@@ -35,7 +35,7 @@ export function CustomerEditModal() {
         );
   };
 
-  const { control, register, handleSubmit, reset, formState } = useForm<CustomerInput>({
+  const { control, register, handleSubmit, formState } = useForm<CustomerInput>({
     resolver: zodResolver(customerSchema),
     defaultValues: customer,
   });

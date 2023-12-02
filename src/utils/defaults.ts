@@ -54,6 +54,7 @@ export const DEFAULT_CUSTOMER = {
   city: 'Bordeaux',
   notes: 'Livraison le Jeudi',
   phone: '06 45 66 56 55',
+  tvaRef: '',
 };
 
 export const PRODUCT_UNITS = [

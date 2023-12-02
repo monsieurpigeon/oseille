@@ -47,6 +47,9 @@ export const addresses = (
       { text: payload.customer.address1, alignment: 'right' },
       { text: payload.customer.address2, alignment: 'right' },
       { text: `${payload.customer.zip} ${payload.customer.city}`, alignment: 'right' },
+      ...(type === DocumentType.invoice && payload.customer.tvaRef
+        ? [{ text: `N° TVA: ${payload.customer.tvaRef}`, alignment: 'right' }]
+        : []),
       ...(type === DocumentType.delivery ? [{ text: payload.customer.phone, alignment: 'right' }] : []),
     ],
   ],
