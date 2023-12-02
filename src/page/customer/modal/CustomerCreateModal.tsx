@@ -19,6 +19,7 @@ export const customerSchema = z.object({
   city: z.string().min(1),
   notes: z.string(),
   phone: z.string(),
+  tvaRef: z.string().optional().nullable(),
 });
 
 export function CustomerCreateModal() {
@@ -28,7 +29,7 @@ export function CustomerCreateModal() {
 
   const { say } = useSideKick();
 
-  const { control, register, handleSubmit, reset } = useForm<CustomerInput>({
+  const { control, register, handleSubmit } = useForm<CustomerInput>({
     resolver: zodResolver(customerSchema),
     defaultValues: EMPTY_CUSTOMER,
   });
