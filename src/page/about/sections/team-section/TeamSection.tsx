@@ -9,9 +9,9 @@ export function TeamSection() {
     >
       <Flex direction="column">
         <Image
-          width="369px"
+          width="250px"
           alignSelf="flex-start"
-          src="https://media.licdn.com/dms/image/D4E03AQGO6toZm8opag/profile-displayphoto-shrink_400_400/0/1665435666497?e=1701302400&v=beta&t=s-gqC_rEAuw_-HRXaxLCVfeqceNgX_yZ9coji7mu9AA"
+          src="/portrait.jpeg"
         />
         <Flex
           justifyContent="space-between"
@@ -70,6 +70,7 @@ export function TeamSection() {
           marginTop={8}
           maxWidth="500px"
           height={0}
+          textAlign="justify"
         >
           <Text>
             Je m'appelle Maxime, je suis développeur web, je vis à Bordeaux et je fabrique l'application{' '}

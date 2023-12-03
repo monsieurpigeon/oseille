@@ -25,6 +25,7 @@ export function BusinessSection() {
         flexGrow={1}
         gap="4"
         maxWidth="500px"
+        textAlign="justify"
       >
         <Heading size="md">Principes</Heading>
         <Text>
@@ -106,7 +107,7 @@ export function BusinessSection() {
                 alignSelf="center"
                 gap={8}
               >
-                <Box>
+                <Box textAlign="justify">
                   <Text>
                     Si vous souhaitez soutenir mon travail, vous pouvez m'encourager financièrement sur{' '}
                     <span className="bold">Tipeee</span>.

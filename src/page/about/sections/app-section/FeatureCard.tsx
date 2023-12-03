@@ -47,7 +47,7 @@ export function FeatureCard({ feature }: FeatureCardProps) {
       <CardBody>
         <Box>
           <Heading size="md">{feature.title}</Heading>
-          <Text>{feature.description}</Text>
+          <Text textAlign="justify">{feature.description}</Text>
         </Box>
       </CardBody>
     </Card>
