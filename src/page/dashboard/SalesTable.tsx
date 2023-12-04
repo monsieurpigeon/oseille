@@ -1,4 +1,4 @@
-import { Button } from '@chakra-ui/react';
+import { Box, Button, FormLabel, Switch } from '@chakra-ui/react';
 import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 import { useLoaderData, useRouteLoaderData } from 'react-router-dom';
@@ -50,11 +50,14 @@ interface Sales {
   customer: string;
   customerId: string;
   totalPrice: number;
+  totalQuantity: number;
 }
 
 export function SalesTable() {
   const [sales, setSales] = useState<Sales[]>([]);
   const { country } = useRouteLoaderData('farm') as { country: Country };
+
+  const [selectedTable, setSelectedTable] = useState(false);
 
   const { products, customers, invoices } = useLoaderData() as {
     products: Product[];
@@ -78,6 +81,7 @@ export function SalesTable() {
                 customer: customer?.name,
                 customerId: customer?.id,
                 totalPrice: line.quantity * line.price || 0,
+                totalQuantity: line.quantity || 0,
               };
             });
           });
@@ -95,10 +99,14 @@ export function SalesTable() {
       ...memo,
       [sale.productId]: {
         ...memo[sale.productId],
-        [sale.customerId as string]: (memo[sale.productId]?.[sale.customerId as string] || 0) + sale.totalPrice,
+        [sale.customerId as string]: {
+          ...memo[sale.productId]?.[sale.customerId as string],
+          price: (memo[sale.productId]?.[sale.customerId as string]?.price || 0) + sale.totalPrice,
+          unit: (memo[sale.productId]?.[sale.customerId as string]?.unit || 0) + sale.totalQuantity,
+        },
       },
     };
-  }, {} as { [key: string]: { [key: string]: number } });
+  }, {} as { [key: string]: { [key: string]: { price: number; unit: number } } });
 
   const valuesList = Object.values(salesByProduct)
     .flatMap((product) => Object.values(product))
@@ -112,7 +120,9 @@ export function SalesTable() {
       return {
         name: product.name,
         id: product.id,
-        total: Object.values(customerSales || {}).reduce((memo, value) => memo + value, 0),
+        total: Object.values(customerSales || {}).reduce((memo, value) => memo + value.price, 0),
+        totalUnit: Object.values(customerSales || {}).reduce((memo, value) => memo + value.unit, 0),
+        unit: product.unit,
         ...customerSales,
       };
     })
@@ -131,46 +141,116 @@ export function SalesTable() {
   return (
     <>
       <Button onClick={() => setShow((v) => !v)}>{show ? 'Cacher les ventes 🫣' : 'Montrer les ventes 😎'}</Button>
+
       {show && (
-        <StyledTable>
-          <thead>
-            <td className="total">
-              <div>Total:</div>
-              <div className="price">
-                🌞{' '}
-                {priceFormatter(
-                  sales.reduce((memo, sale) => memo + (round(sale?.totalPrice) || 0), 0),
-                  country.currency,
-                )}
-              </div>{' '}
-            </td>
-            {customersPlus.map((customer) => (
-              <td className="vertical">
-                <div>{customer.name}</div>
-                <div className="main-price">{priceFormatter(customer.total, country.currency)}</div>
-              </td>
-            ))}
-          </thead>
-          <tbody>
-            {productsPlus.map((product: any) => (
-              <tr>
-                <td className="horizontal">
-                  <div>{product.name}</div>
-                  <div className="main-price">{priceFormatter(product.total, country.currency)}</div>
-                </td>
-                {customersPlus.map((customer) => (
-                  <td
-                    className={clsx('cell', { top: product[customer.id] > threshold })}
-                    title={`${product.name}\n${customer.name}`}
-                  >
-                    {!!product[customer.id] && priceFormatter(product[customer.id], country.currency)}
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </StyledTable>
+        <>
+          <Box
+            display="flex"
+            alignItems="center"
+            gap={4}
+          >
+            <FormLabel mb="0">Prix HT</FormLabel>
+            <Switch
+              value={selectedTable}
+              onChange={(e) => setSelectedTable(e.target.checked)}
+            />
+            <FormLabel mb="0">Unité (kg, botte, ...)</FormLabel>
+          </Box>
+          {!selectedTable && (
+            <PriceTable
+              sales={sales}
+              country={country}
+              customersPlus={customersPlus}
+              productsPlus={productsPlus}
+              threshold={threshold}
+            />
+          )}
+          {selectedTable && (
+            <UnitTable
+              customersPlus={customersPlus}
+              productsPlus={productsPlus}
+              sales={sales}
+              threshold={threshold}
+            />
+          )}
+        </>
       )}
     </>
   );
 }
+
+export const PriceTable = ({ sales, country, customersPlus, productsPlus, threshold }: any) => (
+  <StyledTable>
+    <thead>
+      <td className="total">
+        <div>Total:</div>
+        <div className="price">
+          🌞{' '}
+          {priceFormatter(
+            sales.reduce((memo, sale) => memo + (round(sale?.totalPrice) || 0), 0),
+            country.currency,
+          )}
+        </div>{' '}
+      </td>
+      {customersPlus.map((customer) => (
+        <td className="vertical">
+          <div>{customer.name}</div>
+          <div className="main-price">{priceFormatter(customer.total, country.currency)}</div>
+        </td>
+      ))}
+    </thead>
+    <tbody>
+      {productsPlus.map((product: any) => (
+        <tr>
+          <td className="horizontal">
+            <div>{product.name}</div>
+            <div className="main-price">{priceFormatter(product.total, country.currency)}</div>
+          </td>
+          {customersPlus.map((customer) => (
+            <td
+              className={clsx('cell', { top: product[customer.id]?.price > threshold.price })}
+              title={`${product.name}\n${customer.name}`}
+            >
+              {!!product[customer.id]?.price && priceFormatter(product[customer.id]?.price, country.currency)}
+            </td>
+          ))}
+        </tr>
+      ))}
+    </tbody>
+  </StyledTable>
+);
+
+export const UnitTable = ({ customersPlus, productsPlus, threshold }: any) => (
+  <StyledTable>
+    <thead>
+      <td className="total">
+        <div className="price">🌚</div>
+      </td>
+      {customersPlus.map((customer) => (
+        <td className="vertical">
+          <div>{customer.name}</div>
+        </td>
+      ))}
+    </thead>
+    <tbody>
+      {productsPlus.map((product: any) => (
+        <tr>
+          <td className="horizontal">
+            <div>{product.name}</div>
+            <div className="main-price">
+              {Math.floor(product.totalUnit)} {product.unit}
+            </div>
+          </td>
+          {customersPlus.map((customer) => (
+            <td
+              className={clsx('cell', { top: product[customer.id]?.price > threshold.price })}
+              title={`${product.name}\n${customer.name}`}
+            >
+              {!!product[customer.id] && `${Math.floor(product[customer.id].unit)} ${product.unit}`}
+            </td>
+          ))}
+        </tr>
+      ))}
+    </tbody>
+  </StyledTable>
+);
