@@ -110,7 +110,7 @@ export function SalesTable() {
 
   const valuesList = Object.values(salesByProduct)
     .flatMap((product) => Object.values(product))
-    .sort((a, b) => b - a);
+    .sort((a, b) => b.price - a.price);
 
   const threshold = valuesList[Math.floor(valuesList.length / 4)];
 
@@ -151,7 +151,8 @@ export function SalesTable() {
           >
             <FormLabel mb="0">Prix HT</FormLabel>
             <Switch
-              value={selectedTable}
+              // TODO dégueulasse
+              value={selectedTable as unknown as string}
               onChange={(e) => setSelectedTable(e.target.checked)}
             />
             <FormLabel mb="0">Unité (kg, botte, ...)</FormLabel>
@@ -187,12 +188,12 @@ export const PriceTable = ({ sales, country, customersPlus, productsPlus, thresh
         <div className="price">
           🌞{' '}
           {priceFormatter(
-            sales.reduce((memo, sale) => memo + (round(sale?.totalPrice) || 0), 0),
+            sales.reduce((memo: number, sale: Sales) => memo + (round(sale?.totalPrice) || 0), 0),
             country.currency,
           )}
         </div>{' '}
       </td>
-      {customersPlus.map((customer) => (
+      {customersPlus.map((customer: Customer & { total: number }) => (
         <td className="vertical">
           <div>{customer.name}</div>
           <div className="main-price">{priceFormatter(customer.total, country.currency)}</div>
@@ -206,7 +207,7 @@ export const PriceTable = ({ sales, country, customersPlus, productsPlus, thresh
             <div>{product.name}</div>
             <div className="main-price">{priceFormatter(product.total, country.currency)}</div>
           </td>
-          {customersPlus.map((customer) => (
+          {customersPlus.map((customer: Customer) => (
             <td
               className={clsx('cell', { top: product[customer.id]?.price > threshold.price })}
               title={`${product.name}\n${customer.name}`}
@@ -226,7 +227,7 @@ export const UnitTable = ({ customersPlus, productsPlus, threshold }: any) => (
       <td className="total">
         <div className="price">🌚</div>
       </td>
-      {customersPlus.map((customer) => (
+      {customersPlus.map((customer: Customer) => (
         <td className="vertical">
           <div>{customer.name}</div>
         </td>
@@ -241,7 +242,7 @@ export const UnitTable = ({ customersPlus, productsPlus, threshold }: any) => (
               {Math.floor(product.totalUnit)} {product.unit}
             </div>
           </td>
-          {customersPlus.map((customer) => (
+          {customersPlus.map((customer: Customer) => (
             <td
               className={clsx('cell', { top: product[customer.id]?.price > threshold.price })}
               title={`${product.name}\n${customer.name}`}
