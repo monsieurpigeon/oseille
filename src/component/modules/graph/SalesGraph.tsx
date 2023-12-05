@@ -1,156 +1,25 @@
-import { Chart, registerables } from 'chart.js';
-import 'chartjs-adapter-moment';
-import _ from 'lodash';
-import moment from 'moment';
-import 'moment/locale/fr';
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { useRouteLoaderData } from 'react-router-dom';
-import { Invoice } from '../../../backend';
-import { getInvoiceTotal } from '../../../utils/aggregations';
-import { Country } from '../../../utils/defaults';
-import { priceFormatter } from '../../../utils/formatter';
+import { AgChartsReact } from 'ag-charts-react';
+import { addMonths, format } from 'date-fns';
+import { useState } from 'react';
 
-const months: { [key: string]: string } = {
-  Jan: 'Janv',
-  Feb: 'Févr',
-  Mar: 'Mars',
-  Apr: 'Avr',
-  May: 'Mai',
-  Jun: 'Juin',
-  Jul: 'Juil',
-  Aug: 'Août',
-  Sep: 'Sept',
-  Oct: 'Oct',
-  Nov: 'Nov',
-  Dec: 'Déc',
-};
+export function SalesGraph() {
+  const months = Array.from({ length: 12 }).map((_, index) => format(addMonths(new Date(0, index), 0), 'MMM'));
+  const salesData = [162000, 0, 302000, 800000, 1254000, 950000, 200000];
 
-function translate_month(month: string) {
-  return months[month] || month;
-}
+  const chartData = months.map((month, index) => ({
+    month: month,
+    iceCreamSales: salesData[index] || 0,
+  }));
 
-interface SalesGraphProps {
-  invoices: Invoice[];
-}
-
-Chart.register(...registerables);
-
-export function SalesGraph({ invoices: invoicesClone }: SalesGraphProps) {
-  const chartRef = useRef(null);
-  const invoices = useMemo(() => _.cloneDeep(invoicesClone), [invoicesClone]);
-
-  const { country } = useRouteLoaderData('farm') as { country: Country };
-
-  const [total, setTotal] = useState(0);
-  const [data, setData] = useState<{ [key: string]: number }>({});
-  const [labels, setLabels] = useState<string[]>([]);
-
-  useEffect(() => {
-    async function calculateTotal() {
-      const sum = await Promise.all(invoices.map((invoice) => getInvoiceTotal(invoice, true, country.value))).then(
-        (totals) => totals.reduce((acc, total) => acc + total, 0),
-      );
-      setTotal(sum);
-    }
-    calculateTotal();
-  }, [invoices]);
-
-  useEffect(() => {
-    if (chartRef.current && invoices.length > 0) {
-      const formatString = 'MMM YYYY';
-      invoices.sort((a, b) => moment(a.createdAt).diff(moment(b.createdAt)));
-
-      let minMonth = moment(invoices[0].createdAt);
-      let maxMonth = moment(invoices[invoices.length - 1].createdAt);
-
-      const labels: string[] = [];
-      let aggregatedData: { [key: string]: number } = {};
-
-      let currentMonth = minMonth.startOf('month');
-      while (currentMonth.isBefore(maxMonth) || currentMonth.isSame(maxMonth, 'month')) {
-        const label = currentMonth.format(formatString);
-        labels.push(label);
-        aggregatedData[label] = 0;
-        currentMonth.add(1, 'month');
-      }
-      setLabels(labels);
-
-      const getData = async () => {
-        return invoices.reduce(async (memo, invoice) => {
-          const acc = await memo;
-          const period = moment(invoice.createdAt).format(formatString);
-          const result = await getInvoiceTotal(invoice, true, country.value);
-          acc[period] += result;
-          return Promise.resolve(acc);
-        }, Promise.resolve(aggregatedData));
-      };
-
-      getData().then((data) => setData(data));
-    }
-  }, [invoices]);
-
-  useEffect(() => {
-    if (chartRef.current && invoices.length > 0) {
-      const chart = new Chart(chartRef.current, {
-        type: 'bar',
-        data: {
-          labels: labels.map((label) => {
-            const month = label.split(' ')[0];
-            const year = label.split(' ')[1];
-            return translate_month(month) + ' ' + year;
-          }),
-          datasets: [
-            {
-              data: labels.map((label) => data[label]),
-              backgroundColor: 'rgba(75, 192, 192, 0.6)',
-              borderColor: 'rgba(75, 192, 192, 1)',
-              borderWidth: 1,
-            },
-          ],
-        },
-        options: {
-          plugins: {
-            legend: {
-              display: false,
-            },
-            tooltip: {
-              callbacks: {
-                label: (value) => priceFormatter(value.raw as number, country.currency),
-              },
-            },
-          },
-          scales: {
-            x: {
-              type: 'category',
-            },
-            y: {
-              beginAtZero: true,
-              ticks: {
-                callback: (value) => priceFormatter(value as number, country.currency),
-              },
-            },
-          },
-        },
-      });
-
-      return () => chart.destroy();
-    }
-  }, [data]);
+  const [chartOptions, setChartOptions] = useState({
+    data: chartData,
+    series: [{ type: 'bar' as const, xKey: 'month', yKey: 'iceCreamSales' }],
+  });
 
   return (
-    <div>
-      <div>{`${invoices.length} facture${invoices.length > 1 ? 's' : ''}, total: ${priceFormatter(
-        total,
-        country.currency,
-      )}`}</div>
-      {invoices.length > 0 && (
-        <canvas
-          ref={chartRef}
-          height="300"
-          width="500"
-          style={{ display: 'block', maxWidth: '100%', height: 'auto' }}
-        />
-      )}
-    </div>
+    // AgCharsReact component with options passed as prop
+    <AgChartsReact options={chartOptions} />
   );
 }
+
+// export default SalesGraph;
