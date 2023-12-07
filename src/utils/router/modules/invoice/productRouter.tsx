@@ -5,6 +5,7 @@ import { ProductDetail } from '../../../../page/product/ProductDetail';
 import { ProductPage } from '../../../../page/product/ProductPage';
 import { ProductCreateModal } from '../../../../page/product/modal/ProductCreateModal';
 import { ProductEditModal } from '../../../../page/product/modal/ProductEditModal';
+import { ProductImportModal } from '../../../../page/product/modal/ProductImportModal';
 
 export const productRouter = {
   path: 'product',
@@ -20,6 +21,7 @@ export const productRouter = {
       element: <ProductAll />,
     },
     { path: 'create', element: <ProductCreateModal /> },
+    { path: 'export', element: <ProductImportModal /> },
     {
       path: ':id',
       element: <ProductDetail />,
