@@ -1,9 +1,12 @@
-import { Button, Container, Flex } from '@chakra-ui/react';
+import { Tab, TabList, TabPanel, TabPanels, Tabs } from '@chakra-ui/react';
 import { useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useRouteLoaderData } from 'react-router-dom';
+import { Product } from '../../../backend';
 import { MyModal } from '../../../component/modal/MyModal';
+import { exportCSV } from '../../../utils/export';
 
 export function ProductImportModal() {
+  const products = useRouteLoaderData('products') as Product[];
   const cancelRef = useRef<any>();
   const navigate = useNavigate();
   const handleClose = (value?: { id: string }) => {
@@ -14,7 +17,17 @@ export function ProductImportModal() {
     }
   };
 
-  const [tab, setTab] = useState<'import' | 'export'>('import');
+  const [tabIndex, setTabIndex] = useState(0);
+
+  const handleTabsChange = (index: number) => {
+    setTabIndex(index);
+  };
+
+  const handleImport = () => {};
+  const handleExport = () => {
+    const headers = { name: 'Nom', tva: 'TVA', unit: 'Unité' };
+    exportCSV(products, headers, 'exportProduit.csv');
+  };
 
   return (
     <MyModal
@@ -22,26 +35,26 @@ export function ProductImportModal() {
       cancelRef={cancelRef}
       title="Import / Export des produits"
       onClose={handleClose}
-      onSubmit={() => {}}
+      confirmLabel={tabIndex === 0 ? 'Importer' : 'Exporter'}
+      cancelLabel="Fermer"
+      onSubmit={tabIndex === 0 ? handleImport : handleExport}
     >
-      <Flex gap={2}>
-        <Button
-          colorScheme="twitter"
-          variant={tab === 'import' ? 'solid' : 'outline'}
-          onClick={() => setTab('import')}
-        >
-          Import
-        </Button>
-        <Button
-          colorScheme="twitter"
-          variant={tab === 'export' ? 'solid' : 'outline'}
-          onClick={() => setTab('export')}
-        >
-          Export
-        </Button>
-      </Flex>
-      {tab === 'import' && <Container>IMPORT</Container>}
-      {tab === 'export' && <Container>EXPORT</Container>}
+      <Tabs
+        variant="enclosed"
+        index={tabIndex}
+        onChange={handleTabsChange}
+      >
+        <TabList>
+          <Tab>Import</Tab>
+          <Tab>Export</Tab>
+        </TabList>
+        <TabPanels>
+          <TabPanel>IMPORT</TabPanel>
+          <TabPanel>
+            {products.length} produit{products.length > 1 ? 's' : ''} à exporter
+          </TabPanel>
+        </TabPanels>
+      </Tabs>
     </MyModal>
   );
 }
