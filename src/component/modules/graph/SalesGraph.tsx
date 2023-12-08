@@ -4,17 +4,17 @@ import { fr } from 'date-fns/locale';
 import _ from 'lodash';
 import { useEffect, useMemo, useState } from 'react';
 import { useRouteLoaderData } from 'react-router-dom';
-import { Invoice } from '../../../backend';
-import { getInvoiceTotal } from '../../../utils/aggregations';
+import { Delivery } from '../../../backend';
+import { getDeliveryTotal } from '../../../utils/aggregations';
 import { Country } from '../../../utils/defaults';
 import { priceFormatter } from '../../../utils/formatter';
 
 interface SalesGraphProps {
-  invoices: Invoice[];
+  deliveries: Delivery[];
 }
 
-export function SalesGraph({ invoices: invoicesClone }: SalesGraphProps) {
-  const invoices = useMemo(() => _.cloneDeep(invoicesClone), [invoicesClone]);
+export function SalesGraph({ deliveries: deliveriesClone }: SalesGraphProps) {
+  const deliveries = useMemo(() => _.cloneDeep(deliveriesClone) || [], [deliveriesClone]);
   const { country } = useRouteLoaderData('farm') as { country: Country };
   const [total, setTotal] = useState(0);
   const [chartOptions, setChartOptions] = useState({});
@@ -23,21 +23,18 @@ export function SalesGraph({ invoices: invoicesClone }: SalesGraphProps) {
 
   useEffect(() => {
     async function calculateTotalAndData() {
-      const sortedInvoices = invoices.sort((a, b) => compareAsc(new Date(a.createdAt), new Date(b.createdAt)));
+      const sortedDeliveries = deliveries.sort((a, b) => compareAsc(new Date(a.deliveredAt), new Date(b.deliveredAt)));
 
-      // Transforme les factures en promesses pour obtenir les totaux
-      const totalsPromises = sortedInvoices.map(async (invoice) => {
-        const total = await getInvoiceTotal(invoice, true, country.value);
-        return { invoice, total };
+      const totalsPromises = sortedDeliveries.map(async (deliveries) => {
+        const total = getDeliveryTotal(deliveries);
+        return { deliveries, total };
       });
 
-      // Attendre toutes les promesses
       const totals = await Promise.all(totalsPromises);
 
-      // Maintenant, vous pouvez utiliser .reduce() sur les résultats
-      const sum = totals.reduce((acc, { invoice, total }) => {
-        const invoiceDate = startOfMonth(new Date(invoice.createdAt));
-        const period = format(invoiceDate, 'MMM yyyy', { locale: fr });
+      const sum = totals.reduce((acc, { deliveries, total }) => {
+        const deliveryDate = startOfMonth(new Date(deliveries.deliveredAt));
+        const period = format(deliveryDate, 'MMM yyyy', { locale: fr });
 
         if (!aggregatedData[period]) {
           aggregatedData[period] = { total: 0, date: invoiceDate };
@@ -67,15 +64,15 @@ export function SalesGraph({ invoices: invoicesClone }: SalesGraphProps) {
     }
 
     calculateTotalAndData();
-  }, [invoices, country]);
+  }, [deliveries, country]);
 
   return (
     <div>
-      <div>{`${invoices.length} facture${invoices.length > 1 ? 's' : ''}, total: ${priceFormatter(
+      <div>{`${deliveries.length} facture${deliveries.length > 1 ? 's' : ''}, total: ${priceFormatter(
         total,
         country.currency,
       )}`}</div>
-      {invoices.length > 0 && (
+      {deliveries.length > 0 && (
         <div style={{ width: '100%', height: '300px' }}>
           <AgChartsReact options={chartOptions} />
         </div>
