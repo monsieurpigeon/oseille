@@ -1,25 +1,80 @@
 import { AgChartsReact } from 'ag-charts-react';
-import { addMonths, format } from 'date-fns';
-import { useState } from 'react';
+import { compareAsc, format, startOfMonth } from 'date-fns';
+import { fr } from 'date-fns/locale';
+import _ from 'lodash';
+import { useEffect, useMemo, useState } from 'react';
+import { useRouteLoaderData } from 'react-router-dom';
+import { getInvoiceTotal } from '../../../utils/aggregations';
+import { Country } from '../../../utils/defaults';
+import { priceFormatter } from '../../../utils/formatter';
 
-export function SalesGraph() {
-  const months = Array.from({ length: 12 }).map((_, index) => format(addMonths(new Date(0, index), 0), 'MMM'));
-  const salesData = [162000, 0, 302000, 800000, 1254000, 950000, 200000];
+export function SalesGraph({ invoices: invoicesClone }: SalesGraphProps) {
+  const invoices = useMemo(() => _.cloneDeep(invoicesClone), [invoicesClone]);
+  const { country } = useRouteLoaderData('farm') as { country: Country };
+  const [total, setTotal] = useState(0);
+  const [chartOptions, setChartOptions] = useState({});
 
-  const chartData = months.map((month, index) => ({
-    month: month,
-    iceCreamSales: salesData[index] || 0,
-  }));
+  const aggregatedData: { [key: string]: { total: number; date: Date } } = {};
 
-  const [chartOptions, setChartOptions] = useState({
-    data: chartData,
-    series: [{ type: 'bar' as const, xKey: 'month', yKey: 'iceCreamSales' }],
-  });
+  useEffect(() => {
+    async function calculateTotalAndData() {
+      const sortedInvoices = invoices.sort((a, b) => compareAsc(new Date(a.createdAt), new Date(b.createdAt)));
+
+      // Transforme les factures en promesses pour obtenir les totaux
+      const totalsPromises = sortedInvoices.map(async (invoice) => {
+        const total = await getInvoiceTotal(invoice, true, country.value);
+        return { invoice, total };
+      });
+
+      // Attendre toutes les promesses
+      const totals = await Promise.all(totalsPromises);
+
+      // Maintenant, vous pouvez utiliser .reduce() sur les résultats
+      const sum = totals.reduce((acc, { invoice, total }) => {
+        const invoiceDate = startOfMonth(new Date(invoice.createdAt));
+        const period = format(invoiceDate, 'MMM yyyy', { locale: fr });
+
+        if (!aggregatedData[period]) {
+          aggregatedData[period] = { total: 0, date: invoiceDate };
+        }
+        aggregatedData[period].total += total;
+
+        return acc + total;
+      }, 0);
+
+      setTotal(sum);
+
+      const chartData = Object.entries(aggregatedData)
+        .map(([period, data]) => ({ period, total: data.total, date: data.date }))
+        .sort((a, b) => compareAsc(a.date, b.date));
+
+      setChartOptions({
+        autoSize: true,
+        data: chartData,
+        series: [
+          {
+            xKey: 'period',
+            yKey: 'total',
+            type: 'bar',
+          },
+        ],
+      });
+    }
+
+    calculateTotalAndData();
+  }, [invoices, country]);
 
   return (
-    // AgCharsReact component with options passed as prop
-    <AgChartsReact options={chartOptions} />
+    <div>
+      <div>{`${invoices.length} facture${invoices.length > 1 ? 's' : ''}, total: ${priceFormatter(
+        total,
+        country.currency,
+      )}`}</div>
+      {invoices.length > 0 && (
+        <div style={{ width: '100%', height: '300px' }}>
+          <AgChartsReact options={chartOptions} />
+        </div>
+      )}
+    </div>
   );
 }
-
-// export default SalesGraph;

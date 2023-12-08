@@ -67,7 +67,7 @@ export function CustomerDocuments() {
         )}
         {tab === 2 && (
           <StyledTab>
-            <SalesGraph />
+            <SalesGraph invoices={invoices} />
           </StyledTab>
         )}
       </StyledWrapper>
