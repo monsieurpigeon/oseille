@@ -4,9 +4,14 @@ import { fr } from 'date-fns/locale';
 import _ from 'lodash';
 import { useEffect, useMemo, useState } from 'react';
 import { useRouteLoaderData } from 'react-router-dom';
+import { Invoice } from '../../../backend';
 import { getInvoiceTotal } from '../../../utils/aggregations';
 import { Country } from '../../../utils/defaults';
 import { priceFormatter } from '../../../utils/formatter';
+
+interface SalesGraphProps {
+  invoices: Invoice[];
+}
 
 export function SalesGraph({ invoices: invoicesClone }: SalesGraphProps) {
   const invoices = useMemo(() => _.cloneDeep(invoicesClone), [invoicesClone]);
