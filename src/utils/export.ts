@@ -1,4 +1,4 @@
-export function exportCSV(data: any[], headers: Record<string, string>, filename: string): Promise<boolean> {
+export function exportCSV(data: any[], headers: Record<string, string>, filename: string) {
   const keys = Object.keys(headers);
   const headerValues = Object.values(headers);
   const rows = [

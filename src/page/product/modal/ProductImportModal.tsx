@@ -33,14 +33,12 @@ export function ProductImportModal() {
     <MyModal
       isOpen={true}
       cancelRef={cancelRef}
-      title="Import / Export des produits"
       onClose={handleClose}
       confirmLabel={tabIndex === 0 ? 'Importer' : 'Exporter'}
       cancelLabel="Fermer"
       onSubmit={tabIndex === 0 ? handleImport : handleExport}
     >
       <Tabs
-        variant="enclosed"
         index={tabIndex}
         onChange={handleTabsChange}
       >

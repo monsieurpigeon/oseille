@@ -16,7 +16,7 @@ interface CreateModalProps {
   cancelRef: React.MutableRefObject<any>;
   onClose: () => void;
   onSubmit?: () => void;
-  title: string;
+  title?: string;
   children?: ReactNode;
   disabled?: boolean;
   confirmLabel?: string;
@@ -54,12 +54,14 @@ export const MyModal = ({
       >
         <AlertDialogOverlay>
           <AlertDialogContent maxW={width}>
-            <AlertDialogHeader
-              fontSize="lg"
-              fontWeight="bold"
-            >
-              {title}
-            </AlertDialogHeader>
+            {title && (
+              <AlertDialogHeader
+                fontSize="lg"
+                fontWeight="bold"
+              >
+                {title}
+              </AlertDialogHeader>
+            )}
             <AlertDialogCloseButton />
             <AlertDialogBody>{children}</AlertDialogBody>
 
