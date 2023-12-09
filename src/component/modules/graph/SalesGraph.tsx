@@ -37,7 +37,7 @@ export function SalesGraph({ deliveries: deliveriesClone }: SalesGraphProps) {
         const period = format(deliveryDate, 'MMM yyyy', { locale: fr });
 
         if (!aggregatedData[period]) {
-          aggregatedData[period] = { total: 0, date: invoiceDate };
+          aggregatedData[period] = { total: 0, date: deliveryDate };
         }
         aggregatedData[period].total += total;
 
