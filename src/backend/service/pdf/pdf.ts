@@ -2,7 +2,7 @@ import * as pdfMake from 'pdfmake/build/pdfmake';
 import { getIsTVA } from '../../../utils/aggregations';
 import { CountryCode } from '../../../utils/defaults';
 import { dateFormatter } from '../../../utils/formatter';
-import { FrBio01, FrBio09, FrBio15 } from '../../../utils/labels';
+import { FrBio01, FrBio09, FrBio10, FrBio15 } from '../../../utils/labels';
 import { getCustomerById } from '../../entity/customer';
 import { Delivery } from '../../entity/delivery';
 import { getFarm } from '../../entity/farm';
@@ -33,10 +33,12 @@ const getBioLogo = (label: string | undefined) => {
   switch (label) {
     case 'fr-bio-01':
       return FrBio01;
-    case 'fr-bio-15':
-      return FrBio15;
     case 'fr-bio-09':
       return FrBio09;
+    case 'fr-bio-10':
+      return FrBio10;
+    case 'fr-bio-15':
+      return FrBio15;
 
     default:
       return '';
