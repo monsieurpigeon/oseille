@@ -19,21 +19,22 @@ export function SalesGraph({ deliveries: deliveriesClone }: SalesGraphProps) {
   const [total, setTotal] = useState(0);
   const [chartOptions, setChartOptions] = useState({});
 
-  const aggregatedData: { [key: string]: { total: number; date: Date } } = {};
-
   useEffect(() => {
     async function calculateTotalAndData() {
-      const sortedDeliveries = deliveries.sort((a, b) => compareAsc(new Date(a.deliveredAt), new Date(b.deliveredAt)));
+      const aggregatedData: { [key: string]: { total: number; date: Date } } = {};
+      const sortedDeliveries = [...deliveries].sort((a, b) =>
+        compareAsc(new Date(a.deliveredAt), new Date(b.deliveredAt)),
+      );
 
-      const totalsPromises = sortedDeliveries.map(async (deliveries) => {
-        const total = getDeliveryTotal(deliveries);
-        return { deliveries, total };
+      const totalsPromises = sortedDeliveries.map(async (delivery) => {
+        const total = getDeliveryTotal(delivery);
+        return { delivery, total };
       });
 
       const totals = await Promise.all(totalsPromises);
 
-      const sum = totals.reduce((acc, { deliveries, total }) => {
-        const deliveryDate = startOfMonth(new Date(deliveries.deliveredAt));
+      const sum = totals.reduce((acc, { delivery, total }) => {
+        const deliveryDate = startOfMonth(new Date(delivery.deliveredAt));
         const period = format(deliveryDate, 'MMM yyyy', { locale: fr });
 
         if (!aggregatedData[period]) {
@@ -43,12 +44,12 @@ export function SalesGraph({ deliveries: deliveriesClone }: SalesGraphProps) {
 
         return acc + total;
       }, 0);
-
       setTotal(sum);
 
       const chartData = Object.entries(aggregatedData)
         .map(([period, data]) => ({ period, total: data.total, date: data.date }))
         .sort((a, b) => compareAsc(a.date, b.date));
+      console.log('chartData', chartData);
 
       setChartOptions({
         autoSize: true,
@@ -62,7 +63,6 @@ export function SalesGraph({ deliveries: deliveriesClone }: SalesGraphProps) {
         ],
       });
     }
-
     calculateTotalAndData();
   }, [deliveries, country]);
 
