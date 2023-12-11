@@ -68,7 +68,7 @@ export function SalesGraph({ deliveries: deliveriesClone }: SalesGraphProps) {
 
   return (
     <div>
-      <div>{`${deliveries.length} facture${deliveries.length > 1 ? 's' : ''}, total: ${priceFormatter(
+      <div>{`${deliveries.length} bon${deliveries.length > 1 ? 's' : ''} de livraison, total: ${priceFormatter(
         total,
         country.currency,
       )}`}</div>
