@@ -78,8 +78,10 @@ export function FarmPracticeModal({ isOpen, onClose }: FarmPracticeModalProps) {
         </FormLabel>
         <Select {...register('bioLabel')}>
           <option value="non">NON</option>
+          <option value="sustainable">Agriculture raisonnée</option>
           <option value="fr-bio-01">FR-BIO-01</option>
           <option value="fr-bio-09">FR-BIO-09</option>
+          <option value="fr-bio-10">FR-BIO-10</option>
           <option value="fr-bio-15">FR-BIO-15</option>
         </Select>
       </Flex>

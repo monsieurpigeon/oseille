@@ -22,10 +22,12 @@ export function PracticesSettingBlock() {
         isOpen={isOpen}
         onClose={onClose}
       />
-      {farm?.bioLabel && farm.bioLabel !== 'non' ? (
+      {farm?.bioLabel && farm.bioLabel !== 'non' && farm.bioLabel !== 'sustainable' ? (
         <div>
           <MyIcon name="good" /> BIO : {farm?.bioLabel?.toUpperCase()}
         </div>
+      ) : farm.bioLabel !== 'non' ? (
+        <div>Agriculture raisonnée</div>
       ) : (
         <div>Agriculture conventionnelle</div>
       )}
