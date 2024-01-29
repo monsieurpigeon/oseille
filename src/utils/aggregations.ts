@@ -12,11 +12,7 @@ export async function getIsTVA(invoice: Invoice): Promise<boolean> {
 }
 
 export function getDeliveryTotal(delivery: Delivery): number {
-  const total = delivery.lines.reduce((acc, el) => acc + el.product.price * el.quantity, 0);
-  
-  console.log(`getDeliveryTotal ${delivery.deliveredAt}:`, total);
-
-  return total;
+  return delivery.lines.reduce((acc, el) => acc + el.product.price * el.quantity, 0);
 }
 
 export async function getInvoiceTotal(invoice: Invoice, ht: boolean = false, code: CountryCode): Promise<number> {

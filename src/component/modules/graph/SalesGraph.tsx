@@ -49,7 +49,6 @@ export function SalesGraph({ deliveries: deliveriesClone }: SalesGraphProps) {
       const chartData = Object.entries(aggregatedData)
         .map(([period, data]) => ({ period, total: data.total, date: data.date }))
         .sort((a, b) => compareAsc(a.date, b.date));
-      console.log('chartData', chartData);
 
       setChartOptions({
         autoSize: true,
