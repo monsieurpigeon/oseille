@@ -1,155 +1,80 @@
-import { Chart, registerables } from 'chart.js';
-import 'chartjs-adapter-moment';
+import { AgChartsReact } from 'ag-charts-react';
+import { compareAsc, format, startOfMonth } from 'date-fns';
+import { fr } from 'date-fns/locale';
 import _ from 'lodash';
-import moment from 'moment';
-import 'moment/locale/fr';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useRouteLoaderData } from 'react-router-dom';
-import { Invoice } from '../../../backend';
-import { getInvoiceTotal } from '../../../utils/aggregations';
+import { Delivery } from '../../../backend';
+import { getDeliveryTotal } from '../../../utils/aggregations';
 import { Country } from '../../../utils/defaults';
 import { priceFormatter } from '../../../utils/formatter';
 
-const months: { [key: string]: string } = {
-  Jan: 'Janv',
-  Feb: 'Févr',
-  Mar: 'Mars',
-  Apr: 'Avr',
-  May: 'Mai',
-  Jun: 'Juin',
-  Jul: 'Juil',
-  Aug: 'Août',
-  Sep: 'Sept',
-  Oct: 'Oct',
-  Nov: 'Nov',
-  Dec: 'Déc',
-};
-
-function translate_month(month: string) {
-  return months[month] || month;
-}
-
 interface SalesGraphProps {
-  invoices: Invoice[];
+  deliveries: Delivery[];
 }
 
-Chart.register(...registerables);
-
-export function SalesGraph({ invoices: invoicesClone }: SalesGraphProps) {
-  const chartRef = useRef(null);
-  const invoices = useMemo(() => _.cloneDeep(invoicesClone), [invoicesClone]);
-
+export function SalesGraph({ deliveries: deliveriesClone }: SalesGraphProps) {
+  const deliveries = useMemo(() => _.cloneDeep(deliveriesClone) || [], [deliveriesClone]);
   const { country } = useRouteLoaderData('farm') as { country: Country };
-
   const [total, setTotal] = useState(0);
-  const [data, setData] = useState<{ [key: string]: number }>({});
-  const [labels, setLabels] = useState<string[]>([]);
+  const [chartOptions, setChartOptions] = useState({});
 
   useEffect(() => {
-    async function calculateTotal() {
-      const sum = await Promise.all(invoices.map((invoice) => getInvoiceTotal(invoice, true, country.value))).then(
-        (totals) => totals.reduce((acc, total) => acc + total, 0),
+    async function calculateTotalAndData() {
+      const aggregatedData: { [key: string]: { total: number; date: Date } } = {};
+      const sortedDeliveries = [...deliveries].sort((a, b) =>
+        compareAsc(new Date(a.deliveredAt), new Date(b.deliveredAt)),
       );
-      setTotal(sum);
-    }
-    calculateTotal();
-  }, [invoices]);
 
-  useEffect(() => {
-    if (chartRef.current && invoices.length > 0) {
-      const formatString = 'MMM YYYY';
-      invoices.sort((a, b) => moment(a.createdAt).diff(moment(b.createdAt)));
-
-      let minMonth = moment(invoices[0].createdAt);
-      let maxMonth = moment(invoices[invoices.length - 1].createdAt);
-
-      const labels: string[] = [];
-      let aggregatedData: { [key: string]: number } = {};
-
-      let currentMonth = minMonth.startOf('month');
-      while (currentMonth.isBefore(maxMonth) || currentMonth.isSame(maxMonth, 'month')) {
-        const label = currentMonth.format(formatString);
-        labels.push(label);
-        aggregatedData[label] = 0;
-        currentMonth.add(1, 'month');
-      }
-      setLabels(labels);
-
-      const getData = async () => {
-        return invoices.reduce(async (memo, invoice) => {
-          const acc = await memo;
-          const period = moment(invoice.createdAt).format(formatString);
-          const result = await getInvoiceTotal(invoice, true, country.value);
-          acc[period] += result;
-          return Promise.resolve(acc);
-        }, Promise.resolve(aggregatedData));
-      };
-
-      getData().then((data) => setData(data));
-    }
-  }, [invoices]);
-
-  useEffect(() => {
-    if (chartRef.current && invoices.length > 0) {
-      const chart = new Chart(chartRef.current, {
-        type: 'bar',
-        data: {
-          labels: labels.map((label) => {
-            const month = label.split(' ')[0];
-            const year = label.split(' ')[1];
-            return translate_month(month) + ' ' + year;
-          }),
-          datasets: [
-            {
-              data: labels.map((label) => data[label]),
-              backgroundColor: 'rgba(75, 192, 192, 0.6)',
-              borderColor: 'rgba(75, 192, 192, 1)',
-              borderWidth: 1,
-            },
-          ],
-        },
-        options: {
-          plugins: {
-            legend: {
-              display: false,
-            },
-            tooltip: {
-              callbacks: {
-                label: (value) => priceFormatter(value.raw as number, country.currency),
-              },
-            },
-          },
-          scales: {
-            x: {
-              type: 'category',
-            },
-            y: {
-              beginAtZero: true,
-              ticks: {
-                callback: (value) => priceFormatter(value as number, country.currency),
-              },
-            },
-          },
-        },
+      const totalsPromises = sortedDeliveries.map(async (delivery) => {
+        const total = getDeliveryTotal(delivery);
+        return { delivery, total };
       });
 
-      return () => chart.destroy();
+      const totals = await Promise.all(totalsPromises);
+
+      const sum = totals.reduce((acc, { delivery, total }) => {
+        const deliveryDate = startOfMonth(new Date(delivery.deliveredAt));
+        const period = format(deliveryDate, 'MMM yyyy', { locale: fr });
+
+        if (!aggregatedData[period]) {
+          aggregatedData[period] = { total: 0, date: deliveryDate };
+        }
+        aggregatedData[period].total += total;
+
+        return acc + total;
+      }, 0);
+      setTotal(sum);
+
+      const chartData = Object.entries(aggregatedData)
+        .map(([period, data]) => ({ period, total: data.total, date: data.date }))
+        .sort((a, b) => compareAsc(a.date, b.date));
+
+      setChartOptions({
+        autoSize: true,
+        data: chartData,
+        series: [
+          {
+            xKey: 'period',
+            yKey: 'total',
+            type: 'bar',
+          },
+        ],
+      });
     }
-  }, [data]);
+    calculateTotalAndData();
+  }, [deliveries, country]);
 
   return (
     <div>
-      <div>{`${invoices.length} facture${invoices.length > 1 ? 's' : ''}, total: ${priceFormatter(
+      <div>{`${deliveries.length} bon${deliveries.length > 1 ? 's' : ''} de livraison, total: ${priceFormatter(
         total,
         country.currency,
       )}`}</div>
-      {invoices.length > 0 && (
-        <canvas
-          ref={chartRef}
-          height="300"
-          width="500"
-          style={{ display: 'block', maxWidth: '100%', height: 'auto' }}
-        />
+      {deliveries.length > 0 && (
+        <div style={{ width: '100%', height: '300px' }}>
+          <AgChartsReact options={chartOptions} />
+        </div>
       )}
     </div>
   );
