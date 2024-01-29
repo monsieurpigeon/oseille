@@ -43,12 +43,15 @@ export function ProductPage() {
               </Flex>
             </InfoModal>
           </Flex>
-          <Button
-            colorScheme="twitter"
-            onClick={() => navigate('create')}
-          >
-            Nouveau
-          </Button>
+          <Flex gap={2}>
+            <Button onClick={() => navigate('export')}>🎁</Button>
+            <Button
+              colorScheme="twitter"
+              onClick={() => navigate('create')}
+            >
+              Nouveau
+            </Button>
+          </Flex>
         </MyHeader>
         <MyScrollList empty={{ title: 'Ajouter mon premier produit', onClick: () => navigate('create') }}>
           {products.map((entity) => (

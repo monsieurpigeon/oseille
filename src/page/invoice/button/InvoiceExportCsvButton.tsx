@@ -35,6 +35,7 @@ export function InvoiceExportCsvButton() {
   }, {} as Record<string, Delivery>);
 
   const handleExport = () => {
+    // TODO should use exportCSV() function
     const clone = _.cloneDeep(invoices);
     const data = clone
       .sort((a, b) => a.createdAt.localeCompare(b.createdAt))
