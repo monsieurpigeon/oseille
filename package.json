@@ -35,7 +35,6 @@
     "react-hook-form": "^7.39.6",
     "react-router-dom": "^6.4.3",
     "relational-pouch": "^4.0.4",
-    "styled-components": "^6.0.0-rc.3",
     "zod": "^3.21.4"
   },
   "devDependencies": {
@@ -48,8 +47,5 @@
     "vite": "^3.2.3",
     "vite-plugin-pwa": "^0.14.7",
     "workbox-window": "^6.5.4"
-  },
-  "resolutions": {
-    "styled-components": "^5"
   }
 }
