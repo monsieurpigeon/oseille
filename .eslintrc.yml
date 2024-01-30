@@ -4,7 +4,6 @@ env:
 extends:
   - standard-with-typescript
   - plugin:react/recommended
-  - prettier
 parserOptions:
   ecmaVersion: latest
   sourceType: module
