@@ -1,44 +1,49 @@
+import { Flex } from '@chakra-ui/react';
 import { Children, ReactNode } from 'react';
-import { styled } from 'styled-components';
 
 interface MyScrollListProps {
   children: ReactNode;
   empty?: { title: string; onClick: () => void };
 }
 
-const MyStyledScrollList = styled.div`
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  height: 0;
-  overflow-y: auto;
-  margin-top: 20px;
-`;
-
-const StyledEmpty = styled.div`
-  padding: 10px;
-  font-size: 1.2rem;
-  text-align: center;
-  border: 2px solid var(--chakra-colors-blue-200);
-  border-radius: 10px;
-  margin-top: 30px;
-  cursor: pointer;
-  background-color: var(--chakra-colors-blue-50);
-  &:hover {
-    transition: 0.2s all ease-in-out;
-    border: 2px solid var(--chakra-colors-blue-400);
-  }
-`;
-
 export function MyScrollList({ children, empty }: MyScrollListProps) {
   const isEmpty = Children.count(children) === 0;
 
   return isEmpty && empty != null ? (
-    <StyledEmpty onClick={empty.onClick}>{empty.title}</StyledEmpty>
+    <Empty
+      onClick={empty.onClick}
+      title={empty.title}
+    />
   ) : (
-    <MyStyledScrollList>{children}</MyStyledScrollList>
+    <Flex
+      grow={1}
+      direction="column"
+      gap="10px"
+      height={0}
+      overflowY="auto"
+      marginTop="20px"
+    >
+      {children}
+    </Flex>
   );
 }
 
-MyScrollList.Empty = StyledEmpty;
+const Empty = ({ children, onClick }: { children: ReactNode; onClick: () => void }) => {
+  return (
+    <Flex
+      onClick={onClick}
+      padding="10px"
+      fontSize="1.2rem"
+      textAlign="center"
+      border="2px solid var(--chakra-colors-blue-200)"
+      borderRadius="10px"
+      cursor="pointer"
+      alignItems="center"
+      _hover={{ border: '2px solid var(--chakra-colors-blue-400)' }}
+    >
+      {children}
+    </Flex>
+  );
+};
+
+MyScrollList.Empty = Empty;
