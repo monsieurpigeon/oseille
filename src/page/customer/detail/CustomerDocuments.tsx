@@ -1,8 +1,7 @@
-import { Button } from '@chakra-ui/react';
+import { Button, Flex } from '@chakra-ui/react';
 import { useAtom } from 'jotai';
 import { atomWithHash } from 'jotai-location';
 import { useLoaderData } from 'react-router-dom';
-import styled from 'styled-components';
 import { Delivery, Invoice } from '../../../backend';
 import { SalesGraph } from '../../../component/modules/graph/SalesGraph';
 import { DeliveryCard, InvoiceCard } from './DocumentCard';
@@ -15,8 +14,13 @@ export function CustomerDocuments() {
   const [tab, setTab] = useAtom(tabAtom);
 
   return (
-    <StyledContainer>
-      <StyledButtons>
+    <Flex
+      grow={1}
+      height={0}
+      direction="column"
+      gap={2}
+    >
+      <Flex gap={2}>
         <Button
           variant={tab === 0 ? 'solid' : 'outlined'}
           onClick={() => setTab(0)}
@@ -35,11 +39,21 @@ export function CustomerDocuments() {
         >
           Ventes
         </Button>
-      </StyledButtons>
-      <StyledWrapper>
+      </Flex>
+      <Flex
+        grow={1}
+        direction="column"
+      >
         {tab === 0 && (
-          <StyledTab>
-            <DocumentWrapper>
+          <Flex
+            grow={1}
+            height={0}
+          >
+            <Flex
+              direction="column"
+              gap={2}
+              grow={1}
+            >
               {deliveries.length === 0 && <div>Aucun bon de livraison</div>}
               {deliveries.map((delivery) => {
                 return (
@@ -49,12 +63,19 @@ export function CustomerDocuments() {
                   />
                 );
               })}
-            </DocumentWrapper>
-          </StyledTab>
+            </Flex>
+          </Flex>
         )}
         {tab === 1 && (
-          <StyledTab>
-            <DocumentWrapper>
+          <Flex
+            grow={1}
+            height={0}
+          >
+            <Flex
+              direction="column"
+              gap={2}
+              grow={1}
+            >
               {invoices.length === 0 && <div>Aucune facture</div>}
               {invoices.map((invoice) => (
                 <InvoiceCard
@@ -62,48 +83,18 @@ export function CustomerDocuments() {
                   invoice={invoice}
                 />
               ))}
-            </DocumentWrapper>
-          </StyledTab>
+            </Flex>
+          </Flex>
         )}
         {tab === 2 && (
-          <StyledTab>
+          <Flex
+            grow={1}
+            height={0}
+          >
             <SalesGraph deliveries={deliveries} />
-          </StyledTab>
+          </Flex>
         )}
-      </StyledWrapper>
-    </StyledContainer>
+      </Flex>
+    </Flex>
   );
 }
-
-const StyledContainer = styled.div`
-  flex-grow: 1;
-  height: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-`;
-
-const StyledButtons = styled.div`
-  display: flex;
-  gap: 8px;
-`;
-
-const StyledWrapper = styled.div`
-  display: flex;
-  flex-grow: 1;
-  flex-direction: column;
-`;
-
-const StyledTab = styled.div`
-  display: flex;
-  flex-grow: 1;
-  height: 0;
-`;
-
-const DocumentWrapper = styled.div`
-  display: flex;
-  flex-grow: 1;
-  overflow-y: auto;
-  flex-direction: column;
-  gap: 8px;
-`;

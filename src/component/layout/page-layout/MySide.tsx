@@ -1,16 +1,17 @@
+import { Flex } from '@chakra-ui/react';
 import { ReactNode } from 'react';
-import { styled } from 'styled-components';
 
 interface MySideProps {
   children: ReactNode;
 }
 
-const MyStyledSide = styled.div`
-  display: flex;
-  flex-direction: column;
-  padding: 0 20px;
-`;
-
 export function MySide({ children }: MySideProps) {
-  return <MyStyledSide>{children}</MyStyledSide>;
+  return (
+    <Flex
+      direction="column"
+      p="0 20px"
+    >
+      {children}
+    </Flex>
+  );
 }

@@ -1,5 +1,5 @@
+import { Flex } from '@chakra-ui/react';
 import { Outlet, useLoaderData, useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
 import { Customer } from '../../../backend';
 import { DetailButton, EditButton } from '../../../component/buttons';
 import { MyHeader } from '../../../component/layout/page-layout/MyHeader';
@@ -14,7 +14,11 @@ export const CustomerDetail = () => {
 
   if (!selected) return <></>;
   return (
-    <StyledContainer>
+    <Flex
+      direction="column"
+      gap="8px"
+      grow={1}
+    >
       <MyHeader>
         <DetailButton />
         <EditButton onClick={() => navigate('edit')} />
@@ -23,13 +27,6 @@ export const CustomerDetail = () => {
 
       <CustomerDisplay customer={selected} />
       <CustomerDocuments />
-    </StyledContainer>
+    </Flex>
   );
 };
-
-const StyledContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  flex-grow: 1;
-`;

@@ -1,48 +1,10 @@
-import { Box, Button, FormLabel, Switch } from '@chakra-ui/react';
-import clsx from 'clsx';
+import { Box, Button, FormLabel, Switch, Table, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { useLoaderData, useRouteLoaderData } from 'react-router-dom';
-import styled from 'styled-components';
 import { Customer, Delivery, Invoice, Product, relDb } from '../../backend';
 import { round } from '../../utils/compute';
 import { Country } from '../../utils/defaults';
 import { priceFormatter } from '../../utils/formatter';
-
-const StyledTable = styled.table`
-  .total {
-    text-align: center;
-    font-size: 1.5em;
-    .price {
-      font-weight: bold;
-    }
-  }
-  .vertical {
-    writing-mode: vertical-rl;
-    transform: rotate(180deg);
-    padding-left: 10px;
-    height: 200px;
-    padding-top: 20px;
-  }
-
-  .horizontal {
-    padding: 5px;
-  }
-
-  .main-price {
-    font-weight: bold;
-  }
-  td {
-    border: 1px solid grey;
-  }
-
-  .cell {
-    &.top {
-      font-weight: bold;
-    }
-    text-align: center;
-    user-select: none;
-  }
-`;
 
 interface Sales {
   product: string;
@@ -181,77 +143,96 @@ export function SalesTable() {
 }
 
 export const PriceTable = ({ sales, country, customersPlus, productsPlus, threshold }: any) => (
-  <StyledTable>
-    <thead>
-      <td className="total">
-        <div>Total:</div>
-        <div className="price">
-          🌞{' '}
-          {priceFormatter(
-            sales.reduce((memo: number, sale: Sales) => memo + (round(sale?.totalPrice) || 0), 0),
-            country.currency,
-          )}
-        </div>{' '}
-      </td>
-      {customersPlus.map((customer: Customer & { total: number }) => (
-        <td className="vertical">
-          <div>{customer.name}</div>
-          <div className="main-price">{priceFormatter(customer.total, country.currency)}</div>
-        </td>
-      ))}
-    </thead>
-    <tbody>
+  <Table variant="simple">
+    <Thead>
+      <Tr>
+        <Th
+          textAlign="center"
+          fontSize="1.5em"
+          lineHeight="1em"
+        >
+          <Box>Total:</Box>
+          <Box fontWeight="bold">
+            🌞
+            {priceFormatter(
+              sales.reduce((memo: number, sale: Sales) => memo + (round(sale?.totalPrice) || 0), 0),
+              country.currency,
+            )}
+          </Box>
+        </Th>
+        {customersPlus.map((customer: Customer & { total: number }) => (
+          <Th
+            className="vertical"
+            key={customer.id}
+          >
+            <Box>{customer.name}</Box>
+            <Box className="main-price">{priceFormatter(customer.total, country.currency)}</Box>
+          </Th>
+        ))}
+      </Tr>
+    </Thead>
+    <Tbody>
       {productsPlus.map((product: any) => (
-        <tr>
-          <td className="horizontal">
+        <Tr key={product.id}>
+          <Td padding="5px">
             <div>{product.name}</div>
-            <div className="main-price">{priceFormatter(product.total, country.currency)}</div>
-          </td>
+            <Box fontWeight="bold">{priceFormatter(product.total, country.currency)}</Box>
+          </Td>
           {customersPlus.map((customer: Customer) => (
-            <td
-              className={clsx('cell', { top: product[customer.id]?.price > threshold.price })}
+            <Td
+              key={`${product.id}\n${customer.id}`}
+              fontWeight={product[customer.id]?.price > threshold.price ? 'bold' : 'normal'}
               title={`${product.name}\n${customer.name}`}
             >
               {!!product[customer.id]?.price && priceFormatter(product[customer.id]?.price, country.currency)}
-            </td>
+            </Td>
           ))}
-        </tr>
+        </Tr>
       ))}
-    </tbody>
-  </StyledTable>
+    </Tbody>
+  </Table>
 );
 
 export const UnitTable = ({ customersPlus, productsPlus, threshold }: any) => (
-  <StyledTable>
-    <thead>
-      <td className="total">
-        <div className="price">🌚</div>
-      </td>
-      {customersPlus.map((customer: Customer) => (
-        <td className="vertical">
-          <div>{customer.name}</div>
-        </td>
-      ))}
-    </thead>
-    <tbody>
+  <Table variant="simple">
+    <Thead>
+      <Tr>
+        <Th
+          textAlign="center"
+          fontSize="1.5em"
+        >
+          <Box fontWeight="bold">🌚</Box>
+        </Th>
+        {customersPlus.map((customer: Customer) => (
+          <Th
+            className="vertical"
+            key={customer.id}
+          >
+            <Box>{customer.name}</Box>
+          </Th>
+        ))}
+      </Tr>
+    </Thead>
+    <Tbody>
       {productsPlus.map((product: any) => (
-        <tr>
-          <td className="horizontal">
-            <div>{product.name}</div>
-            <div className="main-price">
+        <Tr key={product.id}>
+          <Td padding="5px">
+            <Box>{product.name}</Box>
+            <Box fontWeight="bold">
               {Math.floor(product.totalUnit)} {product.unit}
-            </div>
-          </td>
+            </Box>
+          </Td>
           {customersPlus.map((customer: Customer) => (
-            <td
-              className={clsx('cell', { top: product[customer.id]?.price > threshold.price })}
+            <Td
+              key={`${product.id}\n${customer.id}`}
+              fontWeight={product[customer.id]?.price > threshold.price ? 'bold' : 'normal'}
               title={`${product.name}\n${customer.name}`}
             >
               {!!product[customer.id] && `${Math.floor(product[customer.id].unit)} ${product.unit}`}
-            </td>
+            </Td>
           ))}
-        </tr>
+        </Tr>
       ))}
-    </tbody>
-  </StyledTable>
+    </Tbody>
+  </Table>
 );

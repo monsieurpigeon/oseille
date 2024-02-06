@@ -25,7 +25,23 @@ const manifestForPlugin: Partial<VitePWAOptions> = {
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react(), VitePWA(manifestForPlugin)],
+  plugins: [
+    react(),
+    VitePWA(manifestForPlugin),
+    //visualizer({ emitFile: true, filename: 'stats.html' })
+  ],
+  build: {
+    sourcemap: true,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          lodash: ['lodash'],
+          agCharts: ['ag-charts-react'],
+          pdfMake: ['pdfmake'],
+        },
+      },
+    },
+  },
   define: {
     global: 'window',
   },
