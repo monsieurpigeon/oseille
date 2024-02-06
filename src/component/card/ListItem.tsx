@@ -38,6 +38,7 @@ export function ListItem({ onClick, children, isSelected, checkable, checked, on
       </Flex>
       {checkable && (
         <Checkbox
+          border="darkcyan"
           checked={checked}
           onChange={onCheck}
           width="20px"
