@@ -1,6 +1,6 @@
+import { Checkbox, Flex } from '@chakra-ui/react';
 import clsx from 'clsx';
 import { ReactNode } from 'react';
-import styled from 'styled-components';
 
 interface ListItemProps {
   children: ReactNode;
@@ -13,71 +13,40 @@ interface ListItemProps {
   alert?: boolean;
 }
 
-const StyledListItem = styled.div`
-  display: flex;
-  align-items: center;
-  flex-grow: 1;
-  background-color: lightyellow;
-  justify-content: space-between;
-  border: 1px solid yellow;
-  padding: 10px;
-  border-radius: 5px;
-  user-select: none;
-  cursor: pointer;
-
-  &:hover {
-    border: 1px dashed black;
-  }
-
-  &.done {
-    justify-content: flex-end;
-    opacity: 0.5;
-  }
-
-  &.selected {
-    background-color: lightcyan;
-    border: 1px solid cyan;
-    &:hover {
-      background-color: lightcyan;
-      border: 1px dashed cyan;
-    }
-  }
-
-  &.alert {
-  }
-`;
-
-const StyledBlock = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  width: 100%;
-
-  input {
-    cursor: pointer;
-    width: 20px;
-    height: 20px;
-    margin-right: 20px;
-  }
-`;
-
 export function ListItem({ onClick, children, isSelected, checkable, checked, onCheck, done, alert }: ListItemProps) {
   return (
-    <StyledBlock>
-      <StyledListItem
+    <Flex
+      alignItems="center"
+      gap="20px"
+      width="100%"
+    >
+      <Flex
+        opacity={done ? 0.5 : 1}
+        borderRadius="5px"
+        alignItems="center"
+        grow={1}
+        border={isSelected ? '1px solid cyan' : '1px solid yellow'}
+        p="10px"
+        backgroundColor={isSelected ? 'lightcyan' : 'lightyellow'}
+        justifyContent="space-between"
+        cursor="pointer"
         className={clsx(isSelected && 'selected', done && 'done', alert && 'alert')}
         onClick={onClick}
+        _hover={{ border: '1px dashed black' }}
       >
         {children}
-      </StyledListItem>
+      </Flex>
       {checkable && (
-        <input
-          type="checkbox"
-          // rome-ignore lint/complexity/useSimplifiedLogicExpression: <explanation>
+        <Checkbox
+          border="darkcyan"
           checked={checked}
           onChange={onCheck}
+          width="20px"
+          height="20px"
+          cursor="pointer"
+          marginRight="20px"
         />
       )}
-    </StyledBlock>
+    </Flex>
   );
 }

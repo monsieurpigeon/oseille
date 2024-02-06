@@ -1,19 +1,10 @@
-import { Box, Flex } from '@chakra-ui/react';
+import { Box, Flex, Grid } from '@chakra-ui/react';
 import { usePostHog } from 'posthog-js/react';
 import { useEffect } from 'react';
 import { useRouteLoaderData } from 'react-router-dom';
-import { styled } from 'styled-components';
 import { InfoModal } from '../../component/modal/InfoModal';
 import { MyH1 } from '../../component/typography/MyFont';
 import { PriceTable } from './PriceTable';
-
-const StyledPricePage = styled.div`
-  display: grid;
-  position: relative;
-  padding: 0 20px;
-  grid-template-columns: 1fr;
-  grid-template-rows: auto 600px;
-`;
 
 export function PricePage() {
   const posthog = usePostHog();
@@ -23,7 +14,12 @@ export function PricePage() {
   const { farm } = useRouteLoaderData('farm') as any;
 
   return (
-    <StyledPricePage>
+    <Grid
+      position="relative"
+      p="0 20px"
+      gridTemplateColumns="1fr"
+      gridTemplateRows="auto 600px"
+    >
       <Flex
         alignItems="center"
         gap={2}
@@ -48,6 +44,6 @@ export function PricePage() {
         </InfoModal>
       </Flex>
       <PriceTable />
-    </StyledPricePage>
+    </Grid>
   );
 }

@@ -2,19 +2,12 @@ import { Box, Flex, Table, TableContainer, Tbody, Th, Thead, Tr } from '@chakra-
 import { differenceInDays } from 'date-fns';
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate, useRouteLoaderData } from 'react-router-dom';
-import styled from 'styled-components';
 import { Customer, Invoice, isInvoicePaid } from '../../backend';
 import { getInvoiceTotal } from '../../utils/aggregations';
 import { Country } from '../../utils/defaults';
 import { priceFormatter } from '../../utils/formatter';
 
 const plural = (val: number) => (val > 1 ? 's' : '');
-
-const StyledTr = styled(Tr)`
-  &:hover {
-    background-color: #f5f5f5;
-  }
-`;
 
 export function InvoiceAll() {
   const { invoiceDelay } = useRouteLoaderData('farm') as any;
@@ -74,10 +67,11 @@ export function InvoiceAll() {
               {lateInvoices.map((invoice) => {
                 const customer = customers.find((customer) => customer.id === invoice.customer);
                 return (
-                  <StyledTr
+                  <Tr
                     key={invoice.id}
                     onClick={() => navigate(invoice.id)}
                     className="clickable"
+                    _hover={{ backgroundColor: '#f5f5f5' }}
                   >
                     <Th>J+{differenceInDays(new Date(), new Date(invoice.createdAt))}</Th>
                     <Th>
@@ -87,7 +81,7 @@ export function InvoiceAll() {
                       </Flex>
                     </Th>
                     <Th isNumeric>{priceFormatter(totals[invoice.id], country.currency)}</Th>
-                  </StyledTr>
+                  </Tr>
                 );
               })}
             </Tbody>

@@ -1,38 +1,5 @@
-import { Flex } from '@chakra-ui/react';
-import { NavLink } from 'react-router-dom';
-import { styled } from 'styled-components';
-
-const StyledNav = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-`;
-
-const StyledNavItem = styled(NavLink)`
-  padding: 15px;
-  font-size: 20px;
-  font-weight: bold;
-
-  &:hover {
-    background-color: lightcyan;
-  }
-
-  &.active {
-    background-color: lightcyan;
-    border-right: 2px solid cyan;
-  }
-`;
-
-const StyledHeaderNavigationItem = styled(NavLink)`
-  background-color: lightcyan;
-  border-width: 4px 0px;
-  border-color: transparent;
-  border-radius: 8px;
-  padding: 2px 8px;
-  &.active {
-    border-color: cyan;
-  }
-`;
+import { Box, Button, Flex } from '@chakra-ui/react';
+import { NavLink as ReactRouterLink } from 'react-router-dom';
 
 const HEADER_ITEMS = [
   { label: 'Facturation', path: '/invoicing' },
@@ -45,12 +12,14 @@ export function HeaderNavigation() {
   return (
     <Flex gap={4}>
       {HEADER_ITEMS.map((item) => (
-        <StyledHeaderNavigationItem
+        <Button
+          as={ReactRouterLink}
           key={item.path}
           to={item.path}
+          _activeLink={{ backgroundColor: 'aqua' }}
         >
           {item.label}
-        </StyledHeaderNavigationItem>
+        </Button>
       ))}
     </Flex>
   );
@@ -62,16 +31,22 @@ interface InvoicingNavigationProps {
 
 export function InvoicingNavigation({ items }: InvoicingNavigationProps) {
   return (
-    <StyledNav>
+    <Flex
+      direction="column"
+      gap="2px"
+    >
       {items.map((item) => (
-        <StyledNavItem
+        <Button
+          leftIcon={<Box>{item.emoji}</Box>}
+          as={ReactRouterLink}
           key={item.path}
           to={item.path}
-          className="navigation-item"
+          _activeLink={{ backgroundColor: 'aqua' }}
+          style={{ justifyContent: 'flex-start' }}
         >
-          {item.emoji} {item.label}
-        </StyledNavItem>
+          {item.label}
+        </Button>
       ))}
-    </StyledNav>
+    </Flex>
   );
 }
