@@ -30,18 +30,18 @@ export default defineConfig({
     VitePWA(manifestForPlugin),
     //visualizer({ emitFile: true, filename: 'stats.html' })
   ],
-  build: {
-    sourcemap: true,
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          lodash: ['lodash'],
-          agCharts: ['ag-charts-react'],
-          pdfMake: ['pdfmake'],
-        },
-      },
-    },
-  },
+  // build: {
+  //   sourcemap: true,
+  //   rollupOptions: {
+  //     output: {
+  //       manualChunks: {
+  //         lodash: ['lodash'],
+  //         agCharts: ['ag-charts-react'],
+  //         pdfMake: ['pdfmake'],
+  //       },
+  //     },
+  //   },
+  // },
   define: {
     global: 'window',
   },
