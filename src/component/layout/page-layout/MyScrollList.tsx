@@ -12,7 +12,7 @@ export function MyScrollList({ children, empty }: MyScrollListProps) {
   return isEmpty && empty != null ? (
     <Empty
       onClick={empty.onClick}
-      title={empty.title}
+      children={empty.title}
     />
   ) : (
     <Flex

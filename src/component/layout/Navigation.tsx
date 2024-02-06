@@ -1,4 +1,4 @@
-import { Button, Flex } from '@chakra-ui/react';
+import { Box, Button, Flex } from '@chakra-ui/react';
 import { NavLink as ReactRouterLink } from 'react-router-dom';
 
 const HEADER_ITEMS = [
@@ -37,7 +37,7 @@ export function InvoicingNavigation({ items }: InvoicingNavigationProps) {
     >
       {items.map((item) => (
         <Button
-          leftIcon={item.emoji}
+          leftIcon={<Box>{item.emoji}</Box>}
           as={ReactRouterLink}
           key={item.path}
           to={item.path}
