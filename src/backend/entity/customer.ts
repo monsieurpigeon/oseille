@@ -1,14 +1,9 @@
 import { sortAlpha } from '../../utils/sort';
 import { relDb } from '../service/database';
+import { Address, PouchObject } from './common';
 
-export interface Customer {
-  id: string;
-  _rev: string;
+export interface Customer extends PouchObject, Address {
   name: string;
-  address1: string;
-  address2: string;
-  zip: string;
-  city: string;
   notes: string;
   phone: string;
   tvaRef: string;

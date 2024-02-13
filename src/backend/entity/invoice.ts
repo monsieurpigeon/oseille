@@ -1,6 +1,7 @@
 import { documentIdFormatter } from '../../utils/formatter';
 import { relDb } from '../service/database';
 import { DocumentType } from '../service/pdf/pdf';
+import { PouchObject } from './common';
 import { Customer } from './customer';
 import { addInvoiceId, Delivery, removeInvoiceId } from './delivery';
 import { getFarm, updateDocumentId } from './farm';
@@ -31,8 +32,7 @@ export interface Payment {
   notes: string;
 }
 
-export interface Invoice {
-  id: string;
+export interface Invoice extends PouchObject {
   customer: string;
   documentId: string;
   deliveries: string[];

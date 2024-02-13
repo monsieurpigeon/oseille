@@ -1,12 +1,11 @@
 import { documentIdFormatter } from '../../utils/formatter';
 import { relDb } from '../service/database';
+import { PouchObject } from './common';
 import { Customer } from './customer';
 import { getFarm, updateDocumentId } from './farm';
 import { getProductById, ProductWithPrice } from './product';
 
-export interface Delivery {
-  id: string;
-  _rev: string;
+export interface Delivery extends PouchObject {
   isOrder?: boolean;
   isTVA: boolean;
   deliveredAt: string;

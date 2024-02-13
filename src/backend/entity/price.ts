@@ -1,10 +1,9 @@
 import { relDb } from '../service/database';
+import { PouchObject } from './common';
 import { Customer } from './customer';
 import { Product } from './product';
 
-export interface Price {
-  id: string;
-  _rev: string;
+export interface Price extends PouchObject {
   value: number;
   customer: string;
   product: string;
