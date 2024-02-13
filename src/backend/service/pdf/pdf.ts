@@ -2,7 +2,7 @@ import * as pdfMake from 'pdfmake/build/pdfmake';
 import { getIsTVA } from '../../../utils/aggregations';
 import { CountryCode } from '../../../utils/defaults';
 import { dateFormatter } from '../../../utils/formatter';
-import { FrBio01, FrBio09, FrBio10, FrBio15 } from '../../../utils/labels';
+import { FrBio01, FrBio09, FrBio10, FrBio15, FrBio16 } from '../../../utils/labels';
 import { getCustomerById } from '../../entity/customer';
 import { Delivery } from '../../entity/delivery';
 import { getFarm } from '../../entity/farm';
@@ -39,7 +39,8 @@ const getBioLogo = (label: string | undefined) => {
       return FrBio10;
     case 'fr-bio-15':
       return FrBio15;
-
+    case 'fr-bio-16':
+      return FrBio16;
     default:
       return '';
   }
@@ -61,13 +62,13 @@ export const exportDocument = async ({ payload, type, open = false }: any) => {
         text: farm?.footer,
         alignment: 'center',
       },
-      {
-        text: 'Généré gratuitement grâce à Oseille - www.oseille.app',
-        alignment: 'center',
-        color: 'grey',
-        characterSpacing: 1,
-        fontSize: 10,
-      },
+      // {
+      //   text: 'Généré gratuitement grâce à Oseille - www.oseille.app',
+      //   alignment: 'center',
+      //   color: 'grey',
+      //   characterSpacing: 1,
+      //   fontSize: 10,
+      // },
     ],
     content: [
       addresses(

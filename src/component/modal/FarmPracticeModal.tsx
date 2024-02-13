@@ -83,6 +83,7 @@ export function FarmPracticeModal({ isOpen, onClose }: FarmPracticeModalProps) {
           <option value="fr-bio-09">FR-BIO-09</option>
           <option value="fr-bio-10">FR-BIO-10</option>
           <option value="fr-bio-15">FR-BIO-15</option>
+          <option value="fr-bio-16">FR-BIO-16</option>
         </Select>
       </Flex>
       <div>
