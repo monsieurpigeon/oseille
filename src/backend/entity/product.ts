@@ -1,9 +1,8 @@
 import { sortAlpha } from '../../utils/sort';
 import { relDb } from '../service/database';
+import { PouchObject } from './common';
 
-export interface Product {
-  id: string;
-  _rev: string;
+export interface Product extends PouchObject {
   name: string;
   unit: Unit;
   tva: string;
