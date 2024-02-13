@@ -9,12 +9,8 @@ export interface Customer extends PouchObject, Address {
   tvaRef: string;
 }
 
-export interface CustomerInput {
+export interface CustomerInput extends Address {
   name: string;
-  address1: string;
-  address2: string;
-  zip: string;
-  city: string;
   notes: string;
   phone: string;
   tvaRef?: string;
