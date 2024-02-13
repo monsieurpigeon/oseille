@@ -27,7 +27,7 @@ export const DocumentType = {
   invoice: 'Invoice',
 } as const;
 
-export type DocumentType = (typeof DocumentType)[keyof typeof DocumentType];
+export type DocumentType = typeof DocumentType[keyof typeof DocumentType];
 
 const getBioLogo = (label: string | undefined) => {
   switch (label) {
@@ -62,13 +62,13 @@ export const exportDocument = async ({ payload, type, open = false }: any) => {
         text: farm?.footer,
         alignment: 'center',
       },
-      {
-        text: 'Généré gratuitement grâce à Oseille - www.oseille.app',
-        alignment: 'center',
-        color: 'grey',
-        characterSpacing: 1,
-        fontSize: 10,
-      },
+      // {
+      //   text: 'Généré gratuitement grâce à Oseille - www.oseille.app',
+      //   alignment: 'center',
+      //   color: 'grey',
+      //   characterSpacing: 1,
+      //   fontSize: 10,
+      // },
     ],
     content: [
       addresses(
