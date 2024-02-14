@@ -2,7 +2,7 @@ import { documentIdFormatter } from '../../utils/formatter';
 import { relDb } from '../service/database';
 import { Customer } from './customer';
 import { getFarm, updateDocumentId } from './farm';
-import { ProductWithPrice, getProductById } from './product';
+import { getProductById, ProductWithPrice } from './product';
 
 export interface Delivery {
   id: string;

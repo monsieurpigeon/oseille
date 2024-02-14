@@ -38,7 +38,9 @@ export const getProducts = () =>
 
 export const getProductById = (id: string) => relDb.rel.find('product', id).then((doc) => doc.products[0]);
 
-export const onProductsChange = (listener: (value: PouchDB.Core.ChangesResponseChange<{}>) => any) =>
+export const onProductsChange = (
+  listener: (value: PouchDB.Core.ChangesResponseChange<NonNullable<unknown>>) => unknown,
+) =>
   relDb.changes({ since: 'now', live: true }).on('change', (e) => {
     if (e.id.split('_')[0] === 'product') {
       listener(e);

@@ -1,6 +1,6 @@
 import { Button } from '@chakra-ui/react';
 import { usePostHog } from 'posthog-js/react';
-import { Invoice, exportDocument } from '../../../backend';
+import { exportDocument, Invoice } from '../../../backend';
 
 interface InvoicePrintButtonProps {
   invoice: Invoice;

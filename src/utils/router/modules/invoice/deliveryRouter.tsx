@@ -14,7 +14,7 @@ export const deliveryRouter = {
     relDb.rel.find('delivery').then((doc) => ({
       ...doc,
       deliveries: doc.deliveries?.sort((a: Delivery, b: Delivery) => b.documentId.localeCompare(a.documentId)) || [],
-      customers: doc.Icustomers?.sort((a: any, b: any) => a.name.localeCompare(b.name)) || [],
+      customers: doc.Icustomers?.sort((a: Customer, b: Customer) => a.name.localeCompare(b.name)) || [],
       timestamp: new Date().getTime(),
     })),
   children: [

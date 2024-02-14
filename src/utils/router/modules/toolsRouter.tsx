@@ -1,6 +1,6 @@
 import { ToolPageGroup } from '../../../page-group/ToolPageGroup';
-import { ToolPage } from '../../../page/tools/ToolPage';
 import { ScaleToolPage } from '../../../page/tools/scale/ScaleToolPage';
+import { ToolPage } from '../../../page/tools/ToolPage';
 
 export const toolsRouter = {
   path: 'tools',

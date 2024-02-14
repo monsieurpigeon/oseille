@@ -21,30 +21,35 @@ export function TeamSection() {
             <a
               href="https://www.facebook.com/maxime.pigeon/"
               target="_blank"
+              rel="noreferrer"
             >
               <Box>Facebook</Box>
             </a>
             <a
               href="https://www.instagram.com/remote.farm"
               target="_blank"
+              rel="noreferrer"
             >
               <Box>Instagram</Box>
             </a>
             <a
               href="https://www.linkedin.com/in/maxime-pigeon/"
               target="_blank"
+              rel="noreferrer"
             >
               <Box>Linkedin</Box>
             </a>
             <a
               href="https://github.com/monsieurpigeon"
               target="_blank"
+              rel="noreferrer"
             >
               <Box>Github</Box>
             </a>
             <a
               href="https://www.youtube.com/channel/UCn1da__rpNMxGzcDTPauaWg"
               target="_blank"
+              rel="noreferrer"
             >
               <Box>Youtube</Box>
             </a>
@@ -91,6 +96,7 @@ export function TeamSection() {
             <a
               href="https://elzeard.co"
               target="_blank"
+              rel="noreferrer"
             >
               Elzeard
             </a>

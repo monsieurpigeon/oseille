@@ -1,8 +1,8 @@
 import { Box, Flex, useDisclosure } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { MyH3 } from '../../typography/MyFont';
-import { useSideKick } from './SideKickContext';
 import { SideKickFeeling } from './enums';
+import { useSideKick } from './SideKickContext';
 
 const sideKickColors: { [key in SideKickFeeling]: string } = {
   [SideKickFeeling.GOOD]: 'green',

@@ -1,11 +1,11 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate, useRouteLoaderData } from 'react-router-dom';
 import { Invoice, InvoiceInfoInput, updateInvoice } from '../../../backend';
 import { MyModal } from '../../../component/modal/MyModal';
-import { useSideKick } from '../../../component/modules/sidekick/SideKickContext';
 import { SideKickFeeling } from '../../../component/modules/sidekick/enums';
+import { useSideKick } from '../../../component/modules/sidekick/SideKickContext';
 import { invoiceSchema } from './InvoiceCreateModal';
 import { InvoiceFields } from './InvoiceFields';
 
@@ -18,9 +18,8 @@ export function InvoiceEditModal() {
 
   const navigate = useNavigate();
   const { say } = useSideKick();
-  const cancelRef = useRef<any>();
 
-  const { control, register, handleSubmit, reset, formState } = useForm<InvoiceInfoInput>({
+  const { register, handleSubmit, reset, formState } = useForm<InvoiceInfoInput>({
     resolver: zodResolver(invoiceSchema),
     defaultValues: { notes: invoice.notes || '', createdAt: invoice.createdAt },
   });
@@ -46,16 +45,12 @@ export function InvoiceEditModal() {
   return (
     <MyModal
       isOpen={true}
-      cancelRef={cancelRef}
       title="Modifier la livraison"
       onClose={handleClose}
       onSubmit={handleSubmit(onSubmit)}
       disabled={!formState.isDirty}
     >
-      <InvoiceFields
-        control={control}
-        register={register}
-      />
+      <InvoiceFields register={register} />
     </MyModal>
   );
 }

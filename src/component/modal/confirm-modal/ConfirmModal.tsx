@@ -1,54 +1,52 @@
 import {
-  AlertDialog,
-  AlertDialogBody,
-  AlertDialogCloseButton,
-  AlertDialogContent,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogOverlay,
   Button,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay
 } from '@chakra-ui/react';
-import { useRef } from 'react';
 
-export function ConfirmModal({ title, message, isOpen, onConfirm, onCancel }: any) {
-  const cancelRef = useRef<any>();
+interface Props {
+  title: string;
+  message: string;
+  isOpen: boolean;
+  onConfirm: () => void;
+  onCancel: () => void;
+}
 
+export function ConfirmModal({ title, message, isOpen, onConfirm, onCancel }: Props) {
   return (
-    <AlertDialog
+    <Modal
       motionPreset="slideInBottom"
       closeOnOverlayClick={false}
       isOpen={isOpen}
-      leastDestructiveRef={cancelRef}
       onClose={onCancel}
     >
-      <AlertDialogOverlay>
-        <AlertDialogContent>
-          <AlertDialogHeader
-            fontSize="lg"
-            fontWeight="bold"
-          >
-            {title}
-          </AlertDialogHeader>
-          <AlertDialogCloseButton />
-          <AlertDialogBody>{message}</AlertDialogBody>
+      <ModalOverlay backdropFilter="blur(1px)" />
+      <ModalContent>
+        <ModalHeader
+          fontSize="lg"
+          fontWeight="bold"
+        >
+          {title}
+        </ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>{message}</ModalBody>
 
-          <AlertDialogFooter>
-            <Button
-              ref={cancelRef}
-              onClick={onCancel}
-            >
-              Annuler
-            </Button>
-            <Button
-              colorScheme="twitter"
-              onClick={onConfirm}
-              ml={3}
-            >
-              Confirmer
-            </Button>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialogOverlay>
-    </AlertDialog>
+        <ModalFooter>
+          <Button onClick={onCancel}>Annuler</Button>
+          <Button
+            colorScheme="twitter"
+            onClick={onConfirm}
+            ml={3}
+          >
+            Confirmer
+          </Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
   );
 }

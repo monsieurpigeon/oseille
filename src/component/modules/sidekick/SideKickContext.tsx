@@ -1,4 +1,4 @@
-import { PropsWithChildren, createContext, useContext, useState } from 'react';
+import { createContext, PropsWithChildren, useContext, useState } from 'react';
 import { SideKickFeeling } from './enums';
 
 const GOOD_EMOJI = '👍';

@@ -1,14 +1,14 @@
 import { Button, useDisclosure } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { usePostHog } from 'posthog-js/react';
-import { useMemo, useRef } from 'react';
+import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { z } from 'zod';
-import { InvoiceInfoInput, addInvoice } from '../../../backend';
+import { addInvoice, InvoiceInfoInput } from '../../../backend';
 import { MyModal } from '../../../component/modal/MyModal';
-import { useSideKick } from '../../../component/modules/sidekick/SideKickContext';
 import { SideKickFeeling } from '../../../component/modules/sidekick/enums';
+import { useSideKick } from '../../../component/modules/sidekick/SideKickContext';
 import { InvoiceFields } from './InvoiceFields';
 
 interface InvoiceCreateModalProps {
@@ -30,7 +30,6 @@ const defaultValues = { createdAt: new Date().toISOString().split('T')[0], notes
 export function InvoiceCreateModal({ toInvoice, setToInvoice }: InvoiceCreateModalProps) {
   const posthog = usePostHog();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const cancelRef = useRef<any>();
   const { say } = useSideKick();
   const navigate = useNavigate();
 
@@ -42,7 +41,7 @@ export function InvoiceCreateModal({ toInvoice, setToInvoice }: InvoiceCreateMod
     }
   };
 
-  const { control, register, handleSubmit } = useForm<InvoiceInfoInput>({
+  const { register, handleSubmit } = useForm<InvoiceInfoInput>({
     resolver: zodResolver(invoiceSchema),
     defaultValues,
   });
@@ -85,15 +84,11 @@ export function InvoiceCreateModal({ toInvoice, setToInvoice }: InvoiceCreateMod
       </Button>
       <MyModal
         isOpen={isOpen}
-        cancelRef={cancelRef}
         onClose={() => handleClose(undefined)}
         onSubmit={handleSubmit(onSubmit)}
         title="Nouvelle Facture"
       >
-        <InvoiceFields
-          control={control}
-          register={register}
-        />
+        <InvoiceFields register={register} />
       </MyModal>
     </>
   );

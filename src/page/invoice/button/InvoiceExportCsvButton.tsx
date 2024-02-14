@@ -1,9 +1,8 @@
 import { Button, useDisclosure } from '@chakra-ui/react';
 import { format } from 'date-fns';
 import _ from 'lodash';
-import { useRef } from 'react';
 import { useRouteLoaderData } from 'react-router-dom';
-import { Customer, Delivery, Invoice, Product, isInvoicePaid } from '../../../backend';
+import { Customer, Delivery, Invoice, isInvoicePaid, Product } from '../../../backend';
 import { MyModal } from '../../../component/modal/MyModal';
 
 const clean = (num: number) => Number(num.toFixed(5));
@@ -11,7 +10,6 @@ const translate = (num: number) => num.toLocaleString('fr-FR', { minimumFraction
 
 export function InvoiceExportCsvButton() {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const cancelRef = useRef<any>();
   const { invoices, customers, products, deliveries } = useRouteLoaderData('invoices') as {
     invoices: Invoice[];
     customers: Customer[];
@@ -92,10 +90,10 @@ export function InvoiceExportCsvButton() {
       ]),
     ];
 
-    let csvContent = 'data:text/csv;charset=utf-8,' + rows.map((e) => e.join(';')).join('\n');
+    const csvContent = 'data:text/csv;charset=utf-8,' + rows.map((e) => e.join(';')).join('\n');
 
-    var encodedUri = encodeURI(csvContent);
-    var link = document.createElement('a');
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement('a');
     link.setAttribute('href', encodedUri);
     link.setAttribute('download', `export-factures-${format(new Date(), 'dd-MM-yyyy')}.csv`);
     document.body.appendChild(link); // Required for FF
@@ -112,7 +110,6 @@ export function InvoiceExportCsvButton() {
         onSubmit={handleExport}
         isOpen={isOpen}
         onClose={onClose}
-        cancelRef={cancelRef}
       />
     </>
   );

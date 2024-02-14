@@ -1,11 +1,12 @@
 import { Flex, Text, useDisclosure } from '@chakra-ui/react';
 import { useRouteLoaderData } from 'react-router-dom';
-import { MyIcon } from '../../../../../component/MyIcon';
+import { Farm } from '../../../../../backend';
 import { FarmAddressModal } from '../../../../../component/modal/FarmAddressModal';
+import { MyIcon } from '../../../../../component/MyIcon';
 import { SettingCard } from '../../../components/SettingCard';
 
 export function AddressSettingBlock() {
-  const { farm } = useRouteLoaderData('farm') as any;
+  const { farm } = useRouteLoaderData('farm') as { farm: Farm };
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (

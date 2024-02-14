@@ -2,7 +2,7 @@ import { documentIdFormatter } from '../../utils/formatter';
 import { relDb } from '../service/database';
 import { DocumentType } from '../service/pdf/pdf';
 import { Customer } from './customer';
-import { Delivery, addInvoiceId, removeInvoiceId } from './delivery';
+import { addInvoiceId, Delivery, removeInvoiceId } from './delivery';
 import { getFarm, updateDocumentId } from './farm';
 
 export enum PaymentMode {

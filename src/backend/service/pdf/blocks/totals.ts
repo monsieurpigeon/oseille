@@ -1,10 +1,10 @@
 import {
-  TaxLine,
   computeCanadaTaxes,
   computeTaxes,
   getCountry,
   getDeliveryTotal,
   getIsTVA,
+  TaxLine
 } from '../../../../utils/aggregations';
 import { DEFAULT_INVOICE_DELAY, DEFAULT_THREAT } from '../../../../utils/defaults';
 import { dateFormatterDelay, priceFormatter } from '../../../../utils/formatter';

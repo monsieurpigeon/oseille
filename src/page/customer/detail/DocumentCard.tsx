@@ -1,6 +1,6 @@
 import { ViewIcon } from '@chakra-ui/icons';
 import { Box, Flex, IconButton } from '@chakra-ui/react';
-import { Delivery, DocumentType, Invoice, exportDocument } from '../../../backend';
+import { Delivery, DocumentType, exportDocument, Invoice } from '../../../backend';
 import { dateFormatter } from '../../../utils/formatter';
 
 export function InvoiceCard({ invoice }: { invoice: Invoice }) {

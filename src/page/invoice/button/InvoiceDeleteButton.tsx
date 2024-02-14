@@ -1,10 +1,10 @@
 import { usePostHog } from 'posthog-js/react';
 import { useNavigate, useRouteLoaderData } from 'react-router-dom';
-import { Farm, Invoice, deleteInvoice } from '../../../backend';
+import { deleteInvoice, Farm, Invoice } from '../../../backend';
 import { DeleteButton } from '../../../component/buttons';
 import { useConfirm } from '../../../component/modal/confirm-modal/ConfirmContext';
-import { useSideKick } from '../../../component/modules/sidekick/SideKickContext';
 import { SideKickFeeling } from '../../../component/modules/sidekick/enums';
+import { useSideKick } from '../../../component/modules/sidekick/SideKickContext';
 
 interface DeleteInvoiceActionProps {
   invoice: Invoice;

@@ -1,8 +1,9 @@
 import { useDisclosure } from '@chakra-ui/react';
 import { useRouteLoaderData } from 'react-router-dom';
 import { z } from 'zod';
-import { MyIcon } from '../../../../../component/MyIcon';
+import { Farm } from '../../../../../backend';
 import { FarmPracticeModal } from '../../../../../component/modal/FarmPracticeModal';
+import { MyIcon } from '../../../../../component/MyIcon';
 import { SettingCard } from '../../../components/SettingCard';
 
 export const practicesSchema = z.object({
@@ -10,7 +11,7 @@ export const practicesSchema = z.object({
 });
 
 export function PracticesSettingBlock() {
-  const { farm } = useRouteLoaderData('farm') as any;
+  const { farm } = useRouteLoaderData('farm') as { farm: Farm };
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (

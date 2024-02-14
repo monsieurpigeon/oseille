@@ -1,4 +1,4 @@
-import { ComponentProps, PropsWithChildren, createContext, useCallback, useContext, useRef, useState } from 'react';
+import { ComponentProps, createContext, PropsWithChildren, useCallback, useContext, useRef, useState } from 'react';
 import { ConfirmModal } from './ConfirmModal';
 
 type Params = Partial<Omit<ComponentProps<typeof ConfirmModal>, 'open' | 'onConfirm' | 'onCancel'>>;

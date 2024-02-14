@@ -1,9 +1,16 @@
 import { Input, Select, Textarea } from '@chakra-ui/react';
-import { PAYMENT_MODES } from '../../../backend';
-import { MyField } from '../../../component/MyField';
+import { Control, UseFormRegister } from 'react-hook-form';
+import { InvoicePaymentInput, PAYMENT_MODES } from '../../../backend';
 import { MyNumberInput } from '../../../component/form/MyNumberInput';
+import { MyField } from '../../../component/MyField';
 
-export function PaymentFields({ control, register }: any) {
+export function PaymentFields({
+  control,
+  register,
+}: {
+  control: Control<InvoicePaymentInput, unknown>;
+  register: UseFormRegister<InvoicePaymentInput>;
+}) {
   return (
     <>
       <MyField title="Date de paiement">
