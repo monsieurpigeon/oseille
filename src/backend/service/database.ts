@@ -115,16 +115,19 @@ export function exportData(data: unknown) {
   link.click();
 }
 
-export function handleImport({ file }: any) {
+export function handleImport({ file }: { file: File }) {
   return new Promise((resolve) => {
     if (file) {
       const reader = new FileReader();
-      reader.onload = ({ target: { result } }: any) => {
-        db.bulkDocs(
-          JSON.parse(result),
-          { new_edits: false }, // not change revision
-          (...args) => console.log('DONE', args),
-        );
+      reader.onload = ({ target }: ProgressEvent<FileReader>) => {
+        if (target) {
+          const { result } = target;
+          db.bulkDocs(
+            JSON.parse(result as string), // Add type assertion to ensure result is of type string
+            { new_edits: false }, // not change revision
+            (...args) => console.log('DONE', args),
+          );
+        }
       };
       reader.onloadend = () => resolve(reader.result);
       reader.readAsText(file);

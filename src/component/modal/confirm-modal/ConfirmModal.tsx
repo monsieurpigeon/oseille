@@ -6,12 +6,12 @@ import {
   ModalContent,
   ModalFooter,
   ModalHeader,
-  ModalOverlay
+  ModalOverlay,
 } from '@chakra-ui/react';
 
 interface Props {
-  title: string;
-  message: string;
+  title?: string;
+  message?: string;
   isOpen: boolean;
   onConfirm: () => void;
   onCancel: () => void;

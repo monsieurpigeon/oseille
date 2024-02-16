@@ -11,8 +11,8 @@ export interface Price extends PouchObject {
 
 export interface PriceInput {
   value: number;
-  customer: Customer | 'DEFAULT';
-  product: Product;
+  customer: Customer | string | 'DEFAULT';
+  product: Product | string;
 }
 
 export const addPrice = (price: PriceInput) => {

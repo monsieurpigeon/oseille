@@ -197,7 +197,7 @@ const ProductLine = ({ index, methods, availableProducts, availablePrices, remov
         message: `${product.name} => ${customer.name} : ${priceFormatter(watchPrice)} HT par ${product.unit} ?`,
       })
     ) {
-      if ((currentPrice as Price).customer === watchCustomer) {
+      if (currentPrice && (currentPrice as Price).customer === watchCustomer) {
         addPrice({ ...currentPrice, value: watchPrice })
           .then(() =>
             say({

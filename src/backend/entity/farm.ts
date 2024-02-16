@@ -58,7 +58,7 @@ export interface FarmInput {
   tva?: string;
   invoiceDelay?: number;
   threat?: string;
-  country?: string;
+  country?: CountryCode;
 }
 
 export interface LogoInput {
