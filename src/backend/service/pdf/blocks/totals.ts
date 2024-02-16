@@ -67,12 +67,28 @@ export const totals = async (payload: Delivery | Invoice, type: DocumentType, fa
                 ...(farm?.iban
                   ? [
                       {
-                        text: `IBAN ${farm.iban} BIC ${farm.bic ?? ''}`,
+                        text: `IBAN ${farm.iban}`,
                         bold: true,
                       },
                     ]
                   : []),
-                ...(farm?.siret ? [{ text: `Siret : ${farm.siret} - code naf : ${farm.naf ?? ''}` }] : []),
+                ...(farm?.bic
+                  ? [
+                      {
+                        text: `BIC ${farm.bic ?? ''}`,
+                        bold: true,
+                      },
+                    ]
+                  : []),
+                ...(farm?.siret
+                  ? [
+                      {
+                        text: [farm?.siret && `Siret : ${farm.siret}`, farm?.naf && `code NAF : ${farm.naf}`]
+                          .filter((v) => v)
+                          .join(' - '),
+                      },
+                    ]
+                  : []),
               ]
             : [],
           {},
