@@ -22,6 +22,7 @@ export function FeatureCard({ feature }: FeatureCardProps) {
         <a
           href={feature.user.link}
           target="_blank"
+          rel="noreferrer"
         >
           <Flex
             flex="1"

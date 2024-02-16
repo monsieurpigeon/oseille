@@ -1,5 +1,4 @@
 import { Button, useDisclosure } from '@chakra-ui/react';
-import { useRef } from 'react';
 import { MyIcon } from '../MyIcon';
 import { MyModal } from './MyModal';
 
@@ -9,7 +8,6 @@ interface Props {
 
 export function InfoModal({ children }: Props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const cancelRef = useRef<HTMLButtonElement>(null);
   return (
     <>
       <Button
@@ -23,7 +21,6 @@ export function InfoModal({ children }: Props) {
         isOpen={isOpen}
         onClose={onClose}
         title="Aide"
-        cancelRef={cancelRef}
         cancelLabel="Fermer"
       >
         {children}

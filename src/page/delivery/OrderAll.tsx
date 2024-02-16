@@ -3,11 +3,11 @@ import { useAtom } from 'jotai';
 import { usePostHog } from 'posthog-js/react';
 import { useMemo } from 'react';
 import { useNavigate, useRouteLoaderData } from 'react-router-dom';
-import { Delivery, Product, confirmOrder, exportOrders } from '../../backend';
+import { confirmOrder, Delivery, exportOrders, Product } from '../../backend';
 import { MyHeader } from '../../component/layout/page-layout/MyHeader';
 import { useConfirm } from '../../component/modal/confirm-modal/ConfirmContext';
-import { useSideKick } from '../../component/modules/sidekick/SideKickContext';
 import { SideKickFeeling } from '../../component/modules/sidekick/enums';
+import { useSideKick } from '../../component/modules/sidekick/SideKickContext';
 import { selectedOrdersAtom } from './useSelectOrders';
 
 export function OrderAll() {
@@ -122,10 +122,7 @@ export function OrderAll() {
             </Thead>
             <Tbody>
               {productLines.map((line) => (
-                <Tr
-                  key={line.product.id}
-                  onClick={() => navigate(`/product/${line.product.id}`)}
-                >
+                <Tr key={line.product.id}>
                   <Th>{line.product.name}</Th>
                   <Th>
                     {line.quantity} {line.product.unit}

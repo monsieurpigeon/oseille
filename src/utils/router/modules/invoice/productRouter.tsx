@@ -1,10 +1,10 @@
 import { Params } from 'react-router-dom';
 import { Product, relDb } from '../../../../backend';
+import { ProductCreateModal } from '../../../../page/product/modal/ProductCreateModal';
+import { ProductEditModal } from '../../../../page/product/modal/ProductEditModal';
 import { ProductAll } from '../../../../page/product/ProductAll';
 import { ProductDetail } from '../../../../page/product/ProductDetail';
 import { ProductPage } from '../../../../page/product/ProductPage';
-import { ProductCreateModal } from '../../../../page/product/modal/ProductCreateModal';
-import { ProductEditModal } from '../../../../page/product/modal/ProductEditModal';
 
 export const productRouter = {
   path: 'product',

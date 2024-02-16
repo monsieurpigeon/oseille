@@ -1,16 +1,27 @@
 import { Box, Button, Flex, Grid, GridItem, Input, Select, Text, Textarea } from '@chakra-ui/react';
 import { useMemo } from 'react';
-import { FieldArrayWithId } from 'react-hook-form';
+import { Control, FieldArrayWithId, FieldValues, useFieldArray, UseFormReturn } from 'react-hook-form';
 import { useLoaderData, useNavigate, useRouteLoaderData } from 'react-router-dom';
-import { Customer, DeliveryInput, Price, Product, ProductWithPrice, addPrice } from '../../../backend';
+import { addPrice, Customer, DeliveryInput, Price, Product, ProductWithPrice } from '../../../backend';
 import { MyNumberInput } from '../../../component/form/MyNumberInput';
 import { useConfirm } from '../../../component/modal/confirm-modal/ConfirmContext';
-import { useSideKick } from '../../../component/modules/sidekick/SideKickContext';
 import { SideKickFeeling } from '../../../component/modules/sidekick/enums';
+import { useSideKick } from '../../../component/modules/sidekick/SideKickContext';
 import { Country } from '../../../utils/defaults';
 import { priceFormatter } from '../../../utils/formatter';
 
-export function DeliveryFields({ watch, control, register, fields, append, remove, setValue }: any) {
+interface Props {
+  methods: UseFormReturn<DeliveryInput, unknown>;
+}
+
+export function DeliveryFields({ methods }: Props) {
+  const { watch, control, register } = methods;
+
+  const { fields, append, remove } = useFieldArray({
+    control,
+    name: 'lines',
+  });
+
   const navigate = useNavigate();
   const { products, customers, prices } = useLoaderData() as {
     products: Product[];
@@ -102,19 +113,22 @@ export function DeliveryFields({ watch, control, register, fields, append, remov
             </>
           )}
 
-          {fields.map((field: FieldArrayWithId<DeliveryInput, 'lines', 'id'>, index: number) => (
-            <ProductLine
-              index={index}
-              register={register}
-              control={control}
-              availableProducts={availableProducts}
-              availablePrices={availablePrices}
-              setValue={setValue}
-              remove={remove}
-              watch={watch}
-              customer={customers.find((customer) => customer.id === watchCustomer)}
-            />
-          ))}
+          {fields.map((field: FieldArrayWithId<DeliveryInput, 'lines', 'id'>, index: number) => {
+            const customer = customers.find((customer) => customer.id === watchCustomer);
+            return (
+              customer && (
+                <ProductLine
+                  key={field.id}
+                  index={index}
+                  methods={methods}
+                  availableProducts={availableProducts}
+                  availablePrices={availablePrices}
+                  remove={remove}
+                  customer={customer}
+                />
+              )
+            );
+          })}
         </Grid>
         {watchCustomer &&
           (availableProducts.length === 0 ? (
@@ -133,7 +147,7 @@ export function DeliveryFields({ watch, control, register, fields, append, remov
           ) : (
             <Button
               colorScheme="yellow"
-              onClick={() => append({ productId: '', quantity: 0 })}
+              onClick={() => append({ productId: '', price: 0, quantity: 0 })}
             >
               Ajouter produit
             </Button>
@@ -151,17 +165,17 @@ export function DeliveryFields({ watch, control, register, fields, append, remov
   );
 }
 
-const ProductLine = ({
-  index,
-  control,
-  register,
-  availableProducts,
-  availablePrices,
-  setValue,
-  remove,
-  watch,
-  customer,
-}: any) => {
+interface ProductLineProps {
+  index: number;
+  methods: UseFormReturn<DeliveryInput, unknown>;
+  availableProducts: ProductWithPrice[];
+  availablePrices: Price[];
+  remove: (index: number) => void;
+  customer: Customer;
+}
+
+const ProductLine = ({ index, methods, availableProducts, availablePrices, remove, customer }: ProductLineProps) => {
+  const { watch, control, register, setValue } = methods;
   const { isTVA, country } = useRouteLoaderData('farm') as { isTVA: boolean; country: Country };
   const { say } = useSideKick();
   const { confirm } = useConfirm();
@@ -183,7 +197,7 @@ const ProductLine = ({
         message: `${product.name} => ${customer.name} : ${priceFormatter(watchPrice)} HT par ${product.unit} ?`,
       })
     ) {
-      if ((currentPrice as Price).customer === watchCustomer) {
+      if (currentPrice && (currentPrice as Price).customer === watchCustomer) {
         addPrice({ ...currentPrice, value: watchPrice })
           .then(() =>
             say({
@@ -211,10 +225,10 @@ const ProductLine = ({
       <GridItem key={`${index}-a`}>
         <Select
           {...register(`lines.${index}.productId`, {
-            onChange: (e: any) => {
+            onChange: (e: React.ChangeEvent<HTMLSelectElement>) => {
               setValue(
                 `lines.${index}.price`,
-                availablePrices.find((price: Price) => price.product === e.target.value)?.value,
+                availablePrices.find((price: Price) => price.product === e.target.value)?.value || 0,
               );
             },
           })}
@@ -233,14 +247,14 @@ const ProductLine = ({
       </GridItem>
       <GridItem key={`${index}-c`}>
         <MyNumberInput
-          control={control}
+          control={control as unknown as Control<FieldValues>}
           name={`lines.${index}.quantity`}
           min={0}
         />
       </GridItem>
       <GridItem key={`${index}-b`}>
         <MyNumberInput
-          control={control}
+          control={control as unknown as Control<FieldValues>}
           name={`lines.${index}.price`}
           min={0}
           step={0.01}

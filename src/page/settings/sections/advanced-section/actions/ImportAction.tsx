@@ -1,15 +1,14 @@
 import { Button, Input, Text, useDisclosure } from '@chakra-ui/react';
 import { usePostHog } from 'posthog-js/react';
-import { ChangeEvent, useRef, useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import { handleImport } from '../../../../../backend';
-import { MyIcon } from '../../../../../component/MyIcon';
 import { MyModal } from '../../../../../component/modal/MyModal';
+import { MyIcon } from '../../../../../component/MyIcon';
 
 export function ImportAction() {
   const posthog = usePostHog();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [file, setFile] = useState<File>();
-  const cancelRef = useRef<any>();
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       setFile(e.target.files[0]);
@@ -21,7 +20,7 @@ export function ImportAction() {
     }
     posthog?.capture('db_import');
     handleImport({ file })
-      .then((data) => {
+      .then(() => {
         onClose();
       })
       .catch((err) => console.error(err));
@@ -42,7 +41,6 @@ export function ImportAction() {
         disabled={!file}
         confirmLabel="Confirmer"
         onSubmit={handleUploadClick}
-        cancelRef={cancelRef}
       >
         <Text>Veuillez sélectionner le fichier que vous avez reçu pendant l'export pour remplacer vos données</Text>
         <Input

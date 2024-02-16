@@ -1,31 +1,34 @@
 import {
-  TaxLine,
   computeCanadaTaxes,
   computeTaxes,
   getCountry,
   getDeliveryTotal,
   getIsTVA,
+  TaxLine,
 } from '../../../../utils/aggregations';
 import { DEFAULT_INVOICE_DELAY, DEFAULT_THREAT } from '../../../../utils/defaults';
 import { dateFormatterDelay, priceFormatter } from '../../../../utils/formatter';
+import { Delivery } from '../../../entity/delivery';
 import { Farm } from '../../../entity/farm';
+import { Invoice } from '../../../entity/invoice';
 import { DocumentType } from '../pdf';
 
-export const totals = async (payload: any, type: DocumentType, farm: Farm | null) => {
-  const isTVA = type === DocumentType.delivery ? payload.isTVA : await getIsTVA(payload);
+export const totals = async (payload: Delivery | Invoice, type: DocumentType, farm: Farm | null) => {
+  const isTVA = type === DocumentType.delivery ? (payload as Delivery).isTVA : await getIsTVA(payload as Invoice);
   const isCanada = farm?.country === 'CA';
   const country = getCountry(farm?.country);
 
   let totals;
 
   if (type === DocumentType.invoice) {
+    const invoice = payload as Invoice;
     if (isCanada) {
-      totals = await computeCanadaTaxes(payload);
+      totals = await computeCanadaTaxes(invoice);
     } else {
-      totals = await computeTaxes(payload, country.value);
+      totals = await computeTaxes(invoice, country.value);
     }
   } else {
-    totals = { total: { ht: getDeliveryTotal(payload), tax: 0, ttc: 0 } };
+    totals = { total: { ht: getDeliveryTotal(payload as Delivery), tax: 0, ttc: 0 } };
   }
   return {
     layout: 'noBorders',
@@ -39,7 +42,12 @@ export const totals = async (payload: any, type: DocumentType, farm: Farm | null
                 {
                   columns: [
                     { text: 'Échéance', bold: true, width: 150 },
-                    { text: dateFormatterDelay(payload.createdAt, farm?.invoiceDelay ?? DEFAULT_INVOICE_DELAY) },
+                    {
+                      text: dateFormatterDelay(
+                        (payload as Invoice).createdAt,
+                        farm?.invoiceDelay ?? DEFAULT_INVOICE_DELAY,
+                      ),
+                    },
                   ],
                 },
                 {

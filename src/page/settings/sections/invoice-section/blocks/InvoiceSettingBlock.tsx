@@ -1,13 +1,14 @@
 import { useDisclosure } from '@chakra-ui/react';
 import { useRouteLoaderData } from 'react-router-dom';
-import { MyIcon } from '../../../../../component/MyIcon';
+import { Farm } from '../../../../../backend';
 import { FarmInvoicingModal } from '../../../../../component/modal/FarmInvoicingModal';
+import { MyIcon } from '../../../../../component/MyIcon';
 import { DEFAULT_INVOICE_DELAY, DEFAULT_THREAT } from '../../../../../utils/defaults';
 import { SettingCard } from '../../../components/SettingCard';
 
 export function InvoiceSettingBlock() {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { farm } = useRouteLoaderData('farm') as any;
+  const { farm } = useRouteLoaderData('farm') as { farm: Farm };
 
   const delay = farm?.invoiceDelay ?? DEFAULT_INVOICE_DELAY;
 

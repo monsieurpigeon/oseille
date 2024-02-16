@@ -1,4 +1,5 @@
 import * as pdfMake from 'pdfmake/build/pdfmake';
+import { TDocumentDefinitions } from 'pdfmake/interfaces';
 import { getIsTVA } from '../../../utils/aggregations';
 import { CountryCode } from '../../../utils/defaults';
 import { dateFormatter } from '../../../utils/formatter';
@@ -6,7 +7,7 @@ import { FrBio01, FrBio09, FrBio10, FrBio15, FrBio16 } from '../../../utils/labe
 import { getCustomerById } from '../../entity/customer';
 import { Delivery } from '../../entity/delivery';
 import { getFarm } from '../../entity/farm';
-import { paymentModesMap } from '../../entity/invoice';
+import { Invoice, paymentModesMap } from '../../entity/invoice';
 import { Product } from '../../entity/product';
 import { addresses } from './blocks/addresses';
 import { lines } from './blocks/lines';
@@ -46,11 +47,19 @@ const getBioLogo = (label: string | undefined) => {
   }
 };
 
-export const exportDocument = async ({ payload, type, open = false }: any) => {
-  const isTVA = type === DocumentType.delivery ? payload.isTVA : await getIsTVA(payload);
-  const currentCustomer = await getCustomerById(payload.customer);
+export const exportDocument = async ({
+  payload,
+  type,
+  open = false,
+}: {
+  payload: Delivery | Invoice;
+  type: DocumentType;
+  open?: boolean;
+}) => {
+  const isTVA = type === DocumentType.delivery ? (payload as Delivery).isTVA : await getIsTVA(payload as Invoice);
+  const currentCustomer = await getCustomerById(payload.customer as string);
   const farm = await getFarm();
-  const docDefinition: any = {
+  const docDefinition: unknown = {
     defaultStyle: {
       font: 'Roboto',
     },
@@ -83,20 +92,22 @@ export const exportDocument = async ({ payload, type, open = false }: any) => {
           [
             { text: `${payload.documentId}`, style: 'header' },
             {
-              text: `Date: ${dateFormatter(type === DocumentType.invoice ? payload.createdAt : payload.deliveredAt)}`,
+              text: `Date: ${dateFormatter(
+                type === DocumentType.invoice ? (payload as Invoice).createdAt : (payload as Delivery).deliveredAt,
+              )}`,
               style: 'header',
             },
           ],
           ...[
-            type === DocumentType.invoice && payload.payments?.length
+            type === DocumentType.invoice && (payload as Invoice).payments?.length
               ? [
                   { text: 'PAYÉ', style: 'alert' },
                   {
-                    text: `Par ${paymentModesMap[payload.payments[0].paymentMode]} le ${dateFormatter(
-                      payload.payments[0].paidAt,
-                    )}`,
+                    text: `Par ${
+                      paymentModesMap[(payload as Invoice).payments?.[0]?.paymentMode ?? 0]
+                    } le ${dateFormatter((payload as Invoice).payments?.[0]?.paidAt ?? '')}`,
                   },
-                  { text: payload.payments[0].reference, bold: true },
+                  { text: (payload as Invoice).payments?.[0]?.reference, bold: true },
                 ]
               : null,
           ],
@@ -104,7 +115,7 @@ export const exportDocument = async ({ payload, type, open = false }: any) => {
       },
       await lines(payload, type, farm),
       ...(isTVA && type === DocumentType.invoice && farm.country !== CountryCode.CA
-        ? [await taxes(payload, farm)]
+        ? [await taxes(payload as Invoice, farm)]
         : []),
       await totals(payload, type, farm),
       {
@@ -142,9 +153,9 @@ export const exportDocument = async ({ payload, type, open = false }: any) => {
     },
   };
   if (open) {
-    pdfMake.createPdf(docDefinition, undefined, fonts).open();
+    pdfMake.createPdf(docDefinition as TDocumentDefinitions, undefined, fonts).open();
   } else {
-    pdfMake.createPdf(docDefinition, undefined, fonts).download(payload.documentId);
+    pdfMake.createPdf(docDefinition as TDocumentDefinitions, undefined, fonts).download(payload.documentId);
   }
 };
 
@@ -162,7 +173,7 @@ export const exportOrders = async (payload: Delivery[]) => {
       return acc;
     }, {} as { [key: string]: Product });
 
-  const docDefinition: any = {
+  const docDefinition: unknown = {
     defaultStyle: {
       font: 'Roboto',
       alignment: 'right',
@@ -234,5 +245,5 @@ export const exportOrders = async (payload: Delivery[]) => {
     },
   };
 
-  pdfMake.createPdf(docDefinition, undefined, fonts).open();
+  pdfMake.createPdf(docDefinition as TDocumentDefinitions, undefined, fonts).open();
 };

@@ -1,13 +1,13 @@
 import { Box, Select, Text } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect, useRef } from 'react';
-import { useForm } from 'react-hook-form';
+import { useEffect } from 'react';
+import { Control, FieldValues, useForm } from 'react-hook-form';
 import { useRouteLoaderData } from 'react-router-dom';
 import { z } from 'zod';
 import { Farm, updateFarm } from '../../backend';
 import { MyNumberInput } from '../form/MyNumberInput';
-import { useSideKick } from '../modules/sidekick/SideKickContext';
 import { SideKickFeeling } from '../modules/sidekick/enums';
+import { useSideKick } from '../modules/sidekick/SideKickContext';
 import { MyModal } from './MyModal';
 
 export const documentsSchema = z.object({
@@ -26,7 +26,6 @@ const YEARS = [2023, 2024, 2025, 2026, 2027, 2028, 2029];
 
 export function FarmDocumentIdModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
   const { farm } = useRouteLoaderData('farm') as { farm: Farm };
-  const cancelRef = useRef<any>();
   const { say } = useSideKick();
 
   const currentYear = farm.year || 2023;
@@ -66,14 +65,13 @@ export function FarmDocumentIdModal({ isOpen, onClose }: { isOpen: boolean; onCl
       onClose={onClose}
       onSubmit={handleSubmit(onSubmit)}
       title="Mes documents"
-      cancelRef={cancelRef}
       disabled={!formState.isDirty}
     >
       <Box flexGrow={1}>
         <Text>Prochaine livraison:</Text>
         <MyNumberInput
           min={1}
-          control={control}
+          control={control as unknown as Control<FieldValues>}
           name="deliveryId"
         />
       </Box>
@@ -81,7 +79,7 @@ export function FarmDocumentIdModal({ isOpen, onClose }: { isOpen: boolean; onCl
         <Text>Prochaine facture:</Text>
         <MyNumberInput
           min={1}
-          control={control}
+          control={control as unknown as Control<FieldValues>}
           name="invoiceId"
         />
       </Box>

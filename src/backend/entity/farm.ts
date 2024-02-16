@@ -2,15 +2,24 @@ import getYear from 'date-fns/getYear';
 import { CountryCode, DEFAULT_COUNTRY } from '../../utils/defaults';
 import { relDb } from '../service/database';
 import { DocumentType } from '../service/pdf/pdf';
+import { Address, PouchObject } from './common';
 
-export interface Farm {
-  id: string;
-  _rev: string;
+interface BankInfo {
+  rib: string;
+  iban: string;
+  bic: string;
+}
+
+interface CompanyInfo {
+  siret: string;
+  naf: string;
+  tva: string;
+  invoiceDelay: number;
+  threat: string;
+}
+
+export interface Farm extends PouchObject, Address, BankInfo, CompanyInfo {
   title: string;
-  address1: string;
-  address2: string;
-  zip: string;
-  city: string;
   phone: string;
   email: string;
   footer: string;
@@ -19,14 +28,6 @@ export interface Farm {
   year: number;
   isTVA?: string;
   bioLabel: string;
-  rib: string;
-  iban: string;
-  bic: string;
-  siret: string;
-  naf: string;
-  tva: string;
-  invoiceDelay: number;
-  threat: string;
   country: CountryCode;
   _attachements: {
     logo: {
@@ -57,11 +58,12 @@ export interface FarmInput {
   tva?: string;
   invoiceDelay?: number;
   threat?: string;
-  country?: string;
+  country?: CountryCode;
 }
 
 export interface LogoInput {
   data: string;
+  image: unknown;
 }
 
 export const FARM_KEY = 'myFarm';

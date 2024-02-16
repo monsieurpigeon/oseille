@@ -1,13 +1,12 @@
 import { Box, Input, Text, Textarea } from '@chakra-ui/react';
-import { Control, UseFormRegister } from 'react-hook-form';
+import { UseFormRegister } from 'react-hook-form';
 import { InvoiceInfoInput } from '../../../backend';
 
 interface InvoiceFieldsProps {
-  control: Control<InvoiceInfoInput, any>;
   register: UseFormRegister<InvoiceInfoInput>;
 }
 
-export function InvoiceFields({ register, control }: InvoiceFieldsProps) {
+export function InvoiceFields({ register }: InvoiceFieldsProps) {
   return (
     <>
       <Box p={1}>

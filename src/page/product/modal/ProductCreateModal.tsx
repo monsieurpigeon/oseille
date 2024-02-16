@@ -1,13 +1,12 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { usePostHog } from 'posthog-js/react';
-import { useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate, useRouteLoaderData } from 'react-router-dom';
 import { z } from 'zod';
-import { ProductInput, addProduct } from '../../../backend';
+import { addProduct, ProductInput } from '../../../backend';
 import { MyModal } from '../../../component/modal/MyModal';
-import { useSideKick } from '../../../component/modules/sidekick/SideKickContext';
 import { SideKickFeeling } from '../../../component/modules/sidekick/enums';
+import { useSideKick } from '../../../component/modules/sidekick/SideKickContext';
 import { Country, DEFAULT_TVA_MAP } from '../../../utils/defaults';
 import { ProductFields } from './ProductFields';
 
@@ -20,7 +19,6 @@ export const productSchema = z.object({
 
 export function ProductCreateModal() {
   const posthog = usePostHog();
-  const cancelRef = useRef<any>();
   const navigate = useNavigate();
   const { country } = useRouteLoaderData('farm') as { country: Country };
 
@@ -61,7 +59,6 @@ export function ProductCreateModal() {
   return (
     <MyModal
       isOpen={true}
-      cancelRef={cancelRef}
       title="Nouveau produit"
       onClose={handleClose}
       onSubmit={handleSubmit(onSubmit)}

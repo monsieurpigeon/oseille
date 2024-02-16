@@ -9,11 +9,6 @@ export const documentsSchema = z.object({
   deliveryId: z.number().gte(0),
 });
 
-interface DocumentIdInput {
-  invoiceId: number;
-  deliveryId: number;
-}
-
 export function AdvancedSection() {
   return (
     <Flex

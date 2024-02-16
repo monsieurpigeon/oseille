@@ -1,14 +1,14 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { usePostHog } from 'posthog-js/react';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate, useRouteLoaderData } from 'react-router-dom';
 import { z } from 'zod';
 import { Invoice, InvoicePaymentInput, PaymentMode, updateInvoice } from '../../../backend';
-import { MyModal } from '../../../component/modal/MyModal';
 import { useConfirm } from '../../../component/modal/confirm-modal/ConfirmContext';
-import { useSideKick } from '../../../component/modules/sidekick/SideKickContext';
+import { MyModal } from '../../../component/modal/MyModal';
 import { SideKickFeeling } from '../../../component/modules/sidekick/enums';
+import { useSideKick } from '../../../component/modules/sidekick/SideKickContext';
 import { getInvoiceTotal } from '../../../utils/aggregations';
 import { Country } from '../../../utils/defaults';
 import { PaymentFields } from './PaymentFields';
@@ -35,7 +35,6 @@ export function PaymentModal() {
   if (!invoice) return null;
 
   const posthog = usePostHog();
-  const cancelRef = useRef<any>();
   const { say } = useSideKick();
   const navigate = useNavigate();
   const handleClose = () => navigate('..');
@@ -49,7 +48,7 @@ export function PaymentModal() {
     notes: '',
   };
 
-  const { control, register, handleSubmit, reset, formState } = useForm<InvoicePaymentInput>({
+  const { control, register, handleSubmit, reset } = useForm<InvoicePaymentInput>({
     resolver: zodResolver(paymentSchema),
     defaultValues: { ...emptyPayment, ...invoice?.payments?.[0] },
   });
@@ -93,7 +92,6 @@ export function PaymentModal() {
   return (
     <MyModal
       isOpen={true}
-      cancelRef={cancelRef}
       onClose={handleClose}
       onSubmit={handleSubmit(onSubmit)}
       onRemove={(invoice?.payments && invoice.payments.length > 0 && onRemove) || undefined}

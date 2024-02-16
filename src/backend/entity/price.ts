@@ -1,10 +1,9 @@
 import { relDb } from '../service/database';
+import { PouchObject } from './common';
 import { Customer } from './customer';
 import { Product } from './product';
 
-export interface Price {
-  id: string;
-  _rev: string;
+export interface Price extends PouchObject {
   value: number;
   customer: string;
   product: string;
@@ -12,8 +11,8 @@ export interface Price {
 
 export interface PriceInput {
   value: number;
-  customer: Customer | 'DEFAULT';
-  product: Product;
+  customer: Customer | string | 'DEFAULT';
+  product: Product | string;
 }
 
 export const addPrice = (price: PriceInput) => {
@@ -33,7 +32,7 @@ export const getPrices = () =>
     return doc.prices;
   });
 
-export const onPricesChange = (listener: (value: PouchDB.Core.ChangesResponseChange<{}>) => any) =>
+export const onPricesChange = (listener: (value: PouchDB.Core.ChangesResponseChange<object>) => unknown) =>
   relDb.changes({ since: 'now', live: true }).on('change', (e) => {
     if (e.id.split('_')[0] === 'price') {
       listener(e);

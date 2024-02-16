@@ -1,10 +1,11 @@
 import { computeTaxes, getCountry } from '../../../../utils/aggregations';
 import { priceFormatter } from '../../../../utils/formatter';
 import { Farm } from '../../../entity/farm';
+import { Invoice } from '../../../entity/invoice';
 
-export async function taxes(payload: any, farm: Farm) {
+export async function taxes(invoice: Invoice, farm: Farm) {
   const country = getCountry(farm?.country);
-  const taxes = await computeTaxes(payload, country.value);
+  const taxes = await computeTaxes(invoice, country.value);
 
   return {
     table: {

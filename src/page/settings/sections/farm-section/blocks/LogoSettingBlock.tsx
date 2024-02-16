@@ -1,34 +1,33 @@
 import { Box, Image, Input, Text, useDisclosure } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect, useRef, useState } from 'react';
-import { useForm, useWatch } from 'react-hook-form';
+import { useEffect, useState } from 'react';
+import { useForm, UseFormReturn, useWatch } from 'react-hook-form';
 import { useRouteLoaderData } from 'react-router-dom';
 import { z } from 'zod';
-import { LogoInput, addLogo } from '../../../../../backend';
+import { addLogo, LogoInput } from '../../../../../backend';
 import { MyModal } from '../../../../../component/modal/MyModal';
-import { useSideKick } from '../../../../../component/modules/sidekick/SideKickContext';
 import { SideKickFeeling } from '../../../../../component/modules/sidekick/enums';
+import { useSideKick } from '../../../../../component/modules/sidekick/SideKickContext';
 import { SettingCard } from '../../../components/SettingCard';
 
 export const logoSchema = z.object({
   data: z.string(),
+  image: z.any(),
 });
 
 export function LogoSettingBlock() {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const cancelRef = useRef<any>();
   const { say } = useSideKick();
+  const { logo } = useRouteLoaderData('farm') as { logo: string };
 
-  const { logo } = useRouteLoaderData('farm') as any;
-
-  const { control, register, setValue, handleSubmit, reset } = useForm<LogoInput>({
+  const methods = useForm<LogoInput>({
     resolver: zodResolver(logoSchema),
     defaultValues: { data: '' },
   });
 
   const handleClose = () => {
     onClose();
-    reset();
+    methods.reset();
   };
 
   const onSubmit = (e: LogoInput) =>
@@ -58,33 +57,31 @@ export function LogoSettingBlock() {
       {!logo && <Text>Aucun logo</Text>}
       <MyModal
         isOpen={isOpen}
-        cancelRef={cancelRef}
         onClose={handleClose}
-        onSubmit={handleSubmit(onSubmit)}
+        onSubmit={methods.handleSubmit(onSubmit)}
         title="Ajouter un logo"
       >
-        <LogoFields
-          control={control}
-          register={register}
-          setValue={setValue}
-        />
+        <LogoFields methods={methods} />
       </MyModal>
     </SettingCard>
   );
 }
 
-const LogoFields = ({ control, register, setValue }: any) => {
+const LogoFields = ({ methods }: { methods: UseFormReturn<LogoInput> }) => {
+  const { register, control, setValue } = methods;
   const image = useWatch({ control, name: 'image' });
   const [data, setData] = useState('');
 
   useEffect(() => {
     if (image) {
       const reader = new FileReader();
-      reader.onload = ({ target: { result } }: any) => {
-        setData(result);
-        setValue('data', result);
+      reader.onload = ({ target }: ProgressEvent<FileReader>) => {
+        if (target && target.result) {
+          setData(target.result as string);
+          setValue('data', target.result as string);
+        }
       };
-      reader.readAsDataURL(image[0]);
+      reader.readAsDataURL((image as Blob[])[0]);
     }
   }, [image]);
 
