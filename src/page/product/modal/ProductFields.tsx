@@ -1,9 +1,11 @@
 import { Center, Checkbox, Input, Select } from '@chakra-ui/react';
+import { UseFormRegister } from 'react-hook-form';
 import { useRouteLoaderData } from 'react-router-dom';
+import { ProductInput } from '../../../backend';
 import { MyField } from '../../../component/MyField';
 import { Country, PRODUCT_UNITS, TVA_RATES_MAP } from '../../../utils/defaults';
 
-const getTaxFields = (isTVA: boolean, country: Country, register: any) => {
+const getTaxFields = (isTVA: boolean, country: Country, register: UseFormRegister<ProductInput>) => {
   const tvaRates = TVA_RATES_MAP[country.value];
   if (country.value === 'CA') {
     return (
@@ -37,7 +39,7 @@ const getTaxFields = (isTVA: boolean, country: Country, register: any) => {
   );
 };
 
-export const ProductFields = ({ register }: any) => {
+export const ProductFields = ({ register }: { register: UseFormRegister<ProductInput> }) => {
   const { isTVA, country } = useRouteLoaderData('farm') as { isTVA: boolean; country: Country };
   return (
     <>

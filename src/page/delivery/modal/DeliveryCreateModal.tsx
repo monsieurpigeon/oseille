@@ -1,13 +1,12 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { usePostHog } from 'posthog-js/react';
-import { useRef } from 'react';
-import { useFieldArray, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { z } from 'zod';
-import { DeliveryInput, addDelivery } from '../../../backend';
+import { addDelivery, DeliveryInput } from '../../../backend';
 import { MyModal } from '../../../component/modal/MyModal';
-import { useSideKick } from '../../../component/modules/sidekick/SideKickContext';
 import { SideKickFeeling } from '../../../component/modules/sidekick/enums';
+import { useSideKick } from '../../../component/modules/sidekick/SideKickContext';
 import { DeliveryFields } from './DeliveryFields';
 
 export const deliverySchema = z.object({
@@ -26,7 +25,6 @@ export const deliverySchema = z.object({
 
 export function DeliveryCreateModal() {
   const posthog = usePostHog();
-  const cancelRef = useRef<any>();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -34,14 +32,9 @@ export function DeliveryCreateModal() {
 
   const { say } = useSideKick();
 
-  const { control, register, handleSubmit, watch, setValue, getValues } = useForm<DeliveryInput>({
+  const methods = useForm<DeliveryInput>({
     resolver: zodResolver(deliverySchema),
     defaultValues: { customer: '', deliveredAt: new Date().toISOString().split('T')[0], notes: '' },
-  });
-
-  const { fields, append, remove } = useFieldArray({
-    control,
-    name: 'lines',
   });
 
   const handleClose = (value?: { id: string }) => {
@@ -67,22 +60,12 @@ export function DeliveryCreateModal() {
   return (
     <MyModal
       isOpen={true}
-      cancelRef={cancelRef}
       title={isOrder ? 'Nouvelle commande' : 'Nouveau bon de livraison'}
       onClose={handleClose}
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={methods.handleSubmit(onSubmit)}
       width="600px"
     >
-      <DeliveryFields
-        control={control}
-        register={register}
-        fields={fields}
-        append={append}
-        remove={remove}
-        watch={watch}
-        setValue={setValue}
-        getValues={getValues}
-      />
+      <DeliveryFields methods={methods} />
     </MyModal>
   );
 }

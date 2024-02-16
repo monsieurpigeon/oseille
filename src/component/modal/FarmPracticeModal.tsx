@@ -1,14 +1,14 @@
 import { Flex, FormLabel, Select } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { usePostHog } from 'posthog-js/react';
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useRouteLoaderData } from 'react-router-dom';
 import { z } from 'zod';
-import { FarmInput, updateFarm } from '../../backend';
+import { Farm, FarmInput, updateFarm } from '../../backend';
 import { EMPTY_FARM } from '../../utils/defaults';
-import { useSideKick } from '../modules/sidekick/SideKickContext';
 import { SideKickFeeling } from '../modules/sidekick/enums';
+import { useSideKick } from '../modules/sidekick/SideKickContext';
 import { MyModal } from './MyModal';
 
 const practiceSchema = z.object({
@@ -22,9 +22,7 @@ interface FarmPracticeModalProps {
 
 export function FarmPracticeModal({ isOpen, onClose }: FarmPracticeModalProps) {
   const posthog = usePostHog();
-  const { farm } = useRouteLoaderData('farm') as any;
-
-  const cancelRef = useRef<any>();
+  const { farm } = useRouteLoaderData('farm') as { farm: Farm };
   const { say } = useSideKick();
 
   const { register, handleSubmit, reset, formState } = useForm<FarmInput>({
@@ -58,7 +56,6 @@ export function FarmPracticeModal({ isOpen, onClose }: FarmPracticeModalProps) {
 
   return (
     <MyModal
-      cancelRef={cancelRef}
       isOpen={isOpen}
       onClose={onClose}
       onSubmit={handleSubmit(onSubmit)}

@@ -1,11 +1,12 @@
 import { Text, useDisclosure } from '@chakra-ui/react';
 import { useRouteLoaderData } from 'react-router-dom';
+import { Farm } from '../../../../../backend';
 import { FarmBankModal } from '../../../../../component/modal/FarmBankModal';
 import { SettingCard } from '../../../components/SettingCard';
 
 export function BankSettingBlock() {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { farm } = useRouteLoaderData('farm') as any;
+  const { farm } = useRouteLoaderData('farm') as { farm: Farm };
 
   return (
     <SettingCard

@@ -1,10 +1,10 @@
 import { Params } from 'react-router-dom';
 import { Customer, Delivery, Product, relDb } from '../../../../backend';
 import { DeliveryDetail } from '../../../../page/delivery/DeliveryDetail';
-import { OrderAll } from '../../../../page/delivery/OrderAll';
-import { OrderPage } from '../../../../page/delivery/OrderPage';
 import { DeliveryCreateModal } from '../../../../page/delivery/modal/DeliveryCreateModal';
 import { DeliveryEditModal } from '../../../../page/delivery/modal/DeliveryEditModal';
+import { OrderAll } from '../../../../page/delivery/OrderAll';
+import { OrderPage } from '../../../../page/delivery/OrderPage';
 
 export const orderRouter = {
   path: 'order',
@@ -14,7 +14,7 @@ export const orderRouter = {
     relDb.rel.find('delivery').then((doc) => ({
       ...doc,
       deliveries: doc.deliveries?.sort((a: Delivery, b: Delivery) => b.documentId.localeCompare(a.documentId)) || [], // sort and filter should stay here
-      customers: doc.Icustomers?.sort((a: any, b: any) => a.name.localeCompare(b.name)) || [],
+      customers: doc.Icustomers?.sort((a: Customer, b: Customer) => a.name.localeCompare(b.name)) || [],
       timestamp: new Date().getTime(), // TODO necessary ?
     })),
   children: [

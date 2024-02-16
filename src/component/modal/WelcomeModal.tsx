@@ -1,14 +1,14 @@
 import {
-  Button,
-  Flex,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
-  Text,
+    Button,
+    Flex,
+    Modal,
+    ModalBody,
+    ModalCloseButton,
+    ModalContent,
+    ModalFooter,
+    ModalHeader,
+    ModalOverlay,
+    Text
 } from '@chakra-ui/react';
 import { useAtom } from 'jotai';
 import { atomWithStorage } from 'jotai/utils';

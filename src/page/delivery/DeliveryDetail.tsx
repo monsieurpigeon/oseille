@@ -1,9 +1,9 @@
 import { Box, Link } from '@chakra-ui/react';
-import { Outlet, Link as RouterLink, useLoaderData, useNavigate } from 'react-router-dom';
+import { Link as RouterLink, Outlet, useLoaderData, useNavigate } from 'react-router-dom';
 import { Customer, Delivery, Invoice } from '../../backend';
-import { MyIcon } from '../../component/MyIcon';
 import { DetailButton, EditButton } from '../../component/buttons';
 import { MyHeader } from '../../component/layout/page-layout/MyHeader';
+import { MyIcon } from '../../component/MyIcon';
 import { DeliveryDescriptionLine } from '../../component/shared/Delivery';
 import { DeliveryDescription } from '../../component/table/DeliveryDescription';
 import { DeliveryDeleteButton } from './button/DeliveryDeleteButton';

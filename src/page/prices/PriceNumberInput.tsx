@@ -1,15 +1,15 @@
 import { Button } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect } from 'react';
-import { useForm } from 'react-hook-form';
+import { Control, FieldValues, useForm } from 'react-hook-form';
 import { useRouteLoaderData } from 'react-router-dom';
 import { z } from 'zod';
 import { Customer, Product } from '../../backend';
-import { Price, PriceInput, addPrice, deletePrice } from '../../backend/entity/price';
+import { addPrice, deletePrice, Price, PriceInput } from '../../backend/entity/price';
 import { MyNumberInput } from '../../component/form/MyNumberInput';
 import { useConfirm } from '../../component/modal/confirm-modal/ConfirmContext';
-import { useSideKick } from '../../component/modules/sidekick/SideKickContext';
 import { SideKickFeeling } from '../../component/modules/sidekick/enums';
+import { useSideKick } from '../../component/modules/sidekick/SideKickContext';
 import { Country } from '../../utils/defaults';
 import { priceFormatter } from '../../utils/formatter';
 
@@ -104,7 +104,7 @@ export function PriceNumberInput({
           <form onSubmit={handleSubmit(onSubmit)}>
             <div style={{ display: 'flex', gap: '5px', width: '140px', position: 'relative' }}>
               <MyNumberInput
-                control={control}
+                control={control as unknown as Control<FieldValues>}
                 name="value"
                 step={0.01}
                 size="sm"

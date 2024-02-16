@@ -22,10 +22,9 @@ export function InvoicePage() {
     posthog?.capture('invoice_page_viewed');
   }, []);
 
-  const { customers, invoices, timestamp } = useLoaderData() as {
+  const { customers, invoices } = useLoaderData() as {
     customers: Customer[];
     invoices: Invoice[];
-    timestamp: number;
   };
 
   return (
@@ -83,7 +82,7 @@ export function InvoicePage() {
 function InvoiceCustomer({ customer, invoices }: { customer: Customer; invoices: Invoice[] }) {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { invoiceDelay } = useRouteLoaderData('farm') as any;
+  const { invoiceDelay } = useRouteLoaderData('farm') as { invoiceDelay: number };
 
   if (invoices.length === 0) return null;
   return (

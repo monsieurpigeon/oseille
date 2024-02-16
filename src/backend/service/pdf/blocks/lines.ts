@@ -3,15 +3,17 @@ import { Country, TVA_RATES_MAP } from '../../../../utils/defaults';
 import { dateFormatter, priceFormatter } from '../../../../utils/formatter';
 import { Delivery, DeliveryLine } from '../../../entity/delivery';
 import { Farm } from '../../../entity/farm';
+import { Invoice } from '../../../entity/invoice';
 import { ProductWithPrice } from '../../../entity/product';
 import { relDb } from '../../database';
 import { DocumentType } from '../pdf';
 
-export const lines = async (payload: any, type: DocumentType, farm: Farm) => {
+export const lines = async (payload: Delivery | Invoice, type: DocumentType, farm: Farm) => {
   const country = getCountry(farm?.country);
 
   if (type === DocumentType.delivery) {
-    const isTVA = payload.isTVA;
+    const delivery = payload as Delivery;
+    const isTVA = delivery.isTVA;
     return {
       layout: 'lightHorizontalLines',
       style: 'tableExample',
@@ -30,7 +32,7 @@ export const lines = async (payload: any, type: DocumentType, farm: Farm) => {
               alignment: 'right',
             },
           ],
-          ...payload.lines
+          ...delivery.lines
             .sort(
               (
                 a: { product: ProductWithPrice; quantity: number },
@@ -44,10 +46,11 @@ export const lines = async (payload: any, type: DocumentType, farm: Farm) => {
   }
 
   if (type === 'Invoice') {
-    const isTVA = await getIsTVA(payload);
+    const invoice = payload as Invoice;
+    const isTVA = await getIsTVA(invoice);
     const isCanada = country.value === 'CA';
     const result = await relDb.rel
-      .find('Idelivery', payload.deliveries)
+      .find('Idelivery', invoice.deliveries)
       .then((doc) => ({ ...doc, deliveries: doc.Ideliveries }));
     const invoiceDeliveries = result.deliveries.sort((a: Delivery, b: Delivery) =>
       a.documentId.localeCompare(b.documentId),

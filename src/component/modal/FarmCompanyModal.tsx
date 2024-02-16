@@ -1,13 +1,13 @@
 import { Flex, FormLabel, Input } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useRouteLoaderData } from 'react-router-dom';
 import { z } from 'zod';
-import { FarmInput, updateFarm } from '../../backend';
+import { Farm, FarmInput, updateFarm } from '../../backend';
 import { EMPTY_FARM } from '../../utils/defaults';
-import { useSideKick } from '../modules/sidekick/SideKickContext';
 import { SideKickFeeling } from '../modules/sidekick/enums';
+import { useSideKick } from '../modules/sidekick/SideKickContext';
 import { MyModal } from './MyModal';
 
 interface FarmCompanyModalProps {
@@ -22,10 +22,9 @@ export const configSchema = z.object({
 });
 
 export function FarmCompanyModal({ isOpen, onClose }: FarmCompanyModalProps) {
-  const { farm } = useRouteLoaderData('farm') as any;
+  const { farm } = useRouteLoaderData('farm') as { farm: Farm };
 
   const { say } = useSideKick();
-  const cancelRef = useRef<any>();
 
   const { register, handleSubmit, reset, formState } = useForm<FarmInput>({
     resolver: zodResolver(configSchema),
@@ -52,7 +51,6 @@ export function FarmCompanyModal({ isOpen, onClose }: FarmCompanyModalProps) {
 
   return (
     <MyModal
-      cancelRef={cancelRef}
       isOpen={isOpen}
       onClose={onClose}
       onSubmit={handleSubmit(onSubmit)}

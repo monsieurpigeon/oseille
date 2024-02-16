@@ -1,8 +1,8 @@
 import { Box, Flex, Spacer, Text } from '@chakra-ui/react';
 import { useNavigate, useRouteLoaderData } from 'react-router-dom';
 import { Product } from '../../../backend';
-import { MyIcon } from '../../../component/MyIcon';
 import { ListItem } from '../../../component/card/ListItem';
+import { MyIcon } from '../../../component/MyIcon';
 import { Country, CountryCode, DEFAULT_TAX } from '../../../utils/defaults';
 import { TVAFormatter } from '../../../utils/formatter';
 

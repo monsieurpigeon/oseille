@@ -1,10 +1,10 @@
 import { usePostHog } from 'posthog-js/react';
 import { useNavigate } from 'react-router-dom';
-import { Delivery, deleteDelivery } from '../../../backend';
+import { deleteDelivery, Delivery } from '../../../backend';
 import { DeleteButton } from '../../../component/buttons';
 import { useConfirm } from '../../../component/modal/confirm-modal/ConfirmContext';
-import { useSideKick } from '../../../component/modules/sidekick/SideKickContext';
 import { SideKickFeeling } from '../../../component/modules/sidekick/enums';
+import { useSideKick } from '../../../component/modules/sidekick/SideKickContext';
 
 interface DeleteDeliveryActionProps {
   delivery: Delivery;

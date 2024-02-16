@@ -1,5 +1,5 @@
 import { Params } from 'react-router-dom';
-import { Customer, relDb } from '../../../../backend';
+import { Customer, Delivery, Invoice, relDb } from '../../../../backend';
 import { CustomerAll } from '../../../../page/customer/CustomerAll';
 import { CustomerPage } from '../../../../page/customer/CustomerPage';
 import { CustomerDetail } from '../../../../page/customer/detail/CustomerDetail';
@@ -25,8 +25,8 @@ export const customerRouter = {
         relDb.rel.find('customer', params.id).then((doc) => ({
           ...doc,
           customers: doc.customers,
-          deliveries: doc.deliveries.sort((a: any, b: any) => b.documentId.localeCompare(a.documentId)),
-          invoices: doc.invoices.sort((a: any, b: any) => b.documentId.localeCompare(a.documentId)),
+          deliveries: doc.deliveries.sort((a: Delivery, b: Delivery) => b.documentId.localeCompare(a.documentId)),
+          invoices: doc.invoices.sort((a: Invoice, b: Invoice) => b.documentId.localeCompare(a.documentId)),
         })),
       children: [{ path: 'edit', element: <CustomerEditModal /> }],
     },

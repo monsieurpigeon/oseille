@@ -1,19 +1,18 @@
 import {
-  AlertDialog,
-  AlertDialogBody,
-  AlertDialogCloseButton,
-  AlertDialogContent,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogOverlay,
   Button,
   Flex,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay
 } from '@chakra-ui/react';
 import { ReactNode } from 'react';
 
 interface CreateModalProps {
   isOpen: boolean;
-  cancelRef: React.MutableRefObject<any>;
   onClose: () => void;
   onSubmit?: () => void;
   title: string;
@@ -29,7 +28,6 @@ export const MyModal = ({
   title,
   children,
   isOpen,
-  cancelRef,
   onClose,
   onSubmit,
   disabled,
@@ -39,66 +37,59 @@ export const MyModal = ({
   width,
 }: CreateModalProps) => {
   return (
-    <AlertDialog
+    <Modal
       motionPreset="slideInBottom"
       closeOnOverlayClick={false}
       isOpen={isOpen}
-      leastDestructiveRef={cancelRef}
       onClose={onClose}
     >
+      <ModalOverlay backdropFilter="blur(2px)" />
       <form
         onSubmit={(e) => {
           e.preventDefault();
           onSubmit && onSubmit();
         }}
       >
-        <AlertDialogOverlay>
-          <AlertDialogContent maxW={width}>
-            <AlertDialogHeader
-              fontSize="lg"
-              fontWeight="bold"
-            >
-              {title}
-            </AlertDialogHeader>
-            <AlertDialogCloseButton />
-            <AlertDialogBody>{children}</AlertDialogBody>
+        <ModalContent maxW={width}>
+          <ModalHeader
+            fontSize="lg"
+            fontWeight="bold"
+          >
+            {title}
+          </ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>{children}</ModalBody>
 
-            <AlertDialogFooter>
-              <Flex
-                flexGrow={1}
-                justifyContent="space-between"
-                direction="row-reverse"
-              >
-                <Flex gap={2}>
+          <ModalFooter>
+            <Flex
+              flexGrow={1}
+              justifyContent="space-between"
+              direction="row-reverse"
+            >
+              <Flex gap={2}>
+                <Button onClick={onClose}>{cancelLabel ?? 'Annuler'}</Button>
+                {onSubmit && (
                   <Button
-                    ref={cancelRef}
-                    onClick={onClose}
+                    colorScheme="twitter"
+                    type="submit"
+                    disabled={disabled}
                   >
-                    {cancelLabel ?? 'Annuler'}
-                  </Button>
-                  {onSubmit && (
-                    <Button
-                      colorScheme="twitter"
-                      type="submit"
-                      disabled={disabled}
-                    >
-                      {confirmLabel ?? 'Enregistrer'}
-                    </Button>
-                  )}
-                </Flex>
-                {onRemove && (
-                  <Button
-                    onClick={onRemove}
-                    colorScheme="red"
-                  >
-                    Supprimer
+                    {confirmLabel ?? 'Enregistrer'}
                   </Button>
                 )}
               </Flex>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialogOverlay>
+              {onRemove && (
+                <Button
+                  onClick={onRemove}
+                  colorScheme="red"
+                >
+                  Supprimer
+                </Button>
+              )}
+            </Flex>
+          </ModalFooter>
+        </ModalContent>
       </form>
-    </AlertDialog>
+    </Modal>
   );
 };

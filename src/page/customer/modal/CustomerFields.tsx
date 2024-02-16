@@ -1,9 +1,15 @@
 import { Input, Textarea } from '@chakra-ui/react';
+import { UseFormRegister } from 'react-hook-form';
 import { useRouteLoaderData } from 'react-router-dom';
+import { CustomerInput } from '../../../backend';
 import { MyField } from '../../../component/MyField';
 import { DEFAULT_CUSTOMER } from '../../../utils/defaults';
 
-export function CustomerFields({ control, register }: any) {
+interface Props {
+  register: UseFormRegister<CustomerInput>;
+}
+
+export function CustomerFields({ register }: Props) {
   const { isTVA } = useRouteLoaderData('farm') as { isTVA: boolean };
   return (
     <>

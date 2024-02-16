@@ -1,14 +1,14 @@
 import { Flex, FormControl, FormLabel, Input, Select, Text, Textarea } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useRouteLoaderData } from 'react-router-dom';
 import { z } from 'zod';
-import { FarmInput, updateFarm } from '../../backend';
+import { Farm, FarmInput, updateFarm } from '../../backend';
 import { DEFAULT_FOOTER, DEFAULT_THREAT, EMPTY_FARM } from '../../utils/defaults';
 import { MyNumberInput } from '../form/MyNumberInput';
-import { useSideKick } from '../modules/sidekick/SideKickContext';
 import { SideKickFeeling } from '../modules/sidekick/enums';
+import { useSideKick } from '../modules/sidekick/SideKickContext';
 import { MyModal } from './MyModal';
 
 interface FarmInvoicingModalProps {
@@ -24,10 +24,9 @@ export const configSchema = z.object({
 });
 
 export function FarmInvoicingModal({ isOpen, onClose }: FarmInvoicingModalProps) {
-  const { farm } = useRouteLoaderData('farm') as any;
+  const { farm } = useRouteLoaderData('farm') as { farm: Farm };
 
   const { say } = useSideKick();
-  const cancelRef = useRef<any>();
 
   const { control, register, handleSubmit, formState, setValue } = useForm<FarmInput>({
     resolver: zodResolver(configSchema),
@@ -58,7 +57,6 @@ export function FarmInvoicingModal({ isOpen, onClose }: FarmInvoicingModalProps)
 
   return (
     <MyModal
-      cancelRef={cancelRef}
       isOpen={isOpen}
       onClose={onClose}
       onSubmit={handleSubmit(onSubmit)}

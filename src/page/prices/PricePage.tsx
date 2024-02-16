@@ -2,6 +2,7 @@ import { Box, Flex, Grid } from '@chakra-ui/react';
 import { usePostHog } from 'posthog-js/react';
 import { useEffect } from 'react';
 import { useRouteLoaderData } from 'react-router-dom';
+import { Farm } from '../../backend';
 import { InfoModal } from '../../component/modal/InfoModal';
 import { MyH1 } from '../../component/typography/MyFont';
 import { PriceTable } from './PriceTable';
@@ -11,7 +12,7 @@ export function PricePage() {
   useEffect(() => {
     posthog?.capture('price_page_viewed');
   }, []);
-  const { farm } = useRouteLoaderData('farm') as any;
+  const { farm } = useRouteLoaderData('farm') as { farm: Farm };
 
   return (
     <Grid

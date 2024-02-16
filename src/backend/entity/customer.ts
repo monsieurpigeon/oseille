@@ -1,25 +1,16 @@
 import { sortAlpha } from '../../utils/sort';
 import { relDb } from '../service/database';
+import { Address, PouchObject } from './common';
 
-export interface Customer {
-  id: string;
-  _rev: string;
+export interface Customer extends PouchObject, Address {
   name: string;
-  address1: string;
-  address2: string;
-  zip: string;
-  city: string;
   notes: string;
   phone: string;
   tvaRef: string;
 }
 
-export interface CustomerInput {
+export interface CustomerInput extends Address {
   name: string;
-  address1: string;
-  address2: string;
-  zip: string;
-  city: string;
   notes: string;
   phone: string;
   tvaRef?: string;
@@ -39,7 +30,7 @@ export const getCustomers = () =>
 export const getCustomerById = (id: string): Promise<Customer> =>
   relDb.rel.find('Icustomer', id).then((doc) => doc.Icustomers[0]);
 
-export const onCustomersChange = (listener: (value: PouchDB.Core.ChangesResponseChange<{}>) => any) =>
+export const onCustomersChange = (listener: (value: PouchDB.Core.ChangesResponseChange<object>) => unknown) =>
   relDb.changes({ since: 'now', live: true }).on('change', (e) => {
     if (e.id.split('_')[0] === 'customer') {
       listener(e);

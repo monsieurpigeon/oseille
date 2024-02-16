@@ -11,6 +11,7 @@ function App() {
         <a
           href="https://vitejs.dev"
           target="_blank"
+          rel="noreferrer"
         >
           <img
             src="/vite.svg"
@@ -21,6 +22,7 @@ function App() {
         <a
           href="https://reactjs.org"
           target="_blank"
+          rel="noreferrer"
         >
           <img
             src={reactLogo}

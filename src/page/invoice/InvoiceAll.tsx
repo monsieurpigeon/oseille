@@ -10,7 +10,7 @@ import { priceFormatter } from '../../utils/formatter';
 const plural = (val: number) => (val > 1 ? 's' : '');
 
 export function InvoiceAll() {
-  const { invoiceDelay } = useRouteLoaderData('farm') as any;
+  const { invoiceDelay } = useRouteLoaderData('farm') as { invoiceDelay: number };
   const { invoices, customers } = useRouteLoaderData('invoices') as {
     invoices: Invoice[];
     customers: Customer[];

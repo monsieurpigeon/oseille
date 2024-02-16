@@ -1,8 +1,8 @@
 import { SettingPageGroup } from '../../../page-group/SettingPageGroup';
-import { SettingPage } from '../../../page/settings/SettingPage';
 import { AdvancedSection } from '../../../page/settings/sections/advanced-section/AdvancedSection';
 import { FarmSection } from '../../../page/settings/sections/farm-section/FarmSection';
 import { InvoiceSection } from '../../../page/settings/sections/invoice-section/InvoiceSection';
+import { SettingPage } from '../../../page/settings/SettingPage';
 import { visitDefault } from './common';
 
 export const settingsRouter = {

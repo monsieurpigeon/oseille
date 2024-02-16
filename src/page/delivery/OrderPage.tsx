@@ -89,8 +89,7 @@ export function OrderPage() {
 function OrderDate({ date, orders }: { date: string; orders: Delivery[] }) {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [toInvoice, setToInvoice]: [toInvoice: { [key: string]: boolean }, setToInvoice: any] =
-    useAtom(selectedOrdersAtom);
+  const [toInvoice, setToInvoice] = useAtom(selectedOrdersAtom);
 
   const [customers, setCustomer] = useState<{ [key: string]: Customer }>({});
 
@@ -122,10 +121,10 @@ function OrderDate({ date, orders }: { date: string; orders: Delivery[] }) {
                 onClick={() => (delivery.id === id ? navigate('') : navigate(delivery.id))}
                 checkable={!delivery.invoice}
                 checked={toInvoice[delivery.id] || false}
-                onCheck={() => {
+                onCheck={(e: React.ChangeEvent<HTMLInputElement>) => {
                   setToInvoice((i: { [key: string]: boolean }) => ({
                     ...i,
-                    [delivery.id]: !i[delivery.id],
+                    [delivery.id]: e.target.checked,
                   }));
                   navigate('');
                 }}
