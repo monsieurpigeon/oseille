@@ -1,4 +1,4 @@
-import { Checkbox, Flex } from '@chakra-ui/react';
+import { Flex } from '@chakra-ui/react';
 import clsx from 'clsx';
 import { ReactNode } from 'react';
 
@@ -8,7 +8,7 @@ interface ListItemProps {
   isSelected: boolean;
   checkable?: boolean;
   checked?: boolean;
-  onCheck?: () => void;
+  onCheck?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   done?: boolean;
   alert?: boolean;
 }
@@ -37,14 +37,11 @@ export function ListItem({ onClick, children, isSelected, checkable, checked, on
         {children}
       </Flex>
       {checkable && (
-        <Checkbox
-          border="darkcyan"
+        <input
+          type="checkbox"
           checked={checked}
           onChange={onCheck}
-          width="20px"
-          height="20px"
-          cursor="pointer"
-          marginRight="20px"
+          style={{ cursor: 'pointer', width: '20px', height: '20px', margin: '0 10px' }}
         />
       )}
     </Flex>

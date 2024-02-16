@@ -121,10 +121,10 @@ function OrderDate({ date, orders }: { date: string; orders: Delivery[] }) {
                 onClick={() => (delivery.id === id ? navigate('') : navigate(delivery.id))}
                 checkable={!delivery.invoice}
                 checked={toInvoice[delivery.id] || false}
-                onCheck={() => {
+                onCheck={(e: React.ChangeEvent<HTMLInputElement>) => {
                   setToInvoice((i: { [key: string]: boolean }) => ({
                     ...i,
-                    [delivery.id]: !i[delivery.id],
+                    [delivery.id]: e.target.checked,
                   }));
                   navigate('');
                 }}
