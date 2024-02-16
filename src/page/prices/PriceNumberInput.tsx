@@ -1,7 +1,7 @@
 import { Button } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect } from 'react';
-import { useForm } from 'react-hook-form';
+import { Control, FieldValues, useForm } from 'react-hook-form';
 import { useRouteLoaderData } from 'react-router-dom';
 import { z } from 'zod';
 import { Customer, Product } from '../../backend';
@@ -104,7 +104,7 @@ export function PriceNumberInput({
           <form onSubmit={handleSubmit(onSubmit)}>
             <div style={{ display: 'flex', gap: '5px', width: '140px', position: 'relative' }}>
               <MyNumberInput
-                control={control}
+                control={control as unknown as Control<FieldValues>}
                 name="value"
                 step={0.01}
                 size="sm"

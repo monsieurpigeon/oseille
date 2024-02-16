@@ -1,7 +1,7 @@
 import { Box, Select, Text } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect } from 'react';
-import { useForm } from 'react-hook-form';
+import { Control, FieldValues, useForm } from 'react-hook-form';
 import { useRouteLoaderData } from 'react-router-dom';
 import { z } from 'zod';
 import { Farm, updateFarm } from '../../backend';
@@ -71,7 +71,7 @@ export function FarmDocumentIdModal({ isOpen, onClose }: { isOpen: boolean; onCl
         <Text>Prochaine livraison:</Text>
         <MyNumberInput
           min={1}
-          control={control}
+          control={control as unknown as Control<FieldValues>}
           name="deliveryId"
         />
       </Box>
@@ -79,7 +79,7 @@ export function FarmDocumentIdModal({ isOpen, onClose }: { isOpen: boolean; onCl
         <Text>Prochaine facture:</Text>
         <MyNumberInput
           min={1}
-          control={control}
+          control={control as unknown as Control<FieldValues>}
           name="invoiceId"
         />
       </Box>

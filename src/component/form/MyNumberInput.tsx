@@ -3,11 +3,12 @@ import {
   NumberIncrementStepper,
   NumberInput,
   NumberInputField,
+  NumberInputProps,
   NumberInputStepper,
 } from '@chakra-ui/react';
 import { Control, Controller, FieldValues } from 'react-hook-form';
 
-interface MyNumberInputProps {
+interface MyNumberInputProps extends NumberInputProps {
   control: Control<FieldValues>;
   name: string;
   min?: number;

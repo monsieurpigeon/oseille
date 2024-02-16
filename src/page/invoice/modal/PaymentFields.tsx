@@ -1,5 +1,5 @@
 import { Input, Select, Textarea } from '@chakra-ui/react';
-import { Control, UseFormRegister } from 'react-hook-form';
+import { Control, FieldValues, UseFormRegister } from 'react-hook-form';
 import { InvoicePaymentInput, PAYMENT_MODES } from '../../../backend';
 import { MyNumberInput } from '../../../component/form/MyNumberInput';
 import { MyField } from '../../../component/MyField';
@@ -40,7 +40,7 @@ export function PaymentFields({
       </MyField>
       <MyField title="Montant">
         <MyNumberInput
-          control={control}
+          control={control as unknown as Control<FieldValues>}
           name={'amount'}
           min={0}
           step={0.01}
