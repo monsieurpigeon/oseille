@@ -89,8 +89,7 @@ export function OrderPage() {
 function OrderDate({ date, orders }: { date: string; orders: Delivery[] }) {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [toInvoice, setToInvoice]: [toInvoice: { [key: string]: boolean }, setToInvoice: any] =
-    useAtom(selectedOrdersAtom);
+  const [toInvoice, setToInvoice] = useAtom(selectedOrdersAtom);
 
   const [customers, setCustomer] = useState<{ [key: string]: Customer }>({});
 

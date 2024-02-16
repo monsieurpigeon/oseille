@@ -2,12 +2,26 @@ import { Table, TableContainer, Tbody, Td, Tr } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { useRouteLoaderData } from 'react-router-dom';
 import { Invoice } from '../../backend';
-import { computeCanadaTaxes, computeTaxes, getIsTVA } from '../../utils/aggregations';
+import { computeCanadaTaxes, computeTaxes, getIsTVA, TaxLine } from '../../utils/aggregations';
 import { Country } from '../../utils/defaults';
 import { priceFormatter } from '../../utils/formatter';
 
 export function InvoiceTotals({ invoice }: { invoice: Invoice }) {
-  const [state, setState] = useState<any>({ isTva: undefined, taxes: undefined });
+  const [state, setState] = useState<{
+    isTVA: boolean | undefined;
+    taxes:
+      | undefined
+      | {
+          total: TaxLine & {
+            tps: number;
+            tvq: number;
+          };
+        }
+      | {
+          total: TaxLine;
+          detail: TaxLine[];
+        };
+  }>({ isTVA: undefined, taxes: undefined });
   const { country } = useRouteLoaderData('farm') as { country: Country };
 
   useEffect(() => {
@@ -28,7 +42,7 @@ export function InvoiceTotals({ invoice }: { invoice: Invoice }) {
               isNumeric
               fontWeight="bold"
             >
-              {priceFormatter(state.taxes?.total.ht, country.currency)}
+              {state.taxes && priceFormatter(state.taxes.total.ht, country.currency)}
             </Td>
             {state.isTVA && (
               <>
@@ -37,7 +51,7 @@ export function InvoiceTotals({ invoice }: { invoice: Invoice }) {
                   isNumeric
                   fontWeight="bold"
                 >
-                  {priceFormatter(state.taxes?.total.tax, country.currency)}
+                  {state.taxes && priceFormatter(state.taxes.total.tax, country.currency)}
                 </Td>
 
                 <Td>Total TTC</Td>
@@ -45,7 +59,7 @@ export function InvoiceTotals({ invoice }: { invoice: Invoice }) {
                   isNumeric
                   fontWeight="bold"
                 >
-                  {priceFormatter(state.taxes?.total.ttc, country.currency)}
+                  {state.taxes && priceFormatter(state.taxes.total.ttc, country.currency)}
                 </Td>
               </>
             )}

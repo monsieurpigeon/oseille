@@ -122,10 +122,7 @@ export function OrderAll() {
             </Thead>
             <Tbody>
               {productLines.map((line) => (
-                <Tr
-                  key={line.product.id}
-                  onClick={() => navigate(`/product/${line.product.id}`)}
-                >
+                <Tr key={line.product.id}>
                   <Th>{line.product.name}</Th>
                   <Th>
                     {line.quantity} {line.product.unit}

@@ -3,6 +3,7 @@ import { ConfirmModal } from './ConfirmModal';
 
 type Params = Partial<Omit<ComponentProps<typeof ConfirmModal>, 'open' | 'onConfirm' | 'onCancel'>>;
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const defaultFunction = (p?: Params) => Promise.resolve(true);
 
 const defaultValue = {
@@ -28,6 +29,7 @@ function ConfirmModalWithContext() {
   const [open, setOpen] = useState(false);
   const [props, setProps] = useState<undefined | Params>({});
   const { confirmRef } = useContext(ConfirmContext);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const resolveRef = useRef((v: boolean) => {});
 
   confirmRef.current = (props) =>

@@ -63,6 +63,7 @@ export interface FarmInput {
 
 export interface LogoInput {
   data: string;
+  image: unknown;
 }
 
 export const FARM_KEY = 'myFarm';

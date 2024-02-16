@@ -16,7 +16,7 @@ const defaultValue: {
   sentence: '',
   emoji: undefined,
   feeling: undefined,
-  say: (props: sideKickSayFunction) => undefined,
+  say: () => undefined,
   shutUp: () => undefined,
 };
 

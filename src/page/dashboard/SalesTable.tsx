@@ -1,7 +1,7 @@
 import { Box, Button, FormLabel, Switch, Table, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { useLoaderData, useRouteLoaderData } from 'react-router-dom';
-import { Customer, Delivery, Invoice, Product, relDb } from '../../backend';
+import { Customer, Delivery, Invoice, Product, relDb, Unit } from '../../backend';
 import { round } from '../../utils/compute';
 import { Country } from '../../utils/defaults';
 import { priceFormatter } from '../../utils/formatter';
@@ -85,7 +85,7 @@ export function SalesTable() {
         total: Object.values(customerSales || {}).reduce((memo, value) => memo + value.price, 0),
         totalUnit: Object.values(customerSales || {}).reduce((memo, value) => memo + value.unit, 0),
         unit: product.unit,
-        ...customerSales,
+        prices: customerSales,
       };
     })
     .sort((a, b) => b.total - a.total);
@@ -142,7 +142,30 @@ export function SalesTable() {
   );
 }
 
-export const PriceTable = ({ sales, country, customersPlus, productsPlus, threshold }: any) => (
+export const PriceTable = ({
+  sales,
+  country,
+  customersPlus,
+  productsPlus,
+  threshold,
+}: {
+  sales: Sales[];
+  country: Country;
+  customersPlus: {
+    name: string;
+    id: string;
+    total: number;
+  }[];
+  productsPlus: {
+    name: string;
+    id: string;
+    total: number;
+    totalUnit: number;
+    unit: Unit;
+    prices: { [key: string]: { price: number; unit: number } };
+  }[];
+  threshold: { price: number; unit: number };
+}) => (
   <Table variant="simple">
     <Thead>
       <Tr>
@@ -160,7 +183,7 @@ export const PriceTable = ({ sales, country, customersPlus, productsPlus, thresh
             )}
           </Box>
         </Th>
-        {customersPlus.map((customer: Customer & { total: number }) => (
+        {customersPlus.map((customer) => (
           <Th
             className="vertical"
             key={customer.id}
@@ -172,19 +195,20 @@ export const PriceTable = ({ sales, country, customersPlus, productsPlus, thresh
       </Tr>
     </Thead>
     <Tbody>
-      {productsPlus.map((product: any) => (
+      {productsPlus.map((product) => (
         <Tr key={product.id}>
           <Td padding="5px">
             <div>{product.name}</div>
             <Box fontWeight="bold">{priceFormatter(product.total, country.currency)}</Box>
           </Td>
-          {customersPlus.map((customer: Customer) => (
+          {customersPlus.map((customer) => (
             <Td
               key={`${product.id}\n${customer.id}`}
-              fontWeight={product[customer.id]?.price > threshold.price ? 'bold' : 'normal'}
+              fontWeight={product.prices?.[customer.id]?.price > threshold.price ? 'bold' : 'normal'}
               title={`${product.name}\n${customer.name}`}
             >
-              {!!product[customer.id]?.price && priceFormatter(product[customer.id]?.price, country.currency)}
+              {!!product.prices?.[customer.id]?.price &&
+                priceFormatter(product.prices?.[customer.id]?.price, country.currency)}
             </Td>
           ))}
         </Tr>
@@ -193,7 +217,23 @@ export const PriceTable = ({ sales, country, customersPlus, productsPlus, thresh
   </Table>
 );
 
-export const UnitTable = ({ customersPlus, productsPlus, threshold }: any) => (
+export const UnitTable = ({
+  customersPlus,
+  productsPlus,
+  threshold,
+}: {
+  customersPlus: { name: string; id: string; total: number }[];
+  productsPlus: {
+    name: string;
+    id: string;
+    total: number;
+    totalUnit: number;
+    unit: Unit;
+    prices: { [key: string]: { price: number; unit: number } };
+  }[];
+  sales: Sales[];
+  threshold: { price: number; unit: number };
+}) => (
   <Table variant="simple">
     <Thead>
       <Tr>
@@ -203,7 +243,7 @@ export const UnitTable = ({ customersPlus, productsPlus, threshold }: any) => (
         >
           <Box fontWeight="bold">🌚</Box>
         </Th>
-        {customersPlus.map((customer: Customer) => (
+        {customersPlus.map((customer) => (
           <Th
             className="vertical"
             key={customer.id}
@@ -214,7 +254,7 @@ export const UnitTable = ({ customersPlus, productsPlus, threshold }: any) => (
       </Tr>
     </Thead>
     <Tbody>
-      {productsPlus.map((product: any) => (
+      {productsPlus.map((product) => (
         <Tr key={product.id}>
           <Td padding="5px">
             <Box>{product.name}</Box>
@@ -222,13 +262,13 @@ export const UnitTable = ({ customersPlus, productsPlus, threshold }: any) => (
               {Math.floor(product.totalUnit)} {product.unit}
             </Box>
           </Td>
-          {customersPlus.map((customer: Customer) => (
+          {customersPlus.map((customer) => (
             <Td
               key={`${product.id}\n${customer.id}`}
-              fontWeight={product[customer.id]?.price > threshold.price ? 'bold' : 'normal'}
+              fontWeight={product.prices?.[customer.id]?.price > threshold.price ? 'bold' : 'normal'}
               title={`${product.name}\n${customer.name}`}
             >
-              {!!product[customer.id] && `${Math.floor(product[customer.id].unit)} ${product.unit}`}
+              {!!product.prices?.[customer.id] && `${Math.floor(product.prices[customer.id].unit)} ${product.unit}`}
             </Td>
           ))}
         </Tr>

@@ -5,9 +5,17 @@ import {
   NumberInputField,
   NumberInputStepper,
 } from '@chakra-ui/react';
-import { Controller } from 'react-hook-form';
+import { Control, Controller, FieldValues } from 'react-hook-form';
 
-export function MyNumberInput({ control, name, min, max, step, ...props }: any) {
+interface MyNumberInputProps {
+  control: Control<FieldValues>;
+  name: string;
+  min?: number;
+  max?: number;
+  step?: number;
+}
+
+export function MyNumberInput({ control, name, min, max, step, ...props }: MyNumberInputProps) {
   return (
     <Controller
       control={control}
