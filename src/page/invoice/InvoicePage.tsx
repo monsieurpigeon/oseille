@@ -1,11 +1,13 @@
 import { Box, Flex } from '@chakra-ui/react';
 import { differenceInDays } from 'date-fns';
+import { useAtom } from 'jotai';
 import { usePostHog } from 'posthog-js/react';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { Outlet, useLoaderData, useNavigate, useParams, useRouteLoaderData } from 'react-router-dom';
 import { Customer, Invoice, isInvoicePaid } from '../../backend';
 import { ListItem } from '../../component/card/ListItem';
 import { ListItemGroup } from '../../component/card/ListItemGroup';
+import { yearAtom } from '../../component/layout/Header';
 import { MyHeader } from '../../component/layout/page-layout/MyHeader';
 import { MyPage } from '../../component/layout/page-layout/MyPage';
 import { MyScrollList } from '../../component/layout/page-layout/MyScrollList';
@@ -22,10 +24,17 @@ export function InvoicePage() {
     posthog?.capture('invoice_page_viewed');
   }, []);
 
-  const { customers, invoices } = useLoaderData() as {
+  const { customers, invoices: invoicesRaw } = useLoaderData() as {
     customers: Customer[];
     invoices: Invoice[];
   };
+
+  const [year] = useAtom(yearAtom);
+
+  const invoices = useMemo(() => {
+    if (year === '') return invoicesRaw;
+    return invoicesRaw?.filter((invoice) => new Date(invoice.createdAt).getFullYear() === +year);
+  }, [invoicesRaw, year]);
 
   return (
     <MyPage>

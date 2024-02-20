@@ -1,7 +1,9 @@
 import { Box, Button, FormLabel, Switch, Table, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
+import { useAtom } from 'jotai';
+import { useEffect, useMemo, useState } from 'react';
 import { useLoaderData, useRouteLoaderData } from 'react-router-dom';
 import { Customer, Delivery, Invoice, Product, relDb, Unit } from '../../backend';
+import { yearAtom } from '../../component/layout/Header';
 import { round } from '../../utils/compute';
 import { Country } from '../../utils/defaults';
 import { priceFormatter } from '../../utils/formatter';
@@ -20,12 +22,22 @@ export function SalesTable() {
   const { country } = useRouteLoaderData('farm') as { country: Country };
 
   const [selectedTable, setSelectedTable] = useState(false);
+  const [year] = useAtom(yearAtom);
 
-  const { products, customers, invoices } = useLoaderData() as {
+  const {
+    products,
+    customers,
+    invoices: invoicesRaw,
+  } = useLoaderData() as {
     products: Product[];
     customers: Customer[];
     invoices: Invoice[];
   };
+  const invoices = useMemo(() => {
+    if (year === '') return invoicesRaw;
+    return invoicesRaw?.filter((invoice) => new Date(invoice.createdAt).getFullYear() === +year);
+  }, [invoicesRaw, year]);
+
   const [show, setShow] = useState(false);
 
   useEffect(() => {
