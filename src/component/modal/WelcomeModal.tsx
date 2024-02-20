@@ -1,14 +1,15 @@
 import {
-    Button,
-    Flex,
-    Modal,
-    ModalBody,
-    ModalCloseButton,
-    ModalContent,
-    ModalFooter,
-    ModalHeader,
-    ModalOverlay,
-    Text
+  Button,
+  Flex,
+  Kbd,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Text,
 } from '@chakra-ui/react';
 import { useAtom } from 'jotai';
 import { atomWithStorage } from 'jotai/utils';
@@ -36,12 +37,15 @@ export function WelcomeModal() {
                 direction="column"
               >
                 <Text>
-                  Oseille est une application gratuite et hors-ligne qui vous permet de gérer la facturation de votre
-                  exploitation.
+                  Oseille est une application hors-ligne et gratuite qui vous permet de gérer la facturation de votre
+                  ferme.
                 </Text>
                 <Text>Pas besoin de s'inscrire, vous êtes tout de suite à la maison.</Text>
                 <Text>Vos données restent chez vous et sont accessibles même sans internet.</Text>
-                <Text>Pensez à régulièrement exporter vos données et à les stocker en sécurité.</Text>
+                <Text>
+                  Pensez à exporter régulièrement vos données (bouton <Kbd>Export</Kbd> en haut a droite) et à les
+                  stocker en sécurité.
+                </Text>
               </Flex>
             </ModalBody>
 

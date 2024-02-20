@@ -49,7 +49,7 @@ export const FEATURES = [
     title: "Première version de l'app",
     user: users.myriam,
     description:
-      "Suite à mon message sur un groupe facebook, Myriam m'a exprimé son besoin d'avoir une application simple pour gérer la facturation de son exploitation maraîchère, et nous avons trouvé le nom Oseille ensemble",
+      "Suite à mon message sur un groupe facebook, Myriam m'a exprimé son besoin d'avoir une application simple pour gérer la facturation de sa ferme maraîchère, et nous avons trouvé le nom Oseille ensemble",
   },
   {
     title: 'Gestion du tarif par défaut',
