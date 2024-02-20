@@ -1,12 +1,17 @@
-import { Flex, Spacer, Text } from '@chakra-ui/react';
+import { Flex, Select, Spacer, Text } from '@chakra-ui/react';
+import { useAtom } from 'jotai';
+import { atomWithStorage } from 'jotai/utils';
 import { Link, useRouteLoaderData } from 'react-router-dom';
 import { Farm } from '../../backend';
 import { ExportAction } from '../../page/settings/sections/advanced-section/actions/ExportAction';
 import { Country, DEFAULT_FARM } from '../../utils/defaults';
 import { HeaderNavigation } from './Navigation';
 
+export const yearAtom = atomWithStorage('year', '');
+
 export function Header() {
   const { farm, country } = useRouteLoaderData('farm') as { farm: Farm; country: Country };
+  const [year, setYear] = useAtom(yearAtom);
 
   return (
     <Flex
@@ -24,7 +29,17 @@ export function Header() {
       <Spacer />
       <HeaderNavigation />
       <Spacer />
-
+      <Select
+        width="inherit"
+        value={year}
+        onChange={(e) => setYear(e.target.value)}
+      >
+        <option value="">Tout</option>
+        <option value="2024">2024</option>
+        <option value="2023">2023</option>
+        {/* TODO add more years */}
+      </Select>
+      <Spacer />
       <Link to="/settings/farm">
         {farm?.title && (
           <Text as="b">

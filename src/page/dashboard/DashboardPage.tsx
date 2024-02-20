@@ -1,8 +1,10 @@
 import { Box, Stat, StatGroup, StatLabel, StatNumber } from '@chakra-ui/react';
+import { useAtom } from 'jotai';
 import { usePostHog } from 'posthog-js/react';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useLoaderData, useRouteLoaderData } from 'react-router-dom';
 import { Invoice, isInvoicePaid } from '../../backend';
+import { yearAtom } from '../../component/layout/Header';
 import { MySimpleLayout } from '../../component/layout/page-layout/MySimpleLayout';
 import { getInvoiceTotal } from '../../utils/aggregations';
 import { Country, CountryCode } from '../../utils/defaults';
@@ -31,12 +33,18 @@ export function DashboardPage() {
   useEffect(() => {
     posthog?.capture('home_page_viewed');
   }, []);
-  const { invoices } = useLoaderData() as { invoices: Invoice[] };
+  const [year] = useAtom(yearAtom);
+  const { invoices: invoicesRaw } = useLoaderData() as { invoices: Invoice[] };
   const { country } = useRouteLoaderData('farm') as { country: Country };
   const [{ invoicePaid, invoiceWaiting }, setInvoices] = useState({
     invoicePaid: { quantity: 0, money: 0 },
     invoiceWaiting: { quantity: 0, money: 0 },
   });
+
+  const invoices = useMemo(() => {
+    if (year === '') return invoicesRaw;
+    return invoicesRaw?.filter((invoice) => new Date(invoice.createdAt).getFullYear() === +year);
+  }, [invoicesRaw, year]);
 
   useEffect(() => {
     const getInvoices = async () => {

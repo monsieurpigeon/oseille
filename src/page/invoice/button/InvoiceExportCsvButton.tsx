@@ -1,8 +1,11 @@
 import { Button, useDisclosure } from '@chakra-ui/react';
 import { format } from 'date-fns';
+import { useAtom } from 'jotai';
 import _ from 'lodash';
+import { useMemo } from 'react';
 import { useRouteLoaderData } from 'react-router-dom';
 import { Customer, Delivery, Invoice, isInvoicePaid, Product } from '../../../backend';
+import { yearAtom } from '../../../component/layout/Header';
 import { MyModal } from '../../../component/modal/MyModal';
 
 const clean = (num: number) => Number(num.toFixed(5));
@@ -10,12 +13,24 @@ const translate = (num: number) => num.toLocaleString('fr-FR', { minimumFraction
 
 export function InvoiceExportCsvButton() {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const { invoices, customers, products, deliveries } = useRouteLoaderData('invoices') as {
+  const {
+    invoices: invoicesRaw,
+    customers,
+    products,
+    deliveries,
+  } = useRouteLoaderData('invoices') as {
     invoices: Invoice[];
     customers: Customer[];
     products: Product[];
     deliveries: Delivery[];
   };
+
+  const [year] = useAtom(yearAtom);
+
+  const invoices = useMemo(() => {
+    if (year === '') return invoicesRaw;
+    return invoicesRaw?.filter((invoice) => new Date(invoice.createdAt).getFullYear() === +year);
+  }, [invoicesRaw, year]);
 
   const customersMap = customers.reduce((memo, cus) => {
     memo[cus.id] = cus;
