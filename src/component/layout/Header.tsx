@@ -1,10 +1,12 @@
 import { Flex, Select, Spacer, Text } from '@chakra-ui/react';
 import { useAtom } from 'jotai';
 import { atomWithStorage } from 'jotai/utils';
+import { useEffect, useState } from 'react';
 import { Link, useRouteLoaderData } from 'react-router-dom';
 import { Farm } from '../../backend';
 import { ExportAction } from '../../page/settings/sections/advanced-section/actions/ExportAction';
 import { Country, DEFAULT_FARM } from '../../utils/defaults';
+import { YearAlertModal } from './modals/YearAlertModal';
 import { HeaderNavigation } from './Navigation';
 
 export const yearAtom = atomWithStorage('year', '');
@@ -12,6 +14,14 @@ export const yearAtom = atomWithStorage('year', '');
 export function Header() {
   const { farm, country } = useRouteLoaderData('farm') as { farm: Farm; country: Country };
   const [year, setYear] = useAtom(yearAtom);
+
+  const [openAlertYear, setOpenAlertYear] = useState(false);
+
+  useEffect(() => {
+    if (farm && farm.year !== new Date().getFullYear()) {
+      setOpenAlertYear(true);
+    }
+  }, [farm]);
 
   return (
     <Flex
@@ -49,6 +59,10 @@ export function Header() {
         {farm && !farm?.title && <Text as="b">{DEFAULT_FARM.title.toUpperCase()}</Text>}
       </Link>
       <ExportAction />
+      <YearAlertModal
+        isOpen={openAlertYear}
+        onClose={() => setOpenAlertYear(false)}
+      />
     </Flex>
   );
 }
