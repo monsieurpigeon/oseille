@@ -1,4 +1,4 @@
-import { Button } from '@chakra-ui/react';
+import { Button, Text } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect } from 'react';
 import { Control, FieldValues, useForm } from 'react-hook-form';
@@ -10,11 +10,12 @@ import { MyNumberInput } from '../../component/form/MyNumberInput';
 import { useConfirm } from '../../component/modal/confirm-modal/ConfirmContext';
 import { SideKickFeeling } from '../../component/modules/sidekick/enums';
 import { useSideKick } from '../../component/modules/sidekick/SideKickContext';
+import { round } from '../../utils/compute';
 import { Country } from '../../utils/defaults';
 import { priceFormatter } from '../../utils/formatter';
 
 export const priceSchema = z.object({
-  value: z.number(),
+  value: z.string(),
 });
 
 export function PriceNumberInput({
@@ -47,9 +48,12 @@ export function PriceNumberInput({
     if (
       await confirm({
         title: 'Supprimer le tarif ?',
-        message: `Supprimer le tarif pour le produit : "${product.name}" du client ${
-          customer === 'DEFAULT' ? 'par défaut' : customer.name
-        }`,
+        message: (
+          <Text>
+            Supprimer le tarif pour le produit <Text as="b">{product.name}</Text> du client{' '}
+            <Text as="b">{customer === 'DEFAULT' ? 'par défaut' : customer.name}</Text>
+          </Text>
+        ),
       })
     ) {
       deletePrice(price)
@@ -69,7 +73,7 @@ export function PriceNumberInput({
   }, [value]);
 
   const onSubmit = (e: PriceInput) =>
-    addPrice({ ...price, ...e, customer, product })
+    addPrice({ ...price, ...e, value: round(+e.value), customer, product })
       .then(() =>
         say({
           sentence: `Le tarif a bien été enregistré`,
