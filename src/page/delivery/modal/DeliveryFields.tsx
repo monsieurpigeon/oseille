@@ -193,8 +193,14 @@ const ProductLine = ({ index, methods, availableProducts, availablePrices, remov
     const product = availableProducts.find((product: Product) => product.id === watchProduct) as Product;
     if (
       await confirm({
-        title: 'Éditer le tarif ?',
-        message: `${product.name} => ${customer.name} : ${priceFormatter(watchPrice)} HT par ${product.unit} ?`,
+        title: 'Editer le tarif ?',
+        message: (
+          <Text>
+            Le nouveau prix pour le <Text as="b">{product.name}</Text> chez le client{' '}
+            <Text as="b">{customer.name}</Text> sera de <Text as="b">{priceFormatter(watchPrice)}</Text> HT par{' '}
+            {product.unit}
+          </Text>
+        ),
       })
     ) {
       if (currentPrice && (currentPrice as Price).customer === watchCustomer) {

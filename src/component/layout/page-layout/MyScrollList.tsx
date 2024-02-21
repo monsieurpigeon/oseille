@@ -10,7 +10,7 @@ export function MyScrollList({ children, empty }: MyScrollListProps) {
   const isEmpty = Children.count(children) === 0;
 
   return isEmpty && empty != null ? (
-    <Empty onClick={empty.onClick}>{children}</Empty>
+    <Empty onClick={empty.onClick}>{empty.title}</Empty>
   ) : (
     <Flex
       grow={1}

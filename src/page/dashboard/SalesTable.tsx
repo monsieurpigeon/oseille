@@ -216,7 +216,7 @@ export const PriceTable = ({
           {customersPlus.map((customer) => (
             <Td
               key={`${product.id}\n${customer.id}`}
-              fontWeight={product.prices?.[customer.id]?.price > threshold.price ? 'bold' : 'normal'}
+              fontWeight={product.prices?.[customer.id]?.price > threshold?.price ? 'bold' : 'normal'}
               title={`${product.name}\n${customer.name}`}
             >
               {!!product.prices?.[customer.id]?.price &&
