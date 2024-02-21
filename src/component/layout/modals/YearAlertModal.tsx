@@ -61,15 +61,15 @@ export function YearAlertModal({ isOpen, onClose }: { isOpen: boolean; onClose: 
             mt={4}
           >
             <Box>Année</Box>
-            <Flex justifyContent="end">{farm.year}</Flex>
+            <Flex justifyContent="end">{farm?.year}</Flex>
             <Flex justifyContent="end">➡️</Flex>
             <Flex justifyContent="end">{new Date().getFullYear()}</Flex>
             <Box>N° BL</Box>
-            <Flex justifyContent="end">{farm.deliveryId}</Flex>
+            <Flex justifyContent="end">{farm?.deliveryId}</Flex>
             <Flex justifyContent="end">➡️</Flex>
             <Flex justifyContent="end">1</Flex>
             <Box>N° Facture</Box>
-            <Flex justifyContent="end">{farm.invoiceId}</Flex>
+            <Flex justifyContent="end">{farm?.invoiceId}</Flex>
             <Flex justifyContent="end">➡️</Flex>
             <Flex justifyContent="end">1</Flex>
           </SimpleGrid>
