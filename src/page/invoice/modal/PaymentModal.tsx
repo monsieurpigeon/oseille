@@ -48,7 +48,7 @@ export function PaymentModal() {
     notes: '',
   };
 
-  const { control, register, handleSubmit, reset } = useForm<InvoicePaymentInput>({
+  const { register, handleSubmit, reset } = useForm<InvoicePaymentInput>({
     resolver: zodResolver(paymentSchema),
     defaultValues: { ...emptyPayment, ...invoice?.payments?.[0] },
   });
@@ -97,10 +97,7 @@ export function PaymentModal() {
       onRemove={(invoice?.payments && invoice.payments.length > 0 && onRemove) || undefined}
       title={invoice?.payments && invoice.payments.length > 0 ? "Edition d'un paiement" : "Ajout d'un paiement"}
     >
-      <PaymentFields
-        control={control}
-        register={register}
-      />
+      <PaymentFields register={register} />
     </MyModal>
   );
 }

@@ -1,7 +1,7 @@
 import { Flex, FormControl, FormLabel, Input, Select, Text, Textarea } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect } from 'react';
-import { useForm } from 'react-hook-form';
+import { FieldValues, useForm, UseFormRegister } from 'react-hook-form';
 import { useRouteLoaderData } from 'react-router-dom';
 import { z } from 'zod';
 import { Farm, FarmInput, updateFarm } from '../../backend';
@@ -28,7 +28,7 @@ export function FarmInvoicingModal({ isOpen, onClose }: FarmInvoicingModalProps)
 
   const { say } = useSideKick();
 
-  const { control, register, handleSubmit, formState, setValue } = useForm<FarmInput>({
+  const { register, handleSubmit, formState, setValue } = useForm<FarmInput>({
     resolver: zodResolver(configSchema),
     defaultValues: { ...EMPTY_FARM, ...farm },
   });
@@ -91,7 +91,7 @@ export function FarmInvoicingModal({ isOpen, onClose }: FarmInvoicingModalProps)
         <Flex direction="column">
           <FormLabel>Échéance</FormLabel>
           <MyNumberInput
-            control={control}
+            register={register as unknown as UseFormRegister<FieldValues>}
             name="invoiceDelay"
             min={0}
           />

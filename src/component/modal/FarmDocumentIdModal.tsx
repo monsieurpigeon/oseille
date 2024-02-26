@@ -1,7 +1,7 @@
 import { Box, Select, Text } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect } from 'react';
-import { Control, FieldValues, useForm } from 'react-hook-form';
+import { FieldValues, useForm, UseFormRegister } from 'react-hook-form';
 import { useRouteLoaderData } from 'react-router-dom';
 import { z } from 'zod';
 import { Farm, updateFarm } from '../../backend';
@@ -30,7 +30,7 @@ export function FarmDocumentIdModal({ isOpen, onClose }: { isOpen: boolean; onCl
 
   const currentYear = farm.year || 2023;
 
-  const { control, register, formState, handleSubmit, reset } = useForm<DocumentIdInput>({
+  const { register, formState, handleSubmit, reset } = useForm<DocumentIdInput>({
     resolver: zodResolver(documentsSchema),
     defaultValues: {
       invoiceId: farm?.invoiceId,
@@ -71,7 +71,7 @@ export function FarmDocumentIdModal({ isOpen, onClose }: { isOpen: boolean; onCl
         <Text>Prochaine livraison:</Text>
         <MyNumberInput
           min={1}
-          control={control as unknown as Control<FieldValues>}
+          register={register as unknown as UseFormRegister<FieldValues>}
           name="deliveryId"
         />
       </Box>
@@ -79,7 +79,7 @@ export function FarmDocumentIdModal({ isOpen, onClose }: { isOpen: boolean; onCl
         <Text>Prochaine facture:</Text>
         <MyNumberInput
           min={1}
-          control={control as unknown as Control<FieldValues>}
+          register={register as unknown as UseFormRegister<FieldValues>}
           name="invoiceId"
         />
       </Box>
