@@ -27,7 +27,6 @@ export function MyNumberInput({ name, min, max, step, register, ...props }: MyNu
       <NumberInputField
         {...register(name, {
           valueAsNumber: true,
-          required: 'This field is required',
         })}
       />
       <NumberInputStepper>
