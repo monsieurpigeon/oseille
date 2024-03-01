@@ -1,7 +1,7 @@
 import { Button, Text } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect } from 'react';
-import { FieldValues, useForm, UseFormRegister } from 'react-hook-form';
+import { Control, FieldValues, useForm } from 'react-hook-form';
 import { useRouteLoaderData } from 'react-router-dom';
 import { z } from 'zod';
 import { Customer, Product } from '../../backend';
@@ -32,7 +32,7 @@ export function PriceNumberInput({
   onClose: () => void;
 }) {
   const { isTVA, country } = useRouteLoaderData('farm') as { isTVA: boolean; country: Country };
-  const { watch, register, handleSubmit, reset } = useForm<PriceInput>({
+  const { watch, control, handleSubmit, reset } = useForm<PriceInput>({
     resolver: zodResolver(priceSchema),
     defaultValues: {
       value,
@@ -108,7 +108,7 @@ export function PriceNumberInput({
           <form onSubmit={handleSubmit(onSubmit)}>
             <div style={{ display: 'flex', gap: '5px', width: '140px', position: 'relative' }}>
               <MyNumberInput
-                register={register as unknown as UseFormRegister<FieldValues>}
+                control={control as unknown as Control<FieldValues>}
                 name="value"
                 step={0.01}
                 size="sm"

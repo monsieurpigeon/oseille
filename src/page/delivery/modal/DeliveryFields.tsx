@@ -1,6 +1,6 @@
 import { Box, Button, Flex, Grid, GridItem, Input, Select, Text, Textarea } from '@chakra-ui/react';
 import { useMemo } from 'react';
-import { FieldArrayWithId, FieldValues, useFieldArray, UseFormRegister, UseFormReturn } from 'react-hook-form';
+import { Control, FieldArrayWithId, FieldValues, useFieldArray, UseFormReturn } from 'react-hook-form';
 import { useLoaderData, useNavigate, useRouteLoaderData } from 'react-router-dom';
 import { addPrice, Customer, DeliveryInput, Price, Product, ProductWithPrice } from '../../../backend';
 import { MyNumberInput } from '../../../component/form/MyNumberInput';
@@ -175,7 +175,7 @@ interface ProductLineProps {
 }
 
 const ProductLine = ({ index, methods, availableProducts, availablePrices, remove, customer }: ProductLineProps) => {
-  const { watch, register, setValue } = methods;
+  const { watch, register, control, setValue } = methods;
   const { isTVA, country } = useRouteLoaderData('farm') as { isTVA: boolean; country: Country };
   const { say } = useSideKick();
   const { confirm } = useConfirm();
@@ -253,14 +253,14 @@ const ProductLine = ({ index, methods, availableProducts, availablePrices, remov
       </GridItem>
       <GridItem key={`${index}-c`}>
         <MyNumberInput
-          register={register as unknown as UseFormRegister<FieldValues>}
+          control={control as unknown as Control<FieldValues>}
           name={`lines.${index}.quantity`}
           min={0}
         />
       </GridItem>
       <GridItem key={`${index}-b`}>
         <MyNumberInput
-          register={register as unknown as UseFormRegister<FieldValues>}
+          control={control as unknown as Control<FieldValues>}
           name={`lines.${index}.price`}
           min={0}
           step={0.01}

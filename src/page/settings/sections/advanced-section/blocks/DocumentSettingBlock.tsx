@@ -16,10 +16,7 @@ export function DocumentSettingBlock() {
       onUpdate={onOpen}
       isDanger
     >
-      <FarmDocumentIdModal
-        isOpen={isOpen}
-        onClose={onClose}
-      />
+      {isOpen && <FarmDocumentIdModal onClose={onClose} />}
       <div>Prochaine livraison : {farm?.deliveryId}</div>
       <div>Prochaine facture : {farm?.invoiceId}</div>
       <div>Année en cours: {currentYear}</div>

@@ -1,7 +1,7 @@
 import { Box, Select, Text } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect } from 'react';
-import { FieldValues, useForm, UseFormRegister } from 'react-hook-form';
+import { Control, FieldValues, useForm } from 'react-hook-form';
 import { useRouteLoaderData } from 'react-router-dom';
 import { z } from 'zod';
 import { Farm, updateFarm } from '../../backend';
@@ -19,23 +19,22 @@ export const documentsSchema = z.object({
 interface DocumentIdInput {
   invoiceId: number;
   deliveryId: number;
-  year: number;
+  year: string;
 }
 
 const YEARS = [2023, 2024, 2025, 2026, 2027, 2028, 2029];
 
-export function FarmDocumentIdModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
+export function FarmDocumentIdModal({ onClose }: { onClose: () => void }) {
   const { farm } = useRouteLoaderData('farm') as { farm: Farm };
   const { say } = useSideKick();
 
   const currentYear = farm.year || 2023;
-
-  const { register, formState, handleSubmit, reset } = useForm<DocumentIdInput>({
+  const { register, control, formState, handleSubmit, reset } = useForm<DocumentIdInput>({
     resolver: zodResolver(documentsSchema),
     defaultValues: {
       invoiceId: farm?.invoiceId,
       deliveryId: farm?.deliveryId,
-      year: currentYear,
+      year: `${currentYear}`,
     },
   });
 
@@ -43,9 +42,9 @@ export function FarmDocumentIdModal({ isOpen, onClose }: { isOpen: boolean; onCl
     reset({
       invoiceId: farm?.invoiceId,
       deliveryId: farm?.deliveryId,
-      year: currentYear,
+      year: `${currentYear}`,
     });
-  }, [farm, isOpen]);
+  }, [farm]);
 
   const onSubmit = (e: DocumentIdInput) =>
     farm &&
@@ -61,7 +60,7 @@ export function FarmDocumentIdModal({ isOpen, onClose }: { isOpen: boolean; onCl
 
   return (
     <MyModal
-      isOpen={isOpen}
+      isOpen={true}
       onClose={onClose}
       onSubmit={handleSubmit(onSubmit)}
       title="Mes documents"
@@ -71,16 +70,18 @@ export function FarmDocumentIdModal({ isOpen, onClose }: { isOpen: boolean; onCl
         <Text>Prochaine livraison:</Text>
         <MyNumberInput
           min={1}
-          register={register as unknown as UseFormRegister<FieldValues>}
+          control={control as unknown as Control<FieldValues>}
           name="deliveryId"
+          isInt
         />
       </Box>
       <Box flexGrow={1}>
         <Text>Prochaine facture:</Text>
         <MyNumberInput
           min={1}
-          register={register as unknown as UseFormRegister<FieldValues>}
+          control={control as unknown as Control<FieldValues>}
           name="invoiceId"
+          isInt
         />
       </Box>
       <Box flexGrow={1}>

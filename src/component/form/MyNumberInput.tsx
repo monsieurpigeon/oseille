@@ -6,33 +6,47 @@ import {
   NumberInputProps,
   NumberInputStepper,
 } from '@chakra-ui/react';
-import { FieldValues, UseFormRegister } from 'react-hook-form';
+import { Control, Controller, FieldValues } from 'react-hook-form';
 
 interface MyNumberInputProps extends NumberInputProps {
+  control: Control<FieldValues>;
   name: string;
   min?: number;
   max?: number;
   step?: number;
-  register: UseFormRegister<FieldValues>;
+  isInt?: boolean;
 }
 
-export function MyNumberInput({ name, min, max, step, register, ...props }: MyNumberInputProps) {
+export function MyNumberInput({ control, name, min, max, step, isInt, ...props }: MyNumberInputProps) {
   return (
-    <NumberInput
-      {...props}
-      min={min ?? -9999.99}
-      max={max ?? 9999.99}
-      step={step}
-    >
-      <NumberInputField
-        {...register(name, {
-          valueAsNumber: true,
-        })}
-      />
-      <NumberInputStepper>
-        <NumberIncrementStepper />
-        <NumberDecrementStepper />
-      </NumberInputStepper>
-    </NumberInput>
+    <Controller
+      control={control}
+      shouldUnregister={true}
+      name={name}
+      render={({ field }) => {
+        return (
+          <NumberInput
+            min={min ?? -9999.99}
+            max={max ?? 9999.99}
+            step={step}
+            onBlur={(e) => {
+              field.onChange(Number(e.target.value));
+            }}
+            onChange={isInt ? (value) => field.onChange(parseInt(value)) : field.onChange}
+            value={field.value}
+            {...props}
+          >
+            <NumberInputField
+              ref={field.ref}
+              name={field.name}
+            />
+            <NumberInputStepper>
+              <NumberIncrementStepper />
+              <NumberDecrementStepper />
+            </NumberInputStepper>
+          </NumberInput>
+        );
+      }}
+    />
   );
 }
