@@ -14,9 +14,10 @@ interface MyNumberInputProps extends NumberInputProps {
   min?: number;
   max?: number;
   step?: number;
+  isInt?: boolean;
 }
 
-export function MyNumberInput({ control, name, min, max, step, ...props }: MyNumberInputProps) {
+export function MyNumberInput({ control, name, min, max, step, isInt, ...props }: MyNumberInputProps) {
   return (
     <Controller
       control={control}
@@ -27,20 +28,16 @@ export function MyNumberInput({ control, name, min, max, step, ...props }: MyNum
           min={min ?? -9999.99}
           max={max ?? 9999.99}
           step={step}
-          value={field.value}
-          onChange={(text, value) => {
-            if (text.slice(-1) === '.') {
-              field.onChange(text);
-            } else {
-              field.onChange(value);
-            }
+          onBlur={(e) => {
+            field.onChange(Number(e.target.value));
           }}
+          onChange={isInt ? (value) => field.onChange(parseInt(value)) : field.onChange}
+          value={field.value}
           {...props}
         >
           <NumberInputField
             ref={field.ref}
             name={field.name}
-            pattern="(-)?[0-9]*(.[0-9]+)?"
           />
           <NumberInputStepper>
             <NumberIncrementStepper />

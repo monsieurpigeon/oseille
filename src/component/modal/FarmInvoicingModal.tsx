@@ -1,14 +1,14 @@
 import { Flex, FormControl, FormLabel, Input, Select, Text, Textarea } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect } from 'react';
-import { useForm } from 'react-hook-form';
+import { Control, FieldValues, useForm } from 'react-hook-form';
 import { useRouteLoaderData } from 'react-router-dom';
 import { z } from 'zod';
 import { Farm, FarmInput, updateFarm } from '../../backend';
 import { DEFAULT_FOOTER, DEFAULT_THREAT, EMPTY_FARM } from '../../utils/defaults';
 import { MyNumberInput } from '../form/MyNumberInput';
-import { SideKickFeeling } from '../modules/sidekick/enums';
 import { useSideKick } from '../modules/sidekick/SideKickContext';
+import { SideKickFeeling } from '../modules/sidekick/enums';
 import { MyModal } from './MyModal';
 
 interface FarmInvoicingModalProps {
@@ -91,9 +91,10 @@ export function FarmInvoicingModal({ isOpen, onClose }: FarmInvoicingModalProps)
         <Flex direction="column">
           <FormLabel>Échéance</FormLabel>
           <MyNumberInput
-            control={control}
+            control={control as unknown as Control<FieldValues>}
             name="invoiceDelay"
             min={0}
+            isInt
           />
         </Flex>
         <Flex direction="column">
