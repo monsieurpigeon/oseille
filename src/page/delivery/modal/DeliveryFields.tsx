@@ -262,7 +262,6 @@ const ProductLine = ({ index, methods, availableProducts, availablePrices, remov
         <MyNumberInput
           control={control as unknown as Control<FieldValues>}
           name={`lines.${index}.price`}
-          min={0}
           step={0.01}
         />
       </GridItem>

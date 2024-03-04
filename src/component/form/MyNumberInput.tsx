@@ -38,6 +38,7 @@ export function MyNumberInput({ control, name, min, max, step, isInt, ...props }
           <NumberInputField
             ref={field.ref}
             name={field.name}
+            pattern="(-)?[0-9]*(.[0-9]+)?"
           />
           <NumberInputStepper>
             <NumberIncrementStepper />
