@@ -1,12 +1,12 @@
 import { Box, Button, Flex, Grid, GridItem, Input, Select, Text, Textarea } from '@chakra-ui/react';
 import { useMemo } from 'react';
-import { Control, FieldArrayWithId, FieldValues, useFieldArray, UseFormReturn } from 'react-hook-form';
+import { Control, FieldArrayWithId, FieldValues, UseFormReturn, useFieldArray } from 'react-hook-form';
 import { useLoaderData, useNavigate, useRouteLoaderData } from 'react-router-dom';
-import { addPrice, Customer, DeliveryInput, Price, Product, ProductWithPrice } from '../../../backend';
+import { Customer, DeliveryInput, Price, Product, ProductWithPrice, addPrice } from '../../../backend';
 import { MyNumberInput } from '../../../component/form/MyNumberInput';
 import { useConfirm } from '../../../component/modal/confirm-modal/ConfirmContext';
-import { SideKickFeeling } from '../../../component/modules/sidekick/enums';
 import { useSideKick } from '../../../component/modules/sidekick/SideKickContext';
+import { SideKickFeeling } from '../../../component/modules/sidekick/enums';
 import { Country } from '../../../utils/defaults';
 import { priceFormatter } from '../../../utils/formatter';
 
@@ -193,8 +193,14 @@ const ProductLine = ({ index, methods, availableProducts, availablePrices, remov
     const product = availableProducts.find((product: Product) => product.id === watchProduct) as Product;
     if (
       await confirm({
-        title: 'Éditer le tarif ?',
-        message: `${product.name} => ${customer.name} : ${priceFormatter(watchPrice)} HT par ${product.unit} ?`,
+        title: 'Editer le tarif ?',
+        message: (
+          <Text>
+            Le nouveau prix pour le <Text as="b">{product.name}</Text> chez le client{' '}
+            <Text as="b">{customer.name}</Text> sera de <Text as="b">{priceFormatter(watchPrice)}</Text> HT par{' '}
+            {product.unit}
+          </Text>
+        ),
       })
     ) {
       if (currentPrice && (currentPrice as Price).customer === watchCustomer) {
@@ -256,7 +262,6 @@ const ProductLine = ({ index, methods, availableProducts, availablePrices, remov
         <MyNumberInput
           control={control as unknown as Control<FieldValues>}
           name={`lines.${index}.price`}
-          min={0}
           step={0.01}
         />
       </GridItem>

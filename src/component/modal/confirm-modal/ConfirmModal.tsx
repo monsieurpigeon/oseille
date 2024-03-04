@@ -11,7 +11,7 @@ import {
 
 interface Props {
   title?: string;
-  message?: string;
+  message?: string | JSX.Element;
   isOpen: boolean;
   onConfirm: () => void;
   onCancel: () => void;
