@@ -1,12 +1,12 @@
 import { Box, Button, Flex, Grid, GridItem, Input, Select, Text, Textarea } from '@chakra-ui/react';
 import { useMemo } from 'react';
-import { Control, FieldArrayWithId, FieldValues, useFieldArray, UseFormReturn } from 'react-hook-form';
+import { Control, FieldArrayWithId, FieldValues, UseFormReturn, useFieldArray } from 'react-hook-form';
 import { useLoaderData, useNavigate, useRouteLoaderData } from 'react-router-dom';
-import { addPrice, Customer, DeliveryInput, Price, Product, ProductWithPrice } from '../../../backend';
+import { Customer, DeliveryInput, Price, Product, ProductWithPrice, addPrice } from '../../../backend';
 import { MyNumberInput } from '../../../component/form/MyNumberInput';
 import { useConfirm } from '../../../component/modal/confirm-modal/ConfirmContext';
-import { SideKickFeeling } from '../../../component/modules/sidekick/enums';
 import { useSideKick } from '../../../component/modules/sidekick/SideKickContext';
+import { SideKickFeeling } from '../../../component/modules/sidekick/enums';
 import { Country } from '../../../utils/defaults';
 import { priceFormatter } from '../../../utils/formatter';
 
@@ -175,7 +175,7 @@ interface ProductLineProps {
 }
 
 const ProductLine = ({ index, methods, availableProducts, availablePrices, remove, customer }: ProductLineProps) => {
-  const { watch, register, control, setValue } = methods;
+  const { watch, control, register, setValue } = methods;
   const { isTVA, country } = useRouteLoaderData('farm') as { isTVA: boolean; country: Country };
   const { say } = useSideKick();
   const { confirm } = useConfirm();

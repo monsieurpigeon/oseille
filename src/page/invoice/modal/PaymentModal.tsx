@@ -5,10 +5,10 @@ import { useForm } from 'react-hook-form';
 import { useNavigate, useRouteLoaderData } from 'react-router-dom';
 import { z } from 'zod';
 import { Invoice, InvoicePaymentInput, PaymentMode, updateInvoice } from '../../../backend';
-import { useConfirm } from '../../../component/modal/confirm-modal/ConfirmContext';
 import { MyModal } from '../../../component/modal/MyModal';
-import { SideKickFeeling } from '../../../component/modules/sidekick/enums';
+import { useConfirm } from '../../../component/modal/confirm-modal/ConfirmContext';
 import { useSideKick } from '../../../component/modules/sidekick/SideKickContext';
+import { SideKickFeeling } from '../../../component/modules/sidekick/enums';
 import { getInvoiceTotal } from '../../../utils/aggregations';
 import { Country } from '../../../utils/defaults';
 import { PaymentFields } from './PaymentFields';
@@ -98,8 +98,8 @@ export function PaymentModal() {
       title={invoice?.payments && invoice.payments.length > 0 ? "Edition d'un paiement" : "Ajout d'un paiement"}
     >
       <PaymentFields
-        register={register}
         control={control}
+        register={register}
       />
     </MyModal>
   );
