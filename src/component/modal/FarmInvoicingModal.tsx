@@ -7,8 +7,8 @@ import { z } from 'zod';
 import { Farm, FarmInput, updateFarm } from '../../backend';
 import { DEFAULT_FOOTER, DEFAULT_THREAT, EMPTY_FARM } from '../../utils/defaults';
 import { MyNumberInput } from '../form/MyNumberInput';
-import { SideKickFeeling } from '../modules/sidekick/enums';
 import { useSideKick } from '../modules/sidekick/SideKickContext';
+import { SideKickFeeling } from '../modules/sidekick/enums';
 import { MyModal } from './MyModal';
 
 interface FarmInvoicingModalProps {
@@ -28,7 +28,7 @@ export function FarmInvoicingModal({ isOpen, onClose }: FarmInvoicingModalProps)
 
   const { say } = useSideKick();
 
-  const { register, control, handleSubmit, formState, setValue } = useForm<FarmInput>({
+  const { control, register, handleSubmit, formState, setValue } = useForm<FarmInput>({
     resolver: zodResolver(configSchema),
     defaultValues: { ...EMPTY_FARM, ...farm },
   });
