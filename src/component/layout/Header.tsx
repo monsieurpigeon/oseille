@@ -6,8 +6,8 @@ import { Link, useRouteLoaderData } from 'react-router-dom';
 import { Farm } from '../../backend';
 import { ExportAction } from '../../page/settings/sections/advanced-section/actions/ExportAction';
 import { Country, DEFAULT_FARM } from '../../utils/defaults';
-import { YearAlertModal } from './modals/YearAlertModal';
 import { HeaderNavigation } from './Navigation';
+import { YearAlertModal } from './modals/YearAlertModal';
 
 export const yearAtom = atomWithStorage('year', '');
 

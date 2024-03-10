@@ -1,11 +1,13 @@
+import { Box, Text } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate, useRouteLoaderData } from 'react-router-dom';
 import { Invoice, InvoiceInfoInput, updateInvoice } from '../../../backend';
 import { MyModal } from '../../../component/modal/MyModal';
-import { SideKickFeeling } from '../../../component/modules/sidekick/enums';
 import { useSideKick } from '../../../component/modules/sidekick/SideKickContext';
+import { SideKickFeeling } from '../../../component/modules/sidekick/enums';
+import { dateFormatter } from '../../../utils/formatter';
 import { invoiceSchema } from './InvoiceCreateModal';
 import { InvoiceFields } from './InvoiceFields';
 
@@ -50,6 +52,10 @@ export function InvoiceEditModal() {
       onSubmit={handleSubmit(onSubmit)}
       disabled={!formState.isDirty}
     >
+      <Box p={1}>
+        <Text>Date de facturation : {dateFormatter(invoice.createdAt)}</Text>
+      </Box>
+
       <InvoiceFields register={register} />
     </MyModal>
   );

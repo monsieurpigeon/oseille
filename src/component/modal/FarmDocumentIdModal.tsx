@@ -6,8 +6,8 @@ import { useRouteLoaderData } from 'react-router-dom';
 import { z } from 'zod';
 import { Farm, updateFarm } from '../../backend';
 import { MyNumberInput } from '../form/MyNumberInput';
-import { SideKickFeeling } from '../modules/sidekick/enums';
 import { useSideKick } from '../modules/sidekick/SideKickContext';
+import { SideKickFeeling } from '../modules/sidekick/enums';
 import { MyModal } from './MyModal';
 
 export const documentsSchema = z.object({
@@ -72,15 +72,6 @@ export function FarmDocumentIdModal({ onClose }: { onClose: () => void }) {
           min={1}
           control={control as unknown as Control<FieldValues>}
           name="deliveryId"
-          isInt
-        />
-      </Box>
-      <Box flexGrow={1}>
-        <Text>Prochaine facture:</Text>
-        <MyNumberInput
-          min={1}
-          control={control as unknown as Control<FieldValues>}
-          name="invoiceId"
           isInt
         />
       </Box>
