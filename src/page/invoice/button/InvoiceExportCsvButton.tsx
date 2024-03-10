@@ -10,6 +10,7 @@ import { useRouteLoaderData } from 'react-router-dom';
 import { Customer, Delivery, Invoice, Product, isInvoicePaid } from '../../../backend';
 import { yearAtom } from '../../../component/layout/Header';
 import { MyModal } from '../../../component/modal/MyModal';
+import { isteaClients, isteaPayments, isteaSales } from '../../../utils/isteaExport';
 
 const clean = (num: number) => Number(num.toFixed(5));
 const translate = (num: number) => num.toLocaleString('fr-FR', { minimumFractionDigits: 2 });
@@ -126,9 +127,9 @@ export function InvoiceExportCsvButton() {
   const isteaExport = () => {
     const zip = new JSZip();
 
-    for (let file = 0; file < 3; file++) {
-      zip.file(`${file}.csv`, 'hello world');
-    }
+    zip.file(`Ventes.csv`, isteaSales(invoices, customers));
+    zip.file(`Reglements.csv`, isteaPayments(invoices, customers));
+    zip.file(`Clients.csv`, isteaClients(customers));
 
     zip.generateAsync({ type: 'blob' }).then((content) => {
       saveAs(content, 'example.zip');
