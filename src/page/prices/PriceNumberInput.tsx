@@ -15,7 +15,7 @@ import { Country } from '../../utils/defaults';
 import { priceFormatter } from '../../utils/formatter';
 
 export const priceSchema = z.object({
-  value: z.number(),
+  value: z.string().transform((v) => Number(v)),
 });
 
 export function PriceNumberInput({

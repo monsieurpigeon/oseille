@@ -1,4 +1,4 @@
-export const VERSION = '04/03/2024';
+export const VERSION = '19/03/2024';
 
 export const MONEY_OUT = [
   { label: 'Impression de 700 flyers', value: 75 },
@@ -8,7 +8,7 @@ export const MONEY_OUT = [
   { label: 'Salaires', value: 0 },
 ];
 export const MONEY_IN = [
-  { label: 'Dons', value: 124 },
+  { label: 'Dons', value: 129 },
   { label: 'Levée de fonds', value: 0 },
 ];
 

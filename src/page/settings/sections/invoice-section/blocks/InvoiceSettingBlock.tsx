@@ -17,10 +17,7 @@ export function InvoiceSettingBlock() {
       title="Mes factures"
       onUpdate={onOpen}
     >
-      <FarmInvoicingModal
-        isOpen={isOpen}
-        onClose={onClose}
-      />
+      {isOpen && <FarmInvoicingModal onClose={onClose} />}
       {farm?.isTVA && farm.isTVA !== 'non' ? (
         <div>
           <MyIcon name="good" /> Gestion de la TVA

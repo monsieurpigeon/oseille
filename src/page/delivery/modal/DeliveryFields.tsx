@@ -186,7 +186,7 @@ const ProductLine = ({ index, methods, availableProducts, availablePrices, remov
 
   const currentPrice = useMemo(
     () => availablePrices.find((price: Price) => price.product === watchProduct),
-    [availableProducts, watchProduct],
+    [availableProducts, watchProduct, watchPrice, availablePrices],
   );
 
   const updatePrice = async () => {
@@ -271,7 +271,7 @@ const ProductLine = ({ index, methods, availableProducts, availablePrices, remov
             colorScheme="green"
             onClick={updatePrice}
             variant="outline"
-            disabled={watchPrice == null || watchPrice === (currentPrice as Price)?.value}
+            disabled={watchPrice == null || watchPrice == (currentPrice as Price)?.value}
             title="Sauvegarder le nouveau prix"
           >
             💾

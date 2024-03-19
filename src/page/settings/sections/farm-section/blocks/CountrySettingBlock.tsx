@@ -14,10 +14,7 @@ export function CountrySettingBlock() {
       title="Mon pays"
       onUpdate={onOpen}
     >
-      <FarmCountryModal
-        isOpen={isOpen}
-        onClose={onClose}
-      />
+      {isOpen && <FarmCountryModal onClose={onClose} />}
       <SimpleGrid
         columns={2}
         spacing={2}

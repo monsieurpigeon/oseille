@@ -17,11 +17,10 @@ const practiceSchema = z.object({
 });
 
 interface FarmPracticeModalProps {
-  isOpen: boolean;
   onClose: () => void;
 }
 
-export function FarmPracticeModal({ isOpen, onClose }: FarmPracticeModalProps) {
+export function FarmPracticeModal({ onClose }: FarmPracticeModalProps) {
   const posthog = usePostHog();
   const { farm } = useRouteLoaderData('farm') as { farm: Farm };
   const { say } = useSideKick();
@@ -57,7 +56,7 @@ export function FarmPracticeModal({ isOpen, onClose }: FarmPracticeModalProps) {
 
   return (
     <MyModal
-      isOpen={isOpen}
+      isOpen={true}
       onClose={onClose}
       onSubmit={handleSubmit(onSubmit)}
       title="Mes Pratiques"

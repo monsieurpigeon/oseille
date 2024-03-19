@@ -7,7 +7,7 @@ import JSZip from 'jszip';
 import _ from 'lodash';
 import { useMemo } from 'react';
 import { useRouteLoaderData } from 'react-router-dom';
-import { Customer, Delivery, Invoice, Product, isInvoicePaid } from '../../../backend';
+import { Customer, Delivery, Invoice, isInvoicePaid, Product } from '../../../backend';
 import { yearAtom } from '../../../component/layout/Header';
 import { MyModal } from '../../../component/modal/MyModal';
 import { isteaClients, isteaPayments, isteaSales } from '../../../utils/isteaExport';
@@ -164,8 +164,8 @@ export function InvoiceExportCsvButton() {
           value={exportFormat}
           onChange={(e) => setExportFormat(e.target.value)}
         >
-          <option value="csv">Tableur</option>
-          <option value="istea">ISTEA</option>
+          <option value="csv">CSV</option>
+          {/* <option value="istea">ISTEA</option> */}
         </Select>
       </MyModal>
     </>
