@@ -6,8 +6,8 @@ import { Link, useRouteLoaderData } from 'react-router-dom';
 import { Farm } from '../../backend';
 import { ExportAction } from '../../page/settings/sections/advanced-section/actions/ExportAction';
 import { Country, DEFAULT_FARM } from '../../utils/defaults';
-import { HeaderNavigation } from './Navigation';
 import { YearAlertModal } from './modals/YearAlertModal';
+import { HeaderNavigation } from './Navigation';
 
 export const yearAtom = atomWithStorage('year', '');
 
@@ -50,7 +50,7 @@ export function Header() {
         {/* TODO add more years */}
       </Select>
       <Spacer />
-      <Link to="/settings/farm">
+      <Link to="/settings/farm/address">
         {farm?.title && (
           <Text as="b">
             {country.flag} {farm?.title?.toUpperCase()}

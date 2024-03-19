@@ -3,7 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { usePostHog } from 'posthog-js/react';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { Link, useRouteLoaderData } from 'react-router-dom';
+import { Link, useNavigate, useRouteLoaderData } from 'react-router-dom';
 import { z } from 'zod';
 import { Farm, FarmInput, updateFarm } from '../../backend';
 import { EMPTY_FARM } from '../../utils/defaults';
@@ -16,11 +16,7 @@ const practiceSchema = z.object({
   bioLabel: z.string(),
 });
 
-interface FarmPracticeModalProps {
-  onClose: () => void;
-}
-
-export function FarmPracticeModal({ onClose }: FarmPracticeModalProps) {
+export function FarmPracticeModal() {
   const posthog = usePostHog();
   const { farm } = useRouteLoaderData('farm') as { farm: Farm };
   const { say } = useSideKick();
@@ -29,6 +25,11 @@ export function FarmPracticeModal({ onClose }: FarmPracticeModalProps) {
     resolver: zodResolver(practiceSchema),
     defaultValues: { ...EMPTY_FARM, ...farm },
   });
+
+  const navigate = useNavigate();
+  const onClose = () => {
+    navigate('..');
+  };
 
   useEffect(() => {
     if (farm) reset(farm);

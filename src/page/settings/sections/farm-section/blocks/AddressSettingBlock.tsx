@@ -1,20 +1,18 @@
-import { Flex, Text, useDisclosure } from '@chakra-ui/react';
-import { useRouteLoaderData } from 'react-router-dom';
+import { Flex, Text } from '@chakra-ui/react';
+import { useNavigate, useRouteLoaderData } from 'react-router-dom';
 import { Farm } from '../../../../../backend';
-import { FarmAddressModal } from '../../../../../component/modal/FarmAddressModal';
 import { MyIcon } from '../../../../../component/MyIcon';
 import { SettingCard } from '../../../components/SettingCard';
 
 export function AddressSettingBlock() {
   const { farm } = useRouteLoaderData('farm') as { farm: Farm };
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const navigate = useNavigate();
 
   return (
     <SettingCard
       title="Mon adresse"
-      onUpdate={onOpen}
+      onUpdate={() => navigate('address')}
     >
-      {isOpen && <FarmAddressModal onClose={onClose} />}
       {!farm?.title && <Text>Aucune adresse</Text>}
       {farm && (
         <Flex direction="column">

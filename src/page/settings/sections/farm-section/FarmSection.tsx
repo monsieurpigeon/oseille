@@ -1,4 +1,5 @@
 import { Flex } from '@chakra-ui/react';
+import { Outlet } from 'react-router-dom';
 import { AddressSettingBlock } from './blocks/AddressSettingBlock';
 import { CountrySettingBlock } from './blocks/CountrySettingBlock';
 import { LogoSettingBlock } from './blocks/LogoSettingBlock';
@@ -15,6 +16,7 @@ export function FarmSection() {
       <AddressSettingBlock />
       <LogoSettingBlock />
       <PracticesSettingBlock />
+      <Outlet />
     </Flex>
   );
 }
