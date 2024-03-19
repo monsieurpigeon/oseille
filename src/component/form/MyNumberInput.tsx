@@ -23,29 +23,29 @@ export function MyNumberInput({ control, name, min, max, step, isInt, ...props }
       control={control}
       shouldUnregister={true}
       name={name}
-      render={({ field }) => (
-        <NumberInput
-          min={min ?? -9999.99}
-          max={max ?? 9999.99}
-          step={step}
-          onBlur={(e) => {
-            field.onChange(Number(e.target.value));
-          }}
-          onChange={isInt ? (value) => field.onChange(parseInt(value)) : field.onChange}
-          value={field.value}
-          {...props}
-        >
-          <NumberInputField
-            ref={field.ref}
-            name={field.name}
-            pattern="(-)?[0-9]*(.[0-9]+)?"
-          />
-          <NumberInputStepper>
-            <NumberIncrementStepper />
-            <NumberDecrementStepper />
-          </NumberInputStepper>
-        </NumberInput>
-      )}
+      render={({ field }) => {
+        return (
+          <NumberInput
+            min={min ?? -9999.99}
+            max={max ?? 9999.99}
+            step={step}
+            onChange={field.onChange}
+            value={field.value}
+            precision={isInt ? 0 : 2}
+            {...props}
+          >
+            <NumberInputField
+              pattern={!min || min < 0 ? '(-)?[0-9]*(.[0-9]+)?' : '[0-9]*(.[0-9]+)?'} // Allow negative and decimal numbers
+              ref={field.ref}
+              name={field.name}
+            />
+            <NumberInputStepper>
+              <NumberIncrementStepper />
+              <NumberDecrementStepper />
+            </NumberInputStepper>
+          </NumberInput>
+        );
+      }}
     />
   );
 }

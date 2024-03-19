@@ -11,8 +11,14 @@ import { SideKickFeeling } from '../modules/sidekick/enums';
 import { MyModal } from './MyModal';
 
 export const documentsSchema = z.object({
-  invoiceId: z.number().gte(0),
-  deliveryId: z.number().gte(0),
+  invoiceId: z
+    .string()
+    .transform((v) => Number(v))
+    .or(z.number()),
+  deliveryId: z
+    .string()
+    .transform((v) => Number(v))
+    .or(z.number()),
   year: z.string(),
 });
 

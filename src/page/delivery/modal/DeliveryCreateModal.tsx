@@ -3,10 +3,10 @@ import { usePostHog } from 'posthog-js/react';
 import { useForm } from 'react-hook-form';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { z } from 'zod';
-import { DeliveryInput, addDelivery } from '../../../backend';
+import { addDelivery, DeliveryInput } from '../../../backend';
 import { MyModal } from '../../../component/modal/MyModal';
-import { useSideKick } from '../../../component/modules/sidekick/SideKickContext';
 import { SideKickFeeling } from '../../../component/modules/sidekick/enums';
+import { useSideKick } from '../../../component/modules/sidekick/SideKickContext';
 import { DeliveryFields } from './DeliveryFields';
 
 export const deliverySchema = z.object({
@@ -15,8 +15,14 @@ export const deliverySchema = z.object({
   lines: z
     .object({
       productId: z.string().min(1),
-      price: z.number(),
-      quantity: z.number().gt(0),
+      price: z
+        .string()
+        .transform((v) => Number(v))
+        .or(z.number()),
+      quantity: z
+        .string()
+        .transform((v) => Number(v))
+        .or(z.number()),
     })
     .array()
     .nonempty(),
