@@ -3,11 +3,16 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect, useState } from 'react';
 import { useForm, UseFormReturn, useWatch } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
+import { z } from 'zod';
 import { addLogo, LogoInput } from '../../backend';
-import { logoSchema } from '../../page/settings/sections/farm-section/blocks/LogoSettingBlock';
 import { SideKickFeeling } from '../modules/sidekick/enums';
 import { useSideKick } from '../modules/sidekick/SideKickContext';
 import { MyModal } from './MyModal';
+
+export const logoSchema = z.object({
+  data: z.string(),
+  image: z.any(),
+});
 
 export function FarmLogoModal() {
   const { say } = useSideKick();
