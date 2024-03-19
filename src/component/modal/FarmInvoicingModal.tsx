@@ -2,7 +2,7 @@ import { Flex, FormControl, FormLabel, Input, Select, Text, Textarea } from '@ch
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect } from 'react';
 import { Control, FieldValues, useForm } from 'react-hook-form';
-import { useRouteLoaderData } from 'react-router-dom';
+import { useNavigate, useRouteLoaderData } from 'react-router-dom';
 import { z } from 'zod';
 import { Farm, FarmInput, updateFarm } from '../../backend';
 import { DEFAULT_FOOTER, DEFAULT_THREAT, EMPTY_FARM } from '../../utils/defaults';
@@ -10,10 +10,6 @@ import { MyNumberInput } from '../form/MyNumberInput';
 import { SideKickFeeling } from '../modules/sidekick/enums';
 import { useSideKick } from '../modules/sidekick/SideKickContext';
 import { MyModal } from './MyModal';
-
-interface FarmInvoicingModalProps {
-  onClose: () => void;
-}
 
 export const configSchema = z.object({
   footer: z.string(),
@@ -25,10 +21,13 @@ export const configSchema = z.object({
   threat: z.string(),
 });
 
-export function FarmInvoicingModal({ onClose }: FarmInvoicingModalProps) {
+export function FarmInvoicingModal() {
   const { farm } = useRouteLoaderData('farm') as { farm: Farm };
-
   const { say } = useSideKick();
+  const navigate = useNavigate();
+  const onClose = () => {
+    navigate('..');
+  };
 
   const { register, control, handleSubmit, formState, reset } = useForm<FarmInput>({
     resolver: zodResolver(configSchema),

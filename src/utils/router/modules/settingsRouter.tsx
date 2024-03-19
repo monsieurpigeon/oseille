@@ -1,5 +1,9 @@
 import { FarmAddressModal } from '../../../component/modal/FarmAddressModal';
+import { FarmBankModal } from '../../../component/modal/FarmBankModal';
+import { FarmCompanyModal } from '../../../component/modal/FarmCompanyModal';
 import { FarmCountryModal } from '../../../component/modal/FarmCountryModal';
+import { FarmDocumentIdModal } from '../../../component/modal/FarmDocumentIdModal';
+import { FarmInvoicingModal } from '../../../component/modal/FarmInvoicingModal';
 import { FarmPracticeModal } from '../../../component/modal/FarmPracticeModal';
 import { SettingPageGroup } from '../../../page-group/SettingPageGroup';
 import { AdvancedSection } from '../../../page/settings/sections/advanced-section/AdvancedSection';
@@ -26,8 +30,20 @@ export const settingsRouter = {
             { path: 'practices', element: <FarmPracticeModal /> },
           ],
         },
-        { path: 'invoices', element: <InvoiceSection /> },
-        { path: 'advanced', element: <AdvancedSection /> },
+        {
+          path: 'invoices',
+          element: <InvoiceSection />,
+          children: [
+            { path: 'bank', element: <FarmBankModal /> },
+            { path: 'company', element: <FarmCompanyModal /> },
+            { path: 'invoices', element: <FarmInvoicingModal /> },
+          ],
+        },
+        {
+          path: 'advanced',
+          element: <AdvancedSection />,
+          children: [{ path: 'documents', element: <FarmDocumentIdModal /> }],
+        },
       ],
     },
   ],

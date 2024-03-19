@@ -2,12 +2,12 @@ import { Box, Select, Text } from '@chakra-ui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useEffect } from 'react';
 import { Control, FieldValues, useForm } from 'react-hook-form';
-import { useRouteLoaderData } from 'react-router-dom';
+import { useNavigate, useRouteLoaderData } from 'react-router-dom';
 import { z } from 'zod';
 import { Farm, updateFarm } from '../../backend';
 import { MyNumberInput } from '../form/MyNumberInput';
-import { useSideKick } from '../modules/sidekick/SideKickContext';
 import { SideKickFeeling } from '../modules/sidekick/enums';
+import { useSideKick } from '../modules/sidekick/SideKickContext';
 import { MyModal } from './MyModal';
 
 export const documentsSchema = z.object({
@@ -30,9 +30,13 @@ interface DocumentIdInput {
 
 const YEARS = [2023, 2024, 2025, 2026, 2027, 2028, 2029];
 
-export function FarmDocumentIdModal({ onClose }: { onClose: () => void }) {
+export function FarmDocumentIdModal() {
   const { farm } = useRouteLoaderData('farm') as { farm: Farm };
   const { say } = useSideKick();
+  const navigate = useNavigate();
+  const onClose = () => {
+    navigate('..');
+  };
 
   const currentYear = farm.year || 2023;
   const { register, control, formState, handleSubmit, reset } = useForm<DocumentIdInput>({
