@@ -55,14 +55,16 @@ export function LogoSettingBlock() {
         />
       )}
       {!logo && <Text>Aucun logo</Text>}
-      <MyModal
-        isOpen={isOpen}
-        onClose={handleClose}
-        onSubmit={methods.handleSubmit(onSubmit)}
-        title="Ajouter un logo"
-      >
-        <LogoFields methods={methods} />
-      </MyModal>
+      {isOpen && (
+        <MyModal
+          isOpen={true}
+          onClose={handleClose}
+          onSubmit={methods.handleSubmit(onSubmit)}
+          title="Ajouter un logo"
+        >
+          <LogoFields methods={methods} />
+        </MyModal>
+      )}
     </SettingCard>
   );
 }

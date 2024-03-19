@@ -16,7 +16,10 @@ import { PaymentFields } from './PaymentFields';
 export const paymentSchema = z.object({
   paidAt: z.string(),
   paymentMode: z.nativeEnum(PaymentMode),
-  amount: z.number().min(0),
+  amount: z
+    .string()
+    .transform((v) => Number(v))
+    .or(z.number()),
   reference: z.string(),
   notes: z.string(),
 });

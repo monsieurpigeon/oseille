@@ -22,11 +22,10 @@ const farmSchema = z.object({
 });
 
 interface FarmAddressModalProps {
-  isOpen: boolean;
   onClose: () => void;
 }
 
-export function FarmAddressModal({ isOpen, onClose }: FarmAddressModalProps) {
+export function FarmAddressModal({ onClose }: FarmAddressModalProps) {
   const posthog = usePostHog();
   const { farm } = useRouteLoaderData('farm') as { farm: Farm };
   const { say } = useSideKick();
@@ -64,7 +63,7 @@ export function FarmAddressModal({ isOpen, onClose }: FarmAddressModalProps) {
 
   return (
     <MyModal
-      isOpen={isOpen}
+      isOpen={true}
       onClose={onClose}
       onSubmit={handleSubmit(onSubmit)}
       title="Mon adresse"

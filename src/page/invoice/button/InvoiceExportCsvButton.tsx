@@ -1,15 +1,21 @@
-import { Button, useDisclosure } from '@chakra-ui/react';
+import { Button, Select, useDisclosure } from '@chakra-ui/react';
 import { format } from 'date-fns';
+import { saveAs } from 'file-saver';
 import { useAtom } from 'jotai';
+import { atomWithStorage } from 'jotai/utils';
+import JSZip from 'jszip';
 import _ from 'lodash';
 import { useMemo } from 'react';
 import { useRouteLoaderData } from 'react-router-dom';
 import { Customer, Delivery, Invoice, isInvoicePaid, Product } from '../../../backend';
 import { yearAtom } from '../../../component/layout/Header';
 import { MyModal } from '../../../component/modal/MyModal';
+import { isteaClients, isteaPayments, isteaSales } from '../../../utils/isteaExport';
 
 const clean = (num: number) => Number(num.toFixed(5));
 const translate = (num: number) => num.toLocaleString('fr-FR', { minimumFractionDigits: 2 });
+
+export const exportFormatAtom = atomWithStorage('exportFormat', 'csv');
 
 export function InvoiceExportCsvButton() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -26,6 +32,8 @@ export function InvoiceExportCsvButton() {
   };
 
   const [year] = useAtom(yearAtom);
+
+  const [exportFormat, setExportFormat] = useAtom(exportFormatAtom);
 
   const invoices = useMemo(() => {
     if (year === '') return invoicesRaw;
@@ -47,7 +55,7 @@ export function InvoiceExportCsvButton() {
     return memo;
   }, {} as Record<string, Delivery>);
 
-  const handleExport = () => {
+  const csvExport = () => {
     const clone = _.cloneDeep(invoices);
     const data = clone
       .sort((a, b) => a.createdAt.localeCompare(b.createdAt))
@@ -116,6 +124,31 @@ export function InvoiceExportCsvButton() {
     link.click();
   };
 
+  const isteaExport = () => {
+    const zip = new JSZip();
+
+    zip.file(`Ventes.csv`, isteaSales(invoices, customers));
+    zip.file(`Reglements.csv`, isteaPayments(invoices, customers));
+    zip.file(`Clients.csv`, isteaClients(customers));
+
+    zip.generateAsync({ type: 'blob' }).then((content) => {
+      saveAs(content, 'example.zip');
+    });
+  };
+
+  const handleExport = () => {
+    switch (exportFormat) {
+      case 'csv':
+        csvExport();
+        break;
+      case 'istea':
+        isteaExport();
+        break;
+      default:
+        break;
+    }
+  };
+
   return (
     <>
       <Button onClick={onOpen}>Exporter tout</Button>
@@ -125,7 +158,16 @@ export function InvoiceExportCsvButton() {
         onSubmit={handleExport}
         isOpen={isOpen}
         onClose={onClose}
-      />
+      >
+        <p>Format</p>
+        <Select
+          value={exportFormat}
+          onChange={(e) => setExportFormat(e.target.value)}
+        >
+          <option value="csv">CSV</option>
+          {/* <option value="istea">ISTEA</option> */}
+        </Select>
+      </MyModal>
     </>
   );
 }

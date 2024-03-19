@@ -14,10 +14,7 @@ export function AddressSettingBlock() {
       title="Mon adresse"
       onUpdate={onOpen}
     >
-      <FarmAddressModal
-        isOpen={isOpen}
-        onClose={onClose}
-      />
+      {isOpen && <FarmAddressModal onClose={onClose} />}
       {!farm?.title && <Text>Aucune adresse</Text>}
       {farm && (
         <Flex direction="column">

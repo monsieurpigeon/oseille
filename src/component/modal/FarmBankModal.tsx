@@ -11,7 +11,6 @@ import { useSideKick } from '../modules/sidekick/SideKickContext';
 import { MyModal } from './MyModal';
 
 interface FarmBankModalProps {
-  isOpen: boolean;
   onClose: () => void;
 }
 
@@ -21,7 +20,7 @@ export const configSchema = z.object({
   bic: z.string(),
 });
 
-export function FarmBankModal({ isOpen, onClose }: FarmBankModalProps) {
+export function FarmBankModal({ onClose }: FarmBankModalProps) {
   const { farm } = useRouteLoaderData('farm') as { farm: Farm };
   const { say } = useSideKick();
 
@@ -50,7 +49,7 @@ export function FarmBankModal({ isOpen, onClose }: FarmBankModalProps) {
 
   return (
     <MyModal
-      isOpen={isOpen}
+      isOpen={true}
       onClose={onClose}
       onSubmit={handleSubmit(onSubmit)}
       title="Ma banque"

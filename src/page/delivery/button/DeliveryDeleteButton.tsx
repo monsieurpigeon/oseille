@@ -38,7 +38,7 @@ export function DeliveryDeleteButton({ delivery }: DeleteDeliveryActionProps) {
   return (
     <DeleteButton
       onClick={handleDeleteDelivery}
-      disabled={!isEditable}
+      isDisabled={!isEditable}
     />
   );
 }

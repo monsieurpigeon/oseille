@@ -13,10 +13,7 @@ export function CompanySettingBlock() {
       title="Mon entreprise"
       onUpdate={onOpen}
     >
-      <FarmCompanyModal
-        isOpen={isOpen}
-        onClose={onClose}
-      />
+      {isOpen && <FarmCompanyModal onClose={onClose} />}
       {farm?.siret && <Text>SIRET: {farm.siret}</Text>}
       {farm?.naf && <Text>NAF: {farm.naf}</Text>}
       {farm?.tva && <Text>Num. TVA : {farm.tva}</Text>}

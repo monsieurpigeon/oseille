@@ -19,10 +19,7 @@ export function PracticesSettingBlock() {
       title="Mes pratiques"
       onUpdate={onOpen}
     >
-      <FarmPracticeModal
-        isOpen={isOpen}
-        onClose={onClose}
-      />
+      {isOpen && <FarmPracticeModal onClose={onClose} />}
       {farm?.bioLabel && farm.bioLabel !== 'non' && farm.bioLabel !== 'sustainable' ? (
         <div>
           <MyIcon name="good" /> BIO : {farm?.bioLabel?.toUpperCase()}

@@ -7,7 +7,7 @@ import {
   ModalContent,
   ModalFooter,
   ModalHeader,
-  ModalOverlay
+  ModalOverlay,
 } from '@chakra-ui/react';
 import { ReactNode } from 'react';
 
@@ -72,7 +72,7 @@ export const MyModal = ({
                   <Button
                     colorScheme="twitter"
                     type="submit"
-                    disabled={disabled}
+                    isDisabled={disabled}
                   >
                     {confirmLabel ?? 'Enregistrer'}
                   </Button>

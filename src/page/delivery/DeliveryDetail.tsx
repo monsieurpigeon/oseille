@@ -30,7 +30,7 @@ export const DeliveryDetail = () => {
           <DeliveryDeleteButton delivery={selected} />
           <EditButton
             onClick={() => navigate(`edit`)}
-            disabled={!isEditable}
+            isDisabled={!isEditable}
             ml={3}
           />
           <Outlet />

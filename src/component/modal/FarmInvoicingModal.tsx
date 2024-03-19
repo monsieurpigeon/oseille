@@ -7,31 +7,40 @@ import { z } from 'zod';
 import { Farm, FarmInput, updateFarm } from '../../backend';
 import { DEFAULT_FOOTER, DEFAULT_THREAT, EMPTY_FARM } from '../../utils/defaults';
 import { MyNumberInput } from '../form/MyNumberInput';
-import { useSideKick } from '../modules/sidekick/SideKickContext';
 import { SideKickFeeling } from '../modules/sidekick/enums';
+import { useSideKick } from '../modules/sidekick/SideKickContext';
 import { MyModal } from './MyModal';
 
 interface FarmInvoicingModalProps {
-  isOpen: boolean;
   onClose: () => void;
 }
 
 export const configSchema = z.object({
   footer: z.string(),
   isTVA: z.string(),
-  invoiceDelay: z.number().gte(0),
+  invoiceDelay: z
+    .string()
+    .transform((v) => Number(v))
+    .or(z.number()),
   threat: z.string(),
 });
 
-export function FarmInvoicingModal({ isOpen, onClose }: FarmInvoicingModalProps) {
+export function FarmInvoicingModal({ onClose }: FarmInvoicingModalProps) {
   const { farm } = useRouteLoaderData('farm') as { farm: Farm };
 
   const { say } = useSideKick();
 
-  const { control, register, handleSubmit, formState, setValue } = useForm<FarmInput>({
+  const { register, control, handleSubmit, formState, reset } = useForm<FarmInput>({
     resolver: zodResolver(configSchema),
     defaultValues: { ...EMPTY_FARM, ...farm },
   });
+
+  useEffect(() => {
+    reset({
+      ...EMPTY_FARM,
+      ...farm,
+    });
+  }, [farm]);
 
   const onSubmit = (e: FarmInput) => {
     farm &&
@@ -47,17 +56,9 @@ export function FarmInvoicingModal({ isOpen, onClose }: FarmInvoicingModalProps)
         .catch(console.error);
   };
 
-  useEffect(() => {
-    if (farm) {
-      Object.keys(farm).forEach((key) => {
-        setValue(key as keyof FarmInput, farm[key as keyof FarmInput]);
-      });
-    }
-  }, [farm]);
-
   return (
     <MyModal
-      isOpen={isOpen}
+      isOpen={true}
       onClose={onClose}
       onSubmit={handleSubmit(onSubmit)}
       title="Mes factures"

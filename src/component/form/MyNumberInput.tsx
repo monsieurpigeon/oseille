@@ -28,17 +28,15 @@ export function MyNumberInput({ control, name, min, max, step, isInt, ...props }
           min={min ?? -9999.99}
           max={max ?? 9999.99}
           step={step}
-          onBlur={(e) => {
-            field.onChange(Number(e.target.value));
-          }}
-          onChange={isInt ? (value) => field.onChange(parseInt(value)) : field.onChange}
+          onChange={field.onChange}
           value={field.value}
+          precision={isInt ? 0 : 2}
           {...props}
         >
           <NumberInputField
+            pattern={!min || min < 0 ? '(-)?[0-9]*(.[0-9]+)?' : '[0-9]*(.[0-9]+)?'} // Allow negative and decimal numbers
             ref={field.ref}
             name={field.name}
-            pattern="(-)?[0-9]*(.[0-9]+)?"
           />
           <NumberInputStepper>
             <NumberIncrementStepper />

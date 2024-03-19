@@ -1,12 +1,12 @@
 import { Box, Button, Flex, Grid, GridItem, Input, Select, Text, Textarea } from '@chakra-ui/react';
 import { useMemo } from 'react';
-import { Control, FieldArrayWithId, FieldValues, UseFormReturn, useFieldArray } from 'react-hook-form';
+import { Control, FieldArrayWithId, FieldValues, useFieldArray, UseFormReturn } from 'react-hook-form';
 import { useLoaderData, useNavigate, useRouteLoaderData } from 'react-router-dom';
-import { Customer, DeliveryInput, Price, Product, ProductWithPrice, addPrice } from '../../../backend';
+import { addPrice, Customer, DeliveryInput, Price, Product, ProductWithPrice } from '../../../backend';
 import { MyNumberInput } from '../../../component/form/MyNumberInput';
 import { useConfirm } from '../../../component/modal/confirm-modal/ConfirmContext';
-import { useSideKick } from '../../../component/modules/sidekick/SideKickContext';
 import { SideKickFeeling } from '../../../component/modules/sidekick/enums';
+import { useSideKick } from '../../../component/modules/sidekick/SideKickContext';
 import { Country } from '../../../utils/defaults';
 import { priceFormatter } from '../../../utils/formatter';
 
@@ -186,7 +186,7 @@ const ProductLine = ({ index, methods, availableProducts, availablePrices, remov
 
   const currentPrice = useMemo(
     () => availablePrices.find((price: Price) => price.product === watchProduct),
-    [availableProducts, watchProduct],
+    [availableProducts, watchProduct, watchPrice, availablePrices],
   );
 
   const updatePrice = async () => {
@@ -271,7 +271,7 @@ const ProductLine = ({ index, methods, availableProducts, availablePrices, remov
             colorScheme="green"
             onClick={updatePrice}
             variant="outline"
-            disabled={watchPrice == null || watchPrice === (currentPrice as Price)?.value}
+            isDisabled={watchPrice == null || watchPrice == (currentPrice as Price)?.value}
             title="Sauvegarder le nouveau prix"
           >
             💾

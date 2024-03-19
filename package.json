@@ -11,8 +11,8 @@
     "lint:fix": "npm run lint -- --fix"
   },
   "dependencies": {
-    "@chakra-ui/icons": "^2.0.13",
-    "@chakra-ui/react": "^2.4.2",
+    "@chakra-ui/icons": "^2.1.1",
+    "@chakra-ui/react": "^2.8.2",
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
     "@hookform/resolvers": "^3.0.0",
@@ -21,12 +21,14 @@
     "clsx": "^2.0.0",
     "date-fns": "^2.30.0",
     "events": "^3.3.0",
+    "file-saver": "^2.0.5",
     "framer-motion": "^6.5.1",
     "jotai": "^2.4.3",
     "jotai-location": "^0.5.1",
+    "jszip": "^3.10.1",
     "lodash": "^4.17.21",
     "pdfmake": "^0.2.6",
-    "posthog-js": "^1.103.1",
+    "posthog-js": "^1.116.2",
     "pouchdb": "^7.3.1",
     "pouchdb-find": "^7.3.1",
     "react": "^18.2.0",
@@ -38,6 +40,7 @@
     "zod": "^3.21.4"
   },
   "devDependencies": {
+    "@types/file-saver": "^2.0.7",
     "@types/pdfmake": "^0.2.2",
     "@types/pouchdb": "^6.4.0",
     "@types/react": "^18.0.24",

@@ -13,10 +13,7 @@ export function BankSettingBlock() {
       title="Ma banque"
       onUpdate={onOpen}
     >
-      <FarmBankModal
-        isOpen={isOpen}
-        onClose={onClose}
-      />
+      {isOpen && <FarmBankModal onClose={onClose} />}
       {farm?.rib && <Text>RIB: {farm.rib}</Text>}
       {farm?.iban && <Text>IBAN: {farm.iban}</Text>}
       {farm?.bic && <Text>BIC: {farm.bic}</Text>}
