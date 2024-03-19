@@ -4,6 +4,7 @@ import { FarmCompanyModal } from '../../../component/modal/FarmCompanyModal';
 import { FarmCountryModal } from '../../../component/modal/FarmCountryModal';
 import { FarmDocumentIdModal } from '../../../component/modal/FarmDocumentIdModal';
 import { FarmInvoicingModal } from '../../../component/modal/FarmInvoicingModal';
+import { FarmLogoModal } from '../../../component/modal/FarmLogoModal';
 import { FarmPracticeModal } from '../../../component/modal/FarmPracticeModal';
 import { SettingPageGroup } from '../../../page-group/SettingPageGroup';
 import { AdvancedSection } from '../../../page/settings/sections/advanced-section/AdvancedSection';
@@ -27,6 +28,7 @@ export const settingsRouter = {
           children: [
             { path: 'country', element: <FarmCountryModal /> },
             { path: 'address', element: <FarmAddressModal /> },
+            { path: 'logo', element: <FarmLogoModal /> },
             { path: 'practices', element: <FarmPracticeModal /> },
           ],
         },
