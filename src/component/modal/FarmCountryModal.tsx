@@ -16,11 +16,10 @@ const farmSchema = z.object({
 });
 
 interface FarmCountryModalProps {
-  isOpen: boolean;
   onClose: () => void;
 }
 
-export function FarmCountryModal({ isOpen, onClose }: FarmCountryModalProps) {
+export function FarmCountryModal({ onClose }: FarmCountryModalProps) {
   const posthog = usePostHog();
   const { farm } = useRouteLoaderData('farm') as { farm: Farm };
   const { say } = useSideKick();
@@ -60,7 +59,7 @@ export function FarmCountryModal({ isOpen, onClose }: FarmCountryModalProps) {
 
   return (
     <MyModal
-      isOpen={isOpen}
+      isOpen={true}
       onClose={onClose}
       onSubmit={handleSubmit(onSubmit)}
       title="Mon pays"
