@@ -1,4 +1,5 @@
 import { Flex } from '@chakra-ui/react';
+import { Outlet } from 'react-router-dom';
 import { BankSettingBlock } from './blocks/BankSettingBlock';
 import { CompanySettingBlock } from './blocks/CompanySettingBlock';
 import { InvoiceSettingBlock } from './blocks/InvoiceSettingBlock';
@@ -13,6 +14,7 @@ export function InvoiceSection() {
       <BankSettingBlock />
       <CompanySettingBlock />
       <InvoiceSettingBlock />
+      <Outlet />
     </Flex>
   );
 }

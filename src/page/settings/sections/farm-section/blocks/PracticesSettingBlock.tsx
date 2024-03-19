@@ -1,8 +1,6 @@
-import { useDisclosure } from '@chakra-ui/react';
-import { useRouteLoaderData } from 'react-router-dom';
+import { useNavigate, useRouteLoaderData } from 'react-router-dom';
 import { z } from 'zod';
 import { Farm } from '../../../../../backend';
-import { FarmPracticeModal } from '../../../../../component/modal/FarmPracticeModal';
 import { MyIcon } from '../../../../../component/MyIcon';
 import { SettingCard } from '../../../components/SettingCard';
 
@@ -12,14 +10,13 @@ export const practicesSchema = z.object({
 
 export function PracticesSettingBlock() {
   const { farm } = useRouteLoaderData('farm') as { farm: Farm };
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const navigate = useNavigate();
 
   return (
     <SettingCard
       title="Mes pratiques"
-      onUpdate={onOpen}
+      onUpdate={() => navigate('practices')}
     >
-      {isOpen && <FarmPracticeModal onClose={onClose} />}
       {farm?.bioLabel && farm.bioLabel !== 'non' && farm.bioLabel !== 'sustainable' ? (
         <div>
           <MyIcon name="good" /> BIO : {farm?.bioLabel?.toUpperCase()}

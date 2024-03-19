@@ -3,7 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { usePostHog } from 'posthog-js/react';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import { useRouteLoaderData } from 'react-router-dom';
+import { useNavigate, useRouteLoaderData } from 'react-router-dom';
 import { z } from 'zod';
 import { Farm, FarmInput, updateFarm } from '../../backend';
 import { COUNTRIES, EMPTY_FARM } from '../../utils/defaults';
@@ -15,14 +15,15 @@ const farmSchema = z.object({
   country: z.string().min(1),
 });
 
-interface FarmCountryModalProps {
-  onClose: () => void;
-}
-
-export function FarmCountryModal({ onClose }: FarmCountryModalProps) {
+export function FarmCountryModal() {
   const posthog = usePostHog();
   const { farm } = useRouteLoaderData('farm') as { farm: Farm };
   const { say } = useSideKick();
+
+  const navigate = useNavigate();
+  const onClose = () => {
+    navigate('..');
+  };
 
   const { register, handleSubmit, reset, formState } = useForm<FarmInput>({
     resolver: zodResolver(farmSchema),

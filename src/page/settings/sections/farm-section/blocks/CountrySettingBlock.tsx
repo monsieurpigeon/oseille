@@ -1,20 +1,18 @@
-import { SimpleGrid, Text, useDisclosure } from '@chakra-ui/react';
-import { useRouteLoaderData } from 'react-router-dom';
+import { SimpleGrid, Text } from '@chakra-ui/react';
+import { useNavigate, useRouteLoaderData } from 'react-router-dom';
 import { Farm } from '../../../../../backend';
-import { FarmCountryModal } from '../../../../../component/modal/FarmCountryModal';
 import { Country } from '../../../../../utils/defaults';
 import { SettingCard } from '../../../components/SettingCard';
 
 export function CountrySettingBlock() {
   const { country } = useRouteLoaderData('farm') as { farm: Farm; country: Country };
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const navigate = useNavigate();
 
   return (
     <SettingCard
       title="Mon pays"
-      onUpdate={onOpen}
+      onUpdate={() => navigate('country')}
     >
-      {isOpen && <FarmCountryModal onClose={onClose} />}
       <SimpleGrid
         columns={2}
         spacing={2}

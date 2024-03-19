@@ -1,4 +1,5 @@
 import { Flex } from '@chakra-ui/react';
+import { Outlet } from 'react-router-dom';
 import { z } from 'zod';
 import { DangerSettingBlock } from './blocks/DangerSettingBlock';
 import { DocumentSettingBlock } from './blocks/DocumentSettingBlock';
@@ -19,6 +20,7 @@ export function AdvancedSection() {
       <ImportExportSettingBlock />
       <DocumentSettingBlock />
       <DangerSettingBlock />
+      <Outlet />
     </Flex>
   );
 }
