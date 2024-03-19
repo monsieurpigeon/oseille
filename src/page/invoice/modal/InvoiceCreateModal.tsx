@@ -5,10 +5,10 @@ import { useMemo } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { z } from 'zod';
-import { InvoiceInfoInput, addInvoice } from '../../../backend';
+import { addInvoice, InvoiceInfoInput } from '../../../backend';
 import { MyModal } from '../../../component/modal/MyModal';
-import { useSideKick } from '../../../component/modules/sidekick/SideKickContext';
 import { SideKickFeeling } from '../../../component/modules/sidekick/enums';
+import { useSideKick } from '../../../component/modules/sidekick/SideKickContext';
 import { dateFormatter } from '../../../utils/formatter';
 import { InvoiceFields } from './InvoiceFields';
 
@@ -76,7 +76,7 @@ export function InvoiceCreateModal({ toInvoice, setToInvoice }: InvoiceCreateMod
   return (
     <>
       <Button
-        disabled={!facturable}
+        isDisabled={!facturable}
         onClick={() => {
           onOpen();
         }}

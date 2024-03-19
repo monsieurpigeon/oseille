@@ -42,7 +42,7 @@ export function InvoiceDeleteButton({ invoice }: DeleteInvoiceActionProps) {
   return (
     <DeleteButton
       onClick={handleDeleteInvoice}
-      disabled={!isDeletable}
+      isDisabled={!isDeletable}
     />
   );
 }
