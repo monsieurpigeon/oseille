@@ -112,22 +112,13 @@ export function BusinessSection() {
                     Si vous souhaitez soutenir mon travail, vous pouvez m'encourager financièrement sur{' '}
                     <span className="bold">Tipeee</span>.
                   </Text>
-                  <Text>Pas la peine de donner plus de {priceFormatter(1)} par mois.</Text>
-                  <Text>En parler autour de vous c'est mieux.</Text>
                 </Box>
                 <LinkOverlay
                   href="https://fr.tipeee.com/oseille-app/"
                   target="_blank"
                   alignSelf="center"
                 >
-                  <Button
-                    size="lg"
-                    colorScheme="twitter"
-                    width="200px"
-                    height="80px"
-                  >
-                    Je soutiens
-                  </Button>
+                  <Button colorScheme="twitter">Je soutiens</Button>
                 </LinkOverlay>
               </Flex>
             </CardBody>
