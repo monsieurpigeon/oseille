@@ -11,6 +11,7 @@ export function MySimpleLayout({ children }: MySimpleLayoutProps) {
       padding="20px"
       direction="column"
       gap="20px"
+      height="100%"
     >
       {children}
     </Flex>
