@@ -58,6 +58,7 @@ export function CustomerDocuments() {
       <Flex
         grow={1}
         direction="column"
+        overflowY="auto"
       >
         {tab === 0 && (
           <Flex
