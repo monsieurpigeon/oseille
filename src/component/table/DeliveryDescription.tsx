@@ -9,7 +9,10 @@ export function DeliveryDescription({ delivery }: { delivery: Delivery }) {
   const { country } = useRouteLoaderData('farm') as { country: Country };
 
   return (
-    <TableContainer>
+    <TableContainer
+      width="full"
+      overflowY="auto"
+    >
       <Table size="sm">
         <Thead>
           <Tr>

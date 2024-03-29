@@ -1,4 +1,17 @@
-import { Box, Button, FormLabel, Switch, Table, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react';
+import {
+  Box,
+  Button,
+  Flex,
+  FormLabel,
+  Switch,
+  Table,
+  TableContainer,
+  Tbody,
+  Td,
+  Th,
+  Thead,
+  Tr,
+} from '@chakra-ui/react';
 import { useAtom } from 'jotai';
 import { useEffect, useMemo, useState } from 'react';
 import { useLoaderData, useRouteLoaderData } from 'react-router-dom';
@@ -117,9 +130,12 @@ export function SalesTable() {
       <Button onClick={() => setShow((v) => !v)}>{show ? 'Cacher les ventes 🫣' : 'Montrer les ventes 😎'}</Button>
 
       {show && (
-        <>
-          <Box
-            display="flex"
+        <Flex
+          direction="column"
+          height="100%"
+          width="100%"
+        >
+          <Flex
             alignItems="center"
             gap={4}
           >
@@ -130,25 +146,43 @@ export function SalesTable() {
               onChange={(e) => setSelectedTable(e.target.checked)}
             />
             <FormLabel mb="0">Unité (kg, botte, ...)</FormLabel>
-          </Box>
-          {!selectedTable && (
-            <PriceTable
-              sales={sales}
-              country={country}
-              customersPlus={customersPlus}
-              productsPlus={productsPlus}
-              threshold={threshold}
-            />
-          )}
-          {selectedTable && (
-            <UnitTable
-              customersPlus={customersPlus}
-              productsPlus={productsPlus}
-              sales={sales}
-              threshold={threshold}
-            />
-          )}
-        </>
+          </Flex>
+
+          <Flex
+            direction="column"
+            grow="1"
+          >
+            <Flex
+              grow="1"
+              height="0"
+            >
+              <TableContainer
+                width="0"
+                flexGrow={1}
+                overflowX="scroll"
+                overflowY="scroll"
+              >
+                {!selectedTable && (
+                  <PriceTable
+                    sales={sales}
+                    country={country}
+                    customersPlus={customersPlus}
+                    productsPlus={productsPlus}
+                    threshold={threshold}
+                  />
+                )}
+                {selectedTable && (
+                  <UnitTable
+                    customersPlus={customersPlus}
+                    productsPlus={productsPlus}
+                    sales={sales}
+                    threshold={threshold}
+                  />
+                )}
+              </TableContainer>
+            </Flex>
+          </Flex>
+        </Flex>
       )}
     </>
   );
@@ -180,8 +214,9 @@ export const PriceTable = ({
 }) => (
   <Table variant="simple">
     <Thead>
-      <Tr>
+      <Tr style={{ position: 'sticky', top: '0px', backgroundColor: 'white', zIndex: 200 }}>
         <Th
+          style={{ position: 'sticky', left: '0px', backgroundColor: 'white', zIndex: 199 }}
           textAlign="center"
           fontSize="1.5em"
           lineHeight="1em"
@@ -209,10 +244,10 @@ export const PriceTable = ({
     <Tbody>
       {productsPlus.map((product) => (
         <Tr key={product.id}>
-          <Td padding="5px">
+          <Th style={{ position: 'sticky', left: '0px', backgroundColor: 'white', zIndex: 199 }}>
             <div>{product.name}</div>
             <Box fontWeight="bold">{priceFormatter(product.total, country.currency)}</Box>
-          </Td>
+          </Th>
           {customersPlus.map((customer) => (
             <Td
               key={`${product.id}\n${customer.id}`}
@@ -248,8 +283,9 @@ export const UnitTable = ({
 }) => (
   <Table variant="simple">
     <Thead>
-      <Tr>
+      <Tr style={{ position: 'sticky', top: '0px', backgroundColor: 'white', zIndex: 200 }}>
         <Th
+          style={{ position: 'sticky', left: '0px', backgroundColor: 'white', zIndex: 199 }}
           textAlign="center"
           fontSize="1.5em"
         >
@@ -268,12 +304,12 @@ export const UnitTable = ({
     <Tbody>
       {productsPlus.map((product) => (
         <Tr key={product.id}>
-          <Td padding="5px">
+          <Th style={{ position: 'sticky', left: '0px', backgroundColor: 'white', zIndex: 199 }}>
             <Box>{product.name}</Box>
             <Box fontWeight="bold">
               {Math.floor(product.totalUnit)} {product.unit}
             </Box>
-          </Td>
+          </Th>
           {customersPlus.map((customer) => (
             <Td
               key={`${product.id}\n${customer.id}`}

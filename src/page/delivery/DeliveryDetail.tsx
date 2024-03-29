@@ -1,5 +1,5 @@
-import { Box, Link } from '@chakra-ui/react';
-import { Link as RouterLink, Outlet, useLoaderData, useNavigate } from 'react-router-dom';
+import { Box, Flex, Link } from '@chakra-ui/react';
+import { Outlet, Link as RouterLink, useLoaderData, useNavigate } from 'react-router-dom';
 import { Customer, Delivery, Invoice } from '../../backend';
 import { DetailButton, EditButton } from '../../component/buttons';
 import { MyHeader } from '../../component/layout/page-layout/MyHeader';
@@ -38,12 +38,15 @@ export const DeliveryDetail = () => {
         </Box>
       </MyHeader>
 
-      <div>
+      <Flex
+        direction="column"
+        height="100%"
+      >
         <DeliveryDescriptionLine
           delivery={selected}
           customer={currentCustomer}
         />
-        <div>Notes: {selected.notes}</div>
+        <Box>Notes: {selected.notes}</Box>
         {!!selected.invoice && (
           <Link
             to={`/invoicing/invoice/${selected.invoice}`}
@@ -52,8 +55,14 @@ export const DeliveryDetail = () => {
             <MyIcon name="link" /> {invoice.documentId}
           </Link>
         )}
-        <DeliveryDescription delivery={selected} />
-      </div>
+
+        <Flex
+          height={0}
+          grow={1}
+        >
+          <DeliveryDescription delivery={selected} />
+        </Flex>
+      </Flex>
     </>
   );
 };
