@@ -3,7 +3,6 @@ import { TDocumentDefinitions } from 'pdfmake/interfaces';
 import { getIsTVA } from '../../../utils/aggregations';
 import { CountryCode } from '../../../utils/defaults';
 import { dateFormatter } from '../../../utils/formatter';
-import { FrBio01, FrBio09, FrBio10, FrBio15, FrBio16 } from '../../../utils/labels';
 import { getCustomerById } from '../../entity/customer';
 import { Delivery } from '../../entity/delivery';
 import { getFarm } from '../../entity/farm';
@@ -28,22 +27,16 @@ export const DocumentType = {
   invoice: 'Invoice',
 } as const;
 
-export type DocumentType = typeof DocumentType[keyof typeof DocumentType];
+export type DocumentType = (typeof DocumentType)[keyof typeof DocumentType];
 
-const getBioLogo = (label: string | undefined) => {
-  switch (label) {
-    case 'fr-bio-01':
-      return FrBio01;
-    case 'fr-bio-09':
-      return FrBio09;
-    case 'fr-bio-10':
-      return FrBio10;
-    case 'fr-bio-15':
-      return FrBio15;
-    case 'fr-bio-16':
-      return FrBio16;
-    default:
+const getBioLabelText = (bioLabel: string) => {
+  switch (bioLabel) {
+    case 'non':
       return '';
+    case 'sustainable':
+      return "Produit issu de l'agriculture raisonnée";
+    default:
+      return `Tous nos produits sont Bio certifiés par ${bioLabel.toUpperCase()}`;
   }
 };
 
@@ -68,31 +61,19 @@ export const exportDocument = async ({
     },
     footer: [
       {
-        text: farm?.footer,
+        text: farm?.footer || '',
         alignment: 'center',
       },
-      // {
-      //   text: 'Généré gratuitement grâce à Oseille - www.oseille.app',
-      //   alignment: 'center',
-      //   color: 'grey',
-      //   characterSpacing: 1,
-      //   fontSize: 10,
-      // },
+      { text: getBioLabelText(farm?.bioLabel) || '', alignment: 'center' },
     ],
     content: [
-      addresses(
-        { ...payload, customer: currentCustomer },
-        type,
-        !!farm?._attachements?.logo,
-        !!farm?.bioLabel && farm?.bioLabel !== 'non',
-        farm,
-      ),
+      addresses({ ...payload, customer: currentCustomer }, type, !!farm?._attachements?.logo, farm),
+      { text: `${payload.documentId} ${currentCustomer.name}`, style: 'header' },
       {
         columns: [
           [
-            { text: `${payload.documentId}`, style: 'header' },
             {
-              text: `Date: ${dateFormatter(
+              text: `${dateFormatter(
                 type === DocumentType.invoice ? (payload as Invoice).createdAt : (payload as Delivery).deliveredAt,
               )}`,
               style: 'header',
@@ -101,13 +82,21 @@ export const exportDocument = async ({
           ...[
             type === DocumentType.invoice && (payload as Invoice).payments?.length
               ? [
-                  { text: 'PAYÉ', style: 'alert' },
                   {
-                    text: `Par ${
-                      paymentModesMap[(payload as Invoice).payments?.[0]?.paymentMode ?? 0]
-                    } le ${dateFormatter((payload as Invoice).payments?.[0]?.paidAt ?? '')}`,
+                    columnGap: 10,
+                    columns: [
+                      { width: 'auto', text: 'PAYÉ', style: 'alert' },
+                      [
+                        {
+                          width: 'auto',
+                          text: `Par ${
+                            paymentModesMap[(payload as Invoice).payments?.[0]?.paymentMode ?? 0]
+                          } le ${dateFormatter((payload as Invoice).payments?.[0]?.paidAt ?? '')}`,
+                        },
+                        { width: 'auto', text: (payload as Invoice).payments?.[0]?.reference || '', bold: true },
+                      ],
+                    ],
                   },
-                  { text: (payload as Invoice).payments?.[0]?.reference, bold: true },
                 ]
               : null,
           ],
@@ -119,12 +108,11 @@ export const exportDocument = async ({
         : []),
       await totals(payload, type, farm),
       {
-        columns: [{ qr: payload.id, fit: '50' }, { text: `Notes: ${payload.notes ?? ''}` }],
+        columns: [{ text: `Notes: ${payload.notes ?? ''}` }],
       },
     ],
     images: {
       logo: farm?._attachements?.logo?.data || '',
-      bio: getBioLogo(farm?.bioLabel),
     },
     styles: {
       alert: {
@@ -135,7 +123,6 @@ export const exportDocument = async ({
       header: {
         fontSize: 18,
         bold: true,
-        margin: [0, 0, 0, 10],
       },
       subheader: {
         fontSize: 16,

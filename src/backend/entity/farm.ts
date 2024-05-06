@@ -71,7 +71,7 @@ export const FARM_KEY = 'myFarm';
 export async function addFarm() {
   await relDb.rel.save('farm', {
     id: FARM_KEY,
-    footer: 'Tous nos produits sont certifies par FR-BIO-IT',
+    footer: 'Merci pour votre commande !',
     invoiceId: 1,
     deliveryId: 1,
     year: getYear(new Date()),
