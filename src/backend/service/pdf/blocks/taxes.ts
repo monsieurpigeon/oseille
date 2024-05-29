@@ -8,6 +8,7 @@ export async function taxes(invoice: Invoice, farm: Farm) {
   const taxes = await computeTaxes(invoice, country.value);
 
   return {
+    margin: [0, 0, 0, 10],
     table: {
       widths: ['auto', 'auto', 'auto', 'auto', 'auto'],
       headerRows: 1,

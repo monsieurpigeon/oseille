@@ -2,7 +2,7 @@ import { FarmInput } from '../backend';
 
 export const DEFAULT_TAX = '5.5';
 export const DEFAULT_INVOICE_DELAY = 30;
-export const DEFAULT_FOOTER = 'Tous nos produits sont certifies par FR-BIO-IT';
+export const DEFAULT_FOOTER = 'Merci pour votre commande !';
 export const DEFAULT_THREAT = 'En cas de retard de paiement, montant forfaitaire de 40€ pour frais de recouvrement';
 
 export const EMPTY_FARM: FarmInput = {
