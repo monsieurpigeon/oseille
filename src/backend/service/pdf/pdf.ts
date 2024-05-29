@@ -73,10 +73,10 @@ export const exportDocument = async ({
         columns: [
           [
             {
+              margin: [0, 0, 0, 10],
               text: `${dateFormatter(
                 type === DocumentType.invoice ? (payload as Invoice).createdAt : (payload as Delivery).deliveredAt,
               )}`,
-              style: 'header',
             },
           ],
           ...[

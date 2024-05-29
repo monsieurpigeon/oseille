@@ -4,18 +4,19 @@ import { Farm } from '../../../entity/farm';
 import { DocumentType } from '../pdf';
 
 export const addresses = (payload: { customer: Customer }, type: DocumentType, hasLogo: boolean, farm: Farm) => ({
+  margin: [0, 0, 0, 10],
   columns: [
     ...(hasLogo
       ? [
           {
-            width: 150,
+            width: 100,
             image: 'logo',
             fit: [80, 80],
           },
         ]
       : [
           {
-            width: 150,
+            width: 100,
             text: '',
           },
         ]),
@@ -24,7 +25,7 @@ export const addresses = (payload: { customer: Customer }, type: DocumentType, h
       {
         columns: [
           {
-            width: 200,
+            width: 250,
             stack: [
               { text: farm?.title || DEFAULT_FARM.title, bold: true, width: 150 },
               { text: farm?.address1 || DEFAULT_FARM.address1 },
