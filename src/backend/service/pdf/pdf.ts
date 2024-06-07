@@ -36,7 +36,7 @@ const getBioLabelText = (bioLabel: string) => {
     case 'sustainable':
       return "Produit issu de l'agriculture raisonnée";
     default:
-      return `Tous nos produits sont Bio certifiés par ${bioLabel.toUpperCase()}`;
+      return bioLabel ? `Tous nos produits sont Bio certifiés par ${bioLabel.toUpperCase()}` : '';
   }
 };
 
