@@ -187,7 +187,7 @@ export const exportOrders = async (payload: Delivery[]) => {
                 const total = productColumns.reduce((acc, column) => acc + column, 0);
                 return [
                   { text: products[id].name, alignment: 'left' },
-                  total,
+                  total.toFixed(1),
                   { text: products[id].unit, alignment: 'left' },
                   ...productColumns.map((column) => {
                     return column > 0 ? column : '.';
