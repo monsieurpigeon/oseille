@@ -161,6 +161,7 @@ export const exportOrders = async (payload: Delivery[]) => {
     }, {} as { [key: string]: Product });
 
   const docDefinition: unknown = {
+    pageOrientation: 'landscape',
     defaultStyle: {
       font: 'Roboto',
       alignment: 'right',
