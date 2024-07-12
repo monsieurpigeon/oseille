@@ -67,8 +67,9 @@ export const exportDocument = async ({
       { text: getBioLabelText(farm?.bioLabel) || '', alignment: 'center' },
     ],
     content: [
+      { text: type === DocumentType.invoice ? 'FACTURE' : 'BON DE LIVRAISON', bold: true },
       addresses({ ...payload, customer: currentCustomer }, type, !!farm?._attachements?.logo, farm),
-      { text: `${payload.documentId} ${currentCustomer.name}`, style: 'header' },
+      { text: `${payload.documentId}`, style: 'header' },
       {
         columns: [
           [
@@ -103,8 +104,12 @@ export const exportDocument = async ({
         ],
       },
       await lines(payload, type, farm),
-      ...(isTVA && type === DocumentType.invoice && farm.country !== CountryCode.CA
-        ? [await taxes(payload as Invoice, farm)]
+      ...(type === DocumentType.invoice && farm.country !== CountryCode.CA
+        ? [
+            isTVA
+              ? await taxes(payload as Invoice, farm)
+              : { text: "Non assujetti à la TVA selon l'article 293 B du CGI" },
+          ]
         : []),
       await totals(payload, type, farm),
       {
