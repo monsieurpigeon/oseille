@@ -61,6 +61,7 @@ export const PRODUCT_UNITS = [
   { value: 'kg', label: 'kg' },
   { value: 'piece', label: 'piece' },
   { value: 'botte', label: 'botte' },
+  { value: 'heure', label: 'heure' },
 ];
 
 export const TVA_RATES = [
