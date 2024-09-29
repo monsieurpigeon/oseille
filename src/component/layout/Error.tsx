@@ -1,7 +1,7 @@
 import { Link, useRouteError } from 'react-router-dom';
 
 export function Error() {
-  const error = useRouteError();
+  const error = useRouteError() as { message: string };
   console.log(error);
   // Uncaught ReferenceError: path is not defined
   return (
