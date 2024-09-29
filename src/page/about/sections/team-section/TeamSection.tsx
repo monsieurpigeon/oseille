@@ -92,16 +92,8 @@ export function TeamSection() {
           </Text>
 
           <Text>
-            Je ne suis pas maraîcher, mais je travaille pour{' '}
-            <a
-              href="https://elzeard.co"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Elzeard
-            </a>
-            , une super application de gestion complète de fermes maraîchères, et j'ai de nombreuses occasions de
-            rencontrer des maraîchers et de comprendre leurs besoins.
+            Je ne suis pas maraîcher, mais j'ai de nombreuses occasions de rencontrer des maraîchers et de comprendre
+            leurs besoins.
           </Text>
           <Text>
             Par soucis d'économie je ne développerais QUE les fonctionnalités qu'un maraîcher me demandera d'ajouter. Si
@@ -113,13 +105,6 @@ export function TeamSection() {
             débutants que je conseille dans leur reconversion professionnelle. Si vous êtes intéressé par le
             développement web : contactez-moi !
           </Text>
-          <Box>
-            <Text>Mon objectif avec cette application :</Text>
-            <Text>
-              <Text as="b">Faire gagner 1h par semaine à 35 maraîchers</Text>, et cloner ma petite semaine de travail de
-              citadin.
-            </Text>
-          </Box>
           <Text>La vie est trop courte pour copier-coller des cases dans Excel.</Text>
           <Text>Vous avez des choses bien plus grandes à réaliser autour de chez vous.</Text>
         </Flex>

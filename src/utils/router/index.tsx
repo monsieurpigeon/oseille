@@ -1,5 +1,6 @@
-import { createBrowserRouter, Navigate } from 'react-router-dom';
+import { createBrowserRouter } from 'react-router-dom';
 import { Farm, FARM_KEY, relDb } from '../../backend';
+import { Error } from '../../component/layout/Error';
 import { MasterLayout } from '../../component/layout/MasterLayout';
 import { getCountry } from '../aggregations';
 import { DEFAULT_INVOICE_DELAY } from '../defaults';
@@ -14,12 +15,7 @@ export const router = createBrowserRouter([
     path: '/',
     element: <MasterLayout />,
     id: 'farm',
-    errorElement: (
-      <Navigate
-        to="/"
-        replace={true}
-      />
-    ),
+    errorElement: <Error />,
     loader: async () =>
       relDb.rel.find('farm', FARM_KEY).then((doc) => {
         const farm = doc.farms[0] as Farm;
