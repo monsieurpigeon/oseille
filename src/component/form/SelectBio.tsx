@@ -10,6 +10,7 @@ export function SelectBio({ register }: { register: UseFormRegister<FarmInput> }
       <option value="fr-bio-01">FR-BIO-01</option>
       <option value="fr-bio-09">FR-BIO-09</option>
       <option value="fr-bio-10">FR-BIO-10</option>
+      <option value="fr-bio-13">FR-BIO-13</option>
       <option value="fr-bio-15">FR-BIO-15</option>
       <option value="fr-bio-16">FR-BIO-16</option>
     </Select>
